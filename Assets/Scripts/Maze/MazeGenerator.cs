@@ -140,6 +140,7 @@ public class MazeGenerator : MonoBehaviour
     {
         Queue<MazeCell> queue = new Queue<MazeCell>();
         Dictionary<MazeCell, MazeCell> parentMap = new Dictionary<MazeCell, MazeCell>();
+        HashSet<MazeCell> visited = new HashSet<MazeCell>();
 
         queue.Enqueue(startCell);
         parentMap[startCell] = null;
@@ -151,9 +152,11 @@ public class MazeGenerator : MonoBehaviour
             if (currentCell == exitCell)
                 break;
 
+            visited.Add(currentCell);
+
             foreach (var neighbor in GetNeighborsWithNoWalls(currentCell))
             {
-                if (!parentMap.ContainsKey(neighbor))
+                if (!visited.Contains(neighbor))
                 {
                     queue.Enqueue(neighbor);
                     parentMap[neighbor] = currentCell;
@@ -180,7 +183,22 @@ public class MazeGenerator : MonoBehaviour
         }
 
         shortestPath.Reverse(); // Reverse the path to start from startCell
+        // Ensure the exit cell considers its walls when pathfinding
+        if (exitCell.HasFrontWall())
+        {
+            shortestPath.Add(mazeGrid[_mazeWidth - 1, _mazeHeight - 2 + 1]);
+        }
+        if (exitCell.HasBackWall())
+        {
+            shortestPath.Add(mazeGrid[_mazeWidth - 1, _mazeHeight - 2 - 1]);
+        }
+        if (exitCell.HasLeftWall())
+        {
+            shortestPath.Add(mazeGrid[_mazeWidth - 1 - 1, _mazeHeight - 2]);
+        }
     }
+
+
 
     private IEnumerable<MazeCell> GetNeighborsWithNoWalls(MazeCell currentCell)
     {
