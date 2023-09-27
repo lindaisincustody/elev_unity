@@ -9,6 +9,7 @@ public class MazeCell : MonoBehaviour
     [SerializeField] private GameObject _frontWall;
     [SerializeField] private GameObject _backWall;
     [SerializeField] private GameObject _unvisitedBlock;
+    [SerializeField] private GameObject _shortestPathBlock;
 
     public bool isVisited { get; private set; }
 
@@ -97,4 +98,36 @@ public class MazeCell : MonoBehaviour
         }
     }
 
+    public bool HasRightWall()
+    {
+        if (_rightWall.activeSelf)
+            return true;
+        return false;
+    }
+
+    public bool HasLeftWall()
+    {
+        if (_leftWall.activeSelf)
+            return true;
+        return false;
+    }
+
+    public bool HasFrontWall()
+    {
+        if (_frontWall.activeSelf)
+            return true;
+        return false;
+    }
+
+    public bool HasBackWall()
+    {
+        if (_backWall.activeSelf)
+            return true;
+        return false;
+    }
+
+    public void SetAsShortestPath()
+    {
+        _shortestPathBlock.SetActive(true);
+    }
 }

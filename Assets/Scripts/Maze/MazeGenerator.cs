@@ -34,7 +34,7 @@ public class MazeGenerator : MonoBehaviour
 
         yield return GenerateMaze(null, mazeGrid[0, 0], exitCell); // Pass the exit cell
 
-
+        CalculateShortestPath(mazeGrid[0, 0], exitCell);
         // Randomly delete walls to create loops only once
         if (allowLoops)
         {
@@ -136,6 +136,89 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
+    private void CalculateShortestPath(MazeCell startCell, MazeCell exitCell)
+    {
+        Queue<MazeCell> queue = new Queue<MazeCell>();
+        Dictionary<MazeCell, MazeCell> parentMap = new Dictionary<MazeCell, MazeCell>();
+
+        queue.Enqueue(startCell);
+        parentMap[startCell] = null;
+
+        while (queue.Count > 0)
+        {
+            MazeCell currentCell = queue.Dequeue();
+
+            if (currentCell == exitCell)
+                break;
+
+            foreach (var neighbor in GetNeighborsWithNoWalls(currentCell))
+            {
+                if (!parentMap.ContainsKey(neighbor))
+                {
+                    queue.Enqueue(neighbor);
+                    parentMap[neighbor] = currentCell;
+                }
+            }
+        }
+
+        // Reconstruct the shortest path from exitCell to startCell using parentMap
+        List<MazeCell> shortestPath = new List<MazeCell>();
+        MazeCell cell = exitCell;
+
+        while (cell != null)
+        {
+            shortestPath.Add(cell);
+            cell.SetAsShortestPath();
+            if (parentMap.ContainsKey(cell))
+            {
+                cell = parentMap[cell];
+            }
+            else
+            {
+                break; // Exit the loop if there's no parent (e.g., startCell)
+            }
+        }
+
+        shortestPath.Reverse(); // Reverse the path to start from startCell
+    }
+
+    private IEnumerable<MazeCell> GetNeighborsWithNoWalls(MazeCell currentCell)
+    {
+        int x = (int)currentCell.transform.position.x / cellSize;
+        int y = (int)currentCell.transform.position.y / cellSize;
+
+        // Check the right neighbor
+        if (x + 1 < _mazeWidth)
+        {
+            var cellToRight = mazeGrid[x + 1, y];
+            if (!currentCell.HasRightWall() || !cellToRight.HasLeftWall())
+                yield return cellToRight;
+        }
+
+        // Check the left neighbor
+        if (x - 1 >= 0)
+        {
+            var cellToLeft = mazeGrid[x - 1, y];
+            if (!currentCell.HasLeftWall() || !cellToLeft.HasRightWall())
+                yield return cellToLeft;
+        }
+
+        // Check the top neighbor
+        if (y + 1 < _mazeHeight)
+        {
+            var cellToTop = mazeGrid[x, y + 1];
+            if (!currentCell.HasFrontWall() || !cellToTop.HasBackWall())
+                yield return cellToTop;
+        }
+
+        // Check the bottom neighbor
+        if (y - 1 >= 0)
+        {
+            var cellToBottom = mazeGrid[x, y - 1];
+            if (!currentCell.HasBackWall() || !cellToBottom.HasFrontWall())
+                yield return cellToBottom;
+        }
+    }
 
     private void ClearWalls(MazeCell previousCell, MazeCell currentCell)
     {
