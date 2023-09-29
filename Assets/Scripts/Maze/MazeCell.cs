@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MazeCell : MonoBehaviour
 {
@@ -129,5 +130,20 @@ public class MazeCell : MonoBehaviour
     public void SetAsShortestPath()
     {
         _shortestPathBlock.SetActive(true);
+    }
+
+    public void SetDirection(Sprite newSprite)
+    {
+        _shortestPathBlock.GetComponentInChildren<SpriteRenderer>().sprite = newSprite;
+    }
+
+    public void EnableShortedBlock()
+    {
+        _shortestPathBlock.SetActive(true);
+    }
+    public void DisableShortedBlock()
+    {
+        _shortestPathBlock.SetActive(false);
+
     }
 }

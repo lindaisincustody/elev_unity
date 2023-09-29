@@ -17,6 +17,14 @@ public class MazeGenerator : MonoBehaviour
 
     private MazeCell[,] mazeGrid;
     private int cellSize = 4;
+    private List<MazeCell> shortestPath;
+
+    private ImageHolder imageHolder;
+
+    private void Awake()
+    {
+        imageHolder = GetComponent<ImageHolder>();
+    }
 
     private IEnumerator Start()
     {
@@ -25,7 +33,9 @@ public class MazeGenerator : MonoBehaviour
         {
             for (int j = 0; j < _mazeHeight; j++)
             {
-                mazeGrid[i, j] = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                mazeGrid[i, j] = newCell;
+                newCell.transform.parent = gameObject.transform;
             }
         }
 
@@ -164,41 +174,103 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
-        // Reconstruct the shortest path from exitCell to startCell using parentMap
-        List<MazeCell> shortestPath = new List<MazeCell>();
+        shortestPath = new List<MazeCell>();
         MazeCell cell = exitCell;
+        MazeCell prevCell = null;
 
         while (cell != null)
         {
             shortestPath.Add(cell);
             cell.SetAsShortestPath();
+
             if (parentMap.ContainsKey(cell))
             {
+                prevCell = cell;
                 cell = parentMap[cell];
             }
             else
             {
-                break; // Exit the loop if there's no parent (e.g., startCell)
+                break;
             }
         }
 
-        shortestPath.Reverse(); // Reverse the path to start from startCell
-        // Ensure the exit cell considers its walls when pathfinding
-        if (exitCell.HasFrontWall())
+        shortestPath.Reverse();
+        foreach (var cells in shortestPath)
         {
-            shortestPath.Add(mazeGrid[_mazeWidth - 1, _mazeHeight - 2 + 1]);
+            SetSpriteDirection(cells);
         }
-        if (exitCell.HasBackWall())
-        {
-            shortestPath.Add(mazeGrid[_mazeWidth - 1, _mazeHeight - 2 - 1]);
-        }
-        if (exitCell.HasLeftWall())
-        {
-            shortestPath.Add(mazeGrid[_mazeWidth - 1 - 1, _mazeHeight - 2]);
-        }
+
     }
 
+    private void SetSpriteDirection(MazeCell currentCell)
+    {
+        int currentIndex = shortestPath.IndexOf(currentCell);
 
+        if (currentIndex > 0 && currentIndex < shortestPath.Count - 1)
+        {
+            MazeCell prevCell = shortestPath[currentIndex - 1];
+            MazeCell nextCell = shortestPath[currentIndex + 1];
+
+            // Determine the direction based on the relative positions of the cells
+            if (prevCell.transform.position.x < currentCell.transform.position.x && nextCell.transform.position.x > currentCell.transform.position.x)
+            {
+                currentCell.SetDirection(imageHolder.Right);
+            }
+            else if (prevCell.transform.position.x > currentCell.transform.position.x && nextCell.transform.position.x < currentCell.transform.position.x)
+            {
+                currentCell.SetDirection(imageHolder.Left);
+            }
+            else if (prevCell.transform.position.y < currentCell.transform.position.y && nextCell.transform.position.y > currentCell.transform.position.y)
+            {
+                currentCell.SetDirection(imageHolder.Up);
+            }
+            else if (prevCell.transform.position.y > currentCell.transform.position.y && nextCell.transform.position.y < currentCell.transform.position.y)
+            {
+                currentCell.SetDirection(imageHolder.Down);
+            }
+            // Check for corner cases
+            else if (prevCell.transform.position.x > currentCell.transform.position.x && nextCell.transform.position.y > currentCell.transform.position.y)
+            {
+                currentCell.SetDirection(imageHolder.RightUp);
+            }
+            else if (prevCell.transform.position.x < currentCell.transform.position.x && nextCell.transform.position.y > currentCell.transform.position.y)
+            {
+                currentCell.SetDirection(imageHolder.LeftUp);
+            }
+            else if (prevCell.transform.position.x < currentCell.transform.position.x && nextCell.transform.position.y < currentCell.transform.position.y)
+            {
+                currentCell.SetDirection(imageHolder.LeftDown);
+            }
+            else if (prevCell.transform.position.x > currentCell.transform.position.x && nextCell.transform.position.y < currentCell.transform.position.y)
+            {
+                currentCell.SetDirection(imageHolder.RightDown);
+            }
+            // Additional 4 corner cases
+            else if (prevCell.transform.position.y < currentCell.transform.position.y && nextCell.transform.position.x > currentCell.transform.position.x)
+            {
+                currentCell.SetDirection(imageHolder.DownRight);
+            }
+            else if (prevCell.transform.position.y < currentCell.transform.position.y && nextCell.transform.position.x < currentCell.transform.position.x)
+            {
+                currentCell.SetDirection(imageHolder.DownLeft);
+            }
+            else if (prevCell.transform.position.y > currentCell.transform.position.y && nextCell.transform.position.x > currentCell.transform.position.x)
+            {
+                currentCell.SetDirection(imageHolder.UpRight);
+            }
+            else if (prevCell.transform.position.y > currentCell.transform.position.y && nextCell.transform.position.x < currentCell.transform.position.x)
+            {
+                currentCell.SetDirection(imageHolder.UpLeft);
+            }
+        }
+        else
+        {
+            // Handle cases where there are no previous or next cells (start or end of path)
+            // Set a default direction or use logic based on your requirements
+            // For example:
+            currentCell.SetDirection(imageHolder.Right);
+        }
+    }
 
     private IEnumerable<MazeCell> GetNeighborsWithNoWalls(MazeCell currentCell)
     {
@@ -268,6 +340,22 @@ public class MazeGenerator : MonoBehaviour
             previousCell.ClearBack();
             currentCell.ClearFront();
             return;
+        }
+    }
+
+    public void ActivateShortestPath()
+    {
+        foreach (MazeCell cell in shortestPath)
+        {
+            cell.EnableShortedBlock();
+        }
+    }
+
+    public void DeactivateShortestPath()
+    {
+        foreach (MazeCell cell in shortestPath)
+        {
+            cell.DisableShortedBlock();
         }
     }
 }
