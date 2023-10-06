@@ -5,16 +5,22 @@ using System.Linq;
 
 public class MazeGenerator : MonoBehaviour
 {
+    [SerializeField] private CameraTransition cameraTransition;
+    [SerializeField] private GameObject endPrefab;
+
+    [Header("Data Holder")]
+    [SerializeField] private MazeDataSO mazeData;
+
     [Header("Maze Parameters")]
     [SerializeField] private MazeCell _mazeCellPrefab;
-    [SerializeField] private int _mazeWidth;
-    [SerializeField] private int _mazeHeight;
     [SerializeField] private float mazeSpeed = 0.02f;
 
     [Header("Loops Parameters")]
     [SerializeField] private bool allowLoops = false;
     [SerializeField] private int numberOfLoops = 5; // Set the number of loops you want
 
+    private int _mazeWidth;
+    private int _mazeHeight;
     private MazeCell[,] mazeGrid;
     private int cellSize = 4;
     private List<MazeCell> shortestPath;
@@ -24,10 +30,13 @@ public class MazeGenerator : MonoBehaviour
     private void Awake()
     {
         imageHolder = GetComponent<ImageHolder>();
+        _mazeWidth = mazeData.MazeWidth;
+        _mazeHeight = mazeData.MazeHeight;
     }
 
     private IEnumerator Start()
     {
+        cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
         mazeGrid = new MazeCell[_mazeWidth, _mazeHeight];
         for (int i = 0; i < _mazeWidth; i++)
         {
@@ -41,6 +50,7 @@ public class MazeGenerator : MonoBehaviour
 
         // Set the exit cell
         MazeCell exitCell = mazeGrid[_mazeWidth - 1, _mazeHeight - 2];
+        Instantiate(endPrefab, new Vector2(exitCell.transform.position.x + cellSize, exitCell.transform.position.y), Quaternion.identity);
 
         yield return GenerateMaze(null, mazeGrid[0, 0], exitCell); // Pass the exit cell
 
@@ -50,6 +60,7 @@ public class MazeGenerator : MonoBehaviour
         {
             CreateLoops();
         }
+        cameraTransition.StartZoomIn();
     }
 
 

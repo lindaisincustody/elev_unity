@@ -357,8 +357,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.010349989, y: -0.113650024, z: 0}
-    m_Extent: {x: 1.11585, y: 1.4770501, z: 0}
+    m_Center: {x: -0.016849995, y: -0.121800005, z: 0}
+    m_Extent: {x: 1.11025, y: 1.4723, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -1897,6 +1897,54 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &481071136
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 481071138}
+  - component: {fileID: 481071137}
+  m_Layer: 0
+  m_Name: MiniGamesManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &481071137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481071136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c420b7957f44856469ce7d0f0409a014, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attributes: {fileID: 1794075896}
+  mazeData: {fileID: 11400000, guid: e6f34c279a472514795a389a79e08e96, type: 2}
+  MaxMazeHeight: 30
+  MaxMazeWidth: 15
+--- !u!4 &481071138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481071136}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.7989801, y: 1.6189718, z: -0.035827145}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 16
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -2280,8 +2328,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.21555, y: -0.11660004, z: 0}
-    m_Extent: {x: 0.73425, y: 1.4699, z: 0}
+    m_Center: {x: 0.2135, y: -0.11804998, z: 0}
+    m_Extent: {x: 0.7247, y: 1.46395, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -5968,8 +6016,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.011549979, y: 0.01790005, z: 0}
-    m_Extent: {x: 0.95675004, y: 1.3021, z: 0}
+    m_Center: {x: 0.019950002, y: 0.013499975, z: 0}
+    m_Extent: {x: 0.95124996, y: 1.2973, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -6859,8 +6907,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: 0.073299974, y: 0.07429999, z: 0}
-    m_Extent: {x: 0.98529994, y: 0.5786, z: 0}
+    m_Center: {x: 0.07079998, y: 0.076900005, z: 0}
+    m_Extent: {x: 0.9944, y: 0.5788, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -7561,6 +7609,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0fac53671891ef43846df3b22b144aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  numberOfPoems: 0
 --- !u!1 &1796752439
 GameObject:
   m_ObjectHideFlags: 0
@@ -8625,8 +8674,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.0056500137, y: -0.25049996, z: 0}
-    m_Extent: {x: 0.85395, y: 1.0128, z: 0}
+    m_Center: {x: -0.0015999973, y: -0.25844997, z: 0}
+    m_Extent: {x: 0.8519, y: 1.0192499, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -9369,8 +9418,8 @@ MonoBehaviour:
   m_ShadowVolumeIntensityEnabled: 0
   m_ShadowVolumeIntensity: 0.75
   m_LocalBounds:
-    m_Center: {x: -0.022499979, y: -0.09165001, z: 0}
-    m_Extent: {x: 1.0932, y: 1.45855, z: 0}
+    m_Center: {x: -0.024399996, y: -0.08595002, z: 0}
+    m_Extent: {x: 1.0894, y: 1.46065, z: 0}
   m_PointLightInnerAngle: 360
   m_PointLightOuterAngle: 360
   m_PointLightInnerRadius: 0
@@ -13251,7 +13300,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 378628635142371938}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481071137}
+        m_TargetAssemblyTypeName: ActivateMazeGame, Assembly-CSharp
+        m_MethodName: LoadMazeMinigame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5253118875004023439
 GameObject:
   m_ObjectHideFlags: 0
