@@ -38,6 +38,9 @@ public class MazeGenerator : MonoBehaviour
     {
         cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
         mazeGrid = new MazeCell[_mazeWidth, _mazeHeight];
+        mazeSpeed = mazeSpeed / ((_mazeHeight * _mazeWidth) / (900f));
+        numberOfLoops = (int)(numberOfLoops * ((_mazeHeight * _mazeWidth) / 900f));
+
         for (int i = 0; i < _mazeWidth; i++)
         {
             for (int j = 0; j < _mazeHeight; j++)
@@ -187,7 +190,6 @@ public class MazeGenerator : MonoBehaviour
 
         shortestPath = new List<MazeCell>();
         MazeCell cell = exitCell;
-        MazeCell prevCell = null;
 
         while (cell != null)
         {
@@ -196,7 +198,6 @@ public class MazeGenerator : MonoBehaviour
 
             if (parentMap.ContainsKey(cell))
             {
-                prevCell = cell;
                 cell = parentMap[cell];
             }
             else
@@ -281,6 +282,7 @@ public class MazeGenerator : MonoBehaviour
             // For example:
             currentCell.SetDirection(imageHolder.Right);
         }
+        currentCell.DisableShortedBlock();
     }
 
     private IEnumerable<MazeCell> GetNeighborsWithNoWalls(MazeCell currentCell)

@@ -1,6 +1,7 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class CameraTransition : MonoBehaviour
 {
@@ -14,15 +15,18 @@ public class CameraTransition : MonoBehaviour
     private Vector3 initialCameraPosition;
     float newFOVSize;
     [SerializeField] private MazePlayerMovement player;
-    [SerializeField] private SpriteRenderer fogOfWar;
+    public Volume volume;
+    private Vignette vignette;
 
-    public float fogOfWarAlpha;
+    public Color initialBackgroundColor = Color.black;
+    public Color targetBackgroundColor = Color.blue;
 
     public bool canMove = false;
 
     private void Start()
     {
         mainCamera = GetComponent<Camera>();
+        volume.profile.TryGet(out vignette);
     }
 
     private void Update()
@@ -33,10 +37,13 @@ public class CameraTransition : MonoBehaviour
 
     public void SetCamera(int mazeWidth, int mazeHeight, int cellSize)
     {
-        initialCameraPosition = new Vector3(mazeWidth * cellSize / 2 - 5, mazeHeight * cellSize / 2 - 5, -20);
+        initialCameraPosition = new Vector3(mazeWidth * cellSize / 2 - 5, mazeHeight * cellSize / 2 - 2, -20);
         newFOVSize = (Mathf.Max(mazeHeight, mazeWidth) / 30.0f) * maxCameraFOV;
         mainCamera.transform.position = initialCameraPosition;
         mainCamera.orthographicSize = newFOVSize;
+
+        // Set the initial background color
+        mainCamera.backgroundColor = initialBackgroundColor;
     }
 
     public void StartZoomIn()
@@ -46,24 +53,22 @@ public class CameraTransition : MonoBehaviour
 
     private IEnumerator ZoomIn()
     {
+        yield return new WaitForSeconds(1f);
         float startTime = Time.time;
         float progress = 0;
-        float initialFogAlpha = fogOfWar.color.a;
 
         while (progress < 1)
         {
             progress = Mathf.Clamp01((Time.time - startTime) / transitionDuration);
 
-            // Use the animation curve to control the interpolation
             float curveValue = transitionCurve.Evaluate(progress);
 
-            // Smoothly interpolate the camera position and FOV
             mainCamera.transform.position = Vector3.Lerp(initialCameraPosition, new Vector3(playerTransform.position.x, playerTransform.position.y, -20), curveValue);
             mainCamera.orthographicSize = Mathf.Lerp(newFOVSize, targetCameraFov, curveValue);
 
-            Color fogColor = fogOfWar.color;
-            fogColor.a = Mathf.Lerp(initialFogAlpha, fogOfWarAlpha, curveValue);
-            fogOfWar.color = fogColor;
+            mainCamera.backgroundColor = Color.Lerp(initialBackgroundColor, targetBackgroundColor, curveValue);
+
+            vignette.intensity.value = Mathf.Lerp(0, 0.5f, curveValue);
 
             yield return null;
         }
