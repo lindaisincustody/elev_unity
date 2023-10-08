@@ -40,22 +40,36 @@ public class MazeCell : MonoBehaviour
         _backWall.SetActive(false);
     }
 
-    public void MarkAsExit()
+    public void MarkAsExit(int x, int y, MazeCell[,] mazeGrid)
     {
         _leftWall.SetActive(false);
         _rightWall.SetActive(false);
         _frontWall.SetActive(false);
         _backWall.SetActive(false);
+
+        mazeGrid[x - 1, y - 1]._backWall.SetActive(false);
+        mazeGrid[x - 1, y - 3]._frontWall.SetActive(false);
+        mazeGrid[x - 2, y - 2]._rightWall.SetActive(false);
     }
 
     public void DeleteRandomWall(int x, int y, MazeCell[,] mazeGrid)
     {
         // Create an array of walls to choose from
-        GameObject[] walls = { _leftWall, _rightWall, _frontWall, _backWall };
+        GameObject[] Allwalls = { _leftWall, _rightWall, _frontWall, _backWall };
+        List<GameObject> activeWalls = new List<GameObject>();
 
+        foreach (GameObject wall in Allwalls)
+        {
+            if (wall.activeSelf)
+            {
+                activeWalls.Add(wall);
+            }
+        }
+
+        // Convert the list to an array if necessary
+        GameObject[] walls = activeWalls.ToArray();
         // Shuffle the array randomly
         ShuffleArray(walls);
-
         // Disable the first wall in the shuffled array (randomly chosen)
         if (walls.Length > 0)
         {
@@ -64,26 +78,26 @@ public class MazeCell : MonoBehaviour
             if (walls[0] == _leftWall)
             {
                 // Disable the right wall of the left neighbor
-                if (mazeGrid[x, y - 1] != null)
-                    mazeGrid[x, y - 1]._rightWall.SetActive(false);
+                if (mazeGrid[x - 1, y] != null)
+                    mazeGrid[x - 1, y]._rightWall.SetActive(false);
             }
             else if (walls[0] == _rightWall)
             {
                 // Disable the left wall of the right neighbor
-                if (mazeGrid[x, y + 1] != null)
-                    mazeGrid[x, y + 1]._leftWall.SetActive(false);
+                if (mazeGrid[x + 1, y] != null)
+                    mazeGrid[x + 1, y]._leftWall.SetActive(false);
             }
             else if (walls[0] == _frontWall)
             {
                 // Disable the back wall of the front neighbor
-                if (mazeGrid[x - 1, y] != null)
-                    mazeGrid[x - 1, y]._backWall.SetActive(false);
+                if (mazeGrid[x, y + 1] != null)
+                    mazeGrid[x, y + 1]._backWall.SetActive(false);
             }
-            else if (walls[0] == _backWall)
+            else if (walls[0] == _backWall) 
             {
                 // Disable the front wall of the back neighbor
-                if (mazeGrid[x + 1, y] != null)
-                    mazeGrid[x + 1, y]._frontWall.SetActive(false);
+                if (mazeGrid[x, y - 1] != null)
+                    mazeGrid[x, y - 1]._frontWall.SetActive(false);
             }
         }
     }

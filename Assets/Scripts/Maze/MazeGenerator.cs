@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using NavMeshPlus.Components;
+using UnityEngine.Events;
 
 public class MazeGenerator : MonoBehaviour
 {
+    [SerializeField] NavMeshSurface navmesh;
+    [SerializeField] NavMeshCreator creator;
     [SerializeField] private CameraTransition cameraTransition;
     [SerializeField] private GameObject endPrefab;
 
@@ -17,13 +21,18 @@ public class MazeGenerator : MonoBehaviour
 
     [Header("Loops Parameters")]
     [SerializeField] private bool allowLoops = false;
-    [SerializeField] private int numberOfLoops = 5; // Set the number of loops you want
+    [SerializeField] private int numberOfSquaresForALoop = 5;
+
+    [Header("Enemy Parameters")]
+    [SerializeField] private int cellsPerEnemy = 5;
+    [SerializeField] private Enemy enemyPrefab;
 
     private int _mazeWidth;
     private int _mazeHeight;
     private MazeCell[,] mazeGrid;
     private int cellSize = 4;
     private List<MazeCell> shortestPath;
+    [System.NonSerialized] public UnityEvent OnMazeCompletion = new UnityEvent();
 
     private ImageHolder imageHolder;
 
@@ -37,15 +46,20 @@ public class MazeGenerator : MonoBehaviour
     private IEnumerator Start()
     {
         cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
+        creator.ResizeNavMesh(_mazeWidth * cellSize, _mazeHeight * cellSize);
         mazeGrid = new MazeCell[_mazeWidth, _mazeHeight];
         mazeSpeed = mazeSpeed / ((_mazeHeight * _mazeWidth) / (900f));
-        numberOfLoops = (int)(numberOfLoops * ((_mazeHeight * _mazeWidth) / 900f));
+        numberOfSquaresForALoop = (_mazeHeight * _mazeWidth)/numberOfSquaresForALoop;
 
         for (int i = 0; i < _mazeWidth; i++)
         {
             for (int j = 0; j < _mazeHeight; j++)
             {
                 MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                if ((j + 1) % cellsPerEnemy == 0 && (i + 1) % cellsPerEnemy == 0)
+                {
+                    Instantiate(enemyPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                }
                 mazeGrid[i, j] = newCell;
                 newCell.transform.parent = gameObject.transform;
             }
@@ -56,14 +70,16 @@ public class MazeGenerator : MonoBehaviour
         Instantiate(endPrefab, new Vector2(exitCell.transform.position.x + cellSize, exitCell.transform.position.y), Quaternion.identity);
 
         yield return GenerateMaze(null, mazeGrid[0, 0], exitCell); // Pass the exit cell
-
-        CalculateShortestPath(mazeGrid[0, 0], exitCell);
-        // Randomly delete walls to create loops only once
+                                                                   // Randomly delete walls to create loops only once
         if (allowLoops)
         {
             CreateLoops();
         }
+        CalculateShortestPath(mazeGrid[0, 0], exitCell);
+
         cameraTransition.StartZoomIn();
+        navmesh.BuildNavMeshAsync();
+        OnMazeCompletion?.Invoke();
     }
 
 
@@ -89,7 +105,7 @@ public class MazeGenerator : MonoBehaviour
         // Check if the current cell is the exit cell, and mark it as the exit
         if (currentCell == exitCell)
         {
-            currentCell.MarkAsExit();
+            currentCell.MarkAsExit(_mazeHeight, _mazeWidth, mazeGrid);
         }
     }
 
@@ -140,20 +156,14 @@ public class MazeGenerator : MonoBehaviour
     private void CreateLoops()
     {
         int loopsCreated = 0;
-
-        while (loopsCreated < numberOfLoops)
+        while (loopsCreated < numberOfSquaresForALoop)
         {
             int randomX = Random.Range(1, _mazeWidth - 1);
             int randomY = Random.Range(1, _mazeHeight - 1);
 
             var randomCell = mazeGrid[randomX, randomY];
-            //Debug.Log(mazeGrid[randomX, randomY]);
-            // Check if the cell is not on the edge of the maze
             if (randomCell != null)
             {
-                // Implement logic to delete a wall in a way that creates a loop
-                // For example, you can choose a random wall within the cell and delete it
-                // Be sure to update your MazeCell class to handle wall deletion
                 randomCell.DeleteRandomWall(randomX, randomY, mazeGrid);
                 loopsCreated++;
             }
@@ -211,7 +221,6 @@ public class MazeGenerator : MonoBehaviour
         {
             SetSpriteDirection(cells);
         }
-
     }
 
     private void SetSpriteDirection(MazeCell currentCell)
