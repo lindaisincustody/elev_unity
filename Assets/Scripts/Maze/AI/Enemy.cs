@@ -5,33 +5,34 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    MazeGenerator mazeGenerator;
-    Transform target;
-    NavMeshAgent agent;
-
-    private bool canFollow = false;
+    // Serialized Fields
     [SerializeField] private int triggerDistance;
-    [SerializeField] private float timerDuration; // Duration of the timer in seconds
+    [SerializeField] private float timerDuration;
     [SerializeField] private int travelTriggerDistance;
+    [SerializeField] private Gradient startGradient;
+    [SerializeField] private Gradient resetGradient;
+
+    // Components & References
+    private MazeGenerator mazeGenerator;
+    private Transform target;
+    private NavMeshAgent agent;
     private LineRenderer lineRenderer;
-    [SerializeField] private Gradient startGradient; // Gradient when timer starts
-    [SerializeField] private Gradient resetGradient; // Gradient when timer resets
+    private PathRenderer pathRenderer;
+    private GlitchController fullscreenShader;
 
-
-    private float currentTimer; // Current time on the timer
-    private bool timerRunning = false; // Flag to check if the timer is running
-
-    private bool isFadingGradient = false; // Flag to track whether gradient fading is in progress
-    private float fadeDuration = 2.0f;
-    private int fadeSteps = 60;
-
-    float distanceToTarget;
-    Coroutine coroutine;
+    // State Variables
+    private bool canFollow = false;
+    private bool timerRunning = false;
+    private bool caught = false;
+    private float currentTimer;
+    private float distanceToTarget;
     private float pathLength;
 
-    private float agentSpeed = 5;
-    private bool caught = false;
-    PathRenderer pathRenderer;
+    // Constants & Settings
+    private const int fadeSteps = 60;
+    private const float agentSpeed = 5f;
+    private const float caughtSpeed = 10f;
+    private Coroutine coroutine;
 
     private void Awake()
     {
@@ -39,6 +40,8 @@ public class Enemy : MonoBehaviour
         target = FindAnyObjectByType<MazePlayerMovement>().transform;
         lineRenderer = GetComponent<LineRenderer>();
         pathRenderer = GetComponent<PathRenderer>();
+
+        fullscreenShader = FindObjectOfType<GlitchController>();
     }
 
     void Start()
@@ -69,7 +72,6 @@ public class Enemy : MonoBehaviour
         canFollow = true;
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!canFollow)
@@ -151,50 +153,38 @@ public class Enemy : MonoBehaviour
             timerRunning = true;
 
             // Start the gradient fading coroutine
-            coroutine = StartCoroutine(FadeGradient(startGradient, resetGradient, fadeDuration));
+            coroutine = StartCoroutine(FadeGradient(startGradient, resetGradient, timerDuration));
         }
     }
 
     private void ResetTimer()
     {
+        if (!timerRunning)
+            return;
+
         timerRunning = false;
         currentTimer = 0f;
 
         if (coroutine != null)
-        StopCoroutine(coroutine);
-        lineRenderer.colorGradient = startGradient;
+            StopCoroutine(coroutine);
+        if (!caught)
+            lineRenderer.colorGradient = startGradient;
     }
 
     public static Gradient InterpolateGradients(Gradient startGradient, Gradient endGradient, float t)
     {
-        // Create a new gradient
         Gradient interpolatedGradient = new Gradient();
-
-        // Determine the number of color keys to interpolate (use the smaller count)
         int numColorKeys = Mathf.Min(startGradient.colorKeys.Length, endGradient.colorKeys.Length);
-
-        // Create arrays to hold the interpolated color keys
         GradientColorKey[] interpolatedColorKeys = new GradientColorKey[numColorKeys];
 
         for (int i = 0; i < numColorKeys; i++)
         {
-            GradientColorKey startColorKey = startGradient.colorKeys[i];
-            GradientColorKey endColorKey = endGradient.colorKeys[i];
-
-            // Interpolate the color
-            Color interpolatedColor = Color.Lerp(startColorKey.color, endColorKey.color, t);
-
-            // Interpolate the time value
-            float interpolatedTime = Mathf.Lerp(startColorKey.time, endColorKey.time, t);
-
-            // Create the interpolated color key
+            Color interpolatedColor = Color.Lerp(startGradient.colorKeys[i].color, endGradient.colorKeys[i].color, t);
+            float interpolatedTime = Mathf.Lerp(startGradient.colorKeys[i].time, endGradient.colorKeys[i].time, t);
             interpolatedColorKeys[i] = new GradientColorKey(interpolatedColor, interpolatedTime);
         }
 
-        // Set the color keys of the interpolated gradient
         interpolatedGradient.colorKeys = interpolatedColorKeys;
-
-        // Return the interpolated gradient
         return interpolatedGradient;
     }
 
@@ -203,32 +193,34 @@ public class Enemy : MonoBehaviour
     {
         if (lineRenderer != null)
         {
-            float elapsed = 0f;
-
             for (int step = 0; step < fadeSteps; step++)
             {
                 float t = step / (float)fadeSteps;
 
-                // Interpolate the gradients
                 Gradient interpolatedGradient = InterpolateGradients(startGradient, endGradient, t);
                 lineRenderer.colorGradient = interpolatedGradient;
 
-                // Wait for a fraction of the duration
                 yield return new WaitForSeconds(duration / fadeSteps);
             }
-
-            // Ensure the gradient is set to the target gradient when the fading is complete
             lineRenderer.colorGradient = endGradient;
         }
-
-        isFadingGradient = false;
     }
 
     private void CallMethodWhenTimerEnds()
     {
-        Debug.Log("Caught");
+        agent.speed = caughtSpeed;
         caught = true;
         StopCoroutine(coroutine);
         lineRenderer.colorGradient = resetGradient;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            fullscreenShader.TriggerCaughtShader();
+            mazeGenerator.DeactivateShortestPath();
+            Destroy(gameObject);
+        }
     }
 }

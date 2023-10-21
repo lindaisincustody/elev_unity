@@ -17,4 +17,5 @@ public class ImageHolder : MonoBehaviour
     public Sprite DownLeft;
     public Sprite UpRight;
     public Sprite UpLeft;
+    public Sprite CIrcle;
 }

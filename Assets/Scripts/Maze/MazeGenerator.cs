@@ -26,6 +26,7 @@ public class MazeGenerator : MonoBehaviour
     [Header("Enemy Parameters")]
     [SerializeField] private int cellsPerEnemy = 5;
     [SerializeField] private Enemy enemyPrefab;
+    [SerializeField] private PathConsumable pathConsumable;
 
     private int _mazeWidth;
     private int _mazeHeight;
@@ -35,6 +36,7 @@ public class MazeGenerator : MonoBehaviour
     [System.NonSerialized] public UnityEvent OnMazeCompletion = new UnityEvent();
 
     private ImageHolder imageHolder;
+    private float timer = 0.0f;
 
     private void Awake()
     {
@@ -59,6 +61,7 @@ public class MazeGenerator : MonoBehaviour
                 if ((j + 1) % cellsPerEnemy == 0 && (i + 1) % cellsPerEnemy == 0)
                 {
                     Instantiate(enemyPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                    Instantiate(pathConsumable, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
                 }
                 mazeGrid[i, j] = newCell;
                 newCell.transform.parent = gameObject.transform;
@@ -82,6 +85,20 @@ public class MazeGenerator : MonoBehaviour
         OnMazeCompletion?.Invoke();
     }
 
+    private void Update()
+    {
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+
+            // If the timer reaches zero or below, deactivate the path
+            if (timer <= 0)
+            {
+                timer = 0; // Reset timer to 0 for safety
+                DeactivateShortestPath();
+            }
+        }
+    }
 
     private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell, MazeCell exitCell)
     {
@@ -105,7 +122,7 @@ public class MazeGenerator : MonoBehaviour
         // Check if the current cell is the exit cell, and mark it as the exit
         if (currentCell == exitCell)
         {
-            currentCell.MarkAsExit(_mazeHeight, _mazeWidth, mazeGrid);
+            currentCell.MarkAsExit(_mazeWidth, _mazeHeight, mazeGrid);
         }
     }
 
@@ -289,7 +306,7 @@ public class MazeGenerator : MonoBehaviour
             // Handle cases where there are no previous or next cells (start or end of path)
             // Set a default direction or use logic based on your requirements
             // For example:
-            currentCell.SetDirection(imageHolder.Right);
+            currentCell.SetDirection(imageHolder.CIrcle);
         }
         currentCell.DisableShortedBlock();
     }
@@ -365,7 +382,13 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    public void ActivateShortestPath()
+    public void Activate(float addedTime)
+    {
+        timer += addedTime;
+        ActivateShortestPath();
+    }
+
+    private void ActivateShortestPath()
     {
         foreach (MazeCell cell in shortestPath)
         {

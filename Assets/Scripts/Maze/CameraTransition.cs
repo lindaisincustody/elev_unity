@@ -15,8 +15,6 @@ public class CameraTransition : MonoBehaviour
     private Vector3 initialCameraPosition;
     float newFOVSize;
     [SerializeField] private MazePlayerMovement player;
-    public Volume volume;
-    private Vignette vignette;
 
     public Color initialBackgroundColor = Color.black;
     public Color targetBackgroundColor = Color.blue;
@@ -26,7 +24,6 @@ public class CameraTransition : MonoBehaviour
     private void Start()
     {
         mainCamera = GetComponent<Camera>();
-        volume.profile.TryGet(out vignette);
     }
 
     private void Update()
@@ -67,8 +64,6 @@ public class CameraTransition : MonoBehaviour
             mainCamera.orthographicSize = Mathf.Lerp(newFOVSize, targetCameraFov, curveValue);
 
             mainCamera.backgroundColor = Color.Lerp(initialBackgroundColor, targetBackgroundColor, curveValue);
-
-            vignette.intensity.value = Mathf.Lerp(0, 0.5f, curveValue);
 
             yield return null;
         }

@@ -72,7 +72,7 @@ public class MazePlayerMovement : MonoBehaviour
 
     private void ActivateShortestPath()
     {
-        mazeGenerator.ActivateShortestPath();
+        mazeGenerator.Activate(10);
     }
 
     private void DeactivateShortestPath()
