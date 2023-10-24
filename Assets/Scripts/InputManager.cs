@@ -8,6 +8,7 @@ public class InputManager : MonoBehaviour
 {
     public event Action OnInteract = delegate { };
     public event Action OnCancel   = delegate { };
+    public event Action OnBoost =    delegate { };
 
     public Vector2 inputVector { get; private set; }
 
@@ -23,6 +24,7 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.Player.Interact.performed += Interact;
         inputActions.Player.Cancel.performed   += Cancel;
+        inputActions.Player.Boost.performed    += Boost;
     }
 
     private void OnDisable()
@@ -48,6 +50,14 @@ public class InputManager : MonoBehaviour
         if (context.performed)
         {
             OnCancel();
+        }
+    }
+
+    private void Boost(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnBoost();
         }
     }
 }
