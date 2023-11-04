@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f124e6ce2cd06784483e3499c6f825f9, type: 3}
+  m_Name: Test2WordData
+  m_EditorClassIdentifier: 
+  Poem: After _______ defeatomg the monster
+  words:
+  - word: brutally
+    strengthWeight: 0
+    intelligenceWeight: 0.519
+    coordinationWeight: 0.776
+    neutralWeight: 0
+  - word: sadly
+    strengthWeight: 0
+    intelligenceWeight: 0.142
+    coordinationWeight: 0
+    neutralWeight: 0.625
+  - word: fearfully
+    strengthWeight: 0
+    intelligenceWeight: 0.389
+    coordinationWeight: 0
+    neutralWeight: 0.315
+  - word: nervously
+    strengthWeight: 0
+    intelligenceWeight: 0
+    coordinationWeight: 0
+    neutralWeight: 0.787
+  - word: suddenly
+    strengthWeight: 0
+    intelligenceWeight: 0.199
+    coordinationWeight: 0.708
+    neutralWeight: 0
+  - word: bravely
+    strengthWeight: 0.718
+    intelligenceWeight: 0.44
+    coordinationWeight: 0.277
+    neutralWeight: 0
+  - word: hesitantly
+    strengthWeight: 0
+    intelligenceWeight: 0
+    coordinationWeight: 0
+    neutralWeight: 0.503
+  - word: curiously
+    strengthWeight: 0
+    intelligenceWeight: 0.655
+    coordinationWeight: 0
+    neutralWeight: 0.351
+  - word: startled
+    strengthWeight: 0
+    intelligenceWeight: 0
+    coordinationWeight: 0
+    neutralWeight: 0.671

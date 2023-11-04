@@ -19,9 +19,15 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private GameObject hero;
     [SerializeField] private SkillTree skillTree;
     [SerializeField] private AttributesDisplayer displayer;
+    public AnimationCurve bookAnimationCurve;
+    public float bookAnimationDuration = 1.0f;
+
+    private RectTransform bookMover;
+    private int bookOffscreenPositionY = -1500;
 
     public Attributes heroAttributes;
     private int numberOfPoems;
+    private bool _canBeTriggered = true;
 
     // Start is called before the first frame update
     void Start()
@@ -29,12 +35,49 @@ public class PoemMenuController : MonoBehaviour
         numberOfPoems = FindObjectsOfType<PoemTrigger>().Length;
         heroAttributes = hero.GetComponent<Attributes>();
         instance = this;
+        bookMover = bookPanel.GetComponent<RectTransform>();
+
     }
 
     public void OpenPoemBook(WordData wordsData)
     {
-        bookPanel.SetActive(true);
+        if (!_canBeTriggered)
+            return;
+        _canBeTriggered = false;
+
         wordFiller.FillWords(wordsData);
+        bookPanel.SetActive(true);
+        bookMover.anchoredPosition = new Vector3(0, bookOffscreenPositionY, 0);
+        StartCoroutine(MoveFromTo(new Vector3(0, bookOffscreenPositionY, 0), Vector3.zero, bookAnimationDuration));
+    }
+
+    public void ClosePoemBook()
+    {
+        StartCoroutine(MoveFromTo(Vector3.zero, new Vector3(0, bookOffscreenPositionY, 0), bookAnimationDuration));
+        StartCoroutine(ClosePoemBookDelay());
+    }
+
+    IEnumerator MoveFromTo(Vector2 pointA, Vector2 pointB, float duration)
+    {
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            float fractionOfJourney = bookAnimationCurve.Evaluate(elapsedTime / duration);
+            bookMover.anchoredPosition = Vector2.Lerp(pointA, pointB, fractionOfJourney);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        bookMover.anchoredPosition = pointB;
+    }
+
+
+    private IEnumerator ClosePoemBookDelay()
+    {
+        yield return new WaitForSeconds(4f);
+        _canBeTriggered = true;
+        bookPanel.SetActive(false);
     }
 
     public void UpdateAttributes(Word wordData)
@@ -44,7 +87,6 @@ public class PoemMenuController : MonoBehaviour
         heroAttributes.heroCoordination += wordData.coordinationWeight;
         heroAttributes.heroNeutrality += wordData.neutralWeight;
         displayer.UpdateText();
-        bookPanel.SetActive(false);
     }
 
     public void ShowFightOptions()
