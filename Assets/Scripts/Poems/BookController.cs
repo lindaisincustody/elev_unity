@@ -55,19 +55,20 @@ public class BookController : MonoBehaviour
         }
     }
 
-    public void InitiateClosingBook()
+    public void InitiateClosingBook(GameObject objectToDisable)
     {
         PoemMenuController.instance.ClosePoemBook();
-        StartCoroutine(CloseBookDelay());
+        StartCoroutine(CloseBookDelay(objectToDisable));
     }
 
-    private IEnumerator CloseBookDelay()
+    private IEnumerator CloseBookDelay(GameObject objectToDisable)
     {
         yield return new WaitForSeconds(2f);
         wordFiller.firstPoem = false;
         book.interactable = true;
         wordsWereShown = false;
         HidePoemAndWords();
+        objectToDisable.SetActive(false);
         bookFlipper.OpenFirstPage();
     }
 }

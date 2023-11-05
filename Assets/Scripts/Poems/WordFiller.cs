@@ -8,6 +8,7 @@ public class WordFiller : MonoBehaviour
 {
     public GameObject OldPoem;
     public GameObject OldWords;
+    public WritingEffect writingEffect;
     public TextMeshProUGUI[] wordText;
     [SerializeField] private TextMeshProUGUI poemText;
 
@@ -47,6 +48,18 @@ public class WordFiller : MonoBehaviour
     public void ChooseWord(int wordIndex)
     {
         PoemMenuController.instance.UpdateAttributes(wordDataHolder.words[wordIndex]);
-        bookController.InitiateClosingBook();
+        writingEffect.gameObject.SetActive(true);
+        writingEffect.StartEffect(wordDataHolder.words[wordIndex].word, this);
+    }
+
+    public void StartClosingBook()
+    {
+        StartCoroutine(ClosingBookDelay());
+    }
+
+    private IEnumerator ClosingBookDelay()
+    {
+        yield return new WaitForSeconds(2f);
+        bookController.InitiateClosingBook(writingEffect.gameObject);
     }
 }
