@@ -7,12 +7,11 @@ using UnityEngine.UI;
 public class WordFiller : MonoBehaviour
 {
     public GameObject OldPoem;
-    public GameObject OldWords;
+    public GameObject OldChosenWord;
     public WritingEffect writingEffect;
     public TextMeshProUGUI[] wordText;
     [SerializeField] private TextMeshProUGUI poemText;
 
-    public TextMeshProUGUI[] OldWordText;
     [SerializeField] private TextMeshProUGUI OldpoemText;
 
     private WordData wordDataHolder;
@@ -29,12 +28,8 @@ public class WordFiller : MonoBehaviour
         if (!firstPoem)
         {
             OldpoemText.text = poemText.text;
-            for (int i = 0; i < 9; i++)
-            {
-                OldWordText[i].text = wordText[i].text;
-            }
             OldPoem.SetActive(true);
-            OldWords.SetActive(true);
+            OldChosenWord.SetActive(true);
         }
 
         wordDataHolder = wordData;
@@ -48,6 +43,8 @@ public class WordFiller : MonoBehaviour
     public void ChooseWord(int wordIndex)
     {
         PoemMenuController.instance.UpdateAttributes(wordDataHolder.words[wordIndex]);
+        OldChosenWord.GetComponent<TextMeshProUGUI>().text = wordDataHolder.words[wordIndex].word;
+        OldChosenWord.GetComponent<RectTransform>().anchoredPosition = writingEffect.gameObject.GetComponent<RectTransform>().anchoredPosition - new Vector2(21.6f, 0);
         writingEffect.gameObject.SetActive(true);
         writingEffect.StartEffect(wordDataHolder.words[wordIndex].word, this);
     }
