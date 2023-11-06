@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BookController : MonoBehaviour
 {
     public GameObject OldPoem;
-    public GameObject OldWords;
+    public GameObject OldChosenWord;
     public WordFiller wordFiller;
     [SerializeField] private GameObject poemObj;
     [SerializeField] private GameObject wordsHolder;
@@ -42,7 +42,7 @@ public class BookController : MonoBehaviour
         if (!OldPoem.activeSelf && !wordFiller.firstPoem)
         {
             OldPoem.SetActive(true);
-            OldWords.SetActive(true);
+            OldChosenWord.SetActive(true);
         }
     }
 
@@ -51,7 +51,7 @@ public class BookController : MonoBehaviour
         if (OldPoem.activeSelf)
         {
             OldPoem.SetActive(false);
-            OldWords.SetActive(false);
+            OldChosenWord.SetActive(false);
         }
     }
 
