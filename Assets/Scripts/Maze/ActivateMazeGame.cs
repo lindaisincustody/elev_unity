@@ -12,6 +12,8 @@ public class ActivateMazeGame : MonoBehaviour
     [Range(4, 30)]
     public int MaxMazeWidth;
 
+    public DataManager dataManager;
+
     public void LoadMazeMinigame()
     {
         mazeData.MazeHeight = (int)(attributes.heroCoordination / attributes.numberOfPoems * MaxMazeHeight);
@@ -20,6 +22,17 @@ public class ActivateMazeGame : MonoBehaviour
             mazeData.MazeHeight = 5;
         if (mazeData.MazeWidth < 5)
             mazeData.MazeWidth = 5;
-        SceneManager.LoadScene("Maze");
+
+        dataManager.SavePlayerPosition(() =>
+        {
+            LoadNewScene("Maze");
+        });
+        // Call this after saving
+        LoadNewScene("Maze");
+    }
+
+    public void LoadNewScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 }

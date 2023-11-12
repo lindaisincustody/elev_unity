@@ -3,48 +3,57 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-public class WritingEffect : MonoBehaviour
+public class SelectedWordWritingEffect : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI wordHolder;
     [SerializeField] private RectTransform highlightImage;
     [SerializeField] private RectTransform text;
     [SerializeField] private float speed = 2.0f;
+    [SerializeField] private ParticleMask particleMask;
     private RectTransform effect;
     private float EffectInitialPosition;
-
-    private float textOffscreenPositionX = 184.5f;
 
     private void Start()
     {
         effect = GetComponent<RectTransform>();
         EffectInitialPosition = effect.anchoredPosition.x;
-        gameObject.SetActive(false);
     }
 
-    public void StartEffect(string word, WordFiller caller)
+    private void OnEnable()
     {
-        wordHolder.text = word;
-        effect.anchoredPosition -= new Vector2(textOffscreenPositionX, 0);
-        text.anchoredPosition = new Vector3(textOffscreenPositionX, 0, 0);
-        StartCoroutine(MoveElementsCoroutine(caller));
+        particleMask.calculateDuration(wordHolder.text);
+    }
+
+    public void SelectedWordEffect()
+    {
+        highlightImage.gameObject.SetActive(true);
+        StartCoroutine(MoveSelectedElementsCoroutine());
     }
 
     private IEnumerator ResetEffect()
     {
         yield return new WaitForSeconds(3f);
-        text.anchoredPosition = new Vector2(0, text.anchoredPosition.y);
+        Debug.Log(text.anchoredPosition.y);
+        float originalLeft = 0f;
+        float originalRight = 40f;
+        float originalTop = 20f;
+        float originalBottom = -20f;
+
+        // Set the offset values directly
+        text.offsetMin = new Vector2(originalLeft, originalBottom);
+        text.offsetMax = new Vector2(originalRight, originalTop);
         highlightImage.anchoredPosition = new Vector2(0, highlightImage.anchoredPosition.y);
         effect.anchoredPosition = new Vector2(EffectInitialPosition, effect.anchoredPosition.y);
+        highlightImage.gameObject.SetActive(false);
     }
 
-    private IEnumerator MoveElementsCoroutine(WordFiller caller)
+    private IEnumerator MoveSelectedElementsCoroutine()
     {
         while (true)
         {
-            if (text.anchoredPosition.x < 0.001f)
+            if (text.anchoredPosition.x < -200)
             {
                 StartCoroutine(ResetEffect());
-                caller.StartClosingBook();
                 yield break;
             }
             highlightImage.anchoredPosition += new Vector2(speed * Time.deltaTime, 0);
