@@ -9,6 +9,8 @@ public class WordFiller : MonoBehaviour
     public GameObject OldPoem;
     public GameObject OldChosenWord;
     public WritingEffect writingEffect;
+    public ParticleMask particleMask;
+    public Button[] wordButton;
     public TextMeshProUGUI[] wordText;
     [SerializeField] private TextMeshProUGUI poemText;
 
@@ -16,11 +18,13 @@ public class WordFiller : MonoBehaviour
 
     private WordData wordDataHolder;
     private BookController bookController;
+    private WordsListEffect wordsEffector;
     public bool firstPoem = true;
 
     private void Awake()
     {
         bookController = GetComponentInParent<BookController>();
+        wordsEffector = GetComponentInParent<WordsListEffect>();
     }
 
     public void FillWords(WordData wordData)
@@ -38,14 +42,25 @@ public class WordFiller : MonoBehaviour
         {
             wordText[i].text = wordData.words[i].word;
         }
+
+        foreach (Button btn in wordButton)
+        {
+            btn.interactable = true;
+        }
     }
 
     public void ChooseWord(int wordIndex)
     {
+        foreach (Button btn in wordButton)
+        {
+            btn.interactable = false;
+        }
         PoemMenuController.instance.UpdateAttributes(wordDataHolder.words[wordIndex]);
         OldChosenWord.GetComponent<TextMeshProUGUI>().text = wordDataHolder.words[wordIndex].word;
         OldChosenWord.GetComponent<RectTransform>().anchoredPosition = writingEffect.gameObject.GetComponent<RectTransform>().anchoredPosition - new Vector2(21.6f, 0);
+        particleMask.calculateDuration(wordDataHolder.words[wordIndex].word);
         writingEffect.gameObject.SetActive(true);
+        wordsEffector.FadeOutAllExcept(wordIndex);
         writingEffect.StartEffect(wordDataHolder.words[wordIndex].word, this);
     }
 

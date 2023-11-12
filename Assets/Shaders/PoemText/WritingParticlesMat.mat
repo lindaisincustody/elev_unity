@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: WritingParticlesMat
-  m_Shader: {fileID: -6465566751694194690, guid: 2fb5e49c786c4a348bdfc873c4013da2, type: 3}
+  m_Shader: {fileID: 4800000, guid: 3a321e4d37fc54f4fbba3090f71b2333, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -53,9 +53,20 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AlphaClip: 0
+    - _AlphaToMask: 0
+    - _Blend: 0
+    - _CastShadows: 1
+    - _Cull: 2
+    - _DstBlend: 0
     - _EnableExternalAlpha: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _SrcBlend: 1
+    - _Surface: 0
+    - _ZTest: 4
+    - _ZWrite: 1
+    - _ZWriteControl: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
