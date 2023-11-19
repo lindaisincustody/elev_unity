@@ -9,11 +9,5 @@ public class Attributes : MonoBehaviour
     [System.NonSerialized] public float heroCoordination = 0;
     [System.NonSerialized] public float heroNeutrality = 0;
 
-    public int numberOfPoems;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        numberOfPoems = FindObjectsOfType<PoemTrigger>().Length;
-    }
+    [System.NonSerialized] public int numberOfPoems = 2;
 }

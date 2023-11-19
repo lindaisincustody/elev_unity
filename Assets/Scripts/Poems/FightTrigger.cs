@@ -11,4 +11,12 @@ public class FightTrigger : MonoBehaviour
             PoemMenuController.instance.ShowFightOptions();
         }
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Player"))
+        {
+            PoemMenuController.instance.HideFightOptions();
+        }
+    }
 }

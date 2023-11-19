@@ -8,6 +8,7 @@ public class PathConsumable : MonoBehaviour
     private MazeGenerator mazeGenerator;
     private BoxCollider2D collider2D;
     private SpriteRenderer renderer;
+    private GameObject effect;
 
     // Start is called before the first frame update
     void Start()
@@ -15,6 +16,7 @@ public class PathConsumable : MonoBehaviour
         mazeGenerator = FindFirstObjectByType<MazeGenerator>();
         collider2D = GetComponent<BoxCollider2D>();
         renderer = GetComponent<SpriteRenderer>();
+        effect = transform.GetChild(0).gameObject;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -24,6 +26,7 @@ public class PathConsumable : MonoBehaviour
             mazeGenerator.Activate(showPathTime);
             collider2D.enabled = false;
             renderer.enabled = false;
+            effect.SetActive(false);
         }
     }
 }
