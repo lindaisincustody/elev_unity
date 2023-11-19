@@ -60,7 +60,7 @@ public class MazeGenerator : MonoBehaviour
                 MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
                 if ((j + 1) % cellsPerEnemy == 0 && (i + 1) % cellsPerEnemy == 0)
                 {
-                    Instantiate(enemyPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                    Instantiate(enemyPrefab, new Vector2((i - 1) * cellSize, j * cellSize), Quaternion.identity);
                     Instantiate(pathConsumable, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
                 }
                 mazeGrid[i, j] = newCell;
