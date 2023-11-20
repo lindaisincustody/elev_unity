@@ -4742,7 +4742,7 @@ MonoBehaviour:
   mazeData: {fileID: 11400000, guid: e6f34c279a472514795a389a79e08e96, type: 2}
   MaxMazeHeight: 30
   MaxMazeWidth: 15
-  dataManager: {fileID: 0}
+  dataManager: {fileID: 967555239}
 --- !u!4 &481071138
 Transform:
   m_ObjectHideFlags: 0
@@ -15282,7 +15282,7 @@ Transform:
   m_GameObject: {fileID: 1794075888}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1, y: -2.37, z: 0}
+  m_LocalPosition: {x: 0.9, y: -2.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
