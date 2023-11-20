@@ -8,6 +8,10 @@ TagManager:
   - Consumable
   - Pin
   - HollowCircle
+  - LeftZone
+  - RightZone
+  - Heart
+  - Projectile
   layers:
   - Default
   - TransparentFX

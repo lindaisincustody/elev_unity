@@ -94,4 +94,9 @@ public class PoemMenuController : MonoBehaviour
         skillTree.UpdateSkilltree(numberOfPoems);
         skilltreePanel.SetActive(true);
     }
+
+    public void HideFightOptions()
+    {
+        skilltreePanel.SetActive(false);
+    }
 }
