@@ -30,6 +30,11 @@ public class GlitchController : MonoBehaviour
     private bool isGlitching = false;
     private Coroutine stopCoroutine;
 
+    private void Start()
+    {
+        StartCoroutine(StopGlitch());
+    }
+
     private IEnumerator StartGlitch()
     {
         if (stopCoroutine != null)

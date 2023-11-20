@@ -147,7 +147,6 @@ public class Book : MonoBehaviour {
     }
     public void UpdateBook()
     {
-        bookController.HideOldPoem();
         f = Vector3.Lerp(f, transformPoint(Input.mousePosition), Time.deltaTime * 10);
         if (mode == FlipMode.RightToLeft)
             UpdateBookRTLToPoint(f);

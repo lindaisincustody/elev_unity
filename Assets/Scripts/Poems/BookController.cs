@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class BookController : MonoBehaviour
 {
     public GameObject OldPoem;
-    public GameObject OldWords;
+    public GameObject OldChosenWord;
     public WordFiller wordFiller;
     [SerializeField] private GameObject poemObj;
     [SerializeField] private GameObject wordsHolder;
@@ -42,7 +42,7 @@ public class BookController : MonoBehaviour
         if (!OldPoem.activeSelf && !wordFiller.firstPoem)
         {
             OldPoem.SetActive(true);
-            OldWords.SetActive(true);
+            OldChosenWord.SetActive(true);
         }
     }
 
@@ -51,23 +51,24 @@ public class BookController : MonoBehaviour
         if (OldPoem.activeSelf)
         {
             OldPoem.SetActive(false);
-            OldWords.SetActive(false);
+            OldChosenWord.SetActive(false);
         }
     }
 
-    public void InitiateClosingBook()
+    public void InitiateClosingBook(GameObject objectToDisable)
     {
         PoemMenuController.instance.ClosePoemBook();
-        StartCoroutine(CloseBookDelay());
+        StartCoroutine(CloseBookDelay(objectToDisable));
     }
 
-    private IEnumerator CloseBookDelay()
+    private IEnumerator CloseBookDelay(GameObject objectToDisable)
     {
         yield return new WaitForSeconds(2f);
         wordFiller.firstPoem = false;
         book.interactable = true;
         wordsWereShown = false;
         HidePoemAndWords();
+        objectToDisable.SetActive(false);
         bookFlipper.OpenFirstPage();
     }
 }
