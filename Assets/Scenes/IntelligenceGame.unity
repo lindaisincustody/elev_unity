@@ -136,9 +136,9 @@ GameObject:
   - component: {fileID: 640669616}
   - component: {fileID: 640669615}
   - component: {fileID: 640669621}
-  - component: {fileID: 640669619}
   - component: {fileID: 640669620}
   - component: {fileID: 640669622}
+  - component: {fileID: 640669623}
   m_Layer: 0
   m_Name: BattlePlayer
   m_TagString: Player
@@ -279,27 +279,12 @@ Transform:
   m_GameObject: {fileID: 640669614}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.7264, y: -1.5878, z: 0.60663134}
+  m_LocalPosition: {x: -4, y: -3, z: 0.60663134}
   m_LocalScale: {x: 5.0957465, y: 5.0957465, z: 5.0957465}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &640669619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640669614}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a78bc07dd70983d43bac902a2faa12ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 5
-  rb: {fileID: 640669615}
-  animator: {fileID: 640669621}
 --- !u!114 &640669620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -347,6 +332,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xSprite: {fileID: 21300000, guid: f96209a668b67104091de3f9091f900d, type: 3}
   oSprite: {fileID: 21300000, guid: 038131b72547ab64695af19d1ce548c5, type: 3}
+--- !u!114 &640669623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640669614}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa68c46330aab93409674aee53f480f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeedIntelli: 3
+  rbIntelli: {fileID: 640669615}
+  animatorIntelli: {fileID: 640669621}
 --- !u!1 &1892311292
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +405,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -10
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -446,8 +446,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   xPrefab: {fileID: 5159161822446504540, guid: bbc0d974dcd43e347b4f913ff618696b, type: 3}
   oPrefab: {fileID: 796316832953534658, guid: f67bd297b05040b4da52a83c8712a29b, type: 3}
-  gridSizeX: 3
-  gridSizeY: 3
+  correctDestinationSprite: {fileID: 21300000, guid: 739b168a7e22a324983fb66ebb34c457, type: 3}
+  gridSizeX: 10
+  gridSizeY: 10
 --- !u!1 &2010127801
 GameObject:
   m_ObjectHideFlags: 0

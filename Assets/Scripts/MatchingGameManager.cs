@@ -1,70 +1,365 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameController : MonoBehaviour
 {
     public GameObject xPrefab;
     public GameObject oPrefab;
+    public Sprite correctDestinationSprite;
     public int gridSizeX = 3;
     public int gridSizeY = 3;
+    private int numberOfLevels = 20; // Start with level 1
 
     private GameObject[,] grid;
+    private List<Vector2Int> oPositions;
+    private Vector2Int correctDestination;
 
-    // Define a list of positions representing the path the player should take
-    private Vector2Int[] path = { new Vector2Int(0, 0), new Vector2Int(1, 1), new Vector2Int(2, 2), new Vector2Int(2, 1) };
 
     void Start()
     {
-        InitializeGrid();
+        GenerateLevel();
     }
 
-    void InitializeGrid()
+    void GenerateLevel()
     {
-        grid = new GameObject[gridSizeX, gridSizeY];
+        bool solvableLevelGenerated = false;
 
-        for (int i = 0; i < path.Length; i++)
+        while (!solvableLevelGenerated)
         {
-            int x = path[i].x;
-            int y = path[i].y;
+            GenerateOPositions();
 
-            // Instantiate O prefabs at positions defined by the path
-            GameObject obj = Instantiate(oPrefab, new Vector3(x, y, 0), Quaternion.identity);
-            grid[x, y] = obj;
+            solvableLevelGenerated = IsSolvable();
         }
+    }
+
+    void GenerateOPositions()
+    {
+        oPositions = new List<Vector2Int>();
+        Vector2Int playerStartPosition = new Vector2Int(0, 0);
+        oPositions.Add(playerStartPosition);
+
+        bool destinationFound = false;
+
+        // Attempt to find solvable level with a valid destination
+        while (!destinationFound)
+        {
+            // Generate positions for O's using recursive backtracking
+            for (int i = 1; i <= numberOfLevels; i++)
+            {
+                Vector2Int previousPosition = oPositions[i - 1];
+                Vector2Int nextPosition = GenerateNextPosition(previousPosition);
+                oPositions.Add(nextPosition);
+            }
+
+            // Randomly select one O position as the correct destination
+            correctDestination = oPositions[oPositions.Count - 1];
+
+            // Check if the correct destination is reachable and the level is solvable
+            if (CanReachDestination(playerStartPosition, correctDestination) && IsSolvable())
+            {
+                destinationFound = true;
+
+                // Draw the solvable path for visualization
+                DrawSolvablePath(oPositions);
+            }
+            else
+            {
+                // If the level is not solvable, reset positions and try again
+                oPositions.Clear();
+                oPositions.Add(playerStartPosition);
+            }
+        }
+
+        // Instantiate O prefabs at generated positions
+        foreach (Vector2Int position in oPositions)
+        {
+            GameObject oObject = Instantiate(oPrefab, new Vector3(position.x - 4, position.y - 3, 0), Quaternion.identity);
+
+            // Change the sprite of the correct destination
+            if (position == correctDestination)
+            {
+                oObject.GetComponent<SpriteRenderer>().sprite = correctDestinationSprite;
+            }
+        }
+    }
+    Vector2Int GenerateNextPosition(Vector2Int currentPosition)
+    {
+        List<Vector2Int> validNeighbors = GetValidNeighbors(currentPosition);
+        ShuffleList(validNeighbors);
+
+        foreach (Vector2Int neighbor in validNeighbors)
+        {
+            if (!oPositions.Contains(neighbor))
+            {
+                return neighbor;
+            }
+        }
+
+        // If no valid neighbor is found, return the current position
+        return currentPosition;
+    }
+
+    List<Vector2Int> GetValidNeighbors(Vector2Int position)
+    {
+        List<Vector2Int> neighbors = new List<Vector2Int>
+        {
+            new Vector2Int(position.x + 2, position.y),
+            new Vector2Int(position.x - 2, position.y),
+            new Vector2Int(position.x, position.y + 2),
+            new Vector2Int(position.x, position.y - 2)
+        };
+
+        // Filter out positions that are out of bounds or have already been used
+        return neighbors.Where(pos => IsValidPosition(pos)).ToList();
+    }
+
+    void ShuffleList<T>(List<T> list)
+    {
+        int n = list.Count;
+        while (n > 1)
+        {
+            n--;
+            int k = Random.Range(0, n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
+    }
+
+    Vector2Int GenerateAdjacentPosition(Vector2Int previousPosition)
+    {
+        // Generate a list of adjacent positions
+        List<Vector2Int> adjacentPositions = new List<Vector2Int>
+    {
+        new Vector2Int(previousPosition.x + 1, previousPosition.y),
+        new Vector2Int(previousPosition.x - 1, previousPosition.y),
+        new Vector2Int(previousPosition.x, previousPosition.y + 1),
+        new Vector2Int(previousPosition.x, previousPosition.y - 1)
+    };
+
+        // Filter out positions that are out of bounds or already used
+        List<Vector2Int> validAdjacentPositions = adjacentPositions
+            .Where(pos => IsValidPosition(pos) && !oPositions.Contains(pos))
+            .ToList();
+
+        // Randomly choose one of the valid adjacent positions
+        return validAdjacentPositions[Random.Range(0, validAdjacentPositions.Count)];
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) // Adjust the condition as needed
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             CheckWinCondition();
         }
+        Debug.Log(correctDestination);
     }
 
     void CheckWinCondition()
     {
-        bool allX = true;
-
-        for (int i = 0; i < path.Length; i++)
+        IntelligencePlayerController playerController = FindObjectOfType<IntelligencePlayerController>();
+        Vector2Int playerPosition = playerController.GetCurrentPosition();
+        Vector2Int adjustedDestination = new Vector2Int(correctDestination.x - 4, correctDestination.y - 3);
+        // Check if the player is on the correct destination
+        if (playerPosition == adjustedDestination)
         {
-            int x = path[i].x;
-            int y = path[i].y;
+            Debug.Log("You won! Reached the correct destination: " + correctDestination);
+            numberOfLevels++;
+            GenerateLevel(); // Generate the next level
+        }
+        else
+        {
+            Debug.Log("You reached the wrong destination or not all O's turned into X. Try again!");
+        }
+    }
 
-            if (grid[x, y].CompareTag("O"))
+    bool AllOTurnedIntoX()
+    {
+        foreach (Vector2Int position in oPositions)
+        {
+            GameObject oObject = grid[position.x, position.y];
+
+            // Check if the object at the O position has turned into X
+            if (!oObject.CompareTag("X"))
             {
-                allX = false;
-                // Player didn't win yet, some objects are still O
-                Debug.Log("Object at position (" + x + ", " + y + ") is still O.");
-                return;
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool CanReachDestination(Vector2Int start, Vector2Int destination)
+    {
+        List<Node> path = AStarPathfinding(start, destination);
+
+        // If a valid path exists, return true
+        return path != null && path.Count > 0;
+    }
+
+    List<Node> AStarPathfinding(Vector2Int start, Vector2Int destination)
+    {
+        List<Node> openSet = new List<Node>();
+        HashSet<Node> closedSet = new HashSet<Node>();
+
+        Node startNode = new Node(start, null, destination);
+        openSet.Add(startNode);
+
+        while (openSet.Count > 0)
+        {
+            Node currentNode = GetLowestFScoreNode(openSet);
+
+            if (currentNode.Position == destination)
+            {
+                // Found a path
+                return ReconstructPath(currentNode);
+            }
+
+            openSet.Remove(currentNode);
+            closedSet.Add(currentNode);
+
+            foreach (Vector2Int neighborPosition in GetNeighbors(currentNode.Position))
+            {
+                Node neighbor = new Node(neighborPosition, currentNode, destination);
+
+                if (closedSet.Contains(neighbor) || !IsValidPosition(neighborPosition))
+                {
+                    continue;
+                }
+
+                int tentativeGScore = currentNode.GScore + 1;
+
+                if (!openSet.Contains(neighbor) || tentativeGScore < neighbor.GScore)
+                {
+                    neighbor.GScore = tentativeGScore;
+                    neighbor.HScore = HeuristicCostEstimate(neighbor.Position, destination);
+
+                    if (!openSet.Contains(neighbor))
+                    {
+                        openSet.Add(neighbor);
+                    }
+                }
             }
         }
 
-        if (allX)
+        // No path found
+        return null;
+    }
+
+    Node GetLowestFScoreNode(List<Node> nodes)
+    {
+        Node lowestNode = nodes[0];
+
+        foreach (Node node in nodes)
         {
-            // Player won, all objects are X
-            Debug.Log("You won! All objects turned into X.");
-            // Implement win condition logic, e.g., display a win screen.
+            if (node.FScore < lowestNode.FScore)
+            {
+                lowestNode = node;
+            }
+        }
+
+        return lowestNode;
+    }
+
+    List<Node> ReconstructPath(Node node)
+    {
+        List<Node> path = new List<Node>();
+        while (node != null)
+        {
+            path.Add(node);
+            node = node.Parent;
+        }
+        path.Reverse();
+        return path;
+    }
+
+    int HeuristicCostEstimate(Vector2Int current, Vector2Int goal)
+    {
+        return Mathf.Abs(current.x - goal.x) + Mathf.Abs(current.y - goal.y);
+    }
+
+    List<Vector2Int> GetNeighbors(Vector2Int position)
+    {
+        List<Vector2Int> neighbors = new List<Vector2Int>();
+        neighbors.Add(new Vector2Int(position.x + 1, position.y));
+        neighbors.Add(new Vector2Int(position.x - 1, position.y));
+        neighbors.Add(new Vector2Int(position.x, position.y + 1));
+        neighbors.Add(new Vector2Int(position.x, position.y - 1));
+        return neighbors;
+    }
+
+    bool IsValidPosition(Vector2Int position)
+    {
+        return position.x >= 0 && position.x < gridSizeX && position.y >= 0 && position.y < gridSizeY;
+    }
+
+    class Node
+    {
+        public Vector2Int Position { get; }
+        public Node Parent { get; }
+        public int GScore { get; set; }
+        public int HScore { get; set; }
+        public int FScore => GScore + HScore;
+
+        public Node(Vector2Int position, Node parent, Vector2Int goal)
+        {
+            Position = position;
+            Parent = parent;
+            GScore = parent != null ? parent.GScore + 1 : 0;
+            HScore = HeuristicCostEstimate(position, goal);
+        }
+
+        int HeuristicCostEstimate(Vector2Int current, Vector2Int goal)
+        {
+            return Mathf.Abs(current.x - goal.x) + Mathf.Abs(current.y - goal.y);
+        }
+    }
+
+    bool IsSolvable()
+    {
+        HashSet<Vector2Int> visited = new HashSet<Vector2Int>();
+        Vector2Int playerStartPosition = new Vector2Int(0, 0);
+
+        // Perform DFS from the player's starting position
+        DFS(playerStartPosition, visited);
+
+        // Check if all O positions (excluding the correct destination) are visited exactly once
+        foreach (Vector2Int position in oPositions)
+        {
+            if (position != correctDestination)
+            {
+                if (!visited.Contains(position) || visited.Count(pos => pos == position) > 1)
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    void DFS(Vector2Int current, HashSet<Vector2Int> visited)
+    {
+        visited.Add(current);
+
+        foreach (Vector2Int neighbor in GetNeighbors(current))
+        {
+            if (IsValidPosition(neighbor) && !visited.Contains(neighbor))
+            {
+                DFS(neighbor, visited);
+            }
+        }
+    }
+
+    void DrawSolvablePath(List<Vector2Int> positions)
+    {
+        for (int i = 0; i < positions.Count - 1; i++)
+        {
+            Vector2Int start = new Vector2Int(positions[i].x - 4, positions[i].y - 3);
+            Vector2Int end = new Vector2Int(positions[i + 1].x - 4, positions[i + 1].y - 3);
+
+            Debug.DrawLine(new Vector3(start.x, start.y, 0), new Vector3(end.x, end.y, 0), Color.green, 2f);
         }
     }
 }
+
