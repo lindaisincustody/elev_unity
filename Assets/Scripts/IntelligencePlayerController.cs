@@ -41,4 +41,13 @@ public class IntelligencePlayerController : MonoBehaviour
             Debug.LogError("SpriteRenderer not found on object: " + obj.name);
         }
     }
+    void Update()
+    {
+        Debug.Log(GetCurrentPosition());
+    }
+    public Vector2Int GetCurrentPosition()
+    {
+        return new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+        
+    }
 }
