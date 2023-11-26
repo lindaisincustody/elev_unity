@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: Test2WordData
   m_EditorClassIdentifier: 
   Poem: After _______ defeatomg the monster
+  WordPosition: {x: -312.6, y: 62}
+  oldWordPosition: {x: -343, y: 62}
   words:
   - word: brutally
     strengthWeight: 0

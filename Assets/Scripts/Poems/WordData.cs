@@ -15,5 +15,7 @@ public class Word
 public class WordData : ScriptableObject
 {
     public string Poem;
+    public Vector2 WordPosition;
+    public Vector2 oldWordPosition;
     public Word[] words = new Word[9];
 }
