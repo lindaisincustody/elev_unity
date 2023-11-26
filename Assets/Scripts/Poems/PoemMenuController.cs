@@ -19,11 +19,14 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private GameObject hero;
     [SerializeField] private SkillTree skillTree;
     [SerializeField] private AttributesDisplayer displayer;
+    [SerializeField] private RectTransform oldWord;
+    [SerializeField] private RectTransform wordHolder;
     public AnimationCurve bookAnimationCurve;
     public float bookAnimationDuration = 1.0f;
 
     private RectTransform bookMover;
     private int bookOffscreenPositionY = -1500;
+    private Vector2 OldWordPosition;
 
     public Attributes heroAttributes;
     private int numberOfPoems;
@@ -44,6 +47,15 @@ public class PoemMenuController : MonoBehaviour
         if (!_canBeTriggered)
             return;
         _canBeTriggered = false;
+
+        Vector2 newOldWordPosition = wordsData.oldWordPosition;
+        Vector2 newWordPosition = wordsData.WordPosition;
+        wordHolder.anchoredPosition = newWordPosition;
+        if (OldWordPosition != null)
+        {
+            oldWord.anchoredPosition = OldWordPosition;
+        }
+        OldWordPosition = newOldWordPosition;
 
         wordFiller.FillWords(wordsData);
         bookPanel.SetActive(true);

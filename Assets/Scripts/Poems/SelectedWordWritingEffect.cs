@@ -33,7 +33,6 @@ public class SelectedWordWritingEffect : MonoBehaviour
     private IEnumerator ResetEffect()
     {
         yield return new WaitForSeconds(3f);
-        Debug.Log(text.anchoredPosition.y);
         float originalLeft = 0f;
         float originalRight = 40f;
         float originalTop = 20f;
