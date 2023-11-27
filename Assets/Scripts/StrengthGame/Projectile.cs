@@ -36,7 +36,7 @@ public class Projectile : MonoBehaviour
         else if (other.CompareTag("Player"))
         {
             // Check if the Shift key is being held down
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftControl))
             {
                 // Check if the player is blocking
                 if (other.GetComponent<BattlePlayerController>() != null && other.GetComponent<BattlePlayerController>().IsBlocking())
