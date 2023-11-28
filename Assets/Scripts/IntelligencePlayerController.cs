@@ -50,4 +50,9 @@ public class IntelligencePlayerController : MonoBehaviour
         return new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         
     }
+    public void TeleportPlayer(Vector2Int position)
+    {
+        // Set the player's position to the specified position
+        transform.position = new Vector3(position.x, position.y, 0);
+    }
 }
