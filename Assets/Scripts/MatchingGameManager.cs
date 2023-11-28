@@ -11,7 +11,6 @@ public class GameController : MonoBehaviour
     public int gridSizeY = 3;
     private int numberOfLevels = 20; // Start with level 1
 
-    private GameObject[,] grid;
     private List<Vector2Int> oPositions;
     private Vector2Int correctDestination;
 
@@ -23,13 +22,45 @@ public class GameController : MonoBehaviour
 
     void GenerateLevel()
     {
-        bool solvableLevelGenerated = false;
+        DestroyOldLevel(); // Destroy the old level before generating a new one
 
-        while (!solvableLevelGenerated)
+        bool solvableLevelGenerated = false;
+        int maxRetries = 10; // Adjust the maximum number of retries as needed
+
+        for (int retryCount = 0; retryCount < maxRetries; retryCount++)
         {
             GenerateOPositions();
 
             solvableLevelGenerated = IsSolvable();
+
+            if (solvableLevelGenerated)
+            {
+                // Successfully generated a solvable level, exit the loop
+                break;
+            }
+            else
+            {
+                // Level generation failed, reset and try again
+                oPositions.Clear();
+                oPositions.Add(new Vector2Int(0, 0));
+            }
+        }
+
+        if (!solvableLevelGenerated)
+        {
+            // Handle the situation where a solvable level could not be generated within the maximum retries
+            Debug.LogError("Failed to generate a solvable level within the maximum retries.");
+        }
+    }
+
+    void DestroyOldLevel()
+    {
+        // Destroy all game objects with either "O" or "X" tag
+        GameObject[] oldObjects = GameObject.FindGameObjectsWithTag("O").Concat(GameObject.FindGameObjectsWithTag("X")).ToArray();
+
+        foreach (GameObject oldObject in oldObjects)
+        {
+            Destroy(oldObject);
         }
     }
 
@@ -40,9 +71,10 @@ public class GameController : MonoBehaviour
         oPositions.Add(playerStartPosition);
 
         bool destinationFound = false;
+        int maxRetries = 10; // Adjust the maximum number of retries as needed
 
         // Attempt to find solvable level with a valid destination
-        while (!destinationFound)
+        for (int retryCount = 0; retryCount < maxRetries && !destinationFound; retryCount++)
         {
             // Generate positions for O's using recursive backtracking
             for (int i = 1; i <= numberOfLevels; i++)
@@ -69,6 +101,12 @@ public class GameController : MonoBehaviour
                 oPositions.Clear();
                 oPositions.Add(playerStartPosition);
             }
+        }
+
+        if (!destinationFound)
+        {
+            // Handle the situation where a solvable level could not be generated within the maximum retries
+            Debug.LogError("Failed to generate a solvable level within the maximum retries.");
         }
 
         // Instantiate O prefabs at generated positions
@@ -127,26 +165,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    Vector2Int GenerateAdjacentPosition(Vector2Int previousPosition)
-    {
-        // Generate a list of adjacent positions
-        List<Vector2Int> adjacentPositions = new List<Vector2Int>
-    {
-        new Vector2Int(previousPosition.x + 1, previousPosition.y),
-        new Vector2Int(previousPosition.x - 1, previousPosition.y),
-        new Vector2Int(previousPosition.x, previousPosition.y + 1),
-        new Vector2Int(previousPosition.x, previousPosition.y - 1)
-    };
-
-        // Filter out positions that are out of bounds or already used
-        List<Vector2Int> validAdjacentPositions = adjacentPositions
-            .Where(pos => IsValidPosition(pos) && !oPositions.Contains(pos))
-            .ToList();
-
-        // Randomly choose one of the valid adjacent positions
-        return validAdjacentPositions[Random.Range(0, validAdjacentPositions.Count)];
-    }
-
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -161,11 +179,16 @@ public class GameController : MonoBehaviour
         IntelligencePlayerController playerController = FindObjectOfType<IntelligencePlayerController>();
         Vector2Int playerPosition = playerController.GetCurrentPosition();
         Vector2Int adjustedDestination = new Vector2Int(correctDestination.x - 4, correctDestination.y - 3);
+
         // Check if the player is on the correct destination
         if (playerPosition == adjustedDestination)
         {
             Debug.Log("You won! Reached the correct destination: " + correctDestination);
             numberOfLevels++;
+
+            // Teleport the player to the specified position
+            playerController.TeleportPlayer(new Vector2Int(-4, -3));
+
             GenerateLevel(); // Generate the next level
         }
         else
@@ -174,20 +197,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    bool AllOTurnedIntoX()
-    {
-        foreach (Vector2Int position in oPositions)
-        {
-            GameObject oObject = grid[position.x, position.y];
 
-            // Check if the object at the O position has turned into X
-            if (!oObject.CompareTag("X"))
-            {
-                return false;
-            }
-        }
-        return true;
-    }
 
     bool CanReachDestination(Vector2Int start, Vector2Int destination)
     {
