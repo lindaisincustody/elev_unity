@@ -15,7 +15,7 @@ public class BattlePlayerController : MonoBehaviour
         if (other.CompareTag("LeftZone"))
         {
             // Check if the Shift key is being held down
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftControl))
             {
                 // Play the left zone animation
                 animator.SetBool("LeftZone", true);
@@ -37,7 +37,7 @@ public class BattlePlayerController : MonoBehaviour
         else if (other.CompareTag("RightZone"))
         {
             // Check if the Shift key is being held down
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftControl))
             {
                 // Play the left zone animation
                 animator.SetBool("RightZone", true);
