@@ -82,6 +82,15 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""b88068dd-7efa-4ad7-9286-01bf86658a6f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -335,6 +344,17 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Boost"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ed22a93-6855-4a9a-ba7f-f647d9bc164e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -928,6 +948,7 @@ namespace UnityEngine.InputSystem
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
             m_Player_Boost = m_Player.FindAction("Boost", throwIfNotFound: true);
+            m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1007,6 +1028,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_Cancel;
         private readonly InputAction m_Player_Boost;
+        private readonly InputAction m_Player_Jump;
         public struct PlayerActions
         {
             private @Controls m_Wrapper;
@@ -1017,6 +1039,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
             public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
             public InputAction @Boost => m_Wrapper.m_Player_Boost;
+            public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -1044,6 +1067,9 @@ namespace UnityEngine.InputSystem
                 @Boost.started += instance.OnBoost;
                 @Boost.performed += instance.OnBoost;
                 @Boost.canceled += instance.OnBoost;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -1066,6 +1092,9 @@ namespace UnityEngine.InputSystem
                 @Boost.started -= instance.OnBoost;
                 @Boost.performed -= instance.OnBoost;
                 @Boost.canceled -= instance.OnBoost;
+                @Jump.started -= instance.OnJump;
+                @Jump.performed -= instance.OnJump;
+                @Jump.canceled -= instance.OnJump;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1254,6 +1283,7 @@ namespace UnityEngine.InputSystem
             void OnInteract(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
             void OnBoost(InputAction.CallbackContext context);
+            void OnJump(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
