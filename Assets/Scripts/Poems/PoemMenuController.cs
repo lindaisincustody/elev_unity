@@ -54,7 +54,7 @@ public class PoemMenuController : MonoBehaviour
         if (OldWordPosition != null)
         {
             oldWord.anchoredPosition = OldWordPosition;
-        }
+        }   
         OldWordPosition = newOldWordPosition;
 
         wordFiller.FillWords(wordsData);

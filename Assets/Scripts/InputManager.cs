@@ -9,6 +9,7 @@ public class InputManager : MonoBehaviour
     public event Action OnInteract = delegate { };
     public event Action OnCancel   = delegate { };
     public event Action OnBoost =    delegate { };
+    public event Action OnJump     = delegate { };
 
     public Vector2 inputVector { get; private set; }
 
@@ -25,6 +26,7 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Interact.performed += Interact;
         inputActions.Player.Cancel.performed   += Cancel;
         inputActions.Player.Boost.performed    += Boost;
+        inputActions.Player.Jump.performed     += Jump;
     }
 
     private void OnDisable()
@@ -60,4 +62,13 @@ public class InputManager : MonoBehaviour
             OnBoost();
         }
     }
+
+    private void Jump(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnJump();
+        }
+    }
+        
 }
