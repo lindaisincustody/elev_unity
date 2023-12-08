@@ -11,6 +11,7 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] NavMeshCreator creator;
     [SerializeField] private CameraTransition cameraTransition;
     [SerializeField] private GameObject endPrefab;
+    [SerializeField] private EnableMask maskEnabler;
 
     [Header("Data Holder")]
     [SerializeField] private MazeDataSO mazeData;
@@ -26,6 +27,7 @@ public class MazeGenerator : MonoBehaviour
     [Header("Enemy Parameters")]
     [SerializeField] private int cellsPerEnemy = 5;
     [SerializeField] private Enemy enemyPrefab;
+    [SerializeField] private ExpandingEnemy expEnemyPrefab;
     [SerializeField] private PathConsumable pathConsumable;
 
     private int _mazeWidth;
@@ -58,9 +60,11 @@ public class MazeGenerator : MonoBehaviour
             for (int j = 0; j < _mazeHeight; j++)
             {
                 MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
-                if ((j + 1) % cellsPerEnemy == 0 && (i + 1) % cellsPerEnemy == 0)
+                maskEnabler.AddMazeCell(newCell);
+                if ((j - 3) % cellsPerEnemy == 0 && (i  - 3) % cellsPerEnemy == 0)
                 {
-                    Instantiate(enemyPrefab, new Vector2((i - 1) * cellSize, j * cellSize), Quaternion.identity);
+                    ExpandingEnemy exp = Instantiate(expEnemyPrefab, new Vector2((i - 1) * cellSize, j * cellSize), Quaternion.identity);
+                    exp.SetCellCoordinates(i - 1, j, cellSize);
                     Instantiate(pathConsumable, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
                 }
                 mazeGrid[i, j] = newCell;
@@ -402,5 +406,10 @@ public class MazeGenerator : MonoBehaviour
         {
             cell.DisableShortedBlock();
         }
+    }
+
+    public MazeCell GetMazeCell(int x, int y)
+    {
+        return mazeGrid[x, y];
     }
 }
