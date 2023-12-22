@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class Enemy : BaseEnemy
 {
     // Serialized Fields
     [SerializeField] private int triggerDistance;
@@ -19,6 +19,7 @@ public class Enemy : MonoBehaviour
     private LineRenderer lineRenderer;
     private PathRenderer pathRenderer;
     private GlitchController fullscreenShader;
+    private EffectManager effectManager;
 
     // State Variables
     private bool canFollow = false;
@@ -40,7 +41,7 @@ public class Enemy : MonoBehaviour
         target = FindAnyObjectByType<MazePlayerMovement>().transform;
         lineRenderer = GetComponent<LineRenderer>();
         pathRenderer = GetComponent<PathRenderer>();
-
+        effectManager = FindObjectOfType<EffectManager>();
         fullscreenShader = FindObjectOfType<GlitchController>();
     }
 
@@ -58,7 +59,6 @@ public class Enemy : MonoBehaviour
 
     private void OnDisable()
     {
-        // Unsubscribe from the custom event
         mazeGenerator.OnMazeCompletion.RemoveListener(EnableEnemies);
     }
 
@@ -220,6 +220,7 @@ public class Enemy : MonoBehaviour
         {
             fullscreenShader.TriggerCaughtShader();
             mazeGenerator.DeactivateShortestPath();
+            effectManager.ActivateDissolveWallsEffect();
             Destroy(gameObject);
         }
     }
