@@ -17,6 +17,10 @@ public class MazePlayerMovement : MonoBehaviour
     public MazeGenerator mazeGenerator;
     private Vector2 movement;
 
+    private LineRenderer leashRenderer;
+    private DistanceJoint2D joint;
+
+    private bool isLeashed = false;
     private bool isBoosting = false;
 
     private void Awake()
@@ -25,6 +29,9 @@ public class MazePlayerMovement : MonoBehaviour
         playerInput.OnBoost += Boost;
         playerInput.OnInteract += ActivateShortestPath;
         playerInput.OnCancel += DeactivateShortestPath;
+
+        joint = GetComponent<DistanceJoint2D>();
+        leashRenderer = GetComponent<LineRenderer>();
     }
 
     void Update()
@@ -32,6 +39,9 @@ public class MazePlayerMovement : MonoBehaviour
         if (!canMove)
             return;
         movement = playerInput.inputVector;
+
+        if (isLeashed)
+            leashRenderer.SetPosition(0, transform.position);
     }
 
     void FixedUpdate()
@@ -84,5 +94,29 @@ public class MazePlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("MazeEnd"))
             SceneManager.LoadScene("SampleScene");
+    }
+
+    public void LeashToObject(Rigidbody2D rbToLeash, Transform enemyPos)
+    {
+        if (isLeashed)
+            return;
+        isLeashed = true;
+        joint.enabled = true;
+        joint.connectedBody = rbToLeash;
+        leashRenderer.enabled = true;
+        leashRenderer.SetPosition(1, enemyPos.position);
+
+        StartCoroutine(Unleash());
+    }
+
+    private IEnumerator Unleash()
+    {
+        yield return new WaitForSeconds(7f);
+        joint.enabled = false;
+        joint.connectedBody = null;
+        leashRenderer.enabled = false;
+        // Time to Escape
+        yield return new WaitForSeconds(2f);
+        isLeashed = false;
     }
 }
