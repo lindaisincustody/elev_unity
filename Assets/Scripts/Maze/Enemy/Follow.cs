@@ -30,6 +30,8 @@ public class Follow : State
             nextState = new Idle(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed);
             stage = EVENT.EXIT;
         }
+
+        objectivePos = player.position;
     }
 
     public override void Exit()

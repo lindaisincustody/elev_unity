@@ -14,6 +14,7 @@ public class ExpandingEnemy : BaseEnemy
     public float expadingDuration = 8f;
     public float preparationDuration = 2f;
     List<Tuple<GameObject, int>> tencticles = new List<Tuple<GameObject, int>>();
+    public List<GameObject> availableTentacles = new List<GameObject>();
 
     private float tecticleExpandDelay = 1f;
     private int tenticleLength = 4;
@@ -140,7 +141,9 @@ public class ExpandingEnemy : BaseEnemy
                 {
                     if (tencticles[tencticles.Count - 1].Item2 == i)
                     {
-                        Destroy(tencticles[tencticles.Count - 1].Item1.gameObject);
+                        GameObject disabledTentacle = tencticles[tencticles.Count - 1].Item1.gameObject;
+                        disabledTentacle.SetActive(false);
+                        availableTentacles.Add(disabledTentacle);
                         tencticles.RemoveAt(tencticles.Count - 1);
                     }
                 }
@@ -148,6 +151,7 @@ public class ExpandingEnemy : BaseEnemy
 
             yield return new WaitForSeconds(tecticleExpandDelay);
         }
+        rightTenticle = null; leftTentcile = null; upTenticle = null; downTenticle = null;
     }
 
     public void SetCellCoordinates(int x, int y, int cellSize)
@@ -155,7 +159,6 @@ public class ExpandingEnemy : BaseEnemy
         persistentX = x; persistentY = y;
         xCell = (int)gameObject.transform.position.x; 
         yCell = (int)gameObject.transform.position.y;
-        Debug.Log(x + " " + y + " " + xCell + " " + yCell);
         XDCell = xCell; xUCell = xCell; xRCell = xCell; xLCell = xCell;
         YDCell = yCell; yUCell = yCell; yRCell = yCell; yLCell = yCell;
         rightCellXPos = x; leftCellXPos = x; upCellXPos = x; downCellXPos = x;
@@ -175,7 +178,11 @@ public class ExpandingEnemy : BaseEnemy
                 break;
             if (TenticlePos != new Vector2(-1, -1))
             {
-                GameObject ten = Instantiate(tenticle, TenticlePos, Quaternion.identity, gameObject.transform);
+                GameObject ten = availableTentacles[availableTentacles.Count - 1];
+                availableTentacles.RemoveAt(availableTentacles.Count - 1);
+                ten.SetActive(true);
+                ten.transform.position = TenticlePos;
+
                 if (rightTenticle == null)
                     ten.GetComponent<Connection>().SetTarget(gameObject.transform);
                 else
@@ -203,7 +210,11 @@ public class ExpandingEnemy : BaseEnemy
                 break;
             if (TenticlePos != new Vector2(-1, -1))
             {
-                GameObject ten = Instantiate(tenticle, TenticlePos, Quaternion.identity, gameObject.transform);
+                GameObject ten = availableTentacles[availableTentacles.Count - 1];
+                availableTentacles.RemoveAt(availableTentacles.Count - 1);
+                ten.SetActive(true);
+                ten.transform.position = TenticlePos;
+
                 if (leftTentcile == null)
                     ten.GetComponent<Connection>().SetTarget(gameObject.transform);
                 else
@@ -231,7 +242,11 @@ public class ExpandingEnemy : BaseEnemy
                 break;
             if (TenticlePos != new Vector2(-1, -1))
             {
-                GameObject ten = Instantiate(tenticle, TenticlePos, Quaternion.identity, gameObject.transform);
+                GameObject ten = availableTentacles[availableTentacles.Count - 1];
+                availableTentacles.RemoveAt(availableTentacles.Count - 1);
+                ten.SetActive(true);
+                ten.transform.position = TenticlePos;
+
                 if (upTenticle == null)
                     ten.GetComponent<Connection>().SetTarget(gameObject.transform);
                 else
@@ -259,7 +274,11 @@ public class ExpandingEnemy : BaseEnemy
                 break;
             if (TenticlePos != new Vector2(-1, -1))
             {
-                GameObject ten = Instantiate(tenticle, TenticlePos, Quaternion.identity, gameObject.transform);
+                GameObject ten = availableTentacles[availableTentacles.Count - 1];
+                availableTentacles.RemoveAt(availableTentacles.Count - 1);
+                ten.SetActive(true);
+                ten.transform.position = TenticlePos;
+
                 if (downTenticle == null)
                     ten.GetComponent<Connection>().SetTarget(gameObject.transform);
                 else

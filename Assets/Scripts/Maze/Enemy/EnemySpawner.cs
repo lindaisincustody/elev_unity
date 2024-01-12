@@ -8,9 +8,11 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int cellsPerEnemy = 5;
     [SerializeField] private PatrolEnemy enemyPrefab;
     [SerializeField] private ExpandingEnemy expEnemyPrefab;
-    [SerializeField] private PathConsumable pathConsumable;
+
     [SerializeField] private int expandingEnemyTicketCount;
     [SerializeField] private int followingEnemyTicketCount;
+    [Header("Path Shower")]
+    [SerializeField] private PathConsumable pathConsumable;
 
     private int enemyCellsVariation = 2;
 
