@@ -25,7 +25,7 @@ public class MazeGenerator : MonoBehaviour
 
     [Header("Enemy Parameters")]
     [SerializeField] private int cellsPerEnemy = 5;
-    [SerializeField] private Enemy enemyPrefab;
+    [SerializeField] private PatrolEnemy enemyPrefab;
     [SerializeField] private ExpandingEnemy expEnemyPrefab;
     [SerializeField] private PathConsumable pathConsumable;
     [SerializeField] private int expandingEnemyTicketCount;
@@ -434,5 +434,13 @@ public class MazeGenerator : MonoBehaviour
         if (x >= _mazeWidth || y >= _mazeHeight)
             return null;
         return mazeGrid[x, y];
+    }
+
+    public Vector2 GetRandomCellPosition()
+    {
+        int x = Random.Range(0, _mazeWidth - 1);
+        int y = Random.Range(0, _mazeHeight - 1);
+
+        return mazeGrid[x, y].transform.position;
     }
 }

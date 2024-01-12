@@ -10,7 +10,6 @@ public class ExpandingEnemy : BaseEnemy
     public float smallSize = 1f;
     public float bigSize = 3f;
     public GameObject tenticle;
-    public MazeGenerator mazeGenerator;
     public float expandingCooldown = 5f;
     public float expadingDuration = 8f;
     public float preparationDuration = 2f;
@@ -48,7 +47,10 @@ public class ExpandingEnemy : BaseEnemy
     private void Start()
     {
         ps = effectObj.GetComponent<ParticleSystem>();
-        mazeGenerator = FindFirstObjectByType<MazeGenerator>();
+    }
+
+    public override void ActivateEnemy()
+    {
         StartCoroutine(AbilitiesLoop());
     }
 
