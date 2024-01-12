@@ -20,6 +20,7 @@ public class State
     protected State nextState;
     protected NavMeshAgent agent;
     protected MazeGenerator mazeGenerator;
+    protected Vector3 objectivePos;
 
     protected float patrolSpeed = 0;
     protected float followSpeed = 0;
@@ -51,6 +52,13 @@ public class State
             return nextState;
         }
         return this;
+    }
+
+    public Vector3 GetObjectivePosition()
+    {
+        if (objectivePos == Vector3.zero && name != STATE.IDLE)
+            return player.position;
+        return objectivePos;
     }
 
     public bool canReach()

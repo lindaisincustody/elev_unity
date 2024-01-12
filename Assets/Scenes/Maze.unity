@@ -6370,9 +6370,9 @@ MonoBehaviour:
   cellsPerEnemy: 5
   enemyPrefab: {fileID: 4568441859608302279, guid: 5fdfe1c61126c7a41b4c5edd3bf95d50, type: 3}
   expEnemyPrefab: {fileID: 6841425367208298865, guid: 0c5ac7df87ebbf945814817b7b2c7cec, type: 3}
-  pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
   expandingEnemyTicketCount: 5
-  followingEnemyTicketCount: 0
+  followingEnemyTicketCount: 25
+  pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
 --- !u!4 &1491671816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 859623b3f2165454480992f82ad7d009, type: 3}

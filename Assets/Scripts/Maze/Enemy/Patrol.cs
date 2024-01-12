@@ -31,6 +31,9 @@ public class Patrol : State
             stage = EVENT.EXIT;
         }
 
+        if (agent.path.corners.Length > 1)
+            objectivePos = agent.path.corners[1];
+
         base.Update();
     }
 
