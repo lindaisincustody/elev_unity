@@ -6319,7 +6319,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 4568441859608302279, guid: 5fdfe1c61126c7a41b4c5edd3bf95d50, type: 3}
   expEnemyPrefab: {fileID: 6841425367208298865, guid: 0c5ac7df87ebbf945814817b7b2c7cec, type: 3}
   pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
-  expandingEnemyTicketCount: 5
+  expandingEnemyTicketCount: 0
   followingEnemyTicketCount: 25
 --- !u!4 &1485125251
 Transform:
@@ -8200,7 +8200,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 0.3773585, g: 0.28978285, b: 0.28978285, a: 1}
+  m_Color: {r: 0.31132078, g: 0.24788183, b: 0.24788183, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
