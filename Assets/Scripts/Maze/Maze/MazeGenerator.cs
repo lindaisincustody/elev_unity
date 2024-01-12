@@ -17,19 +17,10 @@ public class MazeGenerator : MonoBehaviour
 
     [Header("Maze Parameters")]
     [SerializeField] private MazeCell _mazeCellPrefab;
-    [SerializeField] private float mazeSpeed = 0.02f;
 
     [Header("Loops Parameters")]
     [SerializeField] private bool allowLoops = false;
     [SerializeField] private int numberOfSquaresForALoop = 5;
-
-    [Header("Enemy Parameters")]
-    [SerializeField] private int cellsPerEnemy = 5;
-    [SerializeField] private PatrolEnemy enemyPrefab;
-    [SerializeField] private ExpandingEnemy expEnemyPrefab;
-    [SerializeField] private PathConsumable pathConsumable;
-    [SerializeField] private int expandingEnemyTicketCount;
-    [SerializeField] private int followingEnemyTicketCount;
 
     private int _mazeWidth;
     private int _mazeHeight;
@@ -38,12 +29,14 @@ public class MazeGenerator : MonoBehaviour
     private List<MazeCell> shortestPath;
     [System.NonSerialized] public UnityEvent OnMazeCompletion = new UnityEvent();
 
+    private EnemySpawner enemySpawner;
     private ImageHolder imageHolder;
     private float timer = 0.0f;
 
     private void Awake()
     {
         imageHolder = GetComponent<ImageHolder>();
+        enemySpawner = GetComponent<EnemySpawner>();
         _mazeWidth = mazeData.MazeWidth;
         _mazeHeight = mazeData.MazeHeight;
     }
@@ -51,9 +44,9 @@ public class MazeGenerator : MonoBehaviour
     private IEnumerator Start()
     {
         cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
+        enemySpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
         creator.ResizeNavMesh(_mazeWidth * cellSize, _mazeHeight * cellSize);
         mazeGrid = new MazeCell[_mazeWidth, _mazeHeight];
-        mazeSpeed = mazeSpeed / ((_mazeHeight * _mazeWidth) / (900f));
         numberOfSquaresForALoop = (_mazeHeight * _mazeWidth)/numberOfSquaresForALoop;
 
         for (int i = 0; i < _mazeWidth; i++)
@@ -61,14 +54,6 @@ public class MazeGenerator : MonoBehaviour
             for (int j = 0; j < _mazeHeight; j++)
             {
                 MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
-                if ((j - 3) % cellsPerEnemy == 0 && (i  - 3) % cellsPerEnemy == 0)
-                {
-                    BaseEnemy enemy = ChooseEnemyToSpawn();
-                    BaseEnemy exp = Instantiate(enemy, new Vector2((i - 1) * cellSize, j * cellSize), Quaternion.identity);
-                    if (exp.GetComponent<ExpandingEnemy>() != null)
-                        exp.GetComponent<ExpandingEnemy>().SetCellCoordinates(i - 1, j, cellSize);
-                    Instantiate(pathConsumable, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
-                }
                 mazeGrid[i, j] = newCell;
                 newCell.transform.parent = gameObject.transform;
             }
@@ -78,36 +63,18 @@ public class MazeGenerator : MonoBehaviour
         MazeCell exitCell = mazeGrid[_mazeWidth - 1, _mazeHeight - 2];
         Instantiate(endPrefab, new Vector2(exitCell.transform.position.x + cellSize, exitCell.transform.position.y), Quaternion.identity);
 
-        yield return GenerateMaze(null, mazeGrid[0, 0], exitCell); // Pass the exit cell
-                                                                   // Randomly delete walls to create loops only once
+        GenerateMaze(null, mazeGrid[0, 0], exitCell); // Pass the exit cell
+                                                      // Randomly delete walls to create loops only once
         if (allowLoops)
         {
             CreateLoops();
         }
         CalculateShortestPath(mazeGrid[0, 0], exitCell);
-
+        enemySpawner.SpawnEnemies();
+        yield return navmesh.BuildNavMeshAsync();
         cameraTransition.StartZoomIn();
-        navmesh.BuildNavMeshAsync();
+
         OnMazeCompletion?.Invoke();
-    }
-
-    private BaseEnemy ChooseEnemyToSpawn()
-    {
-        int totalTickets = expandingEnemyTicketCount + followingEnemyTicketCount;
-        if (totalTickets <= 0)
-        {
-            return null; // No tickets available
-        }
-
-        int chosenTicket = Random.Range(0, totalTickets);
-        if (chosenTicket < expandingEnemyTicketCount)
-        {
-            return expEnemyPrefab; // Chose an expanding enemy
-        }
-        else
-        {
-            return enemyPrefab; // Chose a following enemy
-        }
     }
 
     private void Update()
@@ -125,12 +92,10 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    private IEnumerator GenerateMaze(MazeCell previousCell, MazeCell currentCell, MazeCell exitCell)
+    private void GenerateMaze(MazeCell previousCell, MazeCell currentCell, MazeCell exitCell)
     {
         currentCell.Visit();
         ClearWalls(previousCell, currentCell);
-
-        yield return new WaitForSeconds(mazeSpeed);
 
         MazeCell nextCell;
 
@@ -140,7 +105,7 @@ public class MazeGenerator : MonoBehaviour
 
             if (nextCell != null)
             {
-                yield return GenerateMaze(currentCell, nextCell, exitCell);
+                GenerateMaze(currentCell, nextCell, exitCell);
             }
         } while (nextCell != null);
 
@@ -150,8 +115,6 @@ public class MazeGenerator : MonoBehaviour
             currentCell.MarkAsExit(_mazeWidth, _mazeHeight, mazeGrid);
         }
     }
-
-
 
     private MazeCell GetNextUnvisitedCell(MazeCell currentCell)
     {

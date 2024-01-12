@@ -155,6 +155,7 @@ public class ExpandingEnemy : BaseEnemy
         persistentX = x; persistentY = y;
         xCell = (int)gameObject.transform.position.x; 
         yCell = (int)gameObject.transform.position.y;
+        Debug.Log(x + " " + y + " " + xCell + " " + yCell);
         XDCell = xCell; xUCell = xCell; xRCell = xCell; xLCell = xCell;
         YDCell = yCell; yUCell = yCell; yRCell = yCell; yLCell = yCell;
         rightCellXPos = x; leftCellXPos = x; upCellXPos = x; downCellXPos = x;
