@@ -43,7 +43,6 @@ public class State
 
     public State Process()
     {
-        Debug.Log(this + " " + patrolSpeed);
         if (stage == EVENT.ENTER) Enter();
         if (stage == EVENT.UPDATE) Update();
         if (stage == EVENT.EXIT)

@@ -6287,6 +6287,7 @@ GameObject:
   - component: {fileID: 1485125251}
   - component: {fileID: 1485125250}
   - component: {fileID: 1485125252}
+  - component: {fileID: 1485125253}
   m_Layer: 0
   m_Name: MazeGenerator
   m_TagString: Untagged
@@ -6312,15 +6313,8 @@ MonoBehaviour:
   endPrefab: {fileID: 2581738181052571502, guid: cf89064bec317ab47adea9a4fdd26f34, type: 3}
   mazeData: {fileID: 11400000, guid: e6f34c279a472514795a389a79e08e96, type: 2}
   _mazeCellPrefab: {fileID: 7129392269565578830, guid: c0156d6ae4b5e6941859d5138ed7460b, type: 3}
-  mazeSpeed: 0.0005
   allowLoops: 1
   numberOfSquaresForALoop: 25
-  cellsPerEnemy: 5
-  enemyPrefab: {fileID: 4568441859608302279, guid: 5fdfe1c61126c7a41b4c5edd3bf95d50, type: 3}
-  expEnemyPrefab: {fileID: 6841425367208298865, guid: 0c5ac7df87ebbf945814817b7b2c7cec, type: 3}
-  pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
-  expandingEnemyTicketCount: 0
-  followingEnemyTicketCount: 25
 --- !u!4 &1485125251
 Transform:
   m_ObjectHideFlags: 0
@@ -6361,6 +6355,24 @@ MonoBehaviour:
   UpRight: {fileID: 21300000, guid: f2a58fd44fbbd174aa4e81c713af9d6c, type: 3}
   UpLeft: {fileID: 21300000, guid: 4ae780974b3c30f47a6b85e6cb785079, type: 3}
   CIrcle: {fileID: 21300000, guid: e9900872b1a688541baab5c780c36b9a, type: 3}
+--- !u!114 &1485125253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485125249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a7d084d77d0c104193801712dce993b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cellsPerEnemy: 5
+  enemyPrefab: {fileID: 4568441859608302279, guid: 5fdfe1c61126c7a41b4c5edd3bf95d50, type: 3}
+  expEnemyPrefab: {fileID: 6841425367208298865, guid: 0c5ac7df87ebbf945814817b7b2c7cec, type: 3}
+  pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
+  expandingEnemyTicketCount: 5
+  followingEnemyTicketCount: 0
 --- !u!4 &1491671816 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 859623b3f2165454480992f82ad7d009, type: 3}

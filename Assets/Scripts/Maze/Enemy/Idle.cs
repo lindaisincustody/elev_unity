@@ -18,7 +18,7 @@ public class Idle : State
     {
         base.Enter();
         timeEnteredState = Time.time;
-        agent.speed = 0f;
+
         agent.isStopped = true;
         agent.ResetPath();
     }
@@ -27,7 +27,6 @@ public class Idle : State
     {
         if (Time.time - timeEnteredState > idleDuration)
         {
-            agent.enabled = true;
             nextState = new Patrol(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed);
             stage = EVENT.EXIT;
             return;
