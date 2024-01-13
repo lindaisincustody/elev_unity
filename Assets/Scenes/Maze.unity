@@ -1097,7 +1097,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &226291695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3027,6 +3027,37 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 859623b3f2165454480992f82ad7d009, type: 3}
   m_PrefabInstance: {fileID: 1951617070}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &701070838
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 701070839}
+  m_Layer: 0
+  m_Name: // UI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &701070839
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701070838}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -5.9521184, y: -2.9529302, z: -0.19206598}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &707871324
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6370,8 +6401,8 @@ MonoBehaviour:
   cellsPerEnemy: 5
   enemyPrefab: {fileID: 4568441859608302279, guid: 5fdfe1c61126c7a41b4c5edd3bf95d50, type: 3}
   expEnemyPrefab: {fileID: 6841425367208298865, guid: 0c5ac7df87ebbf945814817b7b2c7cec, type: 3}
-  expandingEnemyTicketCount: 5
-  followingEnemyTicketCount: 25
+  expandingEnemyTicketCount: 0
+  followingEnemyTicketCount: 5
   pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
 --- !u!4 &1491671816 stripped
 Transform:
@@ -9974,4 +10005,5 @@ SceneRoots:
   - {fileID: 1364997841}
   - {fileID: 2068602910}
   - {fileID: 1607884027}
+  - {fileID: 701070839}
   - {fileID: 226291698}
