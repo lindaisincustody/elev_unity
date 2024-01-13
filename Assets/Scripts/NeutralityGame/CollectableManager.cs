@@ -6,12 +6,13 @@ public class CollectableManager : MonoBehaviour
 {
     [SerializeField] private Collectable collectableObj;
     public Transform collectablesHolder;
+    public int spawnCount = 5;
     [System.NonSerialized] public List<Collectable> collectables = new List<Collectable>();
 
     // Start is called before the first frame update
     void Start()
     {
-        SpawnCollectibles(5);
+        SpawnCollectibles(spawnCount);
     }
 
     private void SpawnCollectibles(int ammount)
