@@ -8,15 +8,15 @@ public class Cannon : MonoBehaviour
     public Transform exit;
     public int shotAmount = 5;
     public float delayBetweenShots = 0.3f;
-    public float rotationAngle = 15f; // Adjust the rotation angle based on your preference
     public float cannonForce = 10f;
+    public float rotationAngle = 15f;
 
+    private CannonAnimator anim;
     private Quaternion startingRot;
-    private Animator m_Animator;
 
     private void Awake()
     {
-        m_Animator = GetComponent<Animator>();
+        anim = GetComponentInChildren<CannonAnimator>();
     }
 
     void Start()
@@ -40,7 +40,7 @@ public class Cannon : MonoBehaviour
         for (int i = 0; i < amount; i++)
         {
             RotateCannon(Random.Range(-rotationAngle, rotationAngle));
-            PlayShootAnimation();
+            yield return StartCoroutine(anim.PlayShootAnimation());
             ShootCannonBall();
             yield return new WaitForSeconds(delayBetweenShots);
         }
@@ -61,10 +61,5 @@ public class Cannon : MonoBehaviour
     private void ResetRotation()
     {
         transform.rotation = startingRot;
-    }
-
-    private void PlayShootAnimation()
-    {
-        m_Animator.SetTrigger("Shoot");
     }
 }

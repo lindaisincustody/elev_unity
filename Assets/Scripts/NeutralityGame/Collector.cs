@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Collector : MonoBehaviour
 {
-    public CollectableManager collectableManager;
     public ArrowPointer arrow;
 
     public Rigidbody2D playerrb;
@@ -18,12 +17,15 @@ public class Collector : MonoBehaviour
     public float pickUpDistance = 2f;
 
     private Collectable currentCollectable;
+    private Rigidbody2D[] collectableRbs;
 
     private InputManager playerInput;
     private Vector2 movement;
     private float velocityY = 0f;
 
     private bool handIsOccupied = false;
+
+    [SerializeField] LayerMask consumableLayer;
 
     private void Awake()
     {
@@ -77,7 +79,6 @@ public class Collector : MonoBehaviour
             return;
         Rigidbody2D colRb = currentCollectable.GetComponent<Rigidbody2D>();
         colRb.bodyType = RigidbodyType2D.Dynamic;
-        currentCollectable.transform.parent = collectableManager.collectablesHolder;
         velocityY = Mathf.Max(1, (playerrb.velocity.y / jumpForceDivider));
         //velocityY = Mathf.Clamp(rb.velocity.y / jumpForceDivider, -1f, 1f);
         colRb.AddForce(arrow.throwDirection * throwForce * velocityY, ForceMode2D.Impulse);
@@ -89,32 +90,24 @@ public class Collector : MonoBehaviour
 
     private void PickUpConsumable()
     {
-        Collectable collectable = getClosestCollectable();
-        if (collectable == null)
+        if (!getClosestCollectable())
             return;
 
-        collectable.GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         handIsOccupied = true;
-        currentCollectable = collectable;
-        collectable.transform.parent = playerHand.transform;
-        collectable.transform.position = playerHand.transform.position;
-        collectable.GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Kinematic;
+        foreach (var item in collectableRbs)
+        {
+            item.simulated = false;
+        }
     }
 
-    private Collectable getClosestCollectable()
+    private bool getClosestCollectable()
     {
-        Collectable closestCollectable = null;
-        float closestDistance = int.MaxValue;
-        foreach (var collectable in collectableManager.collectables)
-        {
-            if (Vector2.Distance(collectable.transform.position, gameObject.transform.position) < closestDistance)
-            {
-                closestDistance = Vector2.Distance(collectable.transform.position, gameObject.transform.position);
-                if (closestDistance < pickUpDistance)
-                    closestCollectable = collectable;
-            }
-        }
-        print(closestCollectable);
-        return closestCollectable;
+        Collider2D collider = Physics2D.OverlapCircle(transform.position, 1f, consumableLayer);
+        if (collider == null)
+            return false;
+
+        GameObject collectable = collider.transform.parent.gameObject;
+        collectableRbs = collectable.GetComponentsInChildren<Rigidbody2D>();
+        return true;
     }
 }
