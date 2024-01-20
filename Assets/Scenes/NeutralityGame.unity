@@ -709,11 +709,11 @@ HingeJoint2D:
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
   m_ConnectedAnchor: {x: 0, y: -0.55999994}
-  m_UseMotor: 1
+  m_UseMotor: 0
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
-  m_UseLimits: 1
+  m_UseLimits: 0
   m_AngleLimits:
     m_LowerAngle: 0
     m_UpperAngle: 359
@@ -729,9 +729,9 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.5
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 5
+  m_LinearDrag: 5
+  m_AngularDrag: 1000
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -800,8 +800,6 @@ GameObject:
   - component: {fileID: 989030568}
   - component: {fileID: 989030569}
   - component: {fileID: 989030571}
-  - component: {fileID: 989030570}
-  - component: {fileID: 989030572}
   m_Layer: 0
   m_Name: MiddlePart
   m_TagString: Untagged
@@ -876,25 +874,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!255 &989030570
-FixedJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 989030567}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 2.33}
-  m_DampingRatio: 0
-  m_Frequency: 0
 --- !u!50 &989030571
 Rigidbody2D:
   serializedVersion: 4
@@ -922,27 +901,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!231 &989030572
-SpringJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 989030567}
-  m_Enabled: 1
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 274424262}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 0
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: -6.6499996}
-  m_AutoConfigureDistance: 1
-  m_Distance: 1.1699996
-  m_DampingRatio: 0
-  m_Frequency: 1
 --- !u!1001 &1064328905
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1664,7 +1622,6 @@ GameObject:
   - component: {fileID: 1864616273}
   - component: {fileID: 1864616272}
   - component: {fileID: 1864616275}
-  - component: {fileID: 1864616276}
   m_Layer: 0
   m_Name: FlatBowl_Left
   m_TagString: Untagged
@@ -1724,7 +1681,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 100
+  m_Mass: 50
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -1836,25 +1793,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.377258, y: 0.34213543}
   m_EdgeRadius: 0
---- !u!256 &1864616276
-FrictionJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1864616270}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: -6.09, y: 2.4299998}
-  m_MaxForce: 1
-  m_MaxTorque: 1
 --- !u!1 &1885619104
 GameObject:
   m_ObjectHideFlags: 0
@@ -1868,7 +1806,6 @@ GameObject:
   - component: {fileID: 1885619108}
   - component: {fileID: 1885619107}
   - component: {fileID: 1885619106}
-  - component: {fileID: 1885619110}
   m_Layer: 0
   m_Name: FlatBowl_Right
   m_TagString: Untagged
@@ -1973,7 +1910,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 100
+  m_Mass: 50
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
@@ -2040,25 +1977,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!256 &1885619110
-FrictionJoint2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1885619104}
-  m_Enabled: 0
-  serializedVersion: 4
-  m_EnableCollision: 0
-  m_ConnectedRigidBody: {fileID: 0}
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_BreakAction: 3
-  m_AutoConfigureConnectedAnchor: 1
-  m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 6.33, y: 2.4299998}
-  m_MaxForce: 1
-  m_MaxTorque: 1
 --- !u!95 &3020403985490726713
 Animator:
   serializedVersion: 5
