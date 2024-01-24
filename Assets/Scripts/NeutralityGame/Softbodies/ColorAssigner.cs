@@ -14,6 +14,7 @@ public class ColorAssigner : MonoBehaviour
     private void Awake()
     {
         sprite = GetComponent<SpriteRenderer>();
+        psController = new JelloPSContorller(); // Create an instance of JelloPSContorller
     }
 
     private void Start()
@@ -26,13 +27,12 @@ public class ColorAssigner : MonoBehaviour
         if (isOverwridden)
             return;
         // Generate random values for RGB components
-        float r = Random.Range(0.2f, 1f); // Adjust the range based on your preference
+        float r = Random.Range(0.2f, 1f);
         float g = Random.Range(0.2f, 1f);
         float b = Random.Range(0.2f, 1f);
 
         // Assign the bright color to the SpriteRenderer
         sprite.color = new Color(r, g, b);
-        psController = new JelloPSContorller();
         psController.ChangeParticleColor(ps, sprite.color);
 
         coroutine = StartCoroutine(DisablePS());
