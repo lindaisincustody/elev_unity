@@ -950,6 +950,10 @@ PrefabInstance:
       value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 1403108578824817850, guid: 69e0af09abfc1be4cb2027b771ec20a2, type: 3}
+      propertyPath: cannonBall
+      value: 
+      objectReference: {fileID: -1827674795859097507, guid: 35e3fcc0e2f8b3741a9323497a029bf8, type: 3}
+    - target: {fileID: 1403108578824817850, guid: 69e0af09abfc1be4cb2027b771ec20a2, type: 3}
       propertyPath: cannonBallHolder
       value: 
       objectReference: {fileID: 1579988253}
@@ -2058,6 +2062,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1403108578824817850, guid: 69e0af09abfc1be4cb2027b771ec20a2, type: 3}
+      propertyPath: cannonBall
+      value: 
+      objectReference: {fileID: -1827674795859097507, guid: 35e3fcc0e2f8b3741a9323497a029bf8, type: 3}
     - target: {fileID: 1403108578824817850, guid: 69e0af09abfc1be4cb2027b771ec20a2, type: 3}
       propertyPath: cannonBallHolder
       value: 
