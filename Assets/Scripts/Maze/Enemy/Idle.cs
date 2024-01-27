@@ -6,8 +6,8 @@ public class Idle : State
     private float idleDuration = 4f;
     private float timeEnteredState;
 
-    public Idle(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed) 
-        : base(_npc, _agent, _player, _mazeGenerator, _patrolSpeed, _followSpeed)
+    public Idle(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed, ENEMYTYPE _enemyType) 
+        : base(_npc, _agent, _player, _mazeGenerator, _patrolSpeed, _followSpeed, _enemyType)
     {
         patrolSpeed = _patrolSpeed;
         followSpeed = _followSpeed;
@@ -18,7 +18,8 @@ public class Idle : State
     {
         base.Enter();
         timeEnteredState = Time.time;
-
+        if (enemyType == ENEMYTYPE.MAIN)
+            idleDuration = 0.5f;
         agent.isStopped = true;
         agent.ResetPath();
     }
@@ -27,7 +28,16 @@ public class Idle : State
     {
         if (Time.time - timeEnteredState > idleDuration)
         {
-            nextState = new Patrol(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed);
+            switch (enemyType)
+            {
+                case ENEMYTYPE.PATROL:
+                    nextState = new Patrol(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed, enemyType);
+                    break;
+                case ENEMYTYPE.MAIN:
+                    nextState = new Follow(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed, enemyType);
+                    break;
+            };
+
             stage = EVENT.EXIT;
             return;
         }

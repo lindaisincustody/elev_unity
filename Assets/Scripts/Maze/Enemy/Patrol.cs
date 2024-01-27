@@ -3,8 +3,8 @@ using UnityEngine.AI;
 
 public class Patrol : State
 {
-    public Patrol(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed) 
-        : base(_npc, _agent, _player, _mazeGenerator, _patrolSpeed, _followSpeed)
+    public Patrol(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed, ENEMYTYPE _enemyType) 
+        : base(_npc, _agent, _player, _mazeGenerator, _patrolSpeed, _followSpeed, _enemyType)
     {
         name = STATE.PATROL;
         patrolSpeed = _patrolSpeed;
@@ -25,11 +25,11 @@ public class Patrol : State
             agent.SetDestination(mazeGenerator.GetRandomCellPosition());
         }
 
-        if (canReach())
-        {
-            nextState = new Follow(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed);
-            stage = EVENT.EXIT;
-        }
+        //if (canReach())
+        //{
+        //    nextState = new Follow(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed);
+        //    stage = EVENT.EXIT;
+        //}
 
         if (agent.path.corners.Length > 1)
             objectivePos = agent.path.corners[1];

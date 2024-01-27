@@ -14,6 +14,9 @@ public class EnemySpawner : MonoBehaviour
     [Header("Path Shower")]
     [SerializeField] private PathConsumable pathConsumable;
 
+    List<PatrolEnemy> createdPatrolEnemies = new List<PatrolEnemy>();
+    PatrolEnemy chosenEnemy;
+
     private int enemyCellsVariation = 2;
 
     private int _mazeWidth;
@@ -54,7 +57,8 @@ public class EnemySpawner : MonoBehaviour
         BaseEnemy exp = Instantiate(enemy, enemyPos, Quaternion.identity);
         if (exp.GetComponent<ExpandingEnemy>() != null)
             exp.GetComponent<ExpandingEnemy>().SetCellCoordinates(i + xPosVariation, j + yPosVariation, cellSize);
-
+        else
+            createdPatrolEnemies.Add((PatrolEnemy)exp);
         exp.transform.parent = gameObject.transform;
     }
 
@@ -75,5 +79,22 @@ public class EnemySpawner : MonoBehaviour
         {
             return enemyPrefab; // Chose a following enemy
         }
+    }
+
+    public Vector3? ChoosePatrolEnemyToRageMode()
+    {
+        int chosenEnemyIndex = Random.Range(0, createdPatrolEnemies.Count - 1);
+        chosenEnemy = createdPatrolEnemies[chosenEnemyIndex];
+        if (chosenEnemy != null)
+        {
+            chosenEnemy.HideEnemy();
+            return chosenEnemy.transform.position;
+        }
+        return null;
+    }
+
+    public void ExitRageMode(Vector3 mainEnemyPos)
+    {
+        chosenEnemy.AppearEnemy(mainEnemyPos);
     }
 }
