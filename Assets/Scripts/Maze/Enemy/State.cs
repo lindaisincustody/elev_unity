@@ -13,8 +13,14 @@ public class State
         ENTER, UPDATE, EXIT
     };
 
+    public enum ENEMYTYPE
+    {
+        PATROL, EXPANDING, MAIN
+    };
+
     public STATE name;
     protected EVENT stage;
+    protected ENEMYTYPE enemyType;
     protected GameObject enemyNPC;
     protected Transform player;
     protected State nextState;
@@ -25,7 +31,7 @@ public class State
     protected float patrolSpeed = 0;
     protected float followSpeed = 0;
 
-    public State(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed)
+    public State(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed, ENEMYTYPE _enemyType)
     {
         enemyNPC = _npc;
         agent = _agent;
@@ -34,6 +40,7 @@ public class State
         stage = EVENT.ENTER;
         patrolSpeed = _patrolSpeed;
         followSpeed = _followSpeed;
+        enemyType = _enemyType;
     }
 
     public virtual void Enter() {

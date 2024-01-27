@@ -8,8 +8,7 @@ public class EffectManager : MonoBehaviour
     [SerializeField] private Material wallsMat;
     [SerializeField] private Material BeamEffectMat;
     [SerializeField] private Material GlitchEffectMat;
-    [SerializeField] private AbyssController abyssController;
-    [SerializeField] private Timer timer;
+
     public float leaseEffectTime = 7f;
 
     private bool leashAffectTime = false;
@@ -42,16 +41,9 @@ public class EffectManager : MonoBehaviour
         return leashAffectTime;
     }
 
-    private void PlayerGotHit()
-    {
-        abyssController.NextStage();
-        timer.PlayerGotHit();
-    }
-
     private IEnumerator CircleMaskEffect()
     {
         leashAffectTime = true;
-        PlayerGotHit();
         leashController.LeashPlayer();
         yield return new WaitForSeconds(leaseEffectTime);
         leashController.UnleashPlayer();
@@ -61,7 +53,6 @@ public class EffectManager : MonoBehaviour
 
     public void ActivateDissolveWallsEffect()
     {
-        PlayerGotHit();
         StartCoroutine(DissolveWalls());
     }
 

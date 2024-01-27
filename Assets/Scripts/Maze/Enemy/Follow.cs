@@ -3,14 +3,15 @@ using UnityEngine.AI;
 
 public class Follow : State
 {
-    public Follow(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed) 
-        : base(_npc, _agent, _player, _mazeGenerator, _patrolSpeed, _followSpeed)
+    public Follow(GameObject _npc, NavMeshAgent _agent, Transform _player, MazeGenerator _mazeGenerator, float _patrolSpeed, float _followSpeed, ENEMYTYPE _enemyType) 
+        : base(_npc, _agent, _player, _mazeGenerator, _patrolSpeed, _followSpeed, _enemyType)
     {
         name = STATE.FOLLOW;
         patrolSpeed = _patrolSpeed;
         followSpeed = _followSpeed;
         agent.speed = followSpeed;
         agent.isStopped = false;
+        enemyType = _enemyType;
     }
 
     public override void Enter()
@@ -25,13 +26,14 @@ public class Follow : State
         if (!agent.hasPath)
             return;
 
-        if (!canReach())
-        {
-            nextState = new Idle(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed);
-            stage = EVENT.EXIT;
-        }
+        //if (!canReach())
+        //{
+        //    nextState = new Idle(enemyNPC, agent, player, mazeGenerator, patrolSpeed, followSpeed, enemyType);
+        //    stage = EVENT.EXIT;
+        //}
 
-        objectivePos = player.position;
+        if (agent.path.corners.Length > 1)
+            objectivePos = agent.path.corners[1];
     }
 
     public override void Exit()
