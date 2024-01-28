@@ -45,7 +45,7 @@ public class MainEnemy : BaseEnemy
 
     private void DeactivateMainEnemy()
     {
-        if (gameObject != null && gameObject.activeSelf)
+        if (gameObject == null && !gameObject.activeSelf)
             return;
         enemySpawner.ExitRageMode(transform.position);
 

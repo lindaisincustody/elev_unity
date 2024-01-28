@@ -21,12 +21,10 @@ public class MazePlayerMovement : MonoBehaviour
     private DistanceJoint2D joint;
 
     private bool isLeashed = false;
-    private bool isBoosting = false;
 
     private void Awake()
     {
         playerInput = GetComponent<InputManager>();
-        playerInput.OnBoost += Boost;
         playerInput.OnInteract += ActivateShortestPath;
         playerInput.OnCancel += DeactivateShortestPath;
 
@@ -46,38 +44,7 @@ public class MazePlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isBoosting)
-        {
-            // Apply boosted movement
-            rb.velocity = movement.normalized * boostForce;
-        }
-        else
-        {
-            // Apply normal movement
-            rb.velocity = movement.normalized * moveSpeed;
-        }
-    }
-
-    private void Boost()
-    {
-        if (!isBoosting)
-        {
-            // Apply the boost
-            isBoosting = true;
-            rb.velocity = movement.normalized * boostForce;
-
-            // Start a coroutine to end the boost after a specified boostDuration
-            StartCoroutine(EndBoost());
-        }
-    }
-
-    private IEnumerator EndBoost()
-    {
-        yield return new WaitForSeconds(boostDuration);
-
-        // Reset to normal movement speed
-        isBoosting = false;
-        rb.velocity = movement.normalized * moveSpeed;
+         rb.velocity = movement.normalized * moveSpeed;
     }
 
     private void ActivateShortestPath()

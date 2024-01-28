@@ -2456,6 +2456,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ChasingEnemy
       objectReference: {fileID: 0}
+    - target: {fileID: 3123432178694520124, guid: 97abb2df102d633458a513d443b2311a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4938167897911366974, guid: 97abb2df102d633458a513d443b2311a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.538673
@@ -2496,6 +2500,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5869479228791467659, guid: 97abb2df102d633458a513d443b2311a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6478811663421580372, guid: 97abb2df102d633458a513d443b2311a, type: 3}
+      propertyPath: followSpeed
+      value: 12
+      objectReference: {fileID: 0}
     - target: {fileID: 6478811663421580372, guid: 97abb2df102d633458a513d443b2311a, type: 3}
       propertyPath: enemySpawner
       value: 
@@ -2507,6 +2519,18 @@ PrefabInstance:
     - target: {fileID: 6478811663421580372, guid: 97abb2df102d633458a513d443b2311a, type: 3}
       propertyPath: rageModeDuration
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6590638924722548494, guid: 97abb2df102d633458a513d443b2311a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203634130179471998, guid: 97abb2df102d633458a513d443b2311a, type: 3}
+      propertyPath: m_Acceleration
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 9203634130179471998, guid: 97abb2df102d633458a513d443b2311a, type: 3}
+      propertyPath: m_AngularSpeed
+      value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

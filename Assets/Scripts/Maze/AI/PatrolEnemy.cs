@@ -1,8 +1,11 @@
 using UnityEngine;
 using UnityEngine.AI;
+using System;
+using System.Collections;
 
 public class PatrolEnemy : BaseEnemy
 {
+    [SerializeField] private float respawnTime = 2f;
     [SerializeField] private State.ENEMYTYPE enemyType;
 
     [Header("Body references")]
@@ -16,6 +19,7 @@ public class PatrolEnemy : BaseEnemy
     [SerializeField] private ParticleSystem[] particleSystems;
 
     private bool isHidden = false;
+    private Vector3 spawnPos;
 
     void Update()
     {
@@ -42,13 +46,25 @@ public class PatrolEnemy : BaseEnemy
         transform.rotation = targetRotation;
     }
 
-    public void HideEnemy()
+    public void HideEnemy(bool showAnimation)
     {
         isHidden = true;
-        particleManager.SetParticleSizes(false, HideEnemyBody);
+        if (showAnimation)
+            particleManager.SetParticleSizes(false, HideEnemyBody);
+        else
+        {
+            HideEnemyBody();
+            StartCoroutine(RespawnEnemy());
+        }
         eyes.SetActive(false);
         navAgent.enabled = false;
         currentState = null;
+    }
+
+    private IEnumerator RespawnEnemy()
+    {
+        yield return new WaitForSeconds(respawnTime);
+        AppearEnemy(spawnPos);
     }
 
     public void AppearEnemy(Vector3 newPos)
@@ -79,6 +95,7 @@ public class PatrolEnemy : BaseEnemy
 
     public override void ActivateEnemy()
     {
+        spawnPos = transform.position;
         particleManager.StoreOriginalValues(particleSystems);
         currentState = new Idle(gameObject, agent, target.transform, mazeGenerator, patrolSpeed, followSpeed, enemyType);
     }
@@ -91,12 +108,7 @@ public class PatrolEnemy : BaseEnemy
             mazeGenerator.DeactivateShortestPath();
             effectManager.ActivateDissolveWallsEffect();
             Instantiate(deathPS, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            HideEnemy(false);
         }
-    }
-
-    private void OnDestroy()
-    {
-        StopAllCoroutines();
     }
 }

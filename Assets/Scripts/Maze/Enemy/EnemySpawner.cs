@@ -87,7 +87,7 @@ public class EnemySpawner : MonoBehaviour
         chosenEnemy = createdPatrolEnemies[chosenEnemyIndex];
         if (chosenEnemy != null)
         {
-            chosenEnemy.HideEnemy();
+            chosenEnemy.HideEnemy(true);
             return chosenEnemy.transform.position;
         }
         return null;
