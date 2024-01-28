@@ -189,12 +189,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   patrolSpeed: 5
   followSpeed: 0
-  deathPS: {fileID: 2192659719962200384, guid: 67bfc2d749c2c7045889f62538bebb0e, type: 3}
   enemyType: 0
-  navAgent: {fileID: 1051616507901601595}
+  eyes: {fileID: 8982773535203046546}
   children:
   - {fileID: 7423854956391807545}
   - {fileID: 5741164309699554895}
+  navAgent: {fileID: 1051616507901601595}
+  particleManager: {fileID: 8965983339448232617}
+  deathPS: {fileID: 2192659719962200384, guid: 67bfc2d749c2c7045889f62538bebb0e, type: 3}
   particleSystems:
   - {fileID: 7423854956377940831}
   - {fileID: 7423854956377940823}
@@ -203,8 +205,6 @@ MonoBehaviour:
   - {fileID: 7423854956377940829}
   - {fileID: 7423854956377940819}
   - {fileID: 5741164309718071087}
-  particleManager: {fileID: 8965983339448232617}
-  eyes: {fileID: 8982773535203046546}
 --- !u!195 &1051616507901601595
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -214,7 +214,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 3530203744708220539}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
