@@ -32,14 +32,9 @@ public class PlayerMovementNeutrality : MonoBehaviour
         animator.SetFloat("Speed", movement.sqrMagnitude);
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        if (rb.velocity.y == 0)
-        {
-            rb.AddForce(new Vector2(movement.x * moveSpeed, 0f), ForceMode2D.Force);
-            rb.velocity = new Vector2(rb.velocity.x, rb.velocity.y);
-        }
-
+        rb.velocity = new Vector2(movement.x * moveSpeed, rb.velocity.y);
     }
 
     private void Jump()

@@ -4,17 +4,45 @@ using UnityEngine;
 
 public class ScalesWeight : MonoBehaviour
 {
-    [SerializeField] private Transform leftScaleSide;
-    [SerializeField] private Transform rightScaleSide;
+    [SerializeField] ScaleScoreVisualizer leftScaleVisualizer;
+    [SerializeField] ScaleScoreVisualizer rightScaleVisualizer;
 
-    public float yValue;
+    List<int> leftScaleObjects = new List<int>();
+    List<int> rightScaleObjects = new List<int>();
 
-    // Update is called once per frame
-    void Update()
+    public void AddToRightScale(int newObject)
     {
-        if (leftScaleSide.position.y < yValue && rightScaleSide.position.y < yValue)
-        {
-            Debug.Log("WIn");
-        }
+        if (rightScaleObjects.Contains(newObject))
+            return;
+
+        rightScaleObjects.Add(newObject);
+        rightScaleVisualizer.UpdateVisualizer(rightScaleObjects.Count, leftScaleObjects.Count);
+    }
+
+    public void AddToLeftScale(int newObject)
+    {
+        if (leftScaleObjects.Contains(newObject))
+            return;
+
+        leftScaleObjects.Add(newObject);
+        leftScaleVisualizer.UpdateVisualizer(leftScaleObjects.Count, rightScaleObjects.Count);
+    }
+
+    public void RemoveFromRightScale(int removedObject)
+    {
+        if (!rightScaleObjects.Contains(removedObject))
+            return;
+
+        rightScaleObjects.Remove(removedObject);
+        rightScaleVisualizer.UpdateVisualizer(rightScaleObjects.Count, leftScaleObjects.Count);
+    }
+
+    public void RemoveFromLeftScale(int removedObject)
+    {
+        if (!leftScaleObjects.Contains(removedObject))
+            return;
+
+        leftScaleObjects.Remove(removedObject);
+        leftScaleVisualizer.UpdateVisualizer(leftScaleObjects.Count, rightScaleObjects.Count);
     }
 }
