@@ -159,7 +159,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 350
   m_Sprite: {fileID: 184966159, guid: e6531851728beb747bee77ce76182a75, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -204,6 +204,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d06536e493bb60d4883fbd05633efb8d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2588690710431149974
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6480961840183504366}
+  m_Layer: 0
+  m_Name: StandingPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6480961840183504366
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2588690710431149974}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.97, y: 0.03, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 833959027119012179}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5423197718693775008
 GameObject:
   m_ObjectHideFlags: 0
@@ -267,6 +298,7 @@ Transform:
   m_Children:
   - {fileID: 5522148216717931023}
   - {fileID: 2536405232876136588}
+  - {fileID: 6480961840183504366}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1403108578824817850
@@ -284,6 +316,7 @@ MonoBehaviour:
   cannonBall: {fileID: -6560056094166878521, guid: 7d0052ae10641f545a89c6b088bcd269, type: 3}
   cannonBallHolder: {fileID: 0}
   exit: {fileID: 688171857369901838}
+  standingZone: {fileID: 6480961840183504366}
   shotAmount: 5
   delayBetweenShots: 1
   cannonForce: 1000

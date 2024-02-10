@@ -7,10 +7,13 @@ public class Gun : MonoBehaviour
     [SerializeField] float distance = 10f;
     [SerializeField] int suckInPower;
     [SerializeField] int shootPower;
-    [SerializeField] GameObject ammo;
     [SerializeField] Transform cannonBallHolder;
     [SerializeField] LayerMask consumableLayer;
     [SerializeField] SpriteRenderer liquidRenderer;
+    [SerializeField] SoftBody[] softbodies;
+    [SerializeField] SuckInEffect suckIneffect;
+    [SerializeField] GameObject bullet;
+    SoftBody.Shape suckedInShape;
 
     SoftbodySucker sucker = new SoftbodySucker();
 
@@ -24,7 +27,7 @@ public class Gun : MonoBehaviour
         {
             if (_canSuck)
             {
-                ShootRayCast();
+                SuckInSoftBody();
             }
             else if (_canShoot)
             {
@@ -33,25 +36,31 @@ public class Gun : MonoBehaviour
         }
     }
 
-    private void ShootRayCast()
+    private void SuckInSoftBody()
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, distance, consumableLayer);
         if (!hit.collider)
             return;
 
-        GameObject softbody = hit.transform.parent.gameObject;
+        SoftBody softbody = hit.transform.parent.gameObject.GetComponent<SoftBody>();
+        suckedInShape = softbody.softbodyShape;
         SoftBodyForceApplier forceApplier = softbody.GetComponent<SoftBodyForceApplier>();
-
         sucker.SuckIn(forceApplier, transform, suckInPower, liquidRenderer, OnSuckComplete);
+        suckIneffect.ActivateSuckInEffect(softbody.transform.GetChild(0));
     }
 
     private void ShootSoftBody()
     {
-        SoftBodyForceApplier newBall = Instantiate(ammo, transform.position, Quaternion.identity, cannonBallHolder).GetComponent<SoftBodyForceApplier>();
+        SoftBodyForceApplier newBall = Instantiate(GetSuckedInShape(), transform.position, Quaternion.identity, cannonBallHolder).GetComponent<SoftBodyForceApplier>();
         newBall.GetComponent<ColorAssigner>().AssignBrightColor(sucker.GetColor());
         sucker.ShootSoftBody(newBall, shootPower, transform.right);
         liquidRenderer.color = Color.white;
         OnShootComplete();
+    }
+
+    private SoftBody GetSuckedInShape()
+    {
+        return softbodies[(int)suckedInShape];
     }
 
     private void OnSuckComplete()

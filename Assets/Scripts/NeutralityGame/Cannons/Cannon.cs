@@ -6,6 +6,7 @@ public class Cannon : MonoBehaviour
     public SoftBodyForceApplier cannonBall;
     public Transform cannonBallHolder;
     public Transform exit;
+    public Transform standingZone;
     public int shotAmount = 5;
     public float delayBetweenShots = 0.3f;
     public float cannonForce = 10f;
@@ -24,15 +25,9 @@ public class Cannon : MonoBehaviour
         startingRot = transform.rotation;
     }
 
-    private void Update()
+    public void Shoot(int ammount)
     {
-        if (Input.GetKeyDown(KeyCode.F))
-            Shoot();
-    }
-
-    private void Shoot()
-    {
-        StartCoroutine(ShootCannon(shotAmount));
+        StartCoroutine(ShootCannon(ammount));
     }
 
     private IEnumerator ShootCannon(int amount)

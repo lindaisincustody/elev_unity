@@ -291,9 +291,10 @@ GameObject:
   - component: {fileID: 3241053011051368658}
   - component: {fileID: 1843263306121989492}
   - component: {fileID: -6560056094166878521}
+  - component: {fileID: -1317778837424349067}
   m_Layer: 9
   m_Name: BWCircle
-  m_TagString: Untagged
+  m_TagString: Consumable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -361,7 +362,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: eecd87ac9a0f9944eb1d2e68b68ccd62, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -435,6 +436,19 @@ MonoBehaviour:
   - {fileID: 8495569409503713352}
   - {fileID: 9062273935296635789}
   - {fileID: 3218590417682745822}
+--- !u!114 &-1317778837424349067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2305743680734730310}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 477b6cafb6b81b54cad7dbf96641e495, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  softbodyShape: 0
 --- !u!1 &4081771213294696070
 GameObject:
   m_ObjectHideFlags: 0
@@ -5973,7 +5987,7 @@ GameObject:
   - component: {fileID: 1784123181878687625}
   m_Layer: 9
   m_Name: bone_1
-  m_TagString: Untagged
+  m_TagString: Consumable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
