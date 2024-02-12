@@ -4719,6 +4719,7 @@ GameObject:
   m_Component:
   - component: {fileID: 481071138}
   - component: {fileID: 481071137}
+  - component: {fileID: 481071139}
   m_Layer: 0
   m_Name: MiniGamesManager
   m_TagString: Untagged
@@ -4758,6 +4759,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &481071139
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 481071136}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25041cf51ff1bd8448bd57404bc03a3a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mazeGameManager: {fileID: 481071137}
+  StrengthLevel: 1
+  IntelligenceLevel: 1
+  CoordinationLevel: 1
+  NeutralityLevel: 1
 --- !u!1 &482397346
 GameObject:
   m_ObjectHideFlags: 0
@@ -8718,6 +8736,8 @@ MonoBehaviour:
   hero: {fileID: 1794075888}
   skillTree: {fileID: 6934134396752383111}
   displayer: {fileID: 6934134396752383112}
+  oldWord: {fileID: 0}
+  wordHolder: {fileID: 0}
   bookAnimationCurve:
     serializedVersion: 2
     m_Curve: []
@@ -19665,7 +19685,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7762930435568730725}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481071139}
+        m_TargetAssemblyTypeName: MiniGamesManager, Assembly-CSharp
+        m_MethodName: StartStrengthGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1301584214622113010
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20616,7 +20648,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1578267204215582281}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481071139}
+        m_TargetAssemblyTypeName: MiniGamesManager, Assembly-CSharp
+        m_MethodName: StartIntelligenceGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!224 &3472205981600324614
 RectTransform:
   m_ObjectHideFlags: 0
@@ -20911,7 +20955,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &3777190953235372635
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22091,9 +22135,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 481071137}
-        m_TargetAssemblyTypeName: ActivateMazeGame, Assembly-CSharp
-        m_MethodName: LoadMazeMinigame
+      - m_Target: {fileID: 481071139}
+        m_TargetAssemblyTypeName: MiniGamesManager, Assembly-CSharp
+        m_MethodName: StartMazeGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -23176,7 +23220,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 9206142738765647943}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 481071139}
+        m_TargetAssemblyTypeName: MiniGamesManager, Assembly-CSharp
+        m_MethodName: StartNeutralityGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &7259272696507876790
 MonoBehaviour:
   m_ObjectHideFlags: 0

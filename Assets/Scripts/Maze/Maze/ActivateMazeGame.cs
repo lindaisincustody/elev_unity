@@ -14,14 +14,11 @@ public class ActivateMazeGame : MonoBehaviour
 
     public DataManager dataManager;
 
-    public void LoadMazeMinigame()
+    public void LoadMazeMinigame(int level)
     {
-        mazeData.MazeHeight = (int)(attributes.heroCoordination / attributes.numberOfPoems * MaxMazeHeight);
-        mazeData.MazeWidth = (int)(attributes.heroCoordination / attributes.numberOfPoems * MaxMazeWidth);
-        if (mazeData.MazeHeight < 5)
-            mazeData.MazeHeight = 5;
-        if (mazeData.MazeWidth < 5)
-            mazeData.MazeWidth = 5;
+        mazeData.MazeHeight = level + 5;
+        mazeData.MazeWidth = level + 5;
+
 
         dataManager.SavePlayerPosition(() =>
         {

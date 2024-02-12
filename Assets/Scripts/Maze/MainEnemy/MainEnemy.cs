@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.SceneManagement;
 
 public class MainEnemy : BaseEnemy
 {
@@ -20,9 +21,14 @@ public class MainEnemy : BaseEnemy
 
     [Header("References")]
     [SerializeField] private EnemySpawner enemySpawner;
-
+    private MiniGamesManager miniGamesManager;
 
     private bool isActive = false;
+
+    void Awake()
+    { 
+        miniGamesManager = FindObjectOfType<MiniGamesManager>();
+    }
 
     void Update()
     {
@@ -115,7 +121,7 @@ public class MainEnemy : BaseEnemy
     {
         if (collision.CompareTag("Player"))
         {
-
+            SceneManager.LoadScene("SampleScene");
         }
     }
 }

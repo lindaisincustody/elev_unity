@@ -9,11 +9,16 @@ public class GameController : MonoBehaviour
     public Sprite correctDestinationSprite;
     public int gridSizeX = 3;
     public int gridSizeY = 3;
-    private int numberOfLevels = 20; // Start with level 1
+    private int level = 20; // Start with level 1
 
     private List<Vector2Int> oPositions;
     private Vector2Int correctDestination;
 
+    private void Awake()
+    {
+        level = PlayerPrefs.GetInt("IntelligenceLevel", 1);
+        Debug.Log("XD: " + level);
+    }
 
     void Start()
     {
@@ -77,7 +82,7 @@ public class GameController : MonoBehaviour
         for (int retryCount = 0; retryCount < maxRetries && !destinationFound; retryCount++)
         {
             // Generate positions for O's using recursive backtracking
-            for (int i = 1; i <= numberOfLevels; i++)
+            for (int i = 1; i <= level; i++)
             {
                 Vector2Int previousPosition = oPositions[i - 1];
                 Vector2Int nextPosition = GenerateNextPosition(previousPosition);
@@ -184,7 +189,7 @@ public class GameController : MonoBehaviour
         if (playerPosition == adjustedDestination)
         {
             Debug.Log("You won! Reached the correct destination: " + correctDestination);
-            numberOfLevels++;
+            level++;
 
             // Teleport the player to the specified position
             playerController.TeleportPlayer(new Vector2Int(-4, -3));
