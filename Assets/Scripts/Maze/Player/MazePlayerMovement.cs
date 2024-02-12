@@ -19,6 +19,7 @@ public class MazePlayerMovement : MonoBehaviour
 
     private LineRenderer leashRenderer;
     private DistanceJoint2D joint;
+    private MiniGamesManager miniGamesManager;
 
     private bool isLeashed = false;
 
@@ -30,6 +31,8 @@ public class MazePlayerMovement : MonoBehaviour
 
         joint = GetComponent<DistanceJoint2D>();
         leashRenderer = GetComponent<LineRenderer>();
+
+        miniGamesManager = FindObjectOfType<MiniGamesManager>();
     }
 
     void Update()
@@ -60,8 +63,15 @@ public class MazePlayerMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("MazeEnd"))
+        {
+            var level = PlayerPrefs.GetInt("CoordinationLevel", 1);
+            level++;
+            PlayerPrefs.SetInt("CoordinationLevel", level);
+            Debug.Log("Saving: " + level);
+            miniGamesManager.CoordinationLevel++;
             SceneManager.LoadScene("SampleScene");
-    }
+        }
+    }   
 
     public void LeashToObject(Rigidbody2D rbToLeash, Transform enemyPos)
     {

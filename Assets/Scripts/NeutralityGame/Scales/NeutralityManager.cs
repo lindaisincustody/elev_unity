@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NeutralityManager : MonoBehaviour
 {
@@ -10,10 +11,21 @@ public class NeutralityManager : MonoBehaviour
 
     public Action gameStart;
 
+    private void Awake()
+    {
+        scoreToWin =  PlayerPrefs.GetInt("NeutralityLevel") + 2;
+    }
+
     private void Start()
     {
         scoreLossdDifference = (int)(3 * 0.6f);
         StartCoroutine(StartGame());
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.A))
+            Win();
     }
 
     private IEnumerator StartGame()
@@ -24,12 +36,16 @@ public class NeutralityManager : MonoBehaviour
 
     public void Win()
     {
-        Debug.Log("Neutrality Game Won!");
+        scoreToWin++;
+        int level = PlayerPrefs.GetInt("NeutralityLevel");
+        level++;
+        PlayerPrefs.SetInt("NeutralityLevel", level);
+        SceneManager.LoadScene("SampleScene");
     }
 
     public void Lose()
     {
-        Debug.Log("Neutrality Game Lost!");
+        SceneManager.LoadScene("SampleScene");
     }
 
     public int GetScoreToWin()
