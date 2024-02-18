@@ -16,8 +16,7 @@ public class GameController : MonoBehaviour
 
     private void Awake()
     {
-        level = PlayerPrefs.GetInt("IntelligenceLevel", 1);
-        Debug.Log("XD: " + level);
+        level = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceLevel, 1);
     }
 
     void Start()

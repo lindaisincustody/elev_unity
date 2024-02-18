@@ -57,12 +57,9 @@ public class SuckInEffect : MonoBehaviour
 
     public void ActivateWind()
     {
-        if (isWindingUp)
-            return;
         ActivateSuckInColliders();
         lineRenderer.enabled = true;
         isWindingUp = true;
-        StartCoroutine(StartWindingUp());
     }
 
     private void UpdateColliders()
@@ -115,13 +112,6 @@ public class SuckInEffect : MonoBehaviour
             yield return null;
         }
     }
-
-    private IEnumerator StartWindingUp()
-    {
-        yield return new WaitForSeconds(3f);
-        lineRenderer.enabled = false;
-        isWindingUp = false;
-    }   
     
     public void ActivateSuckInColliders()
     {

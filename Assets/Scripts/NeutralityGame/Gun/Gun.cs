@@ -1,51 +1,55 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    [SerializeField] float distance = 10f;
-    [SerializeField] int suckInPower;
-    [SerializeField] int shootPower;
-    [SerializeField] Transform cannonBallHolder;
-    [SerializeField] LayerMask consumableLayer;
-    [SerializeField] SpriteRenderer liquidRenderer;
-    [SerializeField] SoftBody[] softbodies;
-    [SerializeField] SuckInEffect suckIneffect;
-    [SerializeField] Transform gunEnd;
-    SoftBody.Shape suckedInShape;
+    [SerializeField] private float distance = 10f;
+    [SerializeField] private int suckInPower;
+    [SerializeField] private int shootPower;
+    [SerializeField] private Transform cannonBallHolder;
+    [SerializeField] private LayerMask consumableLayer;
+    [SerializeField] private SpriteRenderer liquidRenderer;
+    [SerializeField] private SoftBody[] softbodies;
+    [SerializeField] private SuckInEffect suckIneffect;
+    [SerializeField] private Transform gunEnd;
+    [SerializeField] private InputManager playerInput;
+    private SoftBody.Shape suckedInShape;
+    private bool canShoot = false;
+    private SoftbodySucker sucker;
 
-    SoftbodySucker sucker = new SoftbodySucker();
-
-    bool _canShoot = false;
-    bool _canSuck = true;
-
-    void Update()
+    private void Awake()
     {
-        if (Input.GetMouseButtonDown(0))
+        playerInput.OnFire += Shoot;
+    }
+
+    private void Start()
+    {
+        StartCoroutine(Init());
+    }
+
+    private IEnumerator Init()
+    {
+        yield return new WaitForSeconds(1f);
+        sucker = new SoftbodySucker();
+        suckIneffect.ActivateWind();
+    }
+
+    private void Shoot()
+    {
+        if (canShoot)
         {
-            if (_canShoot)
-            {
-                ShootSoftBody();
-            }
-            else if (_canSuck)
-            {
-                ShootWindStream();
-            }
+            ShootSoftBody();
         }
     }
 
-    private void ShootWindStream()
+    private IEnumerator ShootWindStream()
     {
+        yield return new WaitForSeconds(1f);
         suckIneffect.ActivateWind();
     }
 
     public void SuckInSoftBody(SoftBody softbody)
     {
-        Debug.Log(softbody.name);
-        if (_canShoot)
-            return;
-
         suckedInShape = softbody.softbodyShape;
         SoftBodyForceApplier forceApplier = softbody.GetComponent<SoftBodyForceApplier>();
         sucker.SuckIn(forceApplier, transform, suckInPower, liquidRenderer, OnSuckComplete);
@@ -54,11 +58,12 @@ public class Gun : MonoBehaviour
 
     private void ShootSoftBody()
     {
+        canShoot = false;
         SoftBodyForceApplier newBall = Instantiate(GetSuckedInShape(), gunEnd.position, Quaternion.identity, cannonBallHolder).GetComponent<SoftBodyForceApplier>();
         newBall.GetComponent<ColorAssigner>().AssignBrightColor(sucker.GetColor());
         sucker.ShootSoftBody(newBall, shootPower, transform.right);
         liquidRenderer.color = Color.white;
-        OnShootComplete();
+        StartCoroutine(ShootWindStream());
     }
 
     private SoftBody GetSuckedInShape()
@@ -68,13 +73,6 @@ public class Gun : MonoBehaviour
 
     private void OnSuckComplete()
     {
-        _canShoot = true;
-        _canSuck = false;
-    }
-
-    private void OnShootComplete()
-    {
-        _canShoot = false;
-        _canSuck = true;
+        canShoot = true;
     }
 }

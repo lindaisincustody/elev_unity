@@ -6,11 +6,14 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
-    public event Action OnInteract = delegate { };
-    public event Action OnCancel   = delegate { };
-    public event Action OnBoost =    delegate { };
-    public event Action OnJump     = delegate { };
-
+    public event Action OnInteract    = delegate { };
+    public event Action OnCancel      = delegate { };
+    public event Action OnJump        = delegate { };
+    public event Action OnFire        = delegate { };
+    public event Action OnRLeft       = delegate { };
+    public event Action OnRLeftCancel = delegate { };
+    public event Action OnLLeft       = delegate { };
+    public event Action OnLLeftCancel = delegate { };
     public Vector2 inputVector { get; private set; }
 
     Controls inputActions;
@@ -23,10 +26,14 @@ public class InputManager : MonoBehaviour
     private void OnEnable()
     {
         inputActions.Player.Enable();
-        inputActions.Player.Interact.performed += Interact;
-        inputActions.Player.Cancel.performed   += Cancel;
-        inputActions.Player.Boost.performed    += Boost;
-        inputActions.Player.Jump.performed     += Jump;
+        inputActions.Player.Interact.performed    += Interact;
+        inputActions.Player.Cancel.performed      += Cancel;
+        inputActions.Player.Jump.performed        += Jump;
+        inputActions.Player.Fire.performed        += Fire;
+        inputActions.Player.RotateLeft.performed  += RotateLeft;
+        inputActions.Player.RotateLeft.canceled   += RotateLeft;
+        inputActions.Player.RotateRight.performed += RotateRight;
+        inputActions.Player.RotateRight.canceled  += RotateRight;
     }
 
     private void OnDisable()
@@ -55,14 +62,6 @@ public class InputManager : MonoBehaviour
         }
     }
 
-    private void Boost(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            OnBoost();
-        }
-    }
-
     private void Jump(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -70,5 +69,36 @@ public class InputManager : MonoBehaviour
             OnJump();
         }
     }
-        
+
+    private void Fire(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnFire();
+        }
+    }
+    
+    private void RotateLeft(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnRLeft();
+        }
+        if (context.canceled)
+        {
+            OnRLeftCancel();
+        }
+    }
+
+    private void RotateRight(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnLLeft();
+        }
+        if (context.canceled)
+        {
+            OnLLeftCancel();
+        }
+    }
 }

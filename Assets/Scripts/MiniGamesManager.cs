@@ -14,27 +14,29 @@ public class MiniGamesManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
+        StrengthLevel = PlayerPrefs.GetInt(Constants.StrengthGameName, 1);
+        IntelligenceLevel = PlayerPrefs.GetInt(Constants.IntelligenceGameName, 1);
+        CoordinationLevel = PlayerPrefs.GetInt(Constants.CoordinationGameName, 1);
+        NeutralityLevel = PlayerPrefs.GetInt(Constants.NeutralityGameName, 1);
     }
 
     public void StartMazeGame()
     {
-        CoordinationLevel = PlayerPrefs.GetInt("CoordinationLevel", 1);
-        
-        mazeGameManager.LoadMazeMinigame(CoordinationLevel);
+        SceneManager.LoadScene(Constants.SceneNames.CoordinationGameScene);
     }
 
     public void StartNeutralityGame()
     {
-        SceneManager.LoadScene("NeutralityGame");
+        SceneManager.LoadScene(Constants.SceneNames.NeutralityGameScene);
     }
 
     public void StartIntelligenceGame()
     {
-        SceneManager.LoadScene("IntelligenceGame");
+        SceneManager.LoadScene(Constants.SceneNames.IntelligenceGameScene);
     }
 
     public void StartStrengthGame()
     {
-        SceneManager.LoadScene("Strength");
+        SceneManager.LoadScene(Constants.SceneNames.StrengthGameScene);
     }
 }

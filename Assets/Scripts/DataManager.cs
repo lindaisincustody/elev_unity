@@ -35,19 +35,19 @@ public class DataManager : MonoBehaviour
 
     public void SavePlayerPosition(Action onSaved)
     {
-        //string sceneName = SceneManager.GetActiveScene().name;
-        //if (_saveManager.saveGame.savedProgress.ContainsKey(sceneName))
-        //{
-        //    _saveManager.saveGame.savedProgress[sceneName] = new Level(sceneName, player.position);
-        //}
-        //else
-        //{
-        //    _saveManager.saveGame.savedProgress.Add(sceneName, new Level(sceneName, player.position));
-        //}
-        //_saveManager.SaveAsync(exists =>
-        //{
-        //    if (onSaved != null)
-        //        onSaved.Invoke();
-        //});
+        string sceneName = SceneManager.GetActiveScene().name;
+        if (_saveManager.saveGame.savedProgress.ContainsKey(sceneName))
+        {
+            _saveManager.saveGame.savedProgress[sceneName] = new Level(sceneName, player.position);
+        }
+        else
+        {
+            _saveManager.saveGame.savedProgress.Add(sceneName, new Level(sceneName, player.position));
+        }
+        _saveManager.SaveAsync(exists =>
+        {
+            if (onSaved != null)
+                onSaved.Invoke();
+        });
     }
 }

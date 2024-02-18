@@ -12,9 +12,9 @@ public class ScaleTriggers : MonoBehaviour
         if (collision.CompareTag("Consumable"))
         {
             if (scaleSide == Scales.Left)
-                scales.AddToLeftScale(collision.GetInstanceID());
+                scales.AddToLeftScale(collision.gameObject.GetInstanceID());
             else
-                scales.AddToRightScale(collision.GetInstanceID());
+                scales.AddToRightScale(collision.gameObject.GetInstanceID());
         }
     }
 
@@ -23,9 +23,9 @@ public class ScaleTriggers : MonoBehaviour
         if (collision.CompareTag("Consumable"))
         {
             if (scaleSide == Scales.Left)
-                scales.RemoveFromLeftScale(collision.GetInstanceID());
+                scales.RemoveFromLeftScale(collision.gameObject.GetInstanceID());
             else
-                scales.RemoveFromRightScale(collision.GetInstanceID());
+                scales.RemoveFromRightScale(collision.gameObject.GetInstanceID());
         }
     }
 

@@ -22,4 +22,9 @@ public class SoftbodySucker
     {
         return color;
     }
+
+    internal void SuckIn(SoftBodyForceApplier forceApplier, Transform transform, int suckInPower, SpriteRenderer liquidRenderer, object v)
+    {
+        throw new NotImplementedException();
+    }
 }

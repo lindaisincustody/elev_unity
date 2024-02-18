@@ -64,12 +64,11 @@ public class MazePlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("MazeEnd"))
         {
-            var level = PlayerPrefs.GetInt("CoordinationLevel", 1);
+            var level = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel, 1);
             level++;
-            PlayerPrefs.SetInt("CoordinationLevel", level);
-            Debug.Log("Saving: " + level);
+            PlayerPrefs.SetInt(Constants.PlayerPrefs.CoordinationLevel, level);
             miniGamesManager.CoordinationLevel++;
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene(Constants.SceneNames.MainScene);
         }
     }   
 
