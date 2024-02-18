@@ -18,11 +18,13 @@ public class IntelligencePlayerController : MonoBehaviour
 
         if (other.CompareTag("X"))
         {
+            Debug.Log("X");
             // Player stepped on X, change it to O
             ChangeObjectSpriteAndTag(other.gameObject, oSprite, "O");
         }
-        if (other.CompareTag("O"))
+        else if (other.CompareTag("O"))
         {
+            Debug.Log("O");
             // Player stepped on O, change it to X
             ChangeObjectSpriteAndTag(other.gameObject, xSprite, "X");
         }
