@@ -1,22 +1,40 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour
 {
     public GameObject xPrefab;
     public GameObject oPrefab;
     public Sprite correctDestinationSprite;
-    public int gridSizeX = 3;
-    public int gridSizeY = 3;
-    private int numberOfLevels = 20; // Start with level 1
+
+    public int ActualGameLevel = 1;
+
+    private int currentLevel = 1; // Start with level 1
+    private int difficultyLevel = 1; // overall difficulty
+
+    public TMP_Text levelCurrentText;
+    public TMP_Text levelsWonText;
+    public TMP_Text levelsLostText;
+    public int lostLevels = 0;
+    public int wonLevels = 0;
 
     private List<Vector2Int> oPositions;
     private Vector2Int correctDestination;
 
+    private int gridSizeX = 20;
+    private int gridSizeY = 20;
+
+   
+    
 
     void Start()
     {
+        currentLevel = ActualGameLevel;
+        difficultyLevel = ActualGameLevel;
         GenerateLevel();
     }
 
@@ -25,7 +43,7 @@ public class GameController : MonoBehaviour
         DestroyOldLevel(); // Destroy the old level before generating a new one
 
         bool solvableLevelGenerated = false;
-        int maxRetries = 10; // Adjust the maximum number of retries as needed
+        int maxRetries = 20; // Adjust the maximum number of retries as needed
 
         for (int retryCount = 0; retryCount < maxRetries; retryCount++)
         {
@@ -49,14 +67,16 @@ public class GameController : MonoBehaviour
         if (!solvableLevelGenerated)
         {
             // Handle the situation where a solvable level could not be generated within the maximum retries
+            
             Debug.LogError("Failed to generate a solvable level within the maximum retries.");
+            Application.Quit();
         }
     }
 
     void DestroyOldLevel()
     {
         // Destroy all game objects with either "O" or "X" tag
-        GameObject[] oldObjects = GameObject.FindGameObjectsWithTag("O").Concat(GameObject.FindGameObjectsWithTag("X")).ToArray();
+        GameObject[] oldObjects = GameObject.FindGameObjectsWithTag("O").Concat(GameObject.FindGameObjectsWithTag("X")).Concat(GameObject.FindGameObjectsWithTag("CorrectDestination")).ToArray();
 
         foreach (GameObject oldObject in oldObjects)
         {
@@ -71,13 +91,13 @@ public class GameController : MonoBehaviour
         oPositions.Add(playerStartPosition);
 
         bool destinationFound = false;
-        int maxRetries = 10; // Adjust the maximum number of retries as needed
+        int maxRetries = 100; // Adjust the maximum number of retries as needed
 
         // Attempt to find solvable level with a valid destination
         for (int retryCount = 0; retryCount < maxRetries && !destinationFound; retryCount++)
         {
             // Generate positions for O's using recursive backtracking
-            for (int i = 1; i <= numberOfLevels; i++)
+            for (int i = 1; i <= difficultyLevel; i++)
             {
                 Vector2Int previousPosition = oPositions[i - 1];
                 Vector2Int nextPosition = GenerateNextPosition(previousPosition);
@@ -110,14 +130,16 @@ public class GameController : MonoBehaviour
         }
 
         // Instantiate O prefabs at generated positions
-        foreach (Vector2Int position in oPositions)
+        for (int i = 0; i < oPositions.Count; i++)
         {
+            Vector2Int position = oPositions[i];
             GameObject oObject = Instantiate(oPrefab, new Vector3(position.x - 4, position.y - 3, 0), Quaternion.identity);
 
-            // Change the sprite of the correct destination
             if (position == correctDestination)
             {
                 oObject.GetComponent<SpriteRenderer>().sprite = correctDestinationSprite;
+                oObject.tag = "CorrectDestination";
+                break; // Exit the loop after processing the correct destination
             }
         }
     }
@@ -167,24 +189,59 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            CheckWinCondition();
-        }
-        Debug.Log(correctDestination);
+        //IntelligencePlayerController playerController = FindObjectOfType<IntelligencePlayerController>();
+        //Vector2Int playerPosition = playerController.GetCurrentPosition();
+        //Vector2Int adjustedDestination = new Vector2Int(correctDestination.x - 4, correctDestination.y - 3);
+
+        //// Check if the player is within a 1-unit range of the adjusted destination
+        //if (Mathf.Abs(playerPosition.x - adjustedDestination.x) <= 1 &&
+        //    Mathf.Abs(playerPosition.y - adjustedDestination.y) <= 1)
+        //{
+        //    Invoke("CheckWinCondition", 0.4f);
+        //}
+
+        //Debug.Log(correctDestination);
+        UpdateWonLevelsText();
+        UpdateLostLevelsText();
+        UpdateCurrentLevelsText();
+
+        CheckOverallWin();
     }
 
-    void CheckWinCondition()
+    public void CheckOverallWin()
+    {
+        if (currentLevel > 10)
+        {
+            if (wonLevels - lostLevels >= currentLevel / 3)
+            {
+                ActualGameLevel++;
+                Debug.Log("You won!");
+                SceneManager.LoadScene("SampleScene");
+            }
+            else
+            {
+                Debug.Log("You Lost!");
+                SceneManager.LoadScene("SampleScene");
+            }
+        }
+    }
+    public void CheckWinCondition()
     {
         IntelligencePlayerController playerController = FindObjectOfType<IntelligencePlayerController>();
         Vector2Int playerPosition = playerController.GetCurrentPosition();
         Vector2Int adjustedDestination = new Vector2Int(correctDestination.x - 4, correctDestination.y - 3);
 
         // Check if the player is on the correct destination
-        if (playerPosition == adjustedDestination)
+        //if (playerPosition == adjustedDestination)
+        //{
+        GameObject[] objectsWithTagO = GameObject.FindGameObjectsWithTag("O");
+
+        // If no objects with tag "O" are found, return true (all converted)
+        if (objectsWithTagO.Length == 0)
         {
             Debug.Log("You won! Reached the correct destination: " + correctDestination);
-            numberOfLevels++;
+            IncreaseLevelWon();
+            IncreaseLevel();
 
             // Teleport the player to the specified position
             playerController.TeleportPlayer(new Vector2Int(-4, -3));
@@ -193,11 +250,46 @@ public class GameController : MonoBehaviour
         }
         else
         {
-            Debug.Log("You reached the wrong destination or not all O's turned into X. Try again!");
+            Debug.Log("Not all O's turned into X. Try again!");
+            IncreaseLevelLost();
+            IncreaseLevel();
+            playerController.TeleportPlayer(new Vector2Int(-4, -3));
+            GenerateLevel();
         }
     }
 
+    void UpdateWonLevelsText()
+    {
+        // Update the TMP text to display the current value of wonLevels
+        levelsWonText.text = wonLevels.ToString();
+    }
+    void UpdateLostLevelsText()
+    {
+        // Update the TMP text to display the current value of wonLevels
+        levelsLostText.text = lostLevels.ToString();
+    }
+    void UpdateCurrentLevelsText()
+    {
+        // Update the TMP text to display the current value of wonLevels
+        levelCurrentText.text = "Current Level: " + currentLevel.ToString();
+    }
 
+    void IncreaseLevel()
+    {
+        currentLevel++;
+        if(currentLevel % 3 == 0)
+            difficultyLevel++;
+        //gridSizeX= gridSizeX + 2;
+        //gridSizeY = gridSizeY + 2;
+    }
+    void IncreaseLevelWon()
+    {
+        wonLevels++;
+    }
+    void IncreaseLevelLost()
+    {
+        lostLevels++; 
+    }
 
     bool CanReachDestination(Vector2Int start, Vector2Int destination)
     {
