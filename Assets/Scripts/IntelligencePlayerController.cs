@@ -6,15 +6,22 @@ public class IntelligencePlayerController : MonoBehaviour
 {
     public Sprite xSprite;
     public Sprite oSprite;
+
+    GameController game;
     // Start is called before the first frame update
     void OnTriggerEnter2D(Collider2D other)
     {
+        GameController gameCon = FindObjectOfType<GameController>();
+
+        if (other.gameObject.CompareTag("CorrectDestination"))
+            gameCon.CheckWinCondition();
+
         if (other.CompareTag("X"))
         {
             // Player stepped on X, change it to O
             ChangeObjectSpriteAndTag(other.gameObject, oSprite, "O");
         }
-        else if (other.CompareTag("O"))
+        if (other.CompareTag("O"))
         {
             // Player stepped on O, change it to X
             ChangeObjectSpriteAndTag(other.gameObject, xSprite, "X");
