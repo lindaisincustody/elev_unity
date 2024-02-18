@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        GameLevel = PlayerPrefs.GetInt(Constants.PlayerPrefs.StrengthLevel, 1);
         // Start the coroutine to instantiate projectiles
         StartCoroutine(InstantiateProjectiles());
 
@@ -38,14 +39,15 @@ public class GameManager : MonoBehaviour
         {
 
             GameLevel++;
+            PlayerPrefs.SetInt(Constants.PlayerPrefs.StrengthLevel, GameLevel);
             Debug.Log("You Won!");
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene(Constants.SceneNames.MainScene);
         }
 
         if (heartController.hp <= 0)
         {
             Debug.Log("You Lost!");
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene(Constants.SceneNames.MainScene);
         }
 
     }

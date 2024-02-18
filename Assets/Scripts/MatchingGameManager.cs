@@ -33,6 +33,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
+        ActualGameLevel = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceLevel, 1);
         currentLevel = ActualGameLevel;
         difficultyLevel = ActualGameLevel;
         GenerateLevel();
@@ -215,13 +216,14 @@ public class GameController : MonoBehaviour
             if (wonLevels - lostLevels >= currentLevel / 3)
             {
                 ActualGameLevel++;
+                PlayerPrefs.SetInt(Constants.PlayerPrefs.IntelligenceLevel, ActualGameLevel);
                 Debug.Log("You won!");
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene(Constants.SceneNames.MainScene);
             }
             else
             {
                 Debug.Log("You Lost!");
-                SceneManager.LoadScene("SampleScene");
+                SceneManager.LoadScene(Constants.SceneNames.MainScene);
             }
         }
     }
