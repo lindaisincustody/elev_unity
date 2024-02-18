@@ -13,7 +13,7 @@ public class NeutralityManager : MonoBehaviour
 
     private void Awake()
     {
-        scoreToWin =  PlayerPrefs.GetInt("NeutralityLevel") + 2;
+        scoreToWin =  PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel) + 2;
     }
 
     private void Start()
@@ -24,7 +24,7 @@ public class NeutralityManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A))
+        if (Input.GetKeyDown(KeyCode.O))
             Win();
     }
 
@@ -36,16 +36,18 @@ public class NeutralityManager : MonoBehaviour
 
     public void Win()
     {
+        Debug.Log("You Won");
         scoreToWin++;
-        int level = PlayerPrefs.GetInt("NeutralityLevel");
+        int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
         level++;
-        PlayerPrefs.SetInt("NeutralityLevel", level);
-        SceneManager.LoadScene("SampleScene");
+        PlayerPrefs.SetInt(Constants.PlayerPrefs.NeutralityLevel, level);
+        SceneManager.LoadScene(Constants.SceneNames.MainScene);
     }
 
     public void Lose()
     {
-        SceneManager.LoadScene("SampleScene");
+        Debug.Log("You Lost");
+        SceneManager.LoadScene(Constants.SceneNames.MainScene);
     }
 
     public int GetScoreToWin()

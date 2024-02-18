@@ -21,14 +21,8 @@ public class MainEnemy : BaseEnemy
 
     [Header("References")]
     [SerializeField] private EnemySpawner enemySpawner;
-    private MiniGamesManager miniGamesManager;
 
     private bool isActive = false;
-
-    void Awake()
-    { 
-        miniGamesManager = FindObjectOfType<MiniGamesManager>();
-    }
 
     void Update()
     {
@@ -121,7 +115,7 @@ public class MainEnemy : BaseEnemy
     {
         if (collision.CompareTag("Player"))
         {
-            SceneManager.LoadScene("SampleScene");
+            SceneManager.LoadScene(Constants.SceneNames.MainScene);
         }
     }
 }
