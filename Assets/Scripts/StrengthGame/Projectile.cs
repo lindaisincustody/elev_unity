@@ -23,6 +23,7 @@ public class Projectile : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
+        GameManager gameController = FindObjectOfType<GameManager>();
         // Check if the projectile collided with the heart
         if (other.CompareTag("Heart"))
         {
@@ -45,6 +46,7 @@ public class Projectile : MonoBehaviour
                     playerCollider = other;
 
                     // Implement any logic you need when the projectile is blocked
+                    gameController.score++;
                     Debug.Log("Projectile blocked by player!");
 
                     // Play the blocking animation on the player
