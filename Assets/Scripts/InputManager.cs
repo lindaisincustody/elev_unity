@@ -10,10 +10,7 @@ public class InputManager : MonoBehaviour
     public event Action OnCancel      = delegate { };
     public event Action OnJump        = delegate { };
     public event Action OnFire        = delegate { };
-    public event Action OnRLeft       = delegate { };
-    public event Action OnRLeftCancel = delegate { };
-    public event Action OnLLeft       = delegate { };
-    public event Action OnLLeftCancel = delegate { };
+    public event Action OnNext        = delegate { };
     public Vector2 inputVector { get; private set; }
 
     Controls inputActions;
@@ -30,10 +27,7 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Cancel.performed      += Cancel;
         inputActions.Player.Jump.performed        += Jump;
         inputActions.Player.Fire.performed        += Fire;
-        inputActions.Player.RotateLeft.performed  += RotateLeft;
-        inputActions.Player.RotateLeft.canceled   += RotateLeft;
-        inputActions.Player.RotateRight.performed += RotateRight;
-        inputActions.Player.RotateRight.canceled  += RotateRight;
+        inputActions.Player.Next.performed        += Next;
     }
 
     private void OnDisable()
@@ -77,28 +71,13 @@ public class InputManager : MonoBehaviour
             OnFire();
         }
     }
-    
-    private void RotateLeft(InputAction.CallbackContext context)
+
+    private void Next(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            OnRLeft();
-        }
-        if (context.canceled)
-        {
-            OnRLeftCancel();
+            OnNext();
         }
     }
 
-    private void RotateRight(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            OnLLeft();
-        }
-        if (context.canceled)
-        {
-            OnLLeftCancel();
-        }
-    }
 }

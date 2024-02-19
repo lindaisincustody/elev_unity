@@ -3,14 +3,20 @@ using UnityEngine;
 
 public class Cannon : MonoBehaviour
 {
+    [Header("Cannonball Prefab")]
     public SoftBodyForceApplier cannonBall;
-    public Transform cannonBallHolder;
-    public Transform exit;
-    public Transform standingZone;
+
+    [Header("Parameters")]
     public int shotAmount = 5;
     public float delayBetweenShots = 0.3f;
     public float cannonForce = 10f;
     public float rotationAngle = 15f;
+
+    [Header("References")]
+    public SoftbodyHolder holder;
+    public Transform cannonBallHolder;
+    public Transform exit;
+    public Transform standingZone;
 
     private CannonAnimator anim;
     private Quaternion startingRot;
@@ -45,6 +51,7 @@ public class Cannon : MonoBehaviour
     private void ShootCannonBall()
     {
         SoftBodyForceApplier newBall = Instantiate(cannonBall, exit.position, Quaternion.identity, cannonBallHolder);
+        holder.softbodies.Add(newBall.transform.GetChild(0));
         newBall.ApplyForce(cannonForce, exit.up);
     }
 
