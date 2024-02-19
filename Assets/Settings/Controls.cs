@@ -75,18 +75,9 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""RotateLeft"",
+                    ""name"": ""Next"",
                     ""type"": ""Button"",
-                    ""id"": ""22ca89d8-5036-4105-a2ab-88a1b73181ef"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""RotateRight"",
-                    ""type"": ""Button"",
-                    ""id"": ""a3e34d2f-5ce2-4b00-bd53-8b4365b0afdc"",
+                    ""id"": ""c88e04bf-5c72-42ae-a72e-54b926e192d1"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -272,23 +263,12 @@ namespace UnityEngine.InputSystem
                 },
                 {
                     ""name"": """",
-                    ""id"": ""4c5e652c-033b-4c02-9379-2eef03705157"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""id"": ""5dff6fe1-01e2-4e4b-9f17-70aa63b241c5"",
+                    ""path"": ""<Keyboard>/tab"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""RotateLeft"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""227bae38-67a7-4d5e-8753-d88c8bbe49c0"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""RotateRight"",
+                    ""action"": ""Next"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -881,8 +861,7 @@ namespace UnityEngine.InputSystem
             m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
             m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
-            m_Player_RotateLeft = m_Player.FindAction("RotateLeft", throwIfNotFound: true);
-            m_Player_RotateRight = m_Player.FindAction("RotateRight", throwIfNotFound: true);
+            m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -961,8 +940,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Interact;
         private readonly InputAction m_Player_Cancel;
         private readonly InputAction m_Player_Jump;
-        private readonly InputAction m_Player_RotateLeft;
-        private readonly InputAction m_Player_RotateRight;
+        private readonly InputAction m_Player_Next;
         public struct PlayerActions
         {
             private @Controls m_Wrapper;
@@ -972,8 +950,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Interact => m_Wrapper.m_Player_Interact;
             public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
-            public InputAction @RotateLeft => m_Wrapper.m_Player_RotateLeft;
-            public InputAction @RotateRight => m_Wrapper.m_Player_RotateRight;
+            public InputAction @Next => m_Wrapper.m_Player_Next;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -998,12 +975,9 @@ namespace UnityEngine.InputSystem
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
-                @RotateLeft.started += instance.OnRotateLeft;
-                @RotateLeft.performed += instance.OnRotateLeft;
-                @RotateLeft.canceled += instance.OnRotateLeft;
-                @RotateRight.started += instance.OnRotateRight;
-                @RotateRight.performed += instance.OnRotateRight;
-                @RotateRight.canceled += instance.OnRotateRight;
+                @Next.started += instance.OnNext;
+                @Next.performed += instance.OnNext;
+                @Next.canceled += instance.OnNext;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -1023,12 +997,9 @@ namespace UnityEngine.InputSystem
                 @Jump.started -= instance.OnJump;
                 @Jump.performed -= instance.OnJump;
                 @Jump.canceled -= instance.OnJump;
-                @RotateLeft.started -= instance.OnRotateLeft;
-                @RotateLeft.performed -= instance.OnRotateLeft;
-                @RotateLeft.canceled -= instance.OnRotateLeft;
-                @RotateRight.started -= instance.OnRotateRight;
-                @RotateRight.performed -= instance.OnRotateRight;
-                @RotateRight.canceled -= instance.OnRotateRight;
+                @Next.started -= instance.OnNext;
+                @Next.performed -= instance.OnNext;
+                @Next.canceled -= instance.OnNext;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -1216,8 +1187,7 @@ namespace UnityEngine.InputSystem
             void OnInteract(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
-            void OnRotateLeft(InputAction.CallbackContext context);
-            void OnRotateRight(InputAction.CallbackContext context);
+            void OnNext(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
