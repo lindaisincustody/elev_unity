@@ -13,6 +13,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector2 movement;
 
     private InputManager playerInput;
+    private bool _canMove = true;
 
     private void Awake()
     {
@@ -22,6 +23,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (!_canMove)
+            return;
+
         movement = playerInput.inputVector;
         animator.SetFloat("Horizontal", movement.x);
         animator.SetFloat("Vertical", movement.y);
@@ -31,5 +35,17 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+    }
+
+    public void SetMovement(bool canMove)
+    {
+        _canMove = canMove;
+        if (!canMove)
+        {
+            movement = Vector2.zero;
+            animator.SetFloat("Horizontal", movement.x);
+            animator.SetFloat("Vertical", movement.y);
+            animator.SetFloat("Speed", movement.sqrMagnitude);
+        }
     }
 }

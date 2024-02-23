@@ -15,6 +15,7 @@ public class WordFiller : MonoBehaviour
     [SerializeField] private TextMeshProUGUI poemText;
 
     [SerializeField] private TextMeshProUGUI OldpoemText;
+    [SerializeField] CursorController cursor;
 
     private WordData wordDataHolder;
     private BookController bookController;
@@ -51,6 +52,7 @@ public class WordFiller : MonoBehaviour
 
     public void ChooseWord(int wordIndex)
     {
+        cursor.DeactivateCursor();
         foreach (Button btn in wordButton)
         {
             btn.interactable = false;
