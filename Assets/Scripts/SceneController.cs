@@ -28,4 +28,15 @@ public class SceneController : MonoBehaviour
         SceneManager.LoadScene(sceneName);
         transitionAnim.SetTrigger("Start");
     }
+    public IEnumerator LoadInScene(float x, float y)
+    {
+        PlayerMovement playerController = FindObjectOfType<PlayerMovement>();
+        transitionAnim.SetTrigger("End");
+        yield return new WaitForSeconds(1);
+
+        if (playerController != null)
+            playerController.transform.position = new Vector3(x, y, playerController.transform.position.z);
+
+        transitionAnim.SetTrigger("Start");
+    }
 }
