@@ -8,7 +8,7 @@ public class FightTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            PoemMenuController.instance.ShowFightOptions();
+            //PoemMenuController.instance.ShowFightOptions();
         }
     }
 
@@ -16,7 +16,7 @@ public class FightTrigger : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            PoemMenuController.instance.HideFightOptions();
+            //PoemMenuController.instance.HideFightOptions();
         }
     }
 }

@@ -13,40 +13,51 @@ public enum Trail
 public class PoemMenuController : MonoBehaviour
 {
     public static PoemMenuController instance;
+    [Header("Self-References")]
     [SerializeField] private WordFiller wordFiller;
     [SerializeField] private GameObject bookPanel;
-    [SerializeField] private GameObject skilltreePanel;
-    [SerializeField] private GameObject hero;
-    [SerializeField] private SkillTree skillTree;
-    [SerializeField] private AttributesDisplayer displayer;
+    [SerializeField] private RectTransform bookMover;
+    [SerializeField] private AutoFlip bookFlipper;
     [SerializeField] private RectTransform oldWord;
     [SerializeField] private RectTransform wordHolder;
+    [SerializeField] private AttributesDisplayer displayer;
+    [Header("Player References")]
+    [SerializeField] private GameObject hero;
+    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] private InputManager playerInput;
+    public Attributes heroAttributes;
+    [Header("Cursor References")]
+    [SerializeField] CursorController cursor;
+    [SerializeField] UIElementsHolder wordsElements;
+    [Header("Parameters")]
     public AnimationCurve bookAnimationCurve;
     public float bookAnimationDuration = 1.0f;
 
-    private RectTransform bookMover;
+
     private int bookOffscreenPositionY = -1500;
     private Vector2 OldWordPosition;
 
-    public Attributes heroAttributes;
-    private int numberOfPoems;
     private bool _canBeTriggered = true;
+    private bool isBookActive = false;
 
-    // Start is called before the first frame update
+    private void Awake()
+    {
+        playerInput.OnInteract += OpenNextPage;
+    }
+
     void Start()
     {
-        numberOfPoems = FindObjectsOfType<PoemTrigger>().Length;
-        heroAttributes = hero.GetComponent<Attributes>();
         instance = this;
-        bookMover = bookPanel.GetComponent<RectTransform>();
-
+        heroAttributes = hero.GetComponent<Attributes>();
     }
 
     public void OpenPoemBook(WordData wordsData)
     {
         if (!_canBeTriggered)
             return;
+        isBookActive = true;
         _canBeTriggered = false;
+        playerMovement.SetMovement(false);
 
         Vector2 newOldWordPosition = wordsData.oldWordPosition;
         Vector2 newWordPosition = wordsData.WordPosition;
@@ -65,6 +76,7 @@ public class PoemMenuController : MonoBehaviour
 
     public void ClosePoemBook()
     {
+        isBookActive = false;
         StartCoroutine(MoveFromTo(Vector3.zero, new Vector3(0, bookOffscreenPositionY, 0), bookAnimationDuration));
         StartCoroutine(ClosePoemBookDelay());
     }
@@ -84,9 +96,17 @@ public class PoemMenuController : MonoBehaviour
         bookMover.anchoredPosition = pointB;
     }
 
+    private void OpenNextPage()
+    {
+        if (!isBookActive)
+            return;
+        bookFlipper.FlipRightPage();
+        cursor.ActivateCursor(wordsElements.cursorElements);
+    }
 
     private IEnumerator ClosePoemBookDelay()
     {
+        playerMovement.SetMovement(true);
         yield return new WaitForSeconds(4f);
         _canBeTriggered = true;
         bookPanel.SetActive(false);
@@ -99,16 +119,5 @@ public class PoemMenuController : MonoBehaviour
         heroAttributes.heroCoordination += wordData.coordinationWeight;
         heroAttributes.heroNeutrality += wordData.neutralWeight;
         displayer.UpdateText();
-    }
-
-    public void ShowFightOptions()
-    {
-        skillTree.UpdateSkilltree(numberOfPoems);
-        skilltreePanel.SetActive(true);
-    }
-
-    public void HideFightOptions()
-    {
-        skilltreePanel.SetActive(false);
     }
 }
