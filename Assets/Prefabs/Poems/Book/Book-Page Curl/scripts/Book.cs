@@ -138,13 +138,13 @@ public class Book : MonoBehaviour {
             return localPos;
         }
     }
-    void Update()
-    {
-        if (pageDragging && interactable)
-        {
-            UpdateBook();
-        }
-    }
+    //void Update()
+    //{
+    //    if (pageDragging && interactable)
+    //    {
+    //        UpdateBook();
+    //    }
+    //}
     public void UpdateBook()
     {
         f = Vector3.Lerp(f, transformPoint(Input.mousePosition), Time.deltaTime * 10);

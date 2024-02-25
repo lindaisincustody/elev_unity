@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum Trail
 {
@@ -20,6 +21,7 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private RectTransform oldWord;
     [SerializeField] private RectTransform wordHolder;
     [SerializeField] private AttributesDisplayer displayer;
+    [SerializeField] private Image leftImage;
     [Header("Player References")]
     [SerializeField] private GameObject hero;
     [SerializeField] PlayerMovement playerMovement;
@@ -56,6 +58,7 @@ public class PoemMenuController : MonoBehaviour
             return;
         isBookActive = true;
         _canBeTriggered = false;
+        leftImage.enabled = false;
         playerMovement.SetMovement(false);
 
         for (int i = 0; i < wordsElements.cursorElements.Length; i++)

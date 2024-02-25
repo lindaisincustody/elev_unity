@@ -1841,6 +1841,10 @@ PrefabInstance:
       propertyPath: heroAtrributes
       value: 
       objectReference: {fileID: 1794075896}
+    - target: {fileID: 470082086530689127, guid: 6c652134cdaab43448c4bb189e98ad8b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 470082086533260843, guid: 6c652134cdaab43448c4bb189e98ad8b, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 70.597015
