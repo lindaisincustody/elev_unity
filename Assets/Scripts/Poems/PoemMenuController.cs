@@ -77,6 +77,7 @@ public class PoemMenuController : MonoBehaviour
         bookMover.gameObject.SetActive(true);
         bookMover.anchoredPosition = new Vector3(0, bookOffscreenPositionY, 0);
         StartCoroutine(MoveFromTo(new Vector3(0, bookOffscreenPositionY, 0), Vector3.zero, bookAnimationDuration));
+        _canTurnPage = true;
     }
 
     public void ClosePoemBook()
@@ -97,7 +98,7 @@ public class PoemMenuController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-        _canTurnPage = true;
+
         bookMover.anchoredPosition = pointB;
     }
 
