@@ -15,6 +15,7 @@ public class InputManager : MonoBehaviour
     // UI
     public event Action<Vector2> OnNavigate    = delegate { };
     public event Action OnSubmit = delegate { };
+    public event Action OnUICancel = delegate { };
     public Vector2 inputVector { get; private set; }
 
     Controls inputActions;
@@ -37,6 +38,7 @@ public class InputManager : MonoBehaviour
 
         inputActions.UI.Navigate.performed        += Navigate;
         inputActions.UI.Submit.performed          += Sumbit;
+        inputActions.UI.Cancel.performed += UICancel;
     }
 
     private void OnDisable()
@@ -106,4 +108,11 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    private void UICancel(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            OnUICancel();
+        }
+    }
 }

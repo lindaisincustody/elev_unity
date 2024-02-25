@@ -17,46 +17,55 @@ MonoBehaviour:
   oldWordPosition: {x: -170.6, y: 62}
   words:
   - word: cautiously
+    wordLength: 260
     strengthWeight: 0
     intelligenceWeight: 0.519
     coordinationWeight: 0.776
     neutralWeight: 0
   - word: sadly
+    wordLength: 200
     strengthWeight: 0
     intelligenceWeight: 0.142
     coordinationWeight: 0
     neutralWeight: 0.625
   - word: fearfully
+    wordLength: 250
     strengthWeight: 0
     intelligenceWeight: 0.389
     coordinationWeight: 0
     neutralWeight: 0.315
   - word: nervously
+    wordLength: 250
     strengthWeight: 0
     intelligenceWeight: 0
     coordinationWeight: 0
     neutralWeight: 0.787
   - word: suddenly
+    wordLength: 240
     strengthWeight: 0
     intelligenceWeight: 0.199
     coordinationWeight: 0.708
     neutralWeight: 0
   - word: bravely
+    wordLength: 220
     strengthWeight: 0.718
     intelligenceWeight: 0.44
     coordinationWeight: 0.277
     neutralWeight: 0
   - word: hesitantly
+    wordLength: 250
     strengthWeight: 0
     intelligenceWeight: 0
     coordinationWeight: 0
     neutralWeight: 0.503
   - word: curiously
+    wordLength: 250
     strengthWeight: 0
     intelligenceWeight: 0.655
     coordinationWeight: 0
     neutralWeight: 0.351
   - word: startled
+    wordLength: 220
     strengthWeight: 0
     intelligenceWeight: 0
     coordinationWeight: 0
