@@ -12,6 +12,7 @@ public class WordFiller : MonoBehaviour
     public ParticleMask particleMask;
     public Button[] wordButton;
     public TextMeshProUGUI[] wordText;
+    public SelectedWordWritingEffect[] writingEffectController;
     [SerializeField] private TextMeshProUGUI poemText;
 
     [SerializeField] private TextMeshProUGUI OldpoemText;
@@ -21,6 +22,7 @@ public class WordFiller : MonoBehaviour
     private BookController bookController;
     private WordsListEffect wordsEffector;
     public bool firstPoem = true;
+    private bool canChooseWord = false;
 
     private void Awake()
     {
@@ -52,6 +54,9 @@ public class WordFiller : MonoBehaviour
 
     public void ChooseWord(int wordIndex)
     {
+        if (!canChooseWord)
+            return;
+        writingEffectController[wordIndex].SelectedWordEffect();
         cursor.DeactivateCursor();
         foreach (Button btn in wordButton)
         {
@@ -75,5 +80,10 @@ public class WordFiller : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         bookController.InitiateClosingBook(writingEffect.gameObject);
+    }
+
+    public void EnableWordChoosing(bool canChoose)
+    {
+        canChooseWord = canChoose;
     }
 }

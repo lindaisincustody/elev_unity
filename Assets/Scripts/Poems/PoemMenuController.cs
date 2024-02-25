@@ -15,7 +15,6 @@ public class PoemMenuController : MonoBehaviour
     public static PoemMenuController instance;
     [Header("Self-References")]
     [SerializeField] private WordFiller wordFiller;
-    [SerializeField] private GameObject bookPanel;
     [SerializeField] private RectTransform bookMover;
     [SerializeField] private AutoFlip bookFlipper;
     [SerializeField] private RectTransform oldWord;
@@ -33,12 +32,12 @@ public class PoemMenuController : MonoBehaviour
     public AnimationCurve bookAnimationCurve;
     public float bookAnimationDuration = 1.0f;
 
-
     private int bookOffscreenPositionY = -1500;
     private Vector2 OldWordPosition;
 
     private bool _canBeTriggered = true;
     private bool isBookActive = false;
+    private bool _canTurnPage = true;
 
     private void Awake()
     {
@@ -59,6 +58,12 @@ public class PoemMenuController : MonoBehaviour
         _canBeTriggered = false;
         playerMovement.SetMovement(false);
 
+        for (int i = 0; i < wordsElements.cursorElements.Length; i++)
+        {
+            wordsElements.cursorElements[i].isCentered = false;
+            wordsElements.cursorElements[i].cursorSpace = wordsData.words[i].wordLength;
+        }
+
         Vector2 newOldWordPosition = wordsData.oldWordPosition;
         Vector2 newWordPosition = wordsData.WordPosition;
         wordHolder.anchoredPosition = newWordPosition;
@@ -69,7 +74,7 @@ public class PoemMenuController : MonoBehaviour
         OldWordPosition = newOldWordPosition;
 
         wordFiller.FillWords(wordsData);
-        bookPanel.SetActive(true);
+        bookMover.gameObject.SetActive(true);
         bookMover.anchoredPosition = new Vector3(0, bookOffscreenPositionY, 0);
         StartCoroutine(MoveFromTo(new Vector3(0, bookOffscreenPositionY, 0), Vector3.zero, bookAnimationDuration));
     }
@@ -92,24 +97,26 @@ public class PoemMenuController : MonoBehaviour
             elapsedTime += Time.deltaTime;
             yield return null;
         }
-
+        _canTurnPage = true;
         bookMover.anchoredPosition = pointB;
     }
 
     private void OpenNextPage()
     {
-        if (!isBookActive)
+        if (!isBookActive || !_canTurnPage)
             return;
+        _canTurnPage = false;
         bookFlipper.FlipRightPage();
-        cursor.ActivateCursor(wordsElements.cursorElements);
     }
 
     private IEnumerator ClosePoemBookDelay()
     {
         playerMovement.SetMovement(true);
-        yield return new WaitForSeconds(4f);
+        yield return new WaitForSeconds(6f);
         _canBeTriggered = true;
-        bookPanel.SetActive(false);
+        wordFiller.EnableWordChoosing(false);
+        bookFlipper.FlipLeftPage();
+        bookMover.gameObject.SetActive(false);
     }
 
     public void UpdateAttributes(Word wordData)
@@ -119,5 +126,22 @@ public class PoemMenuController : MonoBehaviour
         heroAttributes.heroCoordination += wordData.coordinationWeight;
         heroAttributes.heroNeutrality += wordData.neutralWeight;
         displayer.UpdateText();
+    }
+
+    public void OnWritingPanelActivate()
+    {
+        StartCoroutine(EnableWordChoosing());
+    }
+
+    private IEnumerator EnableWordChoosing()
+    {
+        yield return new WaitForSeconds(1f);
+        wordFiller.EnableWordChoosing(true);
+        cursor.ActivateCursor(wordsElements.cursorElements, () => ExitPoem());
+    }
+
+    private void ExitPoem()
+    {
+
     }
 }

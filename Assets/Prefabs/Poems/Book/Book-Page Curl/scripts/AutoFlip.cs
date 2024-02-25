@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using UnityEngine;
 [RequireComponent(typeof(Book))]
 public class AutoFlip : MonoBehaviour {
     private BookController bookController;
+    public PoemMenuController poemMenuController;
     public FlipMode Mode;
     public float PageFlipTime = 1;
     public float TimeBetweenPages = 1;
@@ -82,6 +83,7 @@ public class AutoFlip : MonoBehaviour {
             x -= dx;
         }
         ControledBook.ReleasePage(true);
+        poemMenuController.OnWritingPanelActivate();
     }
     IEnumerator FlipLTR(float xc, float xl, float h, float frameTime, float dx)
     {

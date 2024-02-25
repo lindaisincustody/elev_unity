@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class DialogueController : MonoBehaviour
 {
@@ -28,10 +29,18 @@ public class DialogueController : MonoBehaviour
     private string currentText;
 
     private bool isDialogueActive = false;
+    private bool isMinigamesBoxActive = false;
 
     private void Awake()
     {
         playerInput.OnInteract += NextAction;
+        playerInput.OnUICancel += ExitDialogue;
+    }
+
+    private void OnDestroy()
+    {
+        playerInput.OnInteract -= NextAction;
+        playerInput.OnUICancel -= ExitDialogue;
     }
 
     private void NextAction()
@@ -44,7 +53,22 @@ public class DialogueController : MonoBehaviour
         else if (dialogueData.activateFight)
             ShowMinigameOptions();
         else
-            DeactivateDialogue();
+            ExitDialogue();
+    }
+
+    private void ExitDialogue()
+    {
+        if (isDialogueActive || isMinigamesBoxActive)
+        {
+            isDialogueActive = false;
+            isMinigamesBoxActive = false;
+            DialogueObj.SetActive(false);
+            MinigamesBoxObj.SetActive(false);
+            playerMovement.SetMovement(true);
+            dialogueData = null;
+            currentDialogueLine = 0;
+            cursor.DeactivateCursor();
+        }
     }
 
     public void ActivateDialogue(DialogueData newDialogueData)
@@ -57,13 +81,6 @@ public class DialogueController : MonoBehaviour
         mainCharacterImage.sprite = dialogueData.mainCharacterImage;
         otherCharacterImage.sprite = dialogueData.otherCharacterImage;
         dialogueCoroutine = StartCoroutine(ShowText());
-    }
-
-    private void DeactivateDialogue()
-    {
-        isDialogueActive = false;
-        DialogueObj.SetActive(false);
-        playerMovement.SetMovement(true);
     }
 
     private void ShowNextDialogueLine()
@@ -90,15 +107,22 @@ public class DialogueController : MonoBehaviour
         }
     }
 
+    private void SetMiniboxActive(bool isActive)
+    {
+        isMinigamesBoxActive = isActive;
+    }
+
     private void ShowMinigameOptions()
     {
         isDialogueActive = false;
+        isMinigamesBoxActive = true;
         MinigamesBoxObj.SetActive(true);
-        cursor.ActivateCursor(minigamebox.cursorElements);
+        StartCoroutine(ActivateCursor());
     }
 
-    private void OnDisable()
+    private IEnumerator ActivateCursor()
     {
-        playerInput.OnInteract -= NextAction;
+        yield return new WaitForSeconds(0.3f);
+        cursor.ActivateCursor(minigamebox.cursorElements, () => SetMiniboxActive(false));
     }
 }

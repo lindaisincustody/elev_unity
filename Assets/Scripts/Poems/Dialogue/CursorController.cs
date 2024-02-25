@@ -13,11 +13,14 @@ public class CursorController : MonoBehaviour
     [SerializeField] RectTransform rightCursorHolder;
     private UIElement[] UIElements;
     private UIElement activeUI;
+    private Action onSubmitAction;
 
     private int columns = 1;
     private int rows = 1;
+    private float poemWordWidth = 140f;
 
     private bool isCursorAcitve = false;
+    private bool isCentered = true;
 
     private void OnEnable()
     {
@@ -36,6 +39,8 @@ public class CursorController : MonoBehaviour
         if (activeUI == null)
             return;
         activeUI.elementAction?.Invoke();
+        onSubmitAction.Invoke();
+        onSubmitAction = null;
     }
 
     private void OnNavigate(Vector2 value)
@@ -124,17 +129,29 @@ public class CursorController : MonoBehaviour
 
     private void UpdateCursorSpacing()
     {
-        leftCursorHolder.anchoredPosition = Vector2.zero;
-        rightCursorHolder.anchoredPosition = Vector2.zero;
-        leftCursorHolder.anchoredPosition -= new Vector2(activeUI.cursorSpace, leftCursorHolder.anchoredPosition.y);
-        rightCursorHolder.anchoredPosition += new Vector2(activeUI.cursorSpace, leftCursorHolder.anchoredPosition.y);
+        if (isCentered)
+        {
+            leftCursorHolder.anchoredPosition = Vector2.zero;
+            rightCursorHolder.anchoredPosition = Vector2.zero;
+            leftCursorHolder.anchoredPosition -= new Vector2(activeUI.cursorSpace, leftCursorHolder.anchoredPosition.y);
+            rightCursorHolder.anchoredPosition += new Vector2(activeUI.cursorSpace, leftCursorHolder.anchoredPosition.y);
+        }
+        else
+        {
+            leftCursorHolder.anchoredPosition = Vector2.zero;
+            rightCursorHolder.anchoredPosition = Vector2.zero;
+            leftCursorHolder.anchoredPosition -= new Vector2(poemWordWidth, leftCursorHolder.anchoredPosition.y);
+            rightCursorHolder.anchoredPosition -= new Vector2((poemWordWidth - activeUI.cursorSpace), leftCursorHolder.anchoredPosition.y);
+        }
     }
 
-    public void ActivateCursor(UIElement[] newUIElements)
+    public void ActivateCursor(UIElement[] newUIElements, Action newAction)
     {
+        onSubmitAction = newAction;
         isCursorAcitve = true;
         activeUI = newUIElements[0];
         UIElements = newUIElements;
+        isCentered = activeUI.isCentered;
         for (int i = 0; i < newUIElements.Length; i++)
         {
             if (newUIElements[i].col > columns)
@@ -151,6 +168,7 @@ public class CursorController : MonoBehaviour
 
     public void DeactivateCursor()
     {
+        activeUI = null;
         isCursorAcitve = false;
         cursor.gameObject.SetActive(false);
     }
@@ -164,4 +182,5 @@ public class UIElement
     public float cursorSpace;
     public RectTransform rect;
     public UnityEvent elementAction;
+    [System.NonSerialized] public bool isCentered = true;
 }
