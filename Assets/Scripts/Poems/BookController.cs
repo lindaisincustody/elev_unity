@@ -65,10 +65,8 @@ public class BookController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         wordFiller.firstPoem = false;
-        book.interactable = true;
         wordsWereShown = false;
         HidePoemAndWords();
         objectToDisable.SetActive(false);
-        bookFlipper.OpenFirstPage();
     }
 }

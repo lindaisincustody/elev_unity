@@ -112,10 +112,11 @@ public class PoemMenuController : MonoBehaviour
     private IEnumerator ClosePoemBookDelay()
     {
         playerMovement.SetMovement(true);
-        yield return new WaitForSeconds(6f);
-        _canBeTriggered = true;
-        wordFiller.EnableWordChoosing(false);
+        yield return new WaitForSeconds(2f);
         bookFlipper.FlipLeftPage();
+        yield return new WaitForSeconds(3f);
+        wordFiller.EnableWordChoosing(false);
+        _canBeTriggered = true;
         bookMover.gameObject.SetActive(false);
     }
 
