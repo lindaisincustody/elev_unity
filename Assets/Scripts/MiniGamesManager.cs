@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class MiniGamesManager : MonoBehaviour
 {
-    [SerializeField] ActivateMazeGame mazeGameManager;
     public int StrengthLevel = 1;
     public int IntelligenceLevel = 1;
     public int CoordinationLevel = 1;

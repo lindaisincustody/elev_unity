@@ -14,12 +14,23 @@ public class DialogueController : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Image mainCharacterImage;
     [SerializeField] Image otherCharacterImage;
+    [SerializeField] GameObject mainCharacterImageHolder;
+    [SerializeField] GameObject otherCharacterImageHolder;
     [Header("Player References")]
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager playerInput;
     [Header("Cursor References")]
     [SerializeField] CursorController cursor;
     [SerializeField] UIElementsHolder minigamebox;
+    [Header("Attribute Bar References")]
+    [SerializeField] GameObject multiplierFrame;
+    [SerializeField] Image strengthRect;
+    [SerializeField] Image intelligenceRect;
+    [SerializeField] Image coordinationRect;
+    [SerializeField] Image neutralityRect;
+
+    MinigameUI minigameUI;
+    DialogueUI dialogueUI;
 
     DialogueData dialogueData;
     Coroutine dialogueCoroutine;
@@ -43,55 +54,41 @@ public class DialogueController : MonoBehaviour
         playerInput.OnUICancel -= ExitDialogue;
     }
 
+    private void Start()
+    {
+        minigameUI = new MinigameUI(MinigamesBoxObj, multiplierFrame, strengthRect, intelligenceRect, coordinationRect, neutralityRect);
+        dialogueUI = new DialogueUI(DialogueObj, dialogueText, nameText, mainCharacterImage, otherCharacterImage, mainCharacterImageHolder, otherCharacterImageHolder, minigameUI);
+    }
+
+    public void ActivateDialogue(DialogueData newDialogueData)
+    {
+        dialogueData = newDialogueData;
+        currentDialogueLine = 0;
+        isDialogueActive = true;
+
+        playerMovement.SetMovement(false);
+        dialogueUI.ActivateDialogueBox(newDialogueData);
+
+        dialogueCoroutine = StartCoroutine(ShowText());
+    }
+
     private void NextAction()
     {
         if (!isDialogueActive)
             return;
 
-        if (dialogueData.textList.Length > currentDialogueLine)
+        if (currentDialogueLine < dialogueData.textList.Length)
             ShowNextDialogueLine();
         else if (dialogueData.activateFight)
             ShowMinigameOptions();
         else
             ExitDialogue();
     }
-
-    private void ExitDialogue()
-    {
-        if (isDialogueActive || isMinigamesBoxActive)
-        {
-            isDialogueActive = false;
-            isMinigamesBoxActive = false;
-            DialogueObj.SetActive(false);
-            MinigamesBoxObj.SetActive(false);
-            playerMovement.SetMovement(true);
-            dialogueData = null;
-            currentDialogueLine = 0;
-            cursor.DeactivateCursor();
-        }
-    }
-
-    public void ActivateDialogue(DialogueData newDialogueData)
-    {
-        isDialogueActive = true;
-        DialogueObj.SetActive(true);
-        playerMovement.SetMovement(false);
-        dialogueData = newDialogueData;
-        currentDialogueLine = 0;
-        mainCharacterImage.sprite = dialogueData.mainCharacterImage;
-        otherCharacterImage.sprite = dialogueData.otherCharacterImage;
-        dialogueCoroutine = StartCoroutine(ShowText());
-    }
-
     private void ShowNextDialogueLine()
     {
         if (dialogueCoroutine != null)
             StopCoroutine(dialogueCoroutine);
-        dialogueText.text = string.Empty;
-        if (dialogueData.textList[currentDialogueLine].isYourText)
-            nameText.text = "You";
-        else
-            nameText.text = dialogueData.otherCharacterName;
+        dialogueUI.ShowNext(currentDialogueLine);
         dialogueCoroutine = StartCoroutine(ShowText());
     }
 
@@ -107,22 +104,52 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    private void SetMiniboxActive(bool isActive)
+    private void ExitDialogue()
     {
-        isMinigamesBoxActive = isActive;
+        if (!isDialogueActive && !isMinigamesBoxActive) return;
+
+        dialogueData = null;
+        currentDialogueLine = 0;
+
+        dialogueUI.Hide();
+        minigameUI.Hide();
+
+        playerMovement.SetMovement(true);
+        cursor.DeactivateCursor();
     }
 
     private void ShowMinigameOptions()
     {
+        dialogueUI.ShowNext(currentDialogueLine);
+        minigameUI.Show(dialogueData);
         isDialogueActive = false;
         isMinigamesBoxActive = true;
-        MinigamesBoxObj.SetActive(true);
         StartCoroutine(ActivateCursor());
     }
 
     private IEnumerator ActivateCursor()
     {
         yield return new WaitForSeconds(0.3f);
-        cursor.ActivateCursor(minigamebox.cursorElements, () => SetMiniboxActive(false));
+        cursor.ActivateCursor(minigamebox.cursorElements, () => isMinigamesBoxActive = false);
+    }
+
+    public void ChosenGame(int gameAttribute)
+    {
+        switch (gameAttribute)
+        {
+            case 0:
+                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Strength, dialogueData.strengthGameCoinsMultiplier);
+                break;
+            case 1:
+                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Coordination, dialogueData.coordinationGameCoinsMultiplier);
+                break;
+            case 2:
+                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Inteliigence, dialogueData.intelligenceGameCoinsMultiplier);
+                break;
+            case 3:
+                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Neutrality, dialogueData.neutralityGameCoinsMultiplier);
+                break;
+        }
+
     }
 }

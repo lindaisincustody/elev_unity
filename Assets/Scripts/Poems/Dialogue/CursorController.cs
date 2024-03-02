@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Linq;
 using System;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class CursorController : MonoBehaviour
 {
@@ -11,6 +12,10 @@ public class CursorController : MonoBehaviour
     [SerializeField] RectTransform cursor;
     [SerializeField] RectTransform leftCursorHolder;
     [SerializeField] RectTransform rightCursorHolder;
+    [SerializeField] Image leftCursorFiller;
+    [SerializeField] Image rightCursorFiller;
+    [Space]
+    public bool issMinigameCursor = false;
     private UIElement[] UIElements;
     private UIElement activeUI;
     private Action onSubmitAction;
@@ -38,8 +43,10 @@ public class CursorController : MonoBehaviour
     {
         if (activeUI == null)
             return;
-        activeUI.elementAction?.Invoke();
+        // Calls a callback to poem/dialogue
         onSubmitAction.Invoke();
+        // Loads New Scene
+        activeUI.elementAction?.Invoke();
         onSubmitAction = null;
     }
 
@@ -74,6 +81,8 @@ public class CursorController : MonoBehaviour
         }
 
         UpdateCursorSpacing();
+        if (issMinigameCursor)
+            UpdateFillerColor();
     }
     private void NavigateRight()
     {
@@ -91,6 +100,8 @@ public class CursorController : MonoBehaviour
         }
 
         UpdateCursorSpacing();
+        if (issMinigameCursor)
+            UpdateFillerColor();
     }
     private void NavigateUp()
     {
@@ -108,6 +119,8 @@ public class CursorController : MonoBehaviour
         }
 
         UpdateCursorSpacing();
+        if (issMinigameCursor)
+            UpdateFillerColor();
     }
     private void NavigateDown()
     {
@@ -125,6 +138,8 @@ public class CursorController : MonoBehaviour
         }
 
         UpdateCursorSpacing();
+        if (issMinigameCursor)
+            UpdateFillerColor();
     }
 
     private void UpdateCursorSpacing()
@@ -164,6 +179,8 @@ public class CursorController : MonoBehaviour
         cursor.position = activeUI.rect.position;
 
         UpdateCursorSpacing();
+        if (issMinigameCursor)
+            UpdateFillerColor();
     }
 
     public void DeactivateCursor()
@@ -171,6 +188,30 @@ public class CursorController : MonoBehaviour
         activeUI = null;
         isCursorAcitve = false;
         cursor.gameObject.SetActive(false);
+    }
+
+    public void UpdateFillerColor()
+    {
+        if (activeUI.row == 1 && activeUI.col == 1)
+        {
+            leftCursorFiller.color = Color.red;
+            rightCursorFiller.color = Color.red;
+        }
+        else if (activeUI.row == 1 && activeUI.col == 2)
+        {
+            leftCursorFiller.color = Color.green;
+            rightCursorFiller.color = Color.green;
+        }
+        else if (activeUI.row == 2 && activeUI.col == 1)
+        {
+            leftCursorFiller.color = Color.blue;
+            rightCursorFiller.color = Color.blue;
+        }
+        else if (activeUI.row == 2 && activeUI.col == 2)
+        {
+            leftCursorFiller.color = Color.grey;
+            rightCursorFiller.color = Color.grey;
+        }
     }
 }
 

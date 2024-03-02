@@ -20,7 +20,6 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private AutoFlip bookFlipper;
     [SerializeField] private RectTransform oldWord;
     [SerializeField] private RectTransform wordHolder;
-    [SerializeField] private AttributesDisplayer displayer;
     [SerializeField] private Image leftImage;
     [Header("Player References")]
     [SerializeField] private GameObject hero;
@@ -130,7 +129,7 @@ public class PoemMenuController : MonoBehaviour
         heroAttributes.heroIntelligence += wordData.intelligenceWeight;
         heroAttributes.heroCoordination += wordData.coordinationWeight;
         heroAttributes.heroNeutrality += wordData.neutralWeight;
-        displayer.UpdateText();
+        DebugPanel.Instance.UpdateAttributes();
     }
 
     public void OnWritingPanelActivate()
