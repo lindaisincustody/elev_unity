@@ -12,9 +12,6 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private CameraTransition cameraTransition;
     [SerializeField] private GameObject endPrefab;
 
-    [Header("Data Holder")]
-    [SerializeField] private MazeDataSO mazeData;
-
     [Header("Maze Parameters")]
     [SerializeField] private MazeCell _mazeCellPrefab;
 
@@ -37,11 +34,16 @@ public class MazeGenerator : MonoBehaviour
     {
         imageHolder = GetComponent<ImageHolder>();
         enemySpawner = GetComponent<EnemySpawner>();
-        _mazeWidth = mazeData.MazeWidth;
-        _mazeHeight = mazeData.MazeHeight;
     }
 
-    private IEnumerator Start()
+    public void StartGeneratingMaze(int mazeWidth, int mazeHeight)
+    {
+        _mazeWidth = mazeWidth;
+        _mazeHeight = mazeHeight;
+        StartCoroutine(BuildMaze());
+    }
+
+    private IEnumerator BuildMaze()
     {
         cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
         enemySpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);

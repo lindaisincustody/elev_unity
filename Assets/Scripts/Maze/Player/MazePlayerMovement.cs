@@ -13,13 +13,12 @@ public class MazePlayerMovement : MonoBehaviour
     public Rigidbody2D rb;
 
     public InputManager playerInput;
-
+    public MazeManager mazeManager;
     public MazeGenerator mazeGenerator;
     private Vector2 movement;
 
     private LineRenderer leashRenderer;
     private DistanceJoint2D joint;
-    private MiniGamesManager miniGamesManager;
 
     private bool isLeashed = false;
 
@@ -31,8 +30,6 @@ public class MazePlayerMovement : MonoBehaviour
 
         joint = GetComponent<DistanceJoint2D>();
         leashRenderer = GetComponent<LineRenderer>();
-
-        miniGamesManager = FindObjectOfType<MiniGamesManager>();
     }
 
     void Update()
@@ -64,11 +61,7 @@ public class MazePlayerMovement : MonoBehaviour
     {
         if (collision.CompareTag("MazeEnd"))
         {
-            var level = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel, 1);
-            level++;
-            PlayerPrefs.SetInt(Constants.PlayerPrefs.CoordinationLevel, level);
-            miniGamesManager.CoordinationLevel++;
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            mazeManager.Win();
         }
     }   
 

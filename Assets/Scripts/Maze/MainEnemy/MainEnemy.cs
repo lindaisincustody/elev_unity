@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.SceneManagement;
 
 public class MainEnemy : BaseEnemy
 {
@@ -21,6 +20,7 @@ public class MainEnemy : BaseEnemy
 
     [Header("References")]
     [SerializeField] private EnemySpawner enemySpawner;
+    [SerializeField] private MazeManager mazeManager;
 
     private bool isActive = false;
 
@@ -113,9 +113,9 @@ public class MainEnemy : BaseEnemy
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Player"))
+        if (collision.CompareTag("Player") && isActive)
         {
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            mazeManager.Lose();
         }
     }
 }

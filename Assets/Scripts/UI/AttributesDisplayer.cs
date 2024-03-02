@@ -10,7 +10,6 @@ public class AttributesDisplayer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI coordinationText;
     [SerializeField] private TextMeshProUGUI neutralText;
     [SerializeField] private Attributes heroAtrributes;
-    [SerializeField] private TextMeshProUGUI bossText;
 
     private readonly string strengthPrefix = "Strength: ";
     private readonly string intelligencePrefix = "Intelligence: ";
@@ -29,11 +28,5 @@ public class AttributesDisplayer : MonoBehaviour
         intelligenceText.text = intelligencePrefix + heroAtrributes.heroIntelligence.ToString("F2");
         coordinationText.text = coordinationPrefix + heroAtrributes.heroCoordination.ToString("F2");
         neutralText.text = neutralPrefix + heroAtrributes.heroNeutrality.ToString("F2");
-    }
-
-
-    public void ShowBoss(string newText)
-    {
-        bossText.text = newText;
     }
 }

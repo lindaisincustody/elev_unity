@@ -23,3 +23,7 @@ MonoBehaviour:
   mainCharacterImage: {fileID: 21300000, guid: a2a14f80d43697c4d8d9cc384f5da5e7, type: 3}
   otherCharacterImage: {fileID: 21300006, guid: e6ed2f50fd8042a59d44c1660bfd1880, type: 3}
   activateFight: 1
+  strengthGameCoinsMultiplier: 1
+  neutralityGameCoinsMultiplier: 2
+  intelligenceGameCoinsMultiplier: 1.491
+  coordinationGameCoinsMultiplier: 1.16

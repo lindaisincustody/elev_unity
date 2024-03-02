@@ -11,7 +11,7 @@ public class CameraTransition : MonoBehaviour
     public float transitionDuration = 2.0f;
     public AnimationCurve transitionCurve;
 
-    private Camera mainCamera;
+    [SerializeField] Camera mainCamera;
     private Vector3 initialCameraPosition;
     float newFOVSize;
     [SerializeField] private MazePlayerMovement player;
@@ -20,11 +20,6 @@ public class CameraTransition : MonoBehaviour
     public Color targetBackgroundColor = Color.blue;
 
     public bool canMove = false;
-
-    private void Start()
-    {
-        mainCamera = GetComponent<Camera>();
-    }
 
     private void Update()
     {
