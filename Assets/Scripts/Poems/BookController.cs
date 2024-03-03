@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class BookController : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class BookController : MonoBehaviour
     public WordFiller wordFiller;
     [SerializeField] private GameObject poemObj;
     [SerializeField] private GameObject wordsHolder;
+    [SerializeField] private TextMeshProUGUI poemText;
 
     private Book book;
     private AutoFlip bookFlipper;
@@ -19,6 +21,11 @@ public class BookController : MonoBehaviour
     {
         book = GetComponent<Book>();
         bookFlipper = GetComponent<AutoFlip>();
+    }
+
+    public void ExtendPoemAI(string addedPoem)
+    {
+        poemText.text += "\n "+ addedPoem;
     }
 
     public void ShowPoemAndWords()

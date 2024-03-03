@@ -37,7 +37,7 @@ public class Gold : IDisposable
             case Attribute.Coordination:
                 CoordinationGoldMultiplier += multiplier;
                 break;
-            case Attribute.Inteliigence:
+            case Attribute.Intelligence:
                 IntelligenceGoldMultiplier += multiplier;
                 break;
             case Attribute.Neutrality:
@@ -55,7 +55,7 @@ public class Gold : IDisposable
                 return StrengthGoldMultiplier;
             case Attribute.Coordination:
                 return CoordinationGoldMultiplier;
-            case Attribute.Inteliigence:
+            case Attribute.Intelligence:
                 return IntelligenceGoldMultiplier;
             case Attribute.Neutrality:
                 return NeutralityGoldMultiplier;
@@ -73,7 +73,7 @@ public class Gold : IDisposable
 public enum Attribute
 {
     Strength,
-    Inteliigence,
+    Intelligence,
     Coordination,
     Neutrality
 }
