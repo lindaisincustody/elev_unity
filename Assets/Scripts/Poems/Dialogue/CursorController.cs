@@ -14,6 +14,8 @@ public class CursorController : MonoBehaviour
     [SerializeField] RectTransform rightCursorHolder;
     [SerializeField] Image leftCursorFiller;
     [SerializeField] Image rightCursorFiller;
+    [SerializeField] AttributeParticles particleManager;
+    [SerializeField] SpriteAdjuster spriteMarker;
     [Space]
     public bool issMinigameCursor = false;
     private UIElement[] UIElements;
@@ -23,7 +25,7 @@ public class CursorController : MonoBehaviour
     private int columns = 1;
     private int rows = 1;
     private float poemWordWidth = 140f;
-
+    
     private bool isCursorAcitve = false;
     private bool isCentered = true;
 
@@ -188,6 +190,13 @@ public class CursorController : MonoBehaviour
         activeUI = null;
         isCursorAcitve = false;
         cursor.gameObject.SetActive(false);
+        if (issMinigameCursor)
+            ResetHighlights();
+    }
+
+    private void ResetHighlights()
+    {
+        spriteMarker.ResetScales();
     }
 
     public void UpdateFillerColor()
@@ -196,21 +205,29 @@ public class CursorController : MonoBehaviour
         {
             leftCursorFiller.color = Color.red;
             rightCursorFiller.color = Color.red;
+            particleManager.ActivatePSS(Attribute.Strength);
+            spriteMarker.markAttribute(Attribute.Strength);
         }
         else if (activeUI.row == 1 && activeUI.col == 2)
         {
             leftCursorFiller.color = Color.green;
             rightCursorFiller.color = Color.green;
+            particleManager.ActivatePSS(Attribute.Coordination);
+            spriteMarker.markAttribute(Attribute.Coordination);
         }
         else if (activeUI.row == 2 && activeUI.col == 1)
         {
             leftCursorFiller.color = Color.blue;
             rightCursorFiller.color = Color.blue;
+            particleManager.ActivatePSS(Attribute.Intelligence);
+            spriteMarker.markAttribute(Attribute.Intelligence);
         }
         else if (activeUI.row == 2 && activeUI.col == 2)
         {
             leftCursorFiller.color = Color.grey;
             rightCursorFiller.color = Color.grey;
+            particleManager.ActivatePSS(Attribute.Neutrality);
+            spriteMarker.markAttribute(Attribute.Neutrality);
         }
     }
 }

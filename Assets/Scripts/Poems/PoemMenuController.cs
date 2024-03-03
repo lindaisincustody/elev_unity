@@ -21,6 +21,7 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private RectTransform oldWord;
     [SerializeField] private RectTransform wordHolder;
     [SerializeField] private Image leftImage;
+    [SerializeField] private PoemAI poemAI;
     [Header("Player References")]
     [SerializeField] private GameObject hero;
     [SerializeField] PlayerMovement playerMovement;
@@ -55,6 +56,7 @@ public class PoemMenuController : MonoBehaviour
     {
         if (!_canBeTriggered)
             return;
+        poemAI.SendRequest(wordsData);
         isBookActive = true;
         _canBeTriggered = false;
         leftImage.enabled = false;

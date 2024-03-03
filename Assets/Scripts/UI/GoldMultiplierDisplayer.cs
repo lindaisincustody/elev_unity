@@ -25,7 +25,7 @@ public class GoldMultiplierDisplayer : MonoBehaviour
     public void UpdateText()
     {
         strengthText.text = strengthPrefix + inventory.GetGoldMultiplier(Attribute.Strength).ToString("F2");
-        intelligenceText.text = intelligencePrefix + inventory.GetGoldMultiplier(Attribute.Inteliigence).ToString("F2");
+        intelligenceText.text = intelligencePrefix + inventory.GetGoldMultiplier(Attribute.Intelligence).ToString("F2");
         coordinationText.text = coordinationPrefix + inventory.GetGoldMultiplier(Attribute.Coordination).ToString("F2");
         neutralText.text = neutralPrefix + inventory.GetGoldMultiplier(Attribute.Neutrality).ToString("F2");
     }

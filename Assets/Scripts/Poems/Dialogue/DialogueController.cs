@@ -16,6 +16,7 @@ public class DialogueController : MonoBehaviour
     [SerializeField] Image otherCharacterImage;
     [SerializeField] GameObject mainCharacterImageHolder;
     [SerializeField] GameObject otherCharacterImageHolder;
+    [SerializeField] AttributeParticles particles;
     [Header("Player References")]
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager playerInput;
@@ -62,6 +63,7 @@ public class DialogueController : MonoBehaviour
 
     public void ActivateDialogue(DialogueData newDialogueData)
     {
+        particles.SetDialogueData(newDialogueData);
         dialogueData = newDialogueData;
         currentDialogueLine = 0;
         isDialogueActive = true;
@@ -144,7 +146,7 @@ public class DialogueController : MonoBehaviour
                 ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Coordination, dialogueData.coordinationGameCoinsMultiplier);
                 break;
             case 2:
-                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Inteliigence, dialogueData.intelligenceGameCoinsMultiplier);
+                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Intelligence, dialogueData.intelligenceGameCoinsMultiplier);
                 break;
             case 3:
                 ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Neutrality, dialogueData.neutralityGameCoinsMultiplier);
