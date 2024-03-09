@@ -282,6 +282,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Inventory",
+                    "type": "Button",
+                    "id": "25eaf02f-d1b5-47f8-b840-d057f4b01992",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Point",
                     "type": "PassThrough",
                     "id": "32b35790-4ed0-4e9a-aa41-69ac6d629449",
@@ -761,6 +770,17 @@
                     "processors": "",
                     "groups": "XR",
                     "action": "TrackedDeviceOrientation",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "aaaeeb94-dbda-4898-af9a-50691c735604",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Inventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

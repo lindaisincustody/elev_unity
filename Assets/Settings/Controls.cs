@@ -306,6 +306,15 @@ namespace UnityEngine.InputSystem
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Inventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""25eaf02f-d1b5-47f8-b840-d057f4b01992"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Point"",
                     ""type"": ""PassThrough"",
                     ""id"": ""32b35790-4ed0-4e9a-aa41-69ac6d629449"",
@@ -787,6 +796,17 @@ namespace UnityEngine.InputSystem
                     ""action"": ""TrackedDeviceOrientation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""aaaeeb94-dbda-4898-af9a-50691c735604"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Inventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -867,6 +887,7 @@ namespace UnityEngine.InputSystem
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
             m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
             m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
+            m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
             m_UI_Point = m_UI.FindAction("Point", throwIfNotFound: true);
             m_UI_Click = m_UI.FindAction("Click", throwIfNotFound: true);
             m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
@@ -1024,6 +1045,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_UI_Navigate;
         private readonly InputAction m_UI_Submit;
         private readonly InputAction m_UI_Cancel;
+        private readonly InputAction m_UI_Inventory;
         private readonly InputAction m_UI_Point;
         private readonly InputAction m_UI_Click;
         private readonly InputAction m_UI_ScrollWheel;
@@ -1038,6 +1060,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Navigate => m_Wrapper.m_UI_Navigate;
             public InputAction @Submit => m_Wrapper.m_UI_Submit;
             public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
+            public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
             public InputAction @Point => m_Wrapper.m_UI_Point;
             public InputAction @Click => m_Wrapper.m_UI_Click;
             public InputAction @ScrollWheel => m_Wrapper.m_UI_ScrollWheel;
@@ -1063,6 +1086,9 @@ namespace UnityEngine.InputSystem
                 @Cancel.started += instance.OnCancel;
                 @Cancel.performed += instance.OnCancel;
                 @Cancel.canceled += instance.OnCancel;
+                @Inventory.started += instance.OnInventory;
+                @Inventory.performed += instance.OnInventory;
+                @Inventory.canceled += instance.OnInventory;
                 @Point.started += instance.OnPoint;
                 @Point.performed += instance.OnPoint;
                 @Point.canceled += instance.OnPoint;
@@ -1097,6 +1123,9 @@ namespace UnityEngine.InputSystem
                 @Cancel.started -= instance.OnCancel;
                 @Cancel.performed -= instance.OnCancel;
                 @Cancel.canceled -= instance.OnCancel;
+                @Inventory.started -= instance.OnInventory;
+                @Inventory.performed -= instance.OnInventory;
+                @Inventory.canceled -= instance.OnInventory;
                 @Point.started -= instance.OnPoint;
                 @Point.performed -= instance.OnPoint;
                 @Point.canceled -= instance.OnPoint;
@@ -1194,6 +1223,7 @@ namespace UnityEngine.InputSystem
             void OnNavigate(InputAction.CallbackContext context);
             void OnSubmit(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
+            void OnInventory(InputAction.CallbackContext context);
             void OnPoint(InputAction.CallbackContext context);
             void OnClick(InputAction.CallbackContext context);
             void OnScrollWheel(InputAction.CallbackContext context);

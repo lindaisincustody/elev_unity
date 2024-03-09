@@ -9,5 +9,5 @@ public class Attributes : MonoBehaviour
     [System.NonSerialized] public float heroCoordination = 0;
     [System.NonSerialized] public float heroNeutrality = 0;
 
-    [System.NonSerialized] public int numberOfPoems = 2;
+    [System.NonSerialized] public int numberOfEnemies = 2;
 }

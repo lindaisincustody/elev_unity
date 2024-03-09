@@ -24,22 +24,26 @@ public class AttributeParticles : MonoBehaviour
             case Attribute.Strength:
                 var strengthShape = strengthPS.shape;
                 strengthShape.arc = (dialogueData.strengthGameCoinsMultiplier - 1) * 80;
-                strengthPS.gameObject.SetActive(true);
+                if (strengthShape.arc > 1)
+                    strengthPS.gameObject.SetActive(true);
                 break;
             case Attribute.Intelligence:
                 var intelligenceShape = intelligencePS.shape;
                 intelligenceShape.arc = (dialogueData.intelligenceGameCoinsMultiplier - 1) *80;
-                intelligencePS.gameObject.SetActive(true);
+                if (intelligenceShape.arc > 1)
+                    intelligencePS.gameObject.SetActive(true);
                 break;
             case Attribute.Coordination:
                 var coordinationShape = coordinationPS.shape;
                 coordinationShape.arc = (dialogueData.coordinationGameCoinsMultiplier - 1) *80;
-                coordinationPS.gameObject.SetActive(true);
+                if (coordinationShape.arc > 1)
+                    coordinationPS.gameObject.SetActive(true);
                 break;
             case Attribute.Neutrality:
                 var neutralityShape = neutralityPS.shape;
                 neutralityShape.arc = (dialogueData.neutralityGameCoinsMultiplier - 1) *80;
-                neutralityPS.gameObject.SetActive(true);
+                if (neutralityShape.arc > 1)
+                    neutralityPS.gameObject.SetActive(true);
                 break;
             default:
                 Debug.LogWarning("Unknown attribute!");
