@@ -20,4 +20,9 @@ public class Inventory : MonoBehaviour
     {
         return playerGold.GetMultiplier(attribute);
     }
+
+    public int GetGold()
+    {
+        return playerGold.GetGold();
+    }
 }

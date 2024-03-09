@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Test1WordData
   m_EditorClassIdentifier: 
   Poem: And Then I _____<br>looked at the monster
-  WordPosition: {x: -150.6, y: 62}
-  oldWordPosition: {x: -170.6, y: 62}
+  WordPosition: {x: -150, y: 365}
+  oldWordPosition: {x: -150, y: 365}
   words:
   - word: cautiously
     wordLength: 260

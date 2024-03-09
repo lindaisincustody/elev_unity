@@ -110,6 +110,7 @@ public class DialogueController : MonoBehaviour
     {
         if (!isDialogueActive && !isMinigamesBoxActive) return;
 
+        isDialogueActive = false;
         dialogueData = null;
         currentDialogueLine = 0;
 
