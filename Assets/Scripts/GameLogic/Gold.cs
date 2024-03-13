@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Gold : IDisposable
 {
-    private float StrengthGoldMultiplier = 1;
-    private float CoordinationGoldMultiplier = 1;
-    private float IntelligenceGoldMultiplier = 1;
-    private float NeutralityGoldMultiplier = 1;
+    private float StrengthGoldMultiplier = 0;
+    private float CoordinationGoldMultiplier = 0;
+    private float IntelligenceGoldMultiplier = 0;
+    private float NeutralityGoldMultiplier = 0;
 
     private int currentGold = 0;
 
@@ -44,7 +44,6 @@ public class Gold : IDisposable
                 NeutralityGoldMultiplier += multiplier;
                 break;
         }
-        DebugPanel.Instance.UpdateGoldMultiplier();
     }
 
     public float GetMultiplier(Attribute attribute)

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class DebugPanel : MonoBehaviour
 {
-    [SerializeField] AttributesDisplayer attributesDisplayer;
     [SerializeField] GoldMultiplierDisplayer goldMultiplierDisplayer;
     private static DebugPanel instance;
 
@@ -37,12 +36,6 @@ public class DebugPanel : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
     }
-
-    public void UpdateAttributes()
-    {
-        attributesDisplayer.UpdateText();
-    }
-
     public void UpdateGoldMultiplier()
     {
         goldMultiplierDisplayer.UpdateText();
