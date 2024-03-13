@@ -12,52 +12,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f124e6ce2cd06784483e3499c6f825f9, type: 3}
   m_Name: Test2WordData
   m_EditorClassIdentifier: 
-  Poem: After _______ defeatomg the monster
-  WordPosition: {x: -312.6, y: 62}
-  oldWordPosition: {x: -343, y: 62}
+  Poem: After _____ defeating the monster
+  WordPosition: {x: -340, y: 365}
+  oldWordPosition: {x: -340, y: 365}
   words:
   - word: brutally
-    strengthWeight: 0
-    intelligenceWeight: 0.519
-    coordinationWeight: 0.776
+    wordLength: 240
+    strengthWeight: 1
+    intelligenceWeight: 0
+    coordinationWeight: 0.144
     neutralWeight: 0
-  - word: sadly
-    strengthWeight: 0
-    intelligenceWeight: 0.142
+  - word: mercilessly
+    wordLength: 270
+    strengthWeight: 1
+    intelligenceWeight: 0
     coordinationWeight: 0
-    neutralWeight: 0.625
-  - word: fearfully
-    strengthWeight: 0
-    intelligenceWeight: 0.389
-    coordinationWeight: 0
-    neutralWeight: 0.315
+    neutralWeight: 0
+  - word: fearlessly
+    wordLength: 250
+    strengthWeight: 1
+    intelligenceWeight: 0
+    coordinationWeight: 0.149
+    neutralWeight: 0
   - word: nervously
+    wordLength: 250
     strengthWeight: 0
     intelligenceWeight: 0
     coordinationWeight: 0
     neutralWeight: 0.787
-  - word: suddenly
+  - word: quickly
+    wordLength: 240
     strengthWeight: 0
-    intelligenceWeight: 0.199
+    intelligenceWeight: 0.477
     coordinationWeight: 0.708
     neutralWeight: 0
-  - word: bravely
-    strengthWeight: 0.718
-    intelligenceWeight: 0.44
-    coordinationWeight: 0.277
+  - word: swiftly
+    wordLength: 230
+    strengthWeight: 0
+    intelligenceWeight: 0.771
+    coordinationWeight: 0.698
     neutralWeight: 0
-  - word: hesitantly
+  - word: fashionly
+    wordLength: 300
     strengthWeight: 0
     intelligenceWeight: 0
-    coordinationWeight: 0
-    neutralWeight: 0.503
-  - word: curiously
+    coordinationWeight: 0.59
+    neutralWeight: 0.579
+  - word: magically
+    wordLength: 250
     strengthWeight: 0
-    intelligenceWeight: 0.655
+    intelligenceWeight: 0.161
     coordinationWeight: 0
-    neutralWeight: 0.351
-  - word: startled
+    neutralWeight: 1
+  - word: amazingly
+    wordLength: 250
     strengthWeight: 0
-    intelligenceWeight: 0
-    coordinationWeight: 0
-    neutralWeight: 0.671
+    intelligenceWeight: 0.2
+    coordinationWeight: 1
+    neutralWeight: 0

@@ -5,41 +5,37 @@ using System.Collections;
 public class MazeManager : MonoBehaviour
 {
     [SerializeField] MazeGenerator mazeGenerator;
-    [SerializeField] GameObject loseText;
-    private MiniGamesManager miniGamesManager;
-    private float endScreenTime = 3f;
-
-    private void Awake()
-    {
-        miniGamesManager = FindObjectOfType<MiniGamesManager>();
-    }
+    [SerializeField] MazeScreen loseScreen;
+    [SerializeField] MazeWinScreen winScreen;
+    [SerializeField] MazePlayerMovement playerMovement;
+    [SerializeField] CircleCollider2D playerCollider;
 
     private void Start()
     {
         StartMaze();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+            Win();
+    }
+
     public void Win()
     {
-        Debug.Log("You Won!");
         var level = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel, 1);
         level++;
         PlayerPrefs.SetInt(Constants.PlayerPrefs.CoordinationLevel, level);
-        miniGamesManager.CoordinationLevel++;
-        SceneManager.LoadScene(Constants.SceneNames.MainScene);
+        playerCollider.enabled = false;
+        playerMovement.StopPlayer();
+        winScreen.ShowEndScreen();
     }
 
     public void Lose()
     {
-        Debug.Log("You lost!");
-        loseText.SetActive(true);
-        StartCoroutine(LoadScene());
-    }
-
-    private IEnumerator LoadScene()
-    {
-        yield return new WaitForSeconds(endScreenTime);
-        SceneManager.LoadScene(Constants.SceneNames.MainScene);
+        playerCollider.enabled = false;
+        playerMovement.StopPlayer();
+        loseScreen.ShowEndScreen();
     }
 
     private void StartMaze()

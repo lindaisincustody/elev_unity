@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class WordFiller : MonoBehaviour
 {
     public GameObject OldPoem;
-    public GameObject OldChosenWord;
     public WritingEffect writingEffect;
     public ParticleMask particleMask;
     public Button[] wordButton;
@@ -22,6 +21,7 @@ public class WordFiller : MonoBehaviour
     private BookController bookController;
     private WordsListEffect wordsEffector;
     public bool firstPoem = true;
+    private string oldChosenWord;
     private bool canChooseWord = false;
 
     private void Awake()
@@ -34,9 +34,8 @@ public class WordFiller : MonoBehaviour
     {
         if (!firstPoem)
         {
-            OldpoemText.text = poemText.text;
+            OldpoemText.text = poemText.text.Replace("_____", oldChosenWord);
             OldPoem.SetActive(true);
-            OldChosenWord.SetActive(true);
         }
 
         wordDataHolder = wordData;
@@ -63,9 +62,8 @@ public class WordFiller : MonoBehaviour
             btn.interactable = false;
         }
         PoemMenuController.instance.UpdateAttributes(wordDataHolder.words[wordIndex]);
-        OldChosenWord.GetComponent<TextMeshProUGUI>().text = wordDataHolder.words[wordIndex].word;
-        OldChosenWord.GetComponent<RectTransform>().anchoredPosition = writingEffect.gameObject.GetComponent<RectTransform>().anchoredPosition - new Vector2(21.6f, 0);
         particleMask.calculateDuration(wordDataHolder.words[wordIndex].word);
+        oldChosenWord = wordDataHolder.words[wordIndex].word;
         writingEffect.gameObject.SetActive(true);
         wordsEffector.FadeOutAllExcept(wordIndex);
         writingEffect.StartEffect(wordDataHolder.words[wordIndex].word, this);

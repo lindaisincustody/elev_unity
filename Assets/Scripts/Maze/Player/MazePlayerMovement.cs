@@ -57,6 +57,13 @@ public class MazePlayerMovement : MonoBehaviour
         mazeGenerator.DeactivateShortestPath();
     }
 
+    public void StopPlayer()
+    {
+        canMove = false;
+        rb.velocity = Vector3.zero;
+        movement = Vector3.zero;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("MazeEnd"))

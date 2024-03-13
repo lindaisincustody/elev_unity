@@ -7,20 +7,17 @@ using TMPro;
 public class BookController : MonoBehaviour
 {
     public GameObject OldPoem;
-    public GameObject OldChosenWord;
     public WordFiller wordFiller;
     [SerializeField] private GameObject poemObj;
     [SerializeField] private GameObject wordsHolder;
     [SerializeField] private TextMeshProUGUI poemText;
 
     private Book book;
-    private AutoFlip bookFlipper;
     private bool wordsWereShown = false;
 
     private void Awake()
     {
         book = GetComponent<Book>();
-        bookFlipper = GetComponent<AutoFlip>();
     }
 
     public void ExtendPoemAI(string addedPoem)
@@ -49,7 +46,6 @@ public class BookController : MonoBehaviour
         if (!OldPoem.activeSelf && !wordFiller.firstPoem)
         {
             OldPoem.SetActive(true);
-            OldChosenWord.SetActive(true);
         }
     }
 
@@ -58,7 +54,6 @@ public class BookController : MonoBehaviour
         if (OldPoem.activeSelf)
         {
             OldPoem.SetActive(false);
-            OldChosenWord.SetActive(false);
         }
     }
 

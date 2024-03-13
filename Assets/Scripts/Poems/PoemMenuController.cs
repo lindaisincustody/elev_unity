@@ -18,7 +18,6 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private WordFiller wordFiller;
     [SerializeField] private RectTransform bookMover;
     [SerializeField] private AutoFlip bookFlipper;
-    [SerializeField] private RectTransform oldWord;
     [SerializeField] private RectTransform wordHolder;
     [SerializeField] private Image leftImage;
     [SerializeField] private PoemAI poemAI;
@@ -26,7 +25,7 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private GameObject hero;
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] private InputManager playerInput;
-    public Attributes heroAttributes;
+    [SerializeField] Inventory inventory;
     [Header("Cursor References")]
     [SerializeField] CursorController cursor;
     [SerializeField] UIElementsHolder wordsElements;
@@ -35,7 +34,6 @@ public class PoemMenuController : MonoBehaviour
     public float bookAnimationDuration = 1.0f;
 
     private int bookOffscreenPositionY = -1500;
-    private Vector2 OldWordPosition;
 
     private bool _canBeTriggered = true;
     private bool isBookActive = false;
@@ -49,7 +47,6 @@ public class PoemMenuController : MonoBehaviour
     void Start()
     {
         instance = this;
-        heroAttributes = hero.GetComponent<Attributes>();
     }
 
     public void OpenPoemBook(WordData wordsData)
@@ -71,11 +68,6 @@ public class PoemMenuController : MonoBehaviour
         Vector2 newOldWordPosition = wordsData.oldWordPosition;
         Vector2 newWordPosition = wordsData.WordPosition;
         wordHolder.anchoredPosition = newWordPosition;
-        if (OldWordPosition != null)
-        {
-            oldWord.anchoredPosition = OldWordPosition;
-        }   
-        OldWordPosition = newOldWordPosition;
 
         wordFiller.FillWords(wordsData);
         bookMover.gameObject.SetActive(true);
@@ -127,11 +119,10 @@ public class PoemMenuController : MonoBehaviour
 
     public void UpdateAttributes(Word wordData)
     {
-        heroAttributes.heroStrength += wordData.strengthWeight;
-        heroAttributes.heroIntelligence += wordData.intelligenceWeight;
-        heroAttributes.heroCoordination += wordData.coordinationWeight;
-        heroAttributes.heroNeutrality += wordData.neutralWeight;
-        DebugPanel.Instance.UpdateAttributes();
+        inventory.AddGoldMultiplier(Attribute.Strength, wordData.strengthWeight);
+        inventory.AddGoldMultiplier(Attribute.Coordination, wordData.coordinationWeight);
+        inventory.AddGoldMultiplier(Attribute.Intelligence, wordData.intelligenceWeight);
+        inventory.AddGoldMultiplier(Attribute.Neutrality, wordData.neutralWeight);
     }
 
     public void OnWritingPanelActivate()
