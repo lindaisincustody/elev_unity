@@ -8,6 +8,7 @@ using System;
 public class DialogueController : MonoBehaviour
 {
     [Header("DialogueBox References")]
+    [SerializeField] GameObject CanvasBG;
     [SerializeField] GameObject DialogueObj;
     [SerializeField] GameObject MinigamesBoxObj;
     [SerializeField] TextMeshProUGUI dialogueText;
@@ -45,12 +46,14 @@ public class DialogueController : MonoBehaviour
 
     private void Awake()
     {
+        
         playerInput.OnInteract += NextAction;
         playerInput.OnUICancel += ExitDialogue;
     }
 
     private void OnDestroy()
     {
+        
         playerInput.OnInteract -= NextAction;
         playerInput.OnUICancel -= ExitDialogue;
     }
@@ -63,6 +66,7 @@ public class DialogueController : MonoBehaviour
 
     public void ActivateDialogue(DialogueData newDialogueData)
     {
+        CanvasBG.SetActive(true);
         particles.SetDialogueData(newDialogueData);
         dialogueData = newDialogueData;
         currentDialogueLine = 0;
@@ -119,6 +123,7 @@ public class DialogueController : MonoBehaviour
 
         playerMovement.SetMovement(true);
         cursor.DeactivateCursor();
+        CanvasBG.SetActive(false);
     }
 
     private void ShowMinigameOptions()
