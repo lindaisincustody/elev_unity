@@ -10,7 +10,7 @@ public class Gold : IDisposable
     private float IntelligenceGoldMultiplier = 0;
     private float NeutralityGoldMultiplier = 0;
 
-    private int currentGold = 0;
+    private int currentGold = 25;
 
     public Gold()
     {
@@ -20,6 +20,10 @@ public class Gold : IDisposable
     public void AddGold(int ammount)
     {
         currentGold += ammount;
+    }
+    public void RemoveGold(int ammount)
+    {
+        currentGold -= ammount;
     }
 
     public int GetGold()
