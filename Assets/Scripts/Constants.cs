@@ -13,7 +13,7 @@ public class Constants
     {
         public const string IntelligenceGameScene = "IntelligenceGame";
         public const string StrengthGameScene = "StrengthGame";
-        public const string NeutralityGameScene = "NeutralityGame";
+        public const string NeutralityGameScene = "CutGame";
         public const string CoordinationGameScene = "MazeGame";
         public const string MainScene = "Main";
         public const string TutorialScene = "StationScene";
