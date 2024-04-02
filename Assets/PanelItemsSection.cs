@@ -13,6 +13,7 @@ public class PanelItemsSection : MonoBehaviour
     public TextMeshProUGUI descriptionText; // Reference to the description text object in the shop prefab
     private List<GameObject> instantiatedItems = new List<GameObject>();
     private int selectedIndex = 0;
+    public InventoryUI inventoryUI;
 
     void Start()
     {
@@ -43,6 +44,11 @@ public class PanelItemsSection : MonoBehaviour
             RemoveHighlight(prevIndex);
             UpdateDescription(selectedIndex); // Update the description when the selection changes
         }
+
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+        {
+            PurchaseSelectedItem();
+        }
     }
 
     private void PopulatePanel()
@@ -59,6 +65,28 @@ public class PanelItemsSection : MonoBehaviour
                 itemDetails.itemIcon = itemData.itemIcon;
                 itemDetails.UpdateUI();
             }
+        }
+    }
+
+    public void PurchaseSelectedItem()
+    {
+        if (selectedIndex < 0 || selectedIndex >= itemsToDisplay.Count)
+            return;
+
+        var selectedItem = itemsToDisplay[selectedIndex];
+
+        // Implement your logic here to check if the player has enough gold or any other conditions
+        // For example:
+        // if (playerGold >= selectedItem.cost)
+        {
+            // Deduct gold or perform other actions
+
+            // Call AddItemToInventory on the InventoryUI script
+            // You need a reference to the InventoryUI instance. Let's assume it's available as inventoryUI.
+
+            InventoryUI.Instance.AddItemToInventory(selectedItem);
+
+            // Optional: Remove the item from the shop or update the shop UI
         }
     }
 
