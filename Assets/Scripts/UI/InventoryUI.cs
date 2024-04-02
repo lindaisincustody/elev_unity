@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
+    public static InventoryUI Instance { get; private set; }
+
     [Header("References")]
     [SerializeField] InputManager playerInput;
     [SerializeField] Inventory inventory;
@@ -39,9 +41,51 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
         multiplierRectWidth = strengthSlider.rectTransform.rect.width * 4;
         multiplierRectHeight = strengthSlider.rectTransform.rect.height;
         playerInput.OnInventory += OpenInventory;
+    }
+
+    private void OnDestroy()
+    {
+        playerInput.OnInventory -= OpenInventory;
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
+
+    public void AddItemToInventory(ItemData itemData)
+    {
+        // Find the first empty slot in the inventory
+        foreach (Transform child in inventoryPanel.transform)
+        {
+            if (!child.gameObject.activeSelf)
+            {
+                child.gameObject.SetActive(true);
+                // Assume there's an Image component to represent the item icon
+                var image = child.GetComponent<Image>();
+                if (image != null)
+                {
+                    image.sprite = itemData.itemIcon;
+                }
+
+                // Optionally, set the name or any other data you need
+                // For example, a tooltip or description when hovering over the item
+
+                break; // Exit the loop after filling one slot
+            }
+        }
+
+        // Update any other UI elements or internal data structures representing the inventory
     }
 
     public void OpenInventory()
@@ -106,8 +150,4 @@ public class InventoryUI : MonoBehaviour
         return multiplier.ToString("0.00") + " x";
     }
 
-    private void OnDestroy()
-    {
-        playerInput.OnInventory -= OpenInventory;
-    }
 }

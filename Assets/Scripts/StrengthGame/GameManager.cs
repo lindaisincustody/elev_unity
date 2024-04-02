@@ -8,9 +8,12 @@ public class GameManager : MonoBehaviour
 {
     public GameObject projectilePrefab;
     public Transform heart;
+    public Transform player;
+    public Transform enemy;
     public int GameLevel = 1;
     public int score;
     public TMP_Text scoreText;
+
 
     void Start()
     {
@@ -35,18 +38,20 @@ public class GameManager : MonoBehaviour
     {
         Heart heartController = FindObjectOfType<Heart>();
 
-        if (score >= 3)
+        if (score >= 500)
         {
 
             GameLevel++;
             PlayerPrefs.SetInt(Constants.PlayerPrefs.StrengthLevel, GameLevel);
             Debug.Log("You Won!");
+            BattlePlayerController.isPlaying = false;
             SceneManager.LoadScene(Constants.SceneNames.MainScene);
         }
 
         if (heartController.hp <= 0)
         {
             Debug.Log("You Lost!");
+            BattlePlayerController.isPlaying = false;
             SceneManager.LoadScene(Constants.SceneNames.MainScene);
         }
 
@@ -54,23 +59,19 @@ public class GameManager : MonoBehaviour
 
     IEnumerator InstantiateProjectiles()
     {
+        EnemyController enemyController = enemy.GetComponent<EnemyController>(); // Reference to the enemy controller
+
         while (true)
         {
-            // Determine the number of projectiles based on the GameLevel
-            int projectilesPerLevel = GameLevel; // Example formula: 2 projectiles per level
+            // Wait until the enemy reaches its target position
+            yield return new WaitUntil(() => Vector2.Distance(enemyController.transform.position, enemyController.targetPosition) > 17f);
 
-            for (int i = 0; i < projectilesPerLevel; i++)
-            {
-                // Alternate directions for each projectile
-                Vector2 direction = i % 2 == 0 ? Vector2.left : Vector2.right;
-                GameObject projectile = Instantiate(projectilePrefab, GetSpawnPosition(direction), Quaternion.identity);
-                projectile.GetComponent<Projectile>().target = heart;
+            // Instantiate a projectile targeting the heart or player
+            GameObject projectile = Instantiate(projectilePrefab, enemyController.transform.position, Quaternion.identity);
+            Projectile projectileScript = projectile.GetComponent<Projectile>();
+            projectileScript.target = (Random.value > 0.5f) ? heart : player; // Randomize target
 
-                // Short delay between each projectile instantiation
-                yield return new WaitForSeconds(0.5f);
-            }
-
-            // Longer delay after all projectiles for a level have been instantiated
+            // Wait before checking again
             yield return new WaitForSeconds(2f);
         }
     }

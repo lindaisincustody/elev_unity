@@ -8,67 +8,74 @@ public class BattlePlayerController : MonoBehaviour
 
     // Flag to track whether the player is currently blocking
     private bool isBlocking = false;
-    
-    void OnTriggerStay2D(Collider2D other)
-    {
-        // Check if the player is in the left zone
-        if (other.CompareTag("LeftZone"))
-        {
-            // Check if the Shift key is being held down
-            if (Input.GetKey(KeyCode.LeftControl))
-            {
-                // Play the left zone animation
-                animator.SetBool("LeftZone", true);
-                animator.SetBool("IsHoldingShift", true);
-                animator.SetBool("IsBlocking", false);
-                // Set the blocking flag to true
-                isBlocking = true;
-            }
-            else
-            {
-                // Stop the left zone animation
-                animator.SetBool("LeftZone", false);
+    public static bool isPlaying;
+    // The current direction the player is facing
 
-                // Set the blocking flag to false
-                isBlocking = false;
+    public PlayerMovement playerMovement;
+    private string facingDirection = "Up"; // Default direction, adjust as needed
+
+    private void Awake()
+    {
+        playerMovement = GetComponent<PlayerMovement>();
+        isPlaying = false;
+
+    }
+
+    void Update()
+    {
+        // Check if the Left Control key is being held down
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            if (!isBlocking)
+            {
+                playerMovement.SetMovement(false);
+                BlockInFacingDirection();
             }
         }
-        // Check if the player is in the right zone
-        else if (other.CompareTag("RightZone"))
+        else if (isBlocking)
         {
-            // Check if the Shift key is being held down
-            if (Input.GetKey(KeyCode.LeftControl))
-            {
-                // Play the left zone animation
-                animator.SetBool("RightZone", true);
-                animator.SetBool("IsHoldingShift", true);
-                animator.SetBool("IsBlocking", false);
-
-                // Set the blocking flag to true
-                isBlocking = true;
-            }
-            else
-            {
-                // Stop the left zone animation
-                animator.SetBool("RightZone", false);
-
-                // Set the blocking flag to false
-                isBlocking = false;
-            }
+            playerMovement.SetMovement(true);
+            // Stop blocking when the key is released
+            ExitBlockingState();
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private void BlockInFacingDirection()
     {
-        // Reset animation and blocking flag when leaving the trigger zone
-        animator.SetBool("LeftZone", false);
-        animator.SetBool("RightZone", false);
-        
+        // Set the blocking flag to true
+        isBlocking = true;
+
+        // Activate the blocking animation based on the facing direction
+        animator.SetBool($"Defend{facingDirection}", true);
+
+        // Set general blocking flag
+        animator.SetBool("IsBlocking", true);
+    }
+    public void ExitBlockingState()
+    {
+        // Reset the blocking flag
         isBlocking = false;
+
+        // Deactivate all blocking animations
+        animator.SetBool("DefendUp", false);
+        animator.SetBool("DefendDown", false);
+        animator.SetBool("DefendLeft", false);
+        animator.SetBool("DefendRight", false);
+
+        // Reset the general blocking flag
+        animator.SetBool("IsBlocking", false);
+    }
+
+    public void SetFacingDirection(string direction)
+    {
+        // Method to set the facing direction externally
+        facingDirection = direction;
     }
 
     public bool IsBlocking()
     {
         return isBlocking;
     }
+
+
 }
