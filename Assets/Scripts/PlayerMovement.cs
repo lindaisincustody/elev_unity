@@ -27,7 +27,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-
         if (!_canMove)
             return;
 
@@ -39,12 +38,11 @@ public class PlayerMovement : MonoBehaviour
         animator.SetFloat("Vertical", movement.y);
         animator.SetFloat("Speed", movement.sqrMagnitude);
 
-        // If there is movement and the player is blocking, stop blocking
-        if (movement != Vector2.zero && BattlePlayerController.isPlaying)
+        if (movement != Vector2.zero)
         {
-            lastDirection = movement; // Update the last direction if there's movement
+            lastDirection = movement; // Always update the last direction if there's movement
 
-            if (battlePlayerController.IsBlocking())
+            if (BattlePlayerController.isPlaying && battlePlayerController.IsBlocking())
             {
                 battlePlayerController.ExitBlockingState();
             }
@@ -53,7 +51,6 @@ public class PlayerMovement : MonoBehaviour
         // Update the facing direction in the battle controller
         UpdateFacingDirection();
     }
-
     void FixedUpdate()
     {
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
@@ -73,7 +70,6 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateFacingDirection()
     {
-        // Convert the last direction to a string and pass it to the battle player controller
         if (battlePlayerController != null)
         {
             if (Mathf.Abs(lastDirection.x) > Mathf.Abs(lastDirection.y))
@@ -86,6 +82,9 @@ public class PlayerMovement : MonoBehaviour
                 // Vertical movement is dominant
                 battlePlayerController.SetFacingDirection(lastDirection.y > 0 ? "Up" : "Down");
             }
+
+            // Debug log to check the values
+      
         }
     }
 }
