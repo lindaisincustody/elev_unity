@@ -27,6 +27,7 @@ public class MazeGenerator : MonoBehaviour
     [System.NonSerialized] public UnityEvent OnMazeCompletion = new UnityEvent();
 
     private EnemySpawner enemySpawner;
+    private PathShowersSpawner pathShowerSpawner;
     private ImageHolder imageHolder;
     private float timer = 0.0f;
 
@@ -34,6 +35,7 @@ public class MazeGenerator : MonoBehaviour
     {
         imageHolder = GetComponent<ImageHolder>();
         enemySpawner = GetComponent<EnemySpawner>();
+        pathShowerSpawner = GetComponent<PathShowersSpawner>();
     }
 
     public void StartGeneratingMaze(int mazeWidth, int mazeHeight)
@@ -47,6 +49,7 @@ public class MazeGenerator : MonoBehaviour
     {
         cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
         enemySpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
+        pathShowerSpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
         creator.ResizeNavMesh(_mazeWidth * cellSize, _mazeHeight * cellSize);
         mazeGrid = new MazeCell[_mazeWidth, _mazeHeight];
         numberOfSquaresForALoop = (_mazeHeight * _mazeWidth)/numberOfSquaresForALoop;
@@ -73,6 +76,7 @@ public class MazeGenerator : MonoBehaviour
         }
         CalculateShortestPath(mazeGrid[0, 0], exitCell);
         enemySpawner.SpawnEnemies();
+        pathShowerSpawner.SpawnPathShowers();
         yield return navmesh.BuildNavMeshAsync();
         cameraTransition.StartZoomIn();
 
