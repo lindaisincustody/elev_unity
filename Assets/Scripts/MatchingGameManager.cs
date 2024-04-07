@@ -11,10 +11,10 @@ public class GameController : MonoBehaviour
     public GameObject oPrefab;
     public Sprite correctDestinationSprite;
 
-    public int ActualGameLevel = 1;
+    public int ActualGameLevel = 50;
 
-    private int currentLevel = 1; // Start with level 1
-    private int difficultyLevel = 1; // overall difficulty
+    private int currentLevel = 50; // Start with level 1
+    private int difficultyLevel = 50; // overall difficulty
 
     public TMP_Text levelCurrentText;
     public TMP_Text levelsWonText;
@@ -33,7 +33,7 @@ public class GameController : MonoBehaviour
 
     void Start()
     {
-        ActualGameLevel = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceLevel, 1);
+        ActualGameLevel = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceLevel, 10);
         currentLevel = ActualGameLevel;
         difficultyLevel = ActualGameLevel;
         GenerateLevel();
