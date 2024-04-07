@@ -7,53 +7,66 @@ using UnityEngine.EventSystems; // Needed for UI interaction
 
 public class PanelItemsSection : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] InputManager playerInput;
+    [Header("Self-References")]
     public ScrollRect scrollRect;
     public GameObject itemPrefab;
-    public List<ItemData> itemsToDisplay = new List<ItemData>();
-    public TextMeshProUGUI descriptionText; // Reference to the description text object in the shop prefab
+    public TextMeshProUGUI descriptionText;
+    [Header("Items")]
+    public List<ShopItem> shopItems = new List<ShopItem>();
     private List<GameObject> instantiatedItems = new List<GameObject>();
     private int selectedIndex = 0;
-    public InventoryUI inventoryUI;
+
+    private void Awake()
+    {
+        playerInput.OnNavigate += OnNavigate;
+        playerInput.OnSubmit += Buy;
+    }
 
     void Start()
     {
         PopulatePanel();
         UpdateDescription(selectedIndex); // Update description at start
+        HighlightItem(0);
     }
 
-    void Update()
+    private void OnNavigate(Vector2 value)
     {
+        //if (!isShopActive)
+        //   return;
+
         int prevIndex = selectedIndex;
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            if (selectedIndex < instantiatedItems.Count - 1) selectedIndex++;
-            scrollRect.verticalNormalizedPosition = 1 - ((float)selectedIndex / (instantiatedItems.Count - 1));
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
+        if (value == Vector2.up)
         {
             if (selectedIndex > 0) selectedIndex--;
+            scrollRect.verticalNormalizedPosition = 1 - ((float)selectedIndex / (instantiatedItems.Count - 1));
+        }
+        else if (value == Vector2.down)
+        {
+            if (selectedIndex < instantiatedItems.Count - 1) selectedIndex++;
             scrollRect.verticalNormalizedPosition = 1 - ((float)selectedIndex / (instantiatedItems.Count - 1));
         }
 
         HighlightItem(selectedIndex);
 
-        if (prevIndex != selectedIndex) // If selection changed
+        if (prevIndex != selectedIndex)
         {
             HighlightItem(selectedIndex);
             RemoveHighlight(prevIndex);
-            UpdateDescription(selectedIndex); // Update the description when the selection changes
+            UpdateDescription(selectedIndex);
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
-        {
-            PurchaseSelectedItem();
-        }
+    private void Buy()
+    {
+        PurchaseSelectedItem();
     }
 
     private void PopulatePanel()
     {
-        foreach (var itemData in itemsToDisplay)
+        foreach (var itemData in shopItems)
         {
             var itemInstance = Instantiate(itemPrefab, scrollRect.content);
             instantiatedItems.Add(itemInstance);
@@ -62,7 +75,8 @@ public class PanelItemsSection : MonoBehaviour
             if (itemDetails != null)
             {
                 itemDetails.itemName = itemData.itemName;
-                itemDetails.itemIcon = itemData.itemIcon;
+                itemDetails.description = itemData.description;
+                itemDetails.itemIcon = itemData.sprite;
                 itemDetails.UpdateUI();
             }
         }
@@ -70,10 +84,10 @@ public class PanelItemsSection : MonoBehaviour
 
     public void PurchaseSelectedItem()
     {
-        if (selectedIndex < 0 || selectedIndex >= itemsToDisplay.Count)
+        if (selectedIndex < 0 || selectedIndex >= shopItems.Count)
             return;
 
-        var selectedItem = itemsToDisplay[selectedIndex];
+        var selectedItem = shopItems[selectedIndex];
 
         // Implement your logic here to check if the player has enough gold or any other conditions
         // For example:
@@ -83,8 +97,7 @@ public class PanelItemsSection : MonoBehaviour
 
             // Call AddItemToInventory on the InventoryUI script
             // You need a reference to the InventoryUI instance. Let's assume it's available as inventoryUI.
-
-            InventoryUI.Instance.AddItemToInventory(selectedItem);
+            ItemsInventory.Instance.AddItem(selectedItem);
 
             // Optional: Remove the item from the shop or update the shop UI
         }
@@ -104,6 +117,6 @@ public class PanelItemsSection : MonoBehaviour
     }
     private void UpdateDescription(int index)
     {
-        descriptionText.text = itemsToDisplay[index].description; // Set the description text for the currently selected item
+        descriptionText.text = shopItems[index].description; // Set the description text for the currently selected item
     }
 }

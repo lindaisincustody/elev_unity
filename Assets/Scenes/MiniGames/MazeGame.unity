@@ -300,6 +300,7 @@ GameObject:
   m_Component:
   - component: {fileID: 126178657}
   - component: {fileID: 126178656}
+  - component: {fileID: 126178658}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -324,6 +325,7 @@ MonoBehaviour:
   winScreen: {fileID: 164996871}
   playerMovement: {fileID: 535624769}
   playerCollider: {fileID: 535624773}
+  pathShowersSpawner: {fileID: 1485125254}
 --- !u!4 &126178657
 Transform:
   m_ObjectHideFlags: 0
@@ -339,6 +341,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &126178658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126178655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b99f7f301435cfd4d91bf9b5c1ce0e11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _mazeManager: {fileID: 126178656}
 --- !u!1 &143587175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2405,6 +2420,7 @@ GameObject:
   - component: {fileID: 1485125251}
   - component: {fileID: 1485125250}
   - component: {fileID: 1485125253}
+  - component: {fileID: 1485125254}
   - component: {fileID: 1485125252}
   m_Layer: 0
   m_Name: MazeGenerator
@@ -2489,6 +2505,18 @@ MonoBehaviour:
   expEnemyPrefab: {fileID: 6841425367208298865, guid: 0c5ac7df87ebbf945814817b7b2c7cec, type: 3}
   expandingEnemyTicketCount: 0
   followingEnemyTicketCount: 5
+--- !u!114 &1485125254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485125249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8e9a385396979d740ae3fe4e910c0d61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   pathConsumable: {fileID: 8088755448453590453, guid: 496535e5da5b8ae4189af7660577f22a, type: 3}
 --- !u!1 &1518220627
 GameObject:
