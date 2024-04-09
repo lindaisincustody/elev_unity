@@ -4,6 +4,7 @@ public class FinishPointInScene : MonoBehaviour
 {
     public float scene_X;
     public float scene_Y;
+    public float iconY;
     public GameObject iconPrefab; // Assign your icon prefab here in the inspector
     private GameObject instantiatedIcon = null; // To hold the instantiated icon
     private Transform playerTransform = null; // To track the player's position
@@ -61,7 +62,7 @@ public class FinishPointInScene : MonoBehaviour
         if (playerIsInTrigger && instantiatedIcon != null && playerTransform != null)
         {
             // Update the icon's position to be above the player
-            instantiatedIcon.transform.position = playerTransform.position + new Vector3(0, 1.0f, 0); // Adjust Y offset as needed
+            instantiatedIcon.transform.position = playerTransform.position + new Vector3(0, iconY, 0); // Adjust Y offset as needed
         }
     }
 
