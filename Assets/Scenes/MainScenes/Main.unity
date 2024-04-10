@@ -5807,6 +5807,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 6117977592564839130, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: Loop
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6117977592564839130, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1.92
