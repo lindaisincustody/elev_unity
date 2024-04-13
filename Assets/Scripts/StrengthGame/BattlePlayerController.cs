@@ -12,12 +12,15 @@ public class BattlePlayerController : MonoBehaviour
     // The current direction the player is facing
 
     public PlayerMovement playerMovement;
-    private string facingDirection = "Up"; // Default direction, adjust as needed
+    private string facingDirection = ""; // Default direction, adjust as needed
+
+    private CloneManager cloneManager;
 
     private void Awake()
     {
         playerMovement = GetComponent<PlayerMovement>();
         isPlaying = false;
+        cloneManager = FindObjectOfType<CloneManager>();
 
     }
 
@@ -38,6 +41,19 @@ public class BattlePlayerController : MonoBehaviour
             // Stop blocking when the key is released
             ExitBlockingState();
         }
+
+        
+    }
+
+    void FixedUpdate()
+    {
+        // Existing FixedUpdate code...
+
+        // Update clones' position
+        if (cloneManager != null)
+        {
+            cloneManager.UpdateClones();
+        }
     }
 
     private void BlockInFacingDirection()
@@ -50,7 +66,23 @@ public class BattlePlayerController : MonoBehaviour
 
         // Set general blocking flag
         animator.SetBool("IsBlocking", true);
+
+        // Update clone blocking animations
+        if (cloneManager != null)
+        {
+            foreach (GameObject clone in cloneManager.clones)
+            {
+                Animator cloneAnimator = clone.GetComponent<Animator>();
+                if (cloneAnimator != null)
+                {
+                    // Set the same blocking animation as the player
+                    cloneAnimator.SetBool($"Defend{facingDirection}", true);
+                    cloneAnimator.SetBool("IsBlocking", true);
+                }
+            }
+        }
     }
+
     public void ExitBlockingState()
     {
         // Reset the blocking flag
@@ -64,6 +96,24 @@ public class BattlePlayerController : MonoBehaviour
 
         // Reset the general blocking flag
         animator.SetBool("IsBlocking", false);
+
+        // Update clone blocking animations
+        if (cloneManager != null)
+        {
+            foreach (GameObject clone in cloneManager.clones)
+            {
+                Animator cloneAnimator = clone.GetComponent<Animator>();
+                if (cloneAnimator != null)
+                {
+                    // Reset all blocking animations for the clone
+                    cloneAnimator.SetBool("DefendUp", false);
+                    cloneAnimator.SetBool("DefendDown", false);
+                    cloneAnimator.SetBool("DefendLeft", false);
+                    cloneAnimator.SetBool("DefendRight", false);
+                    cloneAnimator.SetBool("IsBlocking", false);
+                }
+            }
+        }
     }
 
     public void SetFacingDirection(string direction)
