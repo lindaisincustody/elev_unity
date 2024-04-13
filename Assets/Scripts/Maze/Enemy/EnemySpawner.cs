@@ -11,8 +11,6 @@ public class EnemySpawner : MonoBehaviour
 
     [SerializeField] private int expandingEnemyTicketCount;
     [SerializeField] private int followingEnemyTicketCount;
-    [Header("Path Shower")]
-    [SerializeField] private PathConsumable pathConsumable;
 
     List<PatrolEnemy> createdPatrolEnemies = new List<PatrolEnemy>();
     PatrolEnemy chosenEnemy;
@@ -39,8 +37,6 @@ public class EnemySpawner : MonoBehaviour
                 if ((j - enemyCellsVariation) % cellsPerEnemy == 0 && (i - enemyCellsVariation) % cellsPerEnemy == 0)
                 {
                     CreateEnemy(i, j);
-                    PathConsumable newConsumable = Instantiate(pathConsumable, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
-                    newConsumable.transform.parent = gameObject.transform;
                 }
             }
         }

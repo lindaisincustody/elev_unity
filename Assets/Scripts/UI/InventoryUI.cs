@@ -14,6 +14,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] PlayerMovement playerMovement;
     [Header("Self References")]
     [SerializeField] GameObject inventoryPanel;
+    [SerializeField] GameObject inventoryBG;
     [SerializeField] TextMeshProUGUI gold;
     [Header("Level References")]
     [SerializeField] TextMeshProUGUI strengthLevel;
@@ -29,6 +30,8 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] Image intelligenceSlider;
     [SerializeField] Image cooridnationSlider;
     [SerializeField] Image neutralitySlider;
+    [Header("Items")]
+    [SerializeField] InventoryItemSlot[] itemSlots;
 
     private bool isInventoryOpen = false;
     private float multiplierRectWidth = 0;
@@ -63,36 +66,12 @@ public class InventoryUI : MonoBehaviour
         }
     }
 
-    public void AddItemToInventory(ItemData itemData)
-    {
-        // Find the first empty slot in the inventory
-        foreach (Transform child in inventoryPanel.transform)
-        {
-            if (!child.gameObject.activeSelf)
-            {
-                child.gameObject.SetActive(true);
-                // Assume there's an Image component to represent the item icon
-                var image = child.GetComponent<Image>();
-                if (image != null)
-                {
-                    image.sprite = itemData.itemIcon;
-                }
-
-                // Optionally, set the name or any other data you need
-                // For example, a tooltip or description when hovering over the item
-
-                break; // Exit the loop after filling one slot
-            }
-        }
-
-        // Update any other UI elements or internal data structures representing the inventory
-    }
-
     public void OpenInventory()
     {
         RefreshUI();
         isInventoryOpen = !isInventoryOpen;
         inventoryPanel.SetActive(isInventoryOpen);
+        inventoryBG.SetActive(isInventoryOpen);
         playerMovement.SetMovement(!isInventoryOpen);
     }
 
@@ -101,6 +80,18 @@ public class InventoryUI : MonoBehaviour
         UpdateGoldText();
         UpdateLevels();
         UpdateGoldMultipliers();
+        PopulateItems();
+    }
+
+    public void PopulateItems()
+    {
+        var allItems = ItemsInventory.Instance.GetAllItems();
+        int slotIndex = 0;
+        foreach (var item in allItems)
+        {
+            itemSlots[slotIndex].Equip(item);
+            slotIndex++;
+        }
     }
 
     private void UpdateGoldText()

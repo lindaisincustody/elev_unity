@@ -309,46 +309,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64b643cfa6b6974419609d9840234de6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInput: {fileID: 0}
   scrollRect: {fileID: 6315757979863952604}
   itemPrefab: {fileID: 5335188156515930346, guid: 417c8867590f53f4e9c845106fb8d7cd, type: 3}
-  itemsToDisplay:
-  - itemName: Book item
-    itemIcon: {fileID: 21300000, guid: c96b78bbb53f1894498fbe124be7ab92, type: 3}
-    description: This is a writer's journal, it increases your creativity!
-  - itemName: Food item
-    itemIcon: {fileID: 21300000, guid: ea9637292d132ac4bb77a0c015d333ea, type: 3}
-    description: Food calms you down and increases your sanity.
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: This is just a template item.
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: This is just a template item.
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: This is just a template item.
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
-  - itemName: Resource item
-    itemIcon: {fileID: 21300000, guid: a6a79f61aca24664f825fac9c1bb16ca, type: 3}
-    description: 
   descriptionText: {fileID: 5273013022883873218}
+  inventoryUI: {fileID: 0}
+  shopItems:
+  - {fileID: 11400000, guid: 36c08ec73bd588543af5c873c0c6dbdd, type: 2}
 --- !u!114 &4478058890106284265
 MonoBehaviour:
   m_ObjectHideFlags: 0
