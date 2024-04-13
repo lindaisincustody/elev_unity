@@ -23,9 +23,6 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private PoemAI poemAI;
     [Header("Player References")]
     [SerializeField] private GameObject hero;
-    [SerializeField] PlayerMovement playerMovement;
-    [SerializeField] private InputManager playerInput;
-    [SerializeField] Inventory inventory;
     [Header("Cursor References")]
     [SerializeField] CursorController cursor;
     [SerializeField] UIElementsHolder wordsElements;
@@ -33,26 +30,38 @@ public class PoemMenuController : MonoBehaviour
     public AnimationCurve bookAnimationCurve;
     public float bookAnimationDuration = 1.0f;
 
+    Player player;
+    InputManager playerInput;
+    PlayerMovement playerMovement;
+
     private int bookOffscreenPositionY = -1500;
 
     private bool _canBeTriggered = true;
     private bool isBookActive = false;
     private bool _canTurnPage = true;
 
-    private void Awake()
-    {
-        playerInput.OnInteract += OpenNextPage;
-    }
-
     void Start()
     {
         instance = this;
+
+        player = Player.instance;
+        playerInput = player.GetInputManager;
+        playerMovement = player.GetPlayerMovement;
+
+        playerInput.OnInteract += OpenNextPage;
+    }
+
+    private void OnDestroy()
+    {
+        playerInput.OnInteract -= OpenNextPage;
     }
 
     public void OpenPoemBook(WordData wordsData)
     {
         if (!_canBeTriggered)
             return;
+
+        InventoryUI.Instance.CanOpenInventory(false);
         poemAI.SendRequest(wordsData);
         isBookActive = true;
         _canBeTriggered = false;
@@ -111,6 +120,7 @@ public class PoemMenuController : MonoBehaviour
         playerMovement.SetMovement(true);
         yield return new WaitForSeconds(2f);
         bookFlipper.FlipLeftPage();
+        InventoryUI.Instance.CanOpenInventory(true);
         yield return new WaitForSeconds(3f);
         wordFiller.EnableWordChoosing(false);
         _canBeTriggered = true;
@@ -119,10 +129,10 @@ public class PoemMenuController : MonoBehaviour
 
     public void UpdateAttributes(Word wordData)
     {
-        inventory.AddGoldMultiplier(Attribute.Strength, wordData.strengthWeight);
-        inventory.AddGoldMultiplier(Attribute.Coordination, wordData.coordinationWeight);
-        inventory.AddGoldMultiplier(Attribute.Intelligence, wordData.intelligenceWeight);
-        inventory.AddGoldMultiplier(Attribute.Neutrality, wordData.neutralWeight);
+        player.AddGoldMultiplier(Attribute.Strength, wordData.strengthWeight);
+        player.AddGoldMultiplier(Attribute.Coordination, wordData.coordinationWeight);
+        player.AddGoldMultiplier(Attribute.Intelligence, wordData.intelligenceWeight);
+        player.AddGoldMultiplier(Attribute.Neutrality, wordData.neutralWeight);
     }
 
     public void OnWritingPanelActivate()

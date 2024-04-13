@@ -12,8 +12,8 @@ public class InventoryData
 public class ItemsInventory : MonoBehaviour
 {
     public InventoryData inventoryData = new InventoryData();
-    private string saveFileName = "inventory.json";
 
+    private SavingWrapper savingWrapper;
     private static ItemsInventory _instance;
     public static ItemsInventory Instance
     {
@@ -42,37 +42,21 @@ public class ItemsInventory : MonoBehaviour
         }
 
         _instance = this;
-        LoadInventory();
-        DontDestroyOnLoad(gameObject);
+        savingWrapper = SavingWrapper.Instance;
+        inventoryData = savingWrapper.LoadInventory();
+
     }
 
     public void AddItem(ShopItem newItem)
     {
         inventoryData.items.Add(newItem);
-        SaveInventory();
-    }
-
-    public void SaveInventory()
-    {
-        string json = JsonUtility.ToJson(inventoryData);
-        File.WriteAllText(Path.Combine(Application.persistentDataPath, saveFileName), json);
-    }
-   
-
-    public void LoadInventory()
-    {
-        string path = Path.Combine(Application.persistentDataPath, saveFileName);
-        if (File.Exists(path))
-        {
-            string json = File.ReadAllText(path);
-            inventoryData = JsonUtility.FromJson<InventoryData>(json);
-        }
+        savingWrapper.SaveInventory(inventoryData);
     }
 
     public void DeleteItems()
     {
         inventoryData.items.Clear();
-        SaveInventory();
+        savingWrapper.SaveInventory(inventoryData);
     }
 
     public List<ShopItem> GetAllItems()

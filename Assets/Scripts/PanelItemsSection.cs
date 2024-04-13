@@ -7,9 +7,9 @@ using UnityEngine.EventSystems; // Needed for UI interaction
 
 public class PanelItemsSection : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] InputManager playerInput;
     [Header("Self-References")]
+    public ShopUI shopUI;
+    public Transform parent;
     public ScrollRect scrollRect;
     public GameObject itemPrefab;
     public TextMeshProUGUI descriptionText;
@@ -18,17 +18,29 @@ public class PanelItemsSection : MonoBehaviour
     private List<GameObject> instantiatedItems = new List<GameObject>();
     private int selectedIndex = 0;
 
-    private void Awake()
-    {
-        playerInput.OnNavigate += OnNavigate;
-        playerInput.OnSubmit += Buy;
-    }
+    private bool isShopOpen = false;
+
+    private Player player;
+    private InputManager playerInput;
+
+    private Coroutine openShop;
 
     void Start()
     {
+        player = Player.instance;
+        playerInput = player.GetInputManager;
+        playerInput.OnNavigate += OnNavigate;
+        playerInput.OnSubmit += Buy;
+
         PopulatePanel();
         UpdateDescription(selectedIndex); // Update description at start
         HighlightItem(0);
+    }
+
+    private void OnDestroy()
+    {
+        playerInput.OnNavigate -= OnNavigate;
+        playerInput.OnSubmit -= Buy;
     }
 
     private void OnNavigate(Vector2 value)
@@ -61,6 +73,9 @@ public class PanelItemsSection : MonoBehaviour
 
     private void Buy()
     {
+        if (!isShopOpen)
+            return;
+
         PurchaseSelectedItem();
     }
 
@@ -68,16 +83,13 @@ public class PanelItemsSection : MonoBehaviour
     {
         foreach (var itemData in shopItems)
         {
-            var itemInstance = Instantiate(itemPrefab, scrollRect.content);
+            var itemInstance = Instantiate(itemPrefab, parent);
             instantiatedItems.Add(itemInstance);
 
             var itemDetails = itemInstance.GetComponent<ItemDetails>();
             if (itemDetails != null)
             {
-                itemDetails.itemName = itemData.itemName;
-                itemDetails.description = itemData.description;
-                itemDetails.itemIcon = itemData.sprite;
-                itemDetails.UpdateUI();
+                itemDetails.UpdateUI(itemData.cost.ToString(), itemData.name, itemData.sprite);
             }
         }
     }
@@ -89,18 +101,29 @@ public class PanelItemsSection : MonoBehaviour
 
         var selectedItem = shopItems[selectedIndex];
 
-        // Implement your logic here to check if the player has enough gold or any other conditions
-        // For example:
-        // if (playerGold >= selectedItem.cost)
+        //if (player.GetGold() < selectedItem.cost)
+        //    return;
+
+        ItemsInventory.Instance.AddItem(selectedItem);
+        player.AddGold(selectedItem.cost);
+        shopUI.RefreshShopUI();
+    }
+    
+    public void SetShopOpenState(bool isOpen)
+    {
+        if (isOpen)
+            openShop = StartCoroutine(OpenShop());
+        else
         {
-            // Deduct gold or perform other actions
-
-            // Call AddItemToInventory on the InventoryUI script
-            // You need a reference to the InventoryUI instance. Let's assume it's available as inventoryUI.
-            ItemsInventory.Instance.AddItem(selectedItem);
-
-            // Optional: Remove the item from the shop or update the shop UI
+            StopCoroutine(openShop);
+            isShopOpen = isOpen;
         }
+    }
+
+    private IEnumerator OpenShop()
+    {
+        yield return new WaitForSeconds(1f);
+        isShopOpen = true;
     }
 
     private void HighlightItem(int index)
@@ -109,7 +132,7 @@ public class PanelItemsSection : MonoBehaviour
 
     }
 
-    private void RemoveHighlight(int index)
+    private void RemoveHighlight(int index) 
     {
 
         instantiatedItems[index].GetComponentInChildren<Image>().color = new Color(1, 1, 1, 0.5f); // Semi-transparent white

@@ -18,9 +18,6 @@ public class DialogueController : MonoBehaviour
     [SerializeField] GameObject mainCharacterImageHolder;
     [SerializeField] GameObject otherCharacterImageHolder;
     [SerializeField] AttributeParticles particles;
-    [Header("Player References")]
-    [SerializeField] PlayerMovement playerMovement;
-    [SerializeField] InputManager playerInput;
     [Header("Cursor References")]
     [SerializeField] CursorController cursor;
     [SerializeField] UIElementsHolder minigamebox;
@@ -34,6 +31,10 @@ public class DialogueController : MonoBehaviour
     MinigameUI minigameUI;
     DialogueUI dialogueUI;
 
+    Player player;
+    InputManager playerInput;
+    PlayerMovement playerMovement;
+
     DialogueData dialogueData;
     Coroutine dialogueCoroutine;
     private int currentDialogueLine = 0;
@@ -44,28 +45,27 @@ public class DialogueController : MonoBehaviour
     private bool isDialogueActive = false;
     private bool isMinigamesBoxActive = false;
 
-    private void Awake()
-    {
-        
-        playerInput.OnInteract += NextAction;
-        playerInput.OnUICancel += ExitDialogue;
-    }
-
-    private void OnDestroy()
-    {
-        
-        playerInput.OnInteract -= NextAction;
-        playerInput.OnUICancel -= ExitDialogue;
-    }
-
     private void Start()
     {
+        player = Player.instance;
+        playerInput = player.GetInputManager;
+        playerMovement = player.GetPlayerMovement;
+        playerInput.OnInteract += NextAction;
+        playerInput.OnUICancel += ExitDialogue;
+
         minigameUI = new MinigameUI(MinigamesBoxObj, multiplierFrame, strengthRect, intelligenceRect, coordinationRect, neutralityRect);
         dialogueUI = new DialogueUI(DialogueObj, dialogueText, nameText, mainCharacterImage, otherCharacterImage, mainCharacterImageHolder, otherCharacterImageHolder, minigameUI);
     }
 
+    private void OnDestroy()
+    {
+        playerInput.OnInteract -= NextAction;
+        playerInput.OnUICancel -= ExitDialogue;
+    }
+
     public void ActivateDialogue(DialogueData newDialogueData)
     {
+        InventoryUI.Instance.CanOpenInventory(false);
         CanvasBG.SetActive(true);
         particles.SetDialogueData(newDialogueData);
         dialogueData = newDialogueData;
@@ -114,6 +114,7 @@ public class DialogueController : MonoBehaviour
     {
         if (!isDialogueActive && !isMinigamesBoxActive) return;
 
+        InventoryUI.Instance.CanOpenInventory(true);
         isDialogueActive = false;
         dialogueData = null;
         currentDialogueLine = 0;

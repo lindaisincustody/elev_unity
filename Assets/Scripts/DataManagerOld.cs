@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class DataManager : MonoBehaviour
+public class DataManagerOld : MonoBehaviour
 {
     [SerializeField] private Transform player;
     private SaveManager _saveManager;

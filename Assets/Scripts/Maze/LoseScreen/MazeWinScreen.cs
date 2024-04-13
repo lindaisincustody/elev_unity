@@ -26,7 +26,9 @@ public class MazeWinScreen : MonoBehaviour
     private void ExitMinigame()
     {
         if (GoBackText.activeSelf)
+        {
             SceneManager.LoadScene(Constants.SceneNames.MainScene);
+        }
     }
 
     public void ShowEndScreen()

@@ -18,17 +18,4 @@ public class Constants
         public const string MainScene = "Main";
         public const string TutorialScene = "StationScene";
     }
-
-    public class PlayerPrefs
-    {
-        public const string NeutralityLevel = "NeutralityLevel";
-        public const string StrengthLevel = "StrengthLevel";
-        public const string IntelligenceLevel = "IntelligenceLevel";
-        public const string CoordinationLevel = "CoordinationLevel";
-
-        public const string NeutralityMultiplier = "NeutralityMultiplier";
-        public const string StrengthMultiplier = "StrengthMultiplier";
-        public const string IntelligenceMultiplier  = "IntelligenceMultiplier";
-        public const string CoordinationMultiplier = "CoordinationMultiplier";
-    }
 }

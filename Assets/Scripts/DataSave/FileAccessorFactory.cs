@@ -33,7 +33,7 @@ namespace PluginsEngine.FileAccess
 
         private static void InitializeAsyncPlugin()
         {
-            _asyncPlugin = new AsyncPluginWrapper(GetPlugin, Config);
+           // _asyncPlugin = new AsyncPluginWrapper(GetPlugin, Config);
         }
 
         private static FileAccessConfig _config;

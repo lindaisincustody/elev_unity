@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class CursorController : MonoBehaviour
 {
-    [SerializeField] InputManager playerInput;
     [SerializeField] RectTransform cursor;
     [SerializeField] RectTransform leftCursorHolder;
     [SerializeField] RectTransform rightCursorHolder;
@@ -22,6 +21,9 @@ public class CursorController : MonoBehaviour
     private UIElement activeUI;
     private Action onSubmitAction;
 
+    Player player;
+    InputManager playerInput;
+
     private int columns = 1;
     private int rows = 1;
     private float poemWordWidth = 140f;
@@ -29,13 +31,16 @@ public class CursorController : MonoBehaviour
     private bool isCursorAcitve = false;
     private bool isCentered = true;
 
-    private void OnEnable()
+    private void Start()
     {
+        player = Player.instance;
+        playerInput = player.GetInputManager;
+
         playerInput.OnNavigate += OnNavigate;
         playerInput.OnSubmit += Sumbit;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         playerInput.OnNavigate -= OnNavigate;
         playerInput.OnSubmit -= Sumbit;

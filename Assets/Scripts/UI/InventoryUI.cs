@@ -8,10 +8,6 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance { get; private set; }
 
-    [Header("References")]
-    [SerializeField] InputManager playerInput;
-    [SerializeField] Inventory inventory;
-    [SerializeField] PlayerMovement playerMovement;
     [Header("Self References")]
     [SerializeField] GameObject inventoryPanel;
     [SerializeField] GameObject inventoryBG;
@@ -33,7 +29,13 @@ public class InventoryUI : MonoBehaviour
     [Header("Items")]
     [SerializeField] InventoryItemSlot[] itemSlots;
 
+    Player player;
+    DataManager dataManager;
+    InputManager playerInput;
+    PlayerMovement playerMovement;
+
     private bool isInventoryOpen = false;
+    private bool canOpenInventory = true;
     private float multiplierRectWidth = 0;
     private float multiplierRectHeight = 0;
 
@@ -54,6 +56,15 @@ public class InventoryUI : MonoBehaviour
         }
         multiplierRectWidth = strengthSlider.rectTransform.rect.width * 4;
         multiplierRectHeight = strengthSlider.rectTransform.rect.height;
+    }
+
+    private void Start()
+    {
+        player = Player.instance;
+        dataManager = DataManager.Instance;
+        playerInput = player.GetInputManager;
+        playerMovement = player.GetPlayerMovement;
+
         playerInput.OnInventory += OpenInventory;
     }
 
@@ -68,11 +79,19 @@ public class InventoryUI : MonoBehaviour
 
     public void OpenInventory()
     {
+        if (!canOpenInventory)
+            return;
+
         RefreshUI();
         isInventoryOpen = !isInventoryOpen;
         inventoryPanel.SetActive(isInventoryOpen);
         inventoryBG.SetActive(isInventoryOpen);
         playerMovement.SetMovement(!isInventoryOpen);
+    }
+
+    public void CanOpenInventory(bool canOpen)
+    {
+        canOpenInventory = canOpen;
     }
 
     private void RefreshUI()
@@ -89,6 +108,11 @@ public class InventoryUI : MonoBehaviour
         int slotIndex = 0;
         foreach (var item in allItems)
         {
+            if (itemSlots.Length == slotIndex)
+            {
+                Debug.LogError("Too many items, not enough slots to display");
+                break;
+            }
             itemSlots[slotIndex].Equip(item);
             slotIndex++;
         }
@@ -96,28 +120,28 @@ public class InventoryUI : MonoBehaviour
 
     private void UpdateGoldText()
     {
-        gold.text = inventory.GetGold().ToString();
+        gold.text = player.GetGold().ToString();
     }
 
     private void UpdateLevels()
     {
-        strengthLevel.text = PlayerPrefs.GetInt(Constants.PlayerPrefs.StrengthLevel).ToString();
-        intelligenceLevel.text = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceLevel).ToString();
-        coordinationLevel.text = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel).ToString();
-        neutralityLevel.text = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel).ToString();
+        strengthLevel.text = dataManager.GetLevel(Attribute.Strength).ToString();
+        intelligenceLevel.text = dataManager.GetLevel(Attribute.Intelligence).ToString();
+        coordinationLevel.text = dataManager.GetLevel(Attribute.Coordination).ToString();
+        neutralityLevel.text = dataManager.GetLevel(Attribute.Neutrality).ToString();
     }
 
     private void UpdateGoldMultipliers()
     {
-        strengthGoldMulti.text = MultiplierFormatter(inventory.GetGoldMultiplier(Attribute.Strength));
-        intelligenceGoldMulti.text = MultiplierFormatter(inventory.GetGoldMultiplier(Attribute.Intelligence));
-        coordinationGoldMulti.text = MultiplierFormatter(inventory.GetGoldMultiplier(Attribute.Coordination));
-        neutralityGoldMulti.text = MultiplierFormatter(inventory.GetGoldMultiplier(Attribute.Neutrality));
+        strengthGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Strength));
+        intelligenceGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Intelligence));
+        coordinationGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Coordination));
+        neutralityGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Neutrality));
 
-        heroStrength = PlayerPrefs.GetInt(Constants.PlayerPrefs.StrengthMultiplier, 1);
-        heroCoordination = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationMultiplier, 1);
-        heroIntelligence = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceMultiplier, 1);
-        heroNeutrality = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityMultiplier, 1);
+        heroStrength = player.GetGoldMultiplier(Attribute.Strength);
+        heroCoordination = player.GetGoldMultiplier(Attribute.Coordination);
+        heroIntelligence = player.GetGoldMultiplier(Attribute.Intelligence);
+        heroNeutrality = player.GetGoldMultiplier(Attribute.Neutrality);
 
         strengthSlider.rectTransform.sizeDelta = new Vector2(heroStrength / TotalMultiplier() * multiplierRectWidth, multiplierRectHeight);
         cooridnationSlider.rectTransform.sizeDelta = new Vector2(heroCoordination / TotalMultiplier() * multiplierRectWidth, multiplierRectHeight);

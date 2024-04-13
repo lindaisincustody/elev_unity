@@ -14,17 +14,17 @@ public class MazeManager : MonoBehaviour
     [Header("Item references")]
     [SerializeField] PathShowersSpawner pathShowersSpawner;
 
-    private void Update()
+    DataManager dataManager;
+
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.F))
-            Win();
+        dataManager = DataManager.Instance;
     }
 
     public void Win()
     {
-        var level = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel, 1);
-        level++;
-        PlayerPrefs.SetInt(Constants.PlayerPrefs.CoordinationLevel, level);
+        dataManager.AddLevel(Attribute.Coordination);
+        dataManager.AddGold(4);
         playerCollider.enabled = false;
         playerMovement.StopPlayer();
         winScreen.ShowEndScreen();
@@ -39,7 +39,7 @@ public class MazeManager : MonoBehaviour
 
     public void StartMaze()
     {
-        int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel);
+        int level = dataManager.GetLevel(Attribute.Coordination);
         mazeGenerator.StartGeneratingMaze(level + 5, level + 5);
     }
 
