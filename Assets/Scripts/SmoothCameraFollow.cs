@@ -23,4 +23,24 @@ public class SmoothCameraFollow : MonoBehaviour
 
         transform.position = Vector3.SmoothDamp(transform.position, clampedPosition, ref velocity, damping);
     }
+
+    public Vector2 GetMinBounds()
+    {
+        return minBounds;
+    }
+
+    public Vector2 GetMaxBounds()
+    {
+        return maxBounds;
+    }
+
+    public void SetMinBounds(Vector2 newMinBounds)
+    {
+        minBounds = newMinBounds;
+    }
+
+    public void SetMaxBounds(Vector2 newMaxBounds)
+    {
+        maxBounds = newMaxBounds;
+    }
 }

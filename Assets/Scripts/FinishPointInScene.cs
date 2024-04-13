@@ -5,10 +5,13 @@ public class FinishPointInScene : MonoBehaviour
     public float scene_X;
     public float scene_Y;
     public float iconY;
-    public GameObject iconPrefab; // Assign your icon prefab here in the inspector
-    private GameObject instantiatedIcon = null; // To hold the instantiated icon
-    private Transform playerTransform = null; // To track the player's position
+    public GameObject iconPrefab;
+    public Vector2 cameraMinBounds;
+    public Vector2 cameraMaxBounds;
+    public SmoothCameraFollow cameraFollowScript;
 
+    private GameObject instantiatedIcon = null;
+    private Transform playerTransform = null;
     private bool playerIsInTrigger = false;
 
     private void Awake()
@@ -17,6 +20,16 @@ public class FinishPointInScene : MonoBehaviour
         if (inputManager != null)
         {
             inputManager.OnInteract += HandleInteract;
+        }
+    }
+
+    private void Start()
+    {
+        if (cameraFollowScript != null)
+        {
+            // Set the camera bounds from the manually specified values
+            cameraFollowScript.SetMinBounds(cameraMinBounds);
+            cameraFollowScript.SetMaxBounds(cameraMaxBounds);
         }
     }
 
@@ -70,8 +83,10 @@ public class FinishPointInScene : MonoBehaviour
     {
         if (playerIsInTrigger && SceneController.instance != null)
         {
-            // Start the coroutine properly
-            StartCoroutine(SceneController.instance.LoadInScene(scene_X, scene_Y));
+            float clampedX = Mathf.Clamp(scene_X, cameraMinBounds.x, cameraMaxBounds.x);
+            float clampedY = Mathf.Clamp(scene_Y, cameraMinBounds.y, cameraMaxBounds.y);
+
+            StartCoroutine(SceneController.instance.LoadInScene(clampedX, clampedY));
         }
     }
 }
