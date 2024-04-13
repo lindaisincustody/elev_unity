@@ -4,16 +4,15 @@ using System.Collections;
 
 public class MazeManager : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] MazeGenerator mazeGenerator;
     [SerializeField] MazeScreen loseScreen;
     [SerializeField] MazeWinScreen winScreen;
     [SerializeField] MazePlayerMovement playerMovement;
     [SerializeField] CircleCollider2D playerCollider;
 
-    private void Start()
-    {
-        StartMaze();
-    }
+    [Header("Item references")]
+    [SerializeField] PathShowersSpawner pathShowersSpawner;
 
     private void Update()
     {
@@ -38,9 +37,20 @@ public class MazeManager : MonoBehaviour
         loseScreen.ShowEndScreen();
     }
 
-    private void StartMaze()
+    public void StartMaze()
     {
         int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.CoordinationLevel);
         mazeGenerator.StartGeneratingMaze(level + 5, level + 5);
+    }
+
+    // Item methods
+    public void IncreaseLuck(float luckIncrease)
+    {
+        Debug.Log("Luck increase byL " + luckIncrease);
+    }
+
+    public void IncreasePathShowerAmount(int additionalAmount)
+    {
+        pathShowersSpawner.IncreasePathShowerCount(additionalAmount);
     }
 }
