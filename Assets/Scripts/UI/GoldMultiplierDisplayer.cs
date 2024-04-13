@@ -9,24 +9,26 @@ public class GoldMultiplierDisplayer : MonoBehaviour
     [SerializeField] private TextMeshProUGUI intelligenceText;
     [SerializeField] private TextMeshProUGUI coordinationText;
     [SerializeField] private TextMeshProUGUI neutralText;
-    [SerializeField] private Inventory inventory;
 
     private readonly string strengthPrefix = "StrengthGold: ";
     private readonly string intelligencePrefix = "IntelligenceGold: ";
     private readonly string coordinationPrefix = "CoordinationGold: ";
     private readonly string neutralPrefix = "NeutralityGold: ";
 
+    Player player;
+
     // Start is called before the first frame update
     void Start()
     {
+        player = Player.instance;
         UpdateText();
     }
 
     public void UpdateText()
     {
-        strengthText.text = strengthPrefix + inventory.GetGoldMultiplier(Attribute.Strength).ToString("F2");
-        intelligenceText.text = intelligencePrefix + inventory.GetGoldMultiplier(Attribute.Intelligence).ToString("F2");
-        coordinationText.text = coordinationPrefix + inventory.GetGoldMultiplier(Attribute.Coordination).ToString("F2");
-        neutralText.text = neutralPrefix + inventory.GetGoldMultiplier(Attribute.Neutrality).ToString("F2");
+        strengthText.text = strengthPrefix + player.GetGoldMultiplier(Attribute.Strength).ToString("F2");
+        intelligenceText.text = intelligencePrefix + player.GetGoldMultiplier(Attribute.Intelligence).ToString("F2");
+        coordinationText.text = coordinationPrefix + player.GetGoldMultiplier(Attribute.Coordination).ToString("F2");
+        neutralText.text = neutralPrefix + player.GetGoldMultiplier(Attribute.Neutrality).ToString("F2");
     }
 }

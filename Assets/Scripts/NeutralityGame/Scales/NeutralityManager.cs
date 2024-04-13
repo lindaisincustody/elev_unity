@@ -13,7 +13,7 @@ public class NeutralityManager : MonoBehaviour
 
     private void Awake()
     {
-        scoreToWin =  PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel) + 2;
+        //scoreToWin =  PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel) + 2;
     }
 
     private void Start()
@@ -38,9 +38,9 @@ public class NeutralityManager : MonoBehaviour
     {
         Debug.Log("You Won");
         scoreToWin++;
-        int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
-        level++;
-        PlayerPrefs.SetInt(Constants.PlayerPrefs.NeutralityLevel, level);
+       // int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
+       // level++;
+        //PlayerPrefs.SetInt(Constants.PlayerPrefs.NeutralityLevel, level);
         SceneManager.LoadScene(Constants.SceneNames.MainScene);
     }
 

@@ -26,16 +26,16 @@ public class CutGameManager : MonoBehaviour
 
     private const float delayForEndScreen = 3f;
 
+    private DataManager dataManager;
+
     private List<GameObject> fruits = new List<GameObject>();
     private List<Image> fruitImages = new List<Image>();
 
-    private void Awake()
-    {
-        totalFruitsToSpawn = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
-    }
-
     private void Start()
     {
+        dataManager = DataManager.Instance;
+        totalFruitsToSpawn = dataManager.GetLevel(Attribute.Neutrality);
+
         cutter.Init(OnCut);
         cutter.EnableCutting();
         SetUpGame();
@@ -77,9 +77,7 @@ public class CutGameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delayForEndScreen);
         Debug.Log("You Won");
-        int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
-        level++;
-        PlayerPrefs.SetInt(Constants.PlayerPrefs.NeutralityLevel, level);
+        dataManager.AddLevel(Attribute.Neutrality);
         endScreen.ShowWinScreen();
     }
 

@@ -14,10 +14,13 @@ public class GameManager : MonoBehaviour
     public int score;
     public TMP_Text scoreText;
 
+    private DataManager dataManager;
 
     void Start()
     {
-        GameLevel = PlayerPrefs.GetInt(Constants.PlayerPrefs.StrengthLevel, 1);
+        dataManager = DataManager.Instance;
+
+        GameLevel = dataManager.GetLevel(Attribute.Strength);
         // Start the coroutine to instantiate projectiles
         StartCoroutine(InstantiateProjectiles());
 
@@ -40,9 +43,8 @@ public class GameManager : MonoBehaviour
 
         if (score >= 500)
         {
-
             GameLevel++;
-            PlayerPrefs.SetInt(Constants.PlayerPrefs.StrengthLevel, GameLevel);
+            dataManager.AddLevel(Attribute.Strength);
             Debug.Log("You Won!");
             BattlePlayerController.isPlaying = false;
             SceneManager.LoadScene(Constants.SceneNames.MainScene);

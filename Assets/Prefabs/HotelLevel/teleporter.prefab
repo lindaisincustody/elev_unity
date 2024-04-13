@@ -10,11 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 5575204232954764362}
   - component: {fileID: 7785540768342455752}
-  - component: {fileID: 7745201603216370524}
   - component: {fileID: 338243775620033630}
   - component: {fileID: 4466439560413038523}
+  - component: {fileID: 254923287689671592}
   m_Layer: 0
-  m_Name: warpBlock
+  m_Name: teleporter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,22 +87,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &7745201603216370524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5262561257987133797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db7768d69834b904b90d12a30a157897, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  scene_X: 36
-  scene_Y: 6.5
-  iconY: 1.5
-  iconPrefab: {fileID: 7586973947113215404, guid: d3718d2d7ec0c6c46a1b9db5c457a48e, type: 3}
 --- !u!61 &338243775620033630
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -193,3 +177,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.32, y: 0.14860694}
   m_EdgeRadius: 0
+--- !u!114 &254923287689671592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5262561257987133797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42744c97ae6a8f543a5f381d4d2df4b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  teleport: 0
+  sceneName: 0
+  scene_X: 36
+  scene_Y: 6.5

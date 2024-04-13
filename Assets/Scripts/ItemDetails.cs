@@ -4,18 +4,15 @@ using TMPro;
 
 public class ItemDetails : MonoBehaviour
 {
+    [Header("References")]
+    public TextMeshProUGUI goldText;
     public TextMeshProUGUI nameText;
     public Image iconImage;
-    public TextMeshProUGUI descriptionText; // Add a reference to the description TextMeshPro component
 
-    public string itemName;
-    public Sprite itemIcon;
-    public string description; // Store the description
-
-    public void UpdateUI()
+    public void UpdateUI(string gold, string name, Sprite icon)
     {
-        nameText.text = itemName;
-        iconImage.sprite = itemIcon;
+        nameText.text = name;
+        goldText.text = gold;
+        iconImage.sprite = icon;
     }
-
 }

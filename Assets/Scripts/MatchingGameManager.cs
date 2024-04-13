@@ -28,12 +28,13 @@ public class GameController : MonoBehaviour
     private int gridSizeX = 20;
     private int gridSizeY = 20;
 
-   
-    
+    private DataManager dataManager;
 
     void Start()
     {
-        ActualGameLevel = PlayerPrefs.GetInt(Constants.PlayerPrefs.IntelligenceLevel, 10);
+        dataManager = DataManager.Instance;
+
+        ActualGameLevel = dataManager.GetLevel(Attribute.Intelligence);
         currentLevel = ActualGameLevel;
         difficultyLevel = ActualGameLevel;
         GenerateLevel();
@@ -216,7 +217,7 @@ public class GameController : MonoBehaviour
             if (wonLevels - lostLevels >= currentLevel / 3)
             {
                 ActualGameLevel++;
-                PlayerPrefs.SetInt(Constants.PlayerPrefs.IntelligenceLevel, ActualGameLevel);
+                dataManager.AddLevel(Attribute.Intelligence);
                 Debug.Log("You won!");
                 SceneManager.LoadScene(Constants.SceneNames.MainScene);
             }

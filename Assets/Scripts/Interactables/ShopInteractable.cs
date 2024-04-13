@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoemTrigger : Interactable
+public class ShopInteractable : Interactable
 {
-    [SerializeField] private WordData wordsData;
+    [SerializeField] ShopUI shopUI;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -29,7 +29,7 @@ public class PoemTrigger : Interactable
         if (playerIsInTrigger)
         {
             base.HandleInteract();
-            PoemMenuController.instance.OpenPoemBook(wordsData);
+            shopUI.ShowShop();
         }
     }
 }
