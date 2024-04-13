@@ -12508,11 +12508,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1117316707427796507, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -455
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1117316707427796507, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 80
+      value: 69.993
       objectReference: {fileID: 0}
     - target: {fileID: 1137220950775463517, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: playerInput
@@ -12537,6 +12537,10 @@ PrefabInstance:
     - target: {fileID: 2665772817920246387, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4416416191614891468, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 44.6
       objectReference: {fileID: 0}
     - target: {fileID: 4443628563577731476, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: cursorElements.Array.data[0].elementAction.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -12633,6 +12637,10 @@ PrefabInstance:
     - target: {fileID: 4845002797920965641, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5039082503186558067, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 3.8925018
       objectReference: {fileID: 0}
     - target: {fileID: 5062774027244680380, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
       propertyPath: playerInput
