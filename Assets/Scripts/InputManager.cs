@@ -34,7 +34,6 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Interact.performed    += Interact;
         inputActions.Player.Cancel.performed      += Cancel;
         inputActions.Player.Jump.performed        += Jump;
-        inputActions.Player.Fire.performed        += Fire;
         inputActions.Player.Next.performed        += Next;
 
         inputActions.UI.Navigate.performed        += Navigate;
@@ -91,14 +90,6 @@ public class InputManager : MonoBehaviour
         if (context.performed)
         {
             OnJump();
-        }
-    }
-
-    private void Fire(InputAction.CallbackContext context)
-    {
-        if (context.performed)
-        {
-            OnFire();
         }
     }
 
