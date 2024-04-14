@@ -115,7 +115,8 @@ public class PanelItemsSection : MonoBehaviour
             openShop = StartCoroutine(OpenShop());
         else
         {
-            StopCoroutine(openShop);
+            if (openShop != null)
+                StopCoroutine(openShop);
             isShopOpen = isOpen;
         }
     }
