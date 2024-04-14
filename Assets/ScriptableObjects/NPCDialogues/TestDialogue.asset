@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
   m_Name: TestDialogue
   m_EditorClassIdentifier: 
-  otherCharacterName: testEnemy
+  otherCharacterName: Father
   textList:
   - isYourText: 1
     dialogueLineText: Hello!
@@ -21,7 +21,7 @@ MonoBehaviour:
   - isYourText: 1
     dialogueLineText: No one
   mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
-  otherCharacterImage: {fileID: 21300006, guid: e6ed2f50fd8042a59d44c1660bfd1880, type: 3}
+  otherCharacterImage: {fileID: 21300000, guid: 48561c9dc6357f04988d1c4d45545e81, type: 3}
   activateFight: 1
   strengthGameCoinsMultiplier: 1
   neutralityGameCoinsMultiplier: 2
