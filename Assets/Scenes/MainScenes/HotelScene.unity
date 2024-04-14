@@ -852,6 +852,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 25041cf51ff1bd8448bd57404bc03a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  StrengthLevel: 1
+  IntelligenceLevel: 1
+  CoordinationLevel: 1
+  NeutralityLevel: 1
 --- !u!1001 &501204313
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -46003,17 +46007,6 @@ TilemapCollider2D:
   m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0
   m_UseDelaunayMesh: 0
---- !u!114 &1503284884 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3888476161887655840, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
-  m_PrefabInstance: {fileID: 1634688605}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 850726bf9dc650a4387c7996af2d54b4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1506085350
 GameObject:
   m_ObjectHideFlags: 0
@@ -46462,6 +46455,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1341328895702752002, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
+      propertyPath: playerInput
+      value: 
+      objectReference: {fileID: 1856156268}
     - target: {fileID: 1341328895702752002, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
       propertyPath: shopItems.Array.size
       value: 7
@@ -52803,7 +52800,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47bab317253a1614eaed22c6c8543d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopUI: {fileID: 1503284884}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
