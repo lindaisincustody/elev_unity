@@ -39,6 +39,9 @@ public class Player : MonoBehaviour
     {
         _inventory.SetUpData(playerData);
         _inventory.AddGold(playerData.gold);
+        //Vector2 lastPos = playerData.lastPos;
+        //if (lastPos != null)
+        //    transform.position = lastPos;
     }
 
     public void AddGold(int goldAmount)
@@ -83,8 +86,8 @@ public class Player : MonoBehaviour
 
 public class PlayerData
 {
-    public float posX;
-    public float posY;
+    public string lastScene;
+    public Vector2 lastPos;
     
     public int gold;
 

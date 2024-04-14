@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
+    private DataManager dataManager;
     public static SceneController instance;
     [SerializeField] Animator transitionAnim;
 
@@ -21,9 +22,15 @@ public class SceneController : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        dataManager = DataManager.Instance;
+    }
+
     public IEnumerator LoadScene(string sceneName)
     {
         transitionAnim.SetTrigger("End");
+        dataManager.SaveScene(sceneName);
         yield return new WaitForSeconds(1);
         SceneManager.LoadScene(sceneName);
         transitionAnim.SetTrigger("Start");
@@ -36,7 +43,7 @@ public class SceneController : MonoBehaviour
 
         if (playerController != null)
             playerController.transform.position = new Vector3(x, y, playerController.transform.position.z);
-
+        dataManager.SavePosition(playerController.transform.position);
         transitionAnim.SetTrigger("Start");
     }
 }

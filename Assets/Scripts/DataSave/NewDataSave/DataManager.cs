@@ -55,14 +55,37 @@ public class DataManager : MonoBehaviour
         return playerData;
     }
 
+    public Vector2 GetLastPos()
+    {
+        return playerData.lastPos;
+    }
+
     public InventoryData GetInventoryData()
     {
         return _inventory;
     }
 
+
+    public string GetLastScene()
+    {
+        return playerData.lastScene;
+    }
+
     public void AddGold(int goldAmount)
     {
         playerData.gold += goldAmount;
+        SavePlayerData(playerData);
+    }
+
+    public void SaveScene(string scene)
+    {
+        playerData.lastScene = scene;
+        SavePlayerData(playerData);
+    }
+
+    public void SavePosition(Vector2 pos)
+    {
+        playerData.lastPos = pos;
         SavePlayerData(playerData);
     }
 
