@@ -35,7 +35,7 @@ public class Teleporter : Interactable
         if (playerIsInTrigger)
         {
             base.HandleInteract();
-            if (teleport == Teleport.Samescene)
+            if (teleport == Teleport.SameScene)
                 StartCoroutine(SceneController.instance.LoadInScene(scene_X, scene_Y));
             else if (teleport == Teleport.NewScene)
                 StartCoroutine(SceneController.instance.LoadScene(GetSceneName()));
@@ -56,8 +56,10 @@ public class Teleporter : Interactable
                 return Constants.SceneNames.CoordinationGameScene;
             case Scene.Main:
                 return Constants.SceneNames.MainScene;
-            case Scene.Tutorial:
-                return Constants.SceneNames.TutorialScene;
+            case Scene.Station:
+                return Constants.SceneNames.StationScene;
+            case Scene.Hotel:
+                return Constants.SceneNames.HotelScene;
             default:
                 return ""; // Default return, you can handle this case as needed.
         }
@@ -66,7 +68,7 @@ public class Teleporter : Interactable
 
 public enum Teleport
 {
-    Samescene,
+    SameScene,
     NewScene
 }
 
@@ -77,7 +79,8 @@ public enum Scene
     NeutralityGame,
     CoordinationGame,
     Main,
-    Tutorial
+    Station,
+    Hotel
 }
 
 

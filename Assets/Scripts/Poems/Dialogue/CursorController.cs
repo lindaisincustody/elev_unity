@@ -34,7 +34,10 @@ public class CursorController : MonoBehaviour
     private void Start()
     {
         player = Player.instance;
-        playerInput = player.GetInputManager;
+        if (player != null)
+            playerInput = player.GetInputManager;
+        else
+            playerInput = FindObjectOfType<InputManager>();
 
         playerInput.OnNavigate += OnNavigate;
         playerInput.OnSubmit += Sumbit;
@@ -51,7 +54,7 @@ public class CursorController : MonoBehaviour
         if (activeUI == null)
             return;
         // Calls a callback to poem/dialogue
-        onSubmitAction.Invoke();
+        onSubmitAction?.Invoke();
         // Loads New Scene
         activeUI.elementAction?.Invoke();
         onSubmitAction = null;
