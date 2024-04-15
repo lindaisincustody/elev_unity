@@ -75,7 +75,7 @@ public class DialogueController : MonoBehaviour
         playerMovement.SetMovement(false);
         dialogueUI.ActivateDialogueBox(newDialogueData);
 
-        dialogueCoroutine = StartCoroutine(ShowText());
+        NextAction();
     }
 
     private void NextAction()
