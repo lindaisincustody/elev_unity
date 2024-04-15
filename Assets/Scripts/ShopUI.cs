@@ -22,6 +22,8 @@ public class ShopUI : MonoBehaviour
 
     private void ExitShop()
     {
+        if (!panel.activeSelf)
+            return;
         InventoryUI.Instance.CanOpenInventory(true);
         panel.SetActive(false);
         player.SetMovement(true);

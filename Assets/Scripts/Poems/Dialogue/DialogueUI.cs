@@ -50,8 +50,10 @@ public class DialogueUI
             ChangeCharacterShown(dialogueData.textList[currentDialogueLine].isYourText);
         }
         else
+        {
+            nameText.text = dialogueData.otherCharacterName;
             ChangeCharacterShown(false, true);
-
+        }
     }
 
     private void ChangeCharacterShown(bool showMaincharacter, bool showAttributesBar = false)
