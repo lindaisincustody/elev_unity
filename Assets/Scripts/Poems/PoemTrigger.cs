@@ -30,6 +30,7 @@ public class PoemTrigger : Interactable
         {
             base.HandleInteract();
             PoemMenuController.instance.OpenPoemBook(wordsData);
+            gameObject.SetActive(false);
         }
     }
 }

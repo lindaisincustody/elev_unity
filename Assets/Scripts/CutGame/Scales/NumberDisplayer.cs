@@ -5,9 +5,18 @@ using UnityEngine;
 public class NumberDisplayer : MonoBehaviour
 {
     [SerializeField] GameObject[] lines;
+    [SerializeField] SpriteRenderer[] linesColor;
 
     private int number = 0;
-     
+    
+    public void SetColor(Color newColor)
+    {
+        foreach (var item in linesColor)
+        {
+            item.color = newColor;
+        }
+    }
+
     public void ShowNumber(int number)
     {
         switch (number)
