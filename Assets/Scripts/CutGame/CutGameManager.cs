@@ -16,7 +16,10 @@ public class CutGameManager : MonoBehaviour
     [SerializeField] Transform objectsHolder;
     [SerializeField] GameobjectCutter cutter;
     [SerializeField] WeightCalculator calculator;
-    [SerializeField] TextMeshProUGUI precisionText;
+    [Header("Precision")]
+    [SerializeField] Scales precisionText;
+    [SerializeField] Color loseColor;
+    [SerializeField] Color winColor;
     [Header("Parameters")]
     public int totalFruitsToSpawn = 5;
     public float precision = 10f;
@@ -45,11 +48,13 @@ public class CutGameManager : MonoBehaviour
 
     private void SetUpGame()
     {
-        precisionText.text = "< " + precision.ToString();
+        precisionText.UpdateScales(precision);
+        precisionText.SetColor(winColor);
     }
 
     private void OnCut()
     {
+        UpdatePrecisionColor();
         if (spawnedFruits < totalFruitsToSpawn)
         {
             ResetCutting();
@@ -59,6 +64,14 @@ public class CutGameManager : MonoBehaviour
             RemoveImage();
             CheckWinCondiiton();
         }
+    }
+
+    private void UpdatePrecisionColor()
+    {
+        if (calculator.GetWeightDifference() <= precision)
+            precisionText.SetColor(winColor);
+        else
+            precisionText.SetColor(loseColor);
     }
 
     private void CheckWinCondiiton()

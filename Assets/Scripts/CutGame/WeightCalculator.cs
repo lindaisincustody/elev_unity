@@ -6,9 +6,9 @@ using TMPro;
 public class WeightCalculator : MonoBehaviour
 {
     [SerializeField] Scales leftScale;
-    [SerializeField] Scales rightScale;
-    [SerializeField] TextMeshProUGUI leftWeightText;
-    [SerializeField] TextMeshProUGUI rightWeightText;
+    [SerializeField] Scales rightScale;    
+    [SerializeField] Scales leftSingleWeight;
+    [SerializeField] Scales rightSingleWeight;
     [SerializeField] int weightMultiplier = 10000;
     private MeshFilter leftMeshFilter;
     private MeshFilter rightMeshFilter;
@@ -35,14 +35,14 @@ public class WeightCalculator : MonoBehaviour
         {
             if (totalLeftWeight < totalRightWeight)
             {
-                UpdateText(leftScale, leftWeightText, WeightSide.Left, leftWeight);
-                UpdateText(rightScale, rightWeightText, WeightSide.Right, rightWeight);
+                UpdateText(leftScale, leftSingleWeight, WeightSide.Left, leftWeight);
+                UpdateText(rightScale, rightSingleWeight, WeightSide.Right, rightWeight);
             }
             else
             {
                 switchSides = WeightSide.Right;
-                UpdateText(leftScale, leftWeightText, WeightSide.Left, rightWeight);
-                UpdateText(rightScale, rightWeightText, WeightSide.Right, leftWeight);
+                UpdateText(leftScale, leftSingleWeight, WeightSide.Left, rightWeight);
+                UpdateText(rightScale, rightSingleWeight, WeightSide.Right, leftWeight);
             }
         }
         else
@@ -50,13 +50,13 @@ public class WeightCalculator : MonoBehaviour
             if (totalLeftWeight < totalRightWeight)
             {
                 switchSides = WeightSide.Right;
-                UpdateText(leftScale, leftWeightText, WeightSide.Left, rightWeight);
-                UpdateText(rightScale, rightWeightText, WeightSide.Right, leftWeight);
+                UpdateText(leftScale, leftSingleWeight, WeightSide.Left, rightWeight);
+                UpdateText(rightScale, rightSingleWeight, WeightSide.Right, leftWeight);
             }
             else
             {
-                UpdateText(leftScale, leftWeightText, WeightSide.Left, leftWeight);
-                UpdateText(rightScale, rightWeightText, WeightSide.Right, rightWeight);
+                UpdateText(leftScale, leftSingleWeight, WeightSide.Left, leftWeight);
+                UpdateText(rightScale, rightSingleWeight, WeightSide.Right, rightWeight);
             }
         }
            
@@ -82,18 +82,18 @@ public class WeightCalculator : MonoBehaviour
         return totalArea;
     }
 
-    void UpdateText(Scales textHolder, TextMeshProUGUI singleScaleText, WeightSide side, float totalArea)
+    void UpdateText(Scales textHolder, Scales singleScaleText, WeightSide side, float totalArea)
     {
         if (side == WeightSide.Left)
         {
             totalLeftWeight += totalArea;
-            singleScaleText.text = (totalArea * weightMultiplier).ToString("0");
+            singleScaleText.UpdateScales(totalArea * weightMultiplier);
             textHolder.UpdateScales((totalLeftWeight * weightMultiplier));
         }
         else
         {
             totalRightWeight += totalArea;
-            singleScaleText.text = (totalArea * weightMultiplier).ToString("0");
+            singleScaleText.UpdateScales(totalArea * weightMultiplier);
             textHolder.UpdateScales((totalRightWeight * weightMultiplier));
         }
     }

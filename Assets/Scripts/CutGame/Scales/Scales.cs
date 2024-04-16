@@ -10,6 +10,15 @@ public class Scales : MonoBehaviour
     [SerializeField] NumberDisplayer thousands;
     [SerializeField] NumberDisplayer tenThousands;
 
+    public void SetColor(Color newColor)
+    {
+        ones.SetColor(newColor);
+        tens.SetColor(newColor);
+        hundreds.SetColor(newColor);
+        thousands.SetColor(newColor);
+        tenThousands.SetColor(newColor);
+    }
+
     public void UpdateScales(float newWeight)
     {
         // Convert the weight to an integer (assuming weight is always non-negative)
