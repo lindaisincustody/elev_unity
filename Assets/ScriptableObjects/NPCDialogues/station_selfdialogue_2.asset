@@ -15,7 +15,9 @@ MonoBehaviour:
   otherCharacterName: You
   textList:
   - isYourText: 1
-    dialogueLineText: "\_There are some pills in my pocket. Good."
+    dialogueLineText: There are some pills in my pocket.
+  - isYourText: 1
+    dialogueLineText: Good.
   - isYourText: 1
     dialogueLineText: "Most geniuses\_ were ill."
   mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}

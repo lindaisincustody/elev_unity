@@ -227,7 +227,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!95 &36409475
 Animator:
   serializedVersion: 5
@@ -3221,6 +3221,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: teleporter
       objectReference: {fileID: 0}
+    - target: {fileID: 5262561257987133797, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 10.59
@@ -6079,11 +6083,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 54.18
+      value: -4.11
       objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.64
+      value: -2.44
       objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.z
@@ -17089,6 +17093,14 @@ PrefabInstance:
       propertyPath: playerInput
       value: 
       objectReference: {fileID: 638261035}
+    - target: {fileID: 5648589714040953828, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 4.2931976
+      objectReference: {fileID: 0}
+    - target: {fileID: 7041973572161381999, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 37.453003
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
