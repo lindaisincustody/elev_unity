@@ -7,6 +7,9 @@ public class DialogueTrigger : Interactable
     [SerializeField] DialogueController dialogueController;
     [SerializeField] DialogueData dialogueData;
     [SerializeField] private bool isPopup = false; // Determines trigger type
+    [SerializeField] private Material newMaterial; // New material to apply after dialogue
+    [SerializeField] private SpriteRenderer targetRenderer;
+
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -16,11 +19,14 @@ public class DialogueTrigger : Interactable
             if (isPopup)
             {
                 // Automatically activate the dialogue if it's a popup
-                dialogueController.ActivateDialogue(dialogueData);
+                dialogueController.ActivateDialogue(dialogueData, this);
+                dialogueController.NextAction();
+
             }
             else
             {
                 // Show interact prompt if it requires player interaction
+                
                 player.ShowInteractUI(true);
             }
         }
@@ -44,7 +50,22 @@ public class DialogueTrigger : Interactable
         if (playerIsInTrigger && !isPopup)
         {
             base.HandleInteract();
-            dialogueController.ActivateDialogue(dialogueData);
+            dialogueController.ActivateDialogue(dialogueData, this);
+            
+        }
+    }
+    public void ChangeMaterial()
+    {
+        if (targetRenderer != null && newMaterial != null)
+        {
+            targetRenderer.material = newMaterial;
+        }
+    }
+    public void ActivateDialogue()
+    {
+        if (dialogueController != null)
+        {
+            dialogueController.ActivateDialogue(dialogueData, this); // Pass this reference
         }
     }
 }

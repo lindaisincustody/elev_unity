@@ -875,7 +875,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb
@@ -1126,6 +1126,8 @@ MonoBehaviour:
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
   isPopup: 0
+  newMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
 --- !u!61 &54159284
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2915,7 +2917,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb
@@ -3876,7 +3878,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb
@@ -4194,7 +4196,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 0
   blendDistance: 0
-  weight: 1
+  weight: 0.009
   sharedProfile: {fileID: 11400000, guid: 8d896eec792f3ec49977c378cb326539, type: 2}
 --- !u!4 &344273428
 Transform:
@@ -5645,7 +5647,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb
@@ -6460,7 +6462,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
   m_Name: 
@@ -9788,6 +9790,8 @@ MonoBehaviour:
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
   isPopup: 0
+  newMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
 --- !u!61 &832870073
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -12212,7 +12216,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb
@@ -13651,7 +13655,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: ef130b2491f46694da58d979ac45ac54, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13958,6 +13962,8 @@ MonoBehaviour:
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: f7e6f62559b85224e868f72a8d480ad2, type: 2}
   isPopup: 1
+  newMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
 --- !u!61 &1096744857
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15852,6 +15858,8 @@ MonoBehaviour:
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: e8b21748992dd1f4b9feb426d72fb770, type: 2}
   isPopup: 1
+  newMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
 --- !u!61 &1274674171
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16860,14 +16868,13 @@ GameObject:
   - component: {fileID: 1361709776}
   - component: {fileID: 1361709779}
   - component: {fileID: 1361709778}
-  - component: {fileID: 1361709777}
   m_Layer: 0
   m_Name: SelfDialogue_Windows
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1361709776
 Transform:
   m_ObjectHideFlags: 0
@@ -16877,27 +16884,12 @@ Transform:
   m_GameObject: {fileID: 1361709775}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 11.0326, y: 3.3049, z: -0.15292883}
-  m_LocalScale: {x: 1.6949, y: 1.5303301, z: 1}
+  m_LocalPosition: {x: 28.22, y: 4.5517, z: -0.15292883}
+  m_LocalScale: {x: 1.6949, y: 3.913819, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1617920276}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1361709777
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1361709775}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueController: {fileID: 966221406}
-  dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
-  isPopup: 0
 --- !u!61 &1361709778
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -17527,7 +17519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1464496980
 Transform:
   m_ObjectHideFlags: 0
@@ -17747,6 +17739,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1481364077}
   - component: {fileID: 1481364076}
+  - component: {fileID: 1481364078}
+  - component: {fileID: 1481364079}
   m_Layer: 0
   m_Name: station_set_9 (1)
   m_TagString: Untagged
@@ -17774,7 +17768,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 03eca37685bdbfb4ca078f3d393e3dab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17821,6 +17815,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 368229466}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &1481364078
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481364075}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.013416156, y: -0.15891317}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.32, y: 0.41}
+    newSize: {x: 0.25, y: 0.37}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.3468323, y: 0.7278263}
+  m_EdgeRadius: 0
+--- !u!114 &1481364079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1481364075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueController: {fileID: 966221406}
+  dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
+  isPopup: 0
+  newMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  targetRenderer: {fileID: 1481364076}
 --- !u!1 &1488742852
 GameObject:
   m_ObjectHideFlags: 0
@@ -21267,7 +21323,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb
@@ -22662,6 +22718,8 @@ GameObject:
   m_Component:
   - component: {fileID: 2110470166}
   - component: {fileID: 2110470165}
+  - component: {fileID: 2110470168}
+  - component: {fileID: 2110470167}
   m_Layer: 0
   m_Name: station_set_12 (1)
   m_TagString: Untagged
@@ -22736,6 +22794,68 @@ Transform:
   m_Children: []
   m_Father: {fileID: 368229466}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &2110470167
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110470164}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.17642665}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.25, y: 0.37}
+    newSize: {x: 0.25, y: 0.37}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.25, y: 0.7228533}
+  m_EdgeRadius: 0
+--- !u!114 &2110470168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2110470164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueController: {fileID: 966221406}
+  dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
+  isPopup: 0
+  newMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
 --- !u!1 &2111032760
 GameObject:
   m_ObjectHideFlags: 0
@@ -22915,7 +23035,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.355
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 1.61
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
   m_ApplyToSortingLayers: 00000000cde5207ed9d8cbe6253e00edbf4e53cb

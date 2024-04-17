@@ -44,6 +44,7 @@ public class DialogueController : MonoBehaviour
 
     private bool isDialogueActive = false;
     private bool isMinigamesBoxActive = false;
+    private DialogueTrigger currentTrigger;
 
     private void Start()
     {
@@ -63,8 +64,9 @@ public class DialogueController : MonoBehaviour
         playerInput.OnUICancel -= ExitDialogue;
     }
 
-    public void ActivateDialogue(DialogueData newDialogueData)
+    public void ActivateDialogue(DialogueData newDialogueData, DialogueTrigger trigger)
     {
+        currentTrigger = trigger;
         InventoryUI.Instance.CanOpenInventory(false);
         CanvasBG.SetActive(true);
         particles.SetDialogueData(newDialogueData);
@@ -75,10 +77,10 @@ public class DialogueController : MonoBehaviour
         playerMovement.SetMovement(false);
         dialogueUI.ActivateDialogueBox(newDialogueData);
 
-        NextAction();
+        //NextAction();
     }
 
-    private void NextAction()
+    public void NextAction()
     {
         if (!isDialogueActive)
             return;
@@ -122,7 +124,7 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    private void ExitDialogue()
+    public void ExitDialogue()
     {
         if (!isDialogueActive && !isMinigamesBoxActive) return;
 
@@ -137,6 +139,12 @@ public class DialogueController : MonoBehaviour
         playerMovement.SetMovement(true);
         cursor.DeactivateCursor();
         CanvasBG.SetActive(false);
+
+        if (currentTrigger != null)
+        {
+            currentTrigger.ChangeMaterial();
+            currentTrigger = null; // Reset the trigger reference after use
+        }
     }
 
     private void ShowMinigameOptions()
