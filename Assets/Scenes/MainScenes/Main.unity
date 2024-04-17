@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 36409475}
   - component: {fileID: 36409479}
   - component: {fileID: 36409480}
+  - component: {fileID: 36409481}
   m_Layer: 0
   m_Name: hobo
   m_TagString: Untagged
@@ -268,7 +269,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -309,7 +310,7 @@ Transform:
   m_GameObject: {fileID: 36409474}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 4.51, y: 6.89, z: -0.15292883}
+  m_LocalPosition: {x: 8.9, y: 1.82, z: -0.15292883}
   m_LocalScale: {x: 3.4087, y: 3.4087, z: 3.4087}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -374,6 +375,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueController: {fileID: 1550084231}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
+  isPopup: 0
+--- !u!114 &36409481
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 36409474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f6d3c6e4250e84192f5b34ce9e71bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glowColor: {r: 0.7924528, g: 0.4776524, b: 0.03364185, a: 1}
+  glowBrightness: 1.81
+  outlineWidth: 1.16
+  alphaThreshold: 0.01
+  drawOutside: 1
+  enableInstancing: 0
 --- !u!1 &46453883
 GameObject:
   m_ObjectHideFlags: 0
@@ -12763,6 +12783,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueController: {fileID: 1550084231}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
+  isPopup: 0
 --- !u!1 &1308701591
 GameObject:
   m_ObjectHideFlags: 0
@@ -19904,6 +19925,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dialogueController: {fileID: 1550084231}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
+  isPopup: 0
 --- !u!61 &2006065280
 BoxCollider2D:
   m_ObjectHideFlags: 0

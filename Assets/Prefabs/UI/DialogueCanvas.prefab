@@ -34,8 +34,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 40.8914, y: 69.993}
-  m_SizeDelta: {x: 229.1829, y: 81.6979}
+  m_AnchoredPosition: {x: -0.00078201, y: 60.8}
+  m_SizeDelta: {x: 402.03, y: 81.6979}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &3608293333212987023
 CanvasRenderer:
@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Name
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dbf0762c345b49343ab933900e9ff859, type: 2}
-  m_sharedMaterial: {fileID: -1514344997855476989, guid: dbf0762c345b49343ab933900e9ff859, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: a40168a363e693d40b5ea9adee2bf8a1, type: 2}
+  m_sharedMaterial: {fileID: 5907122895088325365, guid: a40168a363e693d40b5ea9adee2bf8a1, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
-  m_fontSizeBase: 50
+  m_fontSize: 66.77
+  m_fontSizeBase: 66.77
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -128,7 +128,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -119.5289, y: 0, z: -12.581909, w: -42.16713}
+  m_margin: {x: -1.8359528, y: 0, z: 2.1296997, w: -24.464676}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -20861,8 +20861,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 796, y: -120}
-  m_SizeDelta: {x: 1522.7, y: 170.59698}
+  m_AnchoredPosition: {x: 531, y: -102.61}
+  m_SizeDelta: {x: 994.7605, y: 144.9135}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6932595595100263986
 CanvasRenderer:
@@ -20894,8 +20894,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Hello
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dbf0762c345b49343ab933900e9ff859, type: 2}
-  m_sharedMaterial: {fileID: -1514344997855476989, guid: dbf0762c345b49343ab933900e9ff859, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f87bbb8ffeb3dd34dbe2c0b7db2ce428, type: 2}
+  m_sharedMaterial: {fileID: 8963107549957328126, guid: f87bbb8ffeb3dd34dbe2c0b7db2ce428, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -20919,8 +20919,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 35
+  m_fontSizeBase: 35
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -20929,7 +20929,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
-  m_characterSpacing: -8.9
+  m_characterSpacing: 0.5
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -20955,7 +20955,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 5.7075195, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
