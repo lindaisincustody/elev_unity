@@ -38,7 +38,7 @@ public class DialogueController : MonoBehaviour
     DialogueData dialogueData;
     Coroutine dialogueCoroutine;
     private int currentDialogueLine = 0;
-    private float delay = 0.1f;
+    private float delay = 0.05f;
     private string fullText;
     private string currentText;
 
@@ -83,25 +83,37 @@ public class DialogueController : MonoBehaviour
         if (!isDialogueActive)
             return;
 
-        if (currentDialogueLine < dialogueData.textList.Length)
-            ShowNextDialogueLine();
-        else if (dialogueData.activateFight)
-            ShowMinigameOptions();
+        // Check if the text is fully displayed or being displayed
+        if (dialogueCoroutine != null && dialogueText.text != fullText)
+        {
+            StopCoroutine(dialogueCoroutine); // Stop the currently running coroutine
+            dialogueText.text = fullText; // Immediately display the full text
+            dialogueCoroutine = null; // Reset coroutine variable
+        }
         else
-            ExitDialogue();
+        {
+            // Increment dialogue line or end dialogue
+            if (currentDialogueLine < dialogueData.textList.Length)
+                ShowNextDialogueLine();
+            else if (dialogueData.activateFight)
+                ShowMinigameOptions();
+            else
+                ExitDialogue();
+        }
     }
     private void ShowNextDialogueLine()
     {
         if (dialogueCoroutine != null)
             StopCoroutine(dialogueCoroutine);
+
         dialogueUI.ShowNext(currentDialogueLine);
         dialogueCoroutine = StartCoroutine(ShowText());
+        currentDialogueLine++; // Move to the next line after setting up the coroutine
     }
 
     IEnumerator ShowText()
     {
         fullText = dialogueData.textList[currentDialogueLine].dialogueLineText;
-        currentDialogueLine++;
         for (int i = 0; i <= fullText.Length; i++)
         {
             currentText = fullText.Substring(0, i);

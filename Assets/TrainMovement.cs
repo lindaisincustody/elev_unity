@@ -9,7 +9,7 @@ public class TrainMovement : MonoBehaviour
     public float stopOvershoot = 2f; // Distance the train overshoots before coming to a complete stop
     private Rigidbody2D rb; // Rigidbody component
     private float currentVelocity; // Current velocity of the train
-    private bool hasArrived = false; // To check if the train has arrived
+    public static bool hasArrived = false; // To check if the train has arrived
     private bool leaveStation = false; // To check if the train should start leaving
     public CameraShake cameraShake; // Reference to the CameraShake script
 
@@ -29,7 +29,7 @@ public class TrainMovement : MonoBehaviour
             rb.velocity = new Vector2(currentVelocity, 0);
             if (Mathf.Abs(currentVelocity) > 5f) // Check if the train is moving fast enough to justify shaking
             {
-                StartCoroutine(cameraShake.Shake(0.2f, 0.01f)); // Trigger camera shake
+                StartCoroutine(cameraShake.Shake(0.5f, 0.01f)); // Trigger camera shake
             }
         }
         else if (!hasArrived && transform.position.x <= arrivalX - stopOvershoot)
@@ -55,6 +55,7 @@ public class TrainMovement : MonoBehaviour
                 rb.velocity = Vector2.zero; // Stop moving when past leaveX
             }
         }
+
     }
 
     IEnumerator DriftToStop()
@@ -65,7 +66,7 @@ public class TrainMovement : MonoBehaviour
             currentVelocity = Mathf.MoveTowards(currentVelocity, 0, Time.fixedDeltaTime * 5f);
             rb.velocity = new Vector2(currentVelocity, 0);
             // Trigger a gentle camera shake
-            StartCoroutine(cameraShake.Shake(0.2f, 0.007f)); // Shorter duration and lower magnitude for gentle shake
+            StartCoroutine(cameraShake.Shake(0.3f, 0.007f)); // Shorter duration and lower magnitude for gentle shake
             yield return null;
         }
         rb.velocity = Vector2.zero; // Finally stop the train

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class Player : MonoBehaviour
 
     private DataManager dataManager;
     private PlayerData playerData;
+    private TrainMovement trainMovement;
+
 
     public static Player instance { get; set; }
     public PlayerMovement GetPlayerMovement => playerMovement;
@@ -27,12 +30,30 @@ public class Player : MonoBehaviour
         instance = this;
 
         dataManager = DataManager.Instance;
+
+        trainMovement = GetComponent<TrainMovement>();
     }
 
     private void Start()
     {
+        if (SceneManager.GetActiveScene().name == "StationScene")
+        {
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.enabled = false;
+            }
+        }
         playerData = dataManager.GetPlayerData();
         SetUpPlayerData();
+    }
+    private void Update()
+    {
+        if (SceneManager.GetActiveScene().name == "StationScene" && TrainMovement.hasArrived)
+        {
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.enabled = true;
+        }
     }
 
     private void SetUpPlayerData()
