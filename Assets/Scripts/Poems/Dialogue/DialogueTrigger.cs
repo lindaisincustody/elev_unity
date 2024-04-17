@@ -51,7 +51,8 @@ public class DialogueTrigger : Interactable
         {
             base.HandleInteract();
             dialogueController.ActivateDialogue(dialogueData, this);
-            
+            dialogueController.NextAction();
+
         }
     }
     public void ChangeMaterial()
