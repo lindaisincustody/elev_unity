@@ -74,7 +74,7 @@ public class DialogueController : MonoBehaviour
         currentDialogueLine = 0;
         isDialogueActive = true;
 
-        playerMovement.SetMovement(false);
+        //playerMovement.SetMovement(false);
         dialogueUI.ActivateDialogueBox(newDialogueData);
 
         //NextAction();

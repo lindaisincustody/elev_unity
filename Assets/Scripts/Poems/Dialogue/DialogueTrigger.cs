@@ -9,7 +9,7 @@ public class DialogueTrigger : Interactable
     [SerializeField] private bool isPopup = false; // Determines trigger type
     [SerializeField] private Material newMaterial; // New material to apply after dialogue
     [SerializeField] private SpriteRenderer targetRenderer;
-
+    [SerializeField] private bool isDoorInteraction;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -50,9 +50,13 @@ public class DialogueTrigger : Interactable
         if (playerIsInTrigger && !isPopup)
         {
             base.HandleInteract();
-            dialogueController.ActivateDialogue(dialogueData, this);
-            dialogueController.NextAction();
-
+            if (!isDoorInteraction)
+            {
+                dialogueController.ActivateDialogue(dialogueData, this);
+                dialogueController.NextAction();
+            }
+            if(isDoorInteraction)
+            player.GetComponent<PlayerMovement>().StartInteractionSequence();
         }
     }
     public void ChangeMaterial()
