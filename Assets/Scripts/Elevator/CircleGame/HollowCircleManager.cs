@@ -5,28 +5,32 @@ using UnityEngine;
 public class HollowCircleManager : MonoBehaviour
 {
     public GameObject hollowCirclePrefab;
-    private int currentLevel = 0; 
-    private int circlesToSpawn = 0; // Number of circles to spawn in the current level.
-    private int circlesHit = 0; // Number of circles hit in the current level.
+
+    private int circlesToSpawn = 1;
+    private int circlesHit = 0;
+    private int levelsToBeat = 3;
+    private int levelsBeat = 0;
     private List<GameObject> activeCircles = new List<GameObject>();
     private float minDistanceBetweenCircles = 5.0f; 
     private Animator animator;
-    private CircleMovement playerCircle;
+
+    private System.Action Complete;
 
     void Start()
     {
-        ProgressToNextLevel();
-
         animator = GetComponent<Animator>();
 
         animator.enabled = false;
     }
 
-    public void TwitchAnimation()
+    public void ActivateGame(int levels, System.Action onCompelete)
     {
-        animator.enabled = true;
-        animator.SetTrigger("Ring_tw");
-
+        circlesToSpawn = 1;
+        circlesHit = 0;
+        levelsBeat = 0;
+        Complete = onCompelete;
+        levelsToBeat = levels;
+        SpawnHollowCircles(circlesToSpawn);
     }
 
     public void RemoveHollowCircle(GameObject hollowCircle)
@@ -48,39 +52,13 @@ public class HollowCircleManager : MonoBehaviour
 
     void ProgressToNextLevel()
     {
-        currentLevel++;
         circlesHit = 0;
-
-        if (currentLevel == 1)
-        {
-            circlesToSpawn = 1;
-        }
-        else if (currentLevel == 2)
-        {
-            circlesToSpawn = 2;
-        }
-        else if (currentLevel == 3)
-        {
-            circlesToSpawn = 3;
-        }
-        else if (currentLevel == 4)
-        {
-            circlesToSpawn = 4;
-        }
-        else if (currentLevel == 5)
-        {
-
-            Debug.Log("Game finished!");
-        }
+        circlesToSpawn++;
+        levelsBeat++;
+        if (levelsToBeat == levelsBeat)
+            Complete?.Invoke();
         else
-        {
-            // more levels
-        }
-
-        if (currentLevel <= 4)
-        {
             SpawnHollowCircles(circlesToSpawn);
-        }
     }
 
     void SpawnHollowCircles(int numberOfCircles)
@@ -88,9 +66,11 @@ public class HollowCircleManager : MonoBehaviour
         for (int i = 0; i < numberOfCircles; i++)
         {
             Vector3 spawnPosition = GetRandomSpawnPosition();
-            while (IsTooCloseToExistingCircles(spawnPosition))
+            for (int j = 0; j < 5; j++)
             {
-                spawnPosition = GetRandomSpawnPosition();
+                if (IsTooCloseToExistingCircles(spawnPosition))
+                    spawnPosition = GetRandomSpawnPosition();
+                else break;
             }
 
             GameObject circle = Instantiate(hollowCirclePrefab, spawnPosition, Quaternion.identity);
@@ -127,16 +107,25 @@ public class HollowCircleManager : MonoBehaviour
 
     public void ResetGameToLevel1()
     {
-        currentLevel = 0;
         circlesToSpawn = 1;
         circlesHit = 0;
+        levelsBeat = 0;
         activeCircles.ForEach(Destroy);
         activeCircles.Clear();
-        ProgressToNextLevel();
+        SpawnHollowCircles(circlesToSpawn);
     }
+
     public void MissAnimation()
     {
         animator.enabled = true;
         animator.SetTrigger("Ring_Miss");
+        ResetGameToLevel1();
     }
+
+    public void TwitchAnimation()
+    {
+        animator.enabled = true;
+        animator.SetTrigger("Ring_tw");
+    }
+
 }
