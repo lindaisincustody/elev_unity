@@ -17,7 +17,7 @@ public class MazeCell : MonoBehaviour
     public void Visit()
     {
         isVisited = true;
-        _unvisitedBlock.SetActive(false);
+        //_unvisitedBlock.SetActive(false);
     }
 
     public void ClearLeft()
