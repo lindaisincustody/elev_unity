@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Playables;
 
 public class DialogueTrigger : Interactable
 {
+    [SerializeField] public PlayableDirector director;
     [SerializeField] DialogueController dialogueController;
     [SerializeField] DialogueData dialogueData;
     [SerializeField] private bool isPopup = false; // Determines trigger type
@@ -55,8 +57,10 @@ public class DialogueTrigger : Interactable
                 dialogueController.ActivateDialogue(dialogueData, this);
                 dialogueController.NextAction();
             }
-            if(isDoorInteraction)
-            player.GetComponent<PlayerMovement>().StartInteractionSequence();
+            if (isDoorInteraction)
+            {
+                director.Play();
+            }
         }
     }
     public void ChangeMaterial()
