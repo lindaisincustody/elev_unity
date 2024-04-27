@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
     public float minPitch = 0.65f;
     public float stepTimingAdjustment = 0.95f;
     public float stepInterval = 0.435f; // Interval between steps, decrease to make loop faster
+    public bool isInteracting = false;
 
     private void Awake()
     {
@@ -81,6 +82,7 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        if (!isInteracting)
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
@@ -160,5 +162,82 @@ public class PlayerMovement : MonoBehaviour
                 battlePlayerController.SetFacingDirection(lastDirection.y > 0 ? "Up" : "Down");
             }
         }
+    }
+
+    public void StartInteractionSequence()
+    {
+        StartCoroutine(InteractionSequence());
+    }
+
+    private IEnumerator InteractionSequence()
+    {
+        SetMovement(false);  // Disable player input during this sequence
+        isInteracting = true;
+        GameObject npc = GameObject.Find("BagWoman");
+        GameObject interactionCollider = GameObject.Find("InteractionCollider"); 
+        interactionCollider.GetComponent<BoxCollider2D>().enabled = false;
+        
+        yield return new WaitForSeconds(0.2f); 
+
+        Vector2 targetPosition = new Vector2(9.66f, -0.99f);
+        Vector2 targetPosition2 = new Vector2(10.22f, -2.23f);
+        Vector2 npctargetPosition = new Vector2(9.99f, -0.77f);
+        
+        while (Vector2.Distance(transform.position, targetPosition) > 0.01f)
+        {
+            
+            Vector2 newPosition = Vector2.MoveTowards(rb.position, targetPosition, moveSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(newPosition);
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.3f);
+        animator.SetTrigger("openDoor");
+        yield return new WaitForSeconds(0.3f);
+        while (Vector2.Distance(transform.position, targetPosition2) > 0.1f)
+        {
+            Animator doorAnimator = GameObject.Find("Door").GetComponent<Animator>();
+            doorAnimator.SetTrigger("doorOpen");
+            Vector2 newPosition = Vector2.MoveTowards(rb.position, targetPosition2, moveSpeed/3 * Time.fixedDeltaTime);
+            rb.MovePosition(newPosition);
+            yield return null;
+        }
+        
+
+        // Trigger the door open animation
+        //Animator doorAnimator = GameObject.Find("Door").GetComponent<Animator>();
+        //doorAnimator.SetTrigger("doorOpen");
+
+        yield return new WaitForSeconds(1);  // Wait for the door to open
+        
+
+        while (Vector2.Distance(npc.transform.position, npctargetPosition) > 0.1f)
+        {
+            var npcRB = npc.GetComponent<Rigidbody2D>().position;
+            Vector2 newPositionNPC = Vector2.MoveTowards(npcRB, npctargetPosition, moveSpeed/2 * Time.fixedDeltaTime);        
+            npc.GetComponent<Rigidbody2D>().MovePosition(newPositionNPC);
+            npc.GetComponent<Animator>().SetTrigger("start_walk");
+            yield return null;
+        }
+        StartCoroutine(FadeOutAndDestroy(npc));
+        animator.SetTrigger("doneInteracting");
+        SetMovement(true); 
+        isInteracting = false;
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject npc)
+    {
+        SpriteRenderer spriteRenderer = npc.GetComponent<SpriteRenderer>();
+        float fadeDuration = 1.0f;
+        float fadeRate = 1.0f / fadeDuration;
+
+        for (float i = 1; i >= 0; i -= Time.deltaTime * fadeRate)
+        {
+            Color newColor = spriteRenderer.color;
+            newColor.a = i;
+            spriteRenderer.color = newColor;
+            yield return null;
+        }
+
+        Destroy(npc);
     }
 }
