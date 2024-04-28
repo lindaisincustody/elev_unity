@@ -7,29 +7,29 @@ using UnityEngine.Events;
 
 public class MazeGenerator : MonoBehaviour
 {
-    [SerializeField] NavMeshSurface navmesh;
-    [SerializeField] NavMeshCreator creator;
-    [SerializeField] private CameraTransition cameraTransition;
-    [SerializeField] private GameObject endPrefab;
+    [SerializeField] public NavMeshSurface navmesh;
+    [SerializeField] public NavMeshCreator creator;
+    [SerializeField] public CameraTransition cameraTransition;
+    [SerializeField] public GameObject endPrefab;
 
     [Header("Maze Parameters")]
-    [SerializeField] private MazeCell _mazeCellPrefab;
+    [SerializeField] public MazeCell _mazeCellPrefab;
 
     [Header("Loops Parameters")]
     [SerializeField] private bool allowLoops = false;
     [SerializeField] private int numberOfSquaresForALoop = 5;
 
-    private int _mazeWidth;
-    private int _mazeHeight;
-    private MazeCell[,] mazeGrid;
+    public int _mazeWidth;
+    public int _mazeHeight;
+    public MazeCell[,] mazeGrid;
     private int cellSize = 4;
-    private List<MazeCell> shortestPath;
+    public List<MazeCell> shortestPath;
     [System.NonSerialized] public UnityEvent OnMazeCompletion = new UnityEvent();
 
     private EnemySpawner enemySpawner;
     private PathShowersSpawner pathShowerSpawner;
     private ImageHolder imageHolder;
-    private float timer = 0.0f;
+    public float timer = 0.0f;
 
     private void Awake()
     {
@@ -47,18 +47,20 @@ public class MazeGenerator : MonoBehaviour
 
     private IEnumerator BuildMaze()
     {
-        cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
-        enemySpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
-        pathShowerSpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
+        //cameraTransition.SetCamera(_mazeWidth, _mazeHeight, cellSize);
+        //enemySpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
+        //pathShowerSpawner.SetMazeParameters(_mazeWidth, _mazeHeight, cellSize);
         creator.ResizeNavMesh(_mazeWidth * cellSize, _mazeHeight * cellSize);
         mazeGrid = new MazeCell[_mazeWidth, _mazeHeight];
         numberOfSquaresForALoop = (_mazeHeight * _mazeWidth)/numberOfSquaresForALoop;
-
+        //_mazeCellPrefab = GameObject.FindAnyObjectByType<MazeCell>();
         for (int i = 0; i < _mazeWidth; i++)
         {
             for (int j = 0; j < _mazeHeight; j++)
             {
-                MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
+                MazeCell newCell = GameObject.Instantiate(new GameObject()).AddComponent<MazeCell>();
+                //newCell.transform.position = new Vector2(i * cellSize, j * cellSize);
+                //MazeCell newCell = Instantiate(_mazeCellPrefab, new Vector2(i * cellSize, j * cellSize), Quaternion.identity);
                 mazeGrid[i, j] = newCell;
                 newCell.transform.parent = gameObject.transform;
             }
@@ -66,19 +68,19 @@ public class MazeGenerator : MonoBehaviour
 
         // Set the exit cell
         MazeCell exitCell = mazeGrid[_mazeWidth - 1, _mazeHeight - 2];
-        Instantiate(endPrefab, new Vector2(exitCell.transform.position.x + cellSize, exitCell.transform.position.y), Quaternion.identity);
-
+        //Instantiate(endPrefab, new Vector2(exitCell.transform.position.x + cellSize, exitCell.transform.position.y), Quaternion.identity);
+        //newCell = GameObject.Instantiate(new GameObject()).AddComponent<MazeCell>();
         GenerateMaze(null, mazeGrid[0, 0], exitCell); // Pass the exit cell
                                                       // Randomly delete walls to create loops only once
         if (allowLoops)
         {
             CreateLoops();
         }
-        CalculateShortestPath(mazeGrid[0, 0], exitCell);
-        enemySpawner.SpawnEnemies();
-        pathShowerSpawner.SpawnPathShowers();
-        yield return navmesh.BuildNavMeshAsync();
-        cameraTransition.StartZoomIn();
+        //CalculateShortestPath(mazeGrid[0, 0], exitCell);
+        //enemySpawner.SpawnEnemies();
+        //pathShowerSpawner.SpawnPathShowers();
+        yield return new WaitForEndOfFrame();
+        //cameraTransition.StartZoomIn();
 
         OnMazeCompletion?.Invoke();
     }
@@ -181,7 +183,7 @@ public class MazeGenerator : MonoBehaviour
         }
     }
 
-    private void CalculateShortestPath(MazeCell startCell, MazeCell exitCell)
+    public void CalculateShortestPath(MazeCell startCell, MazeCell exitCell)
     {
         Queue<MazeCell> queue = new Queue<MazeCell>();
         Dictionary<MazeCell, MazeCell> parentMap = new Dictionary<MazeCell, MazeCell>();

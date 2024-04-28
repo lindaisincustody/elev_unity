@@ -10,7 +10,7 @@ public class MazeCell : MonoBehaviour
     [SerializeField] private GameObject _frontWall;
     [SerializeField] private GameObject _backWall;
     [SerializeField] private GameObject _unvisitedBlock;
-    [SerializeField] private GameObject _shortestPathBlock;
+    [SerializeField] public GameObject _shortestPathBlock;
 
     public bool isVisited { get; private set; }
 

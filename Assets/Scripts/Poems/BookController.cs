@@ -8,9 +8,9 @@ public class BookController : MonoBehaviour
 {
     public GameObject OldPoem;
     public WordFiller wordFiller;
-    [SerializeField] private GameObject poemObj;
-    [SerializeField] private GameObject wordsHolder;
-    [SerializeField] private TextMeshProUGUI poemText;
+    [SerializeField] public GameObject poemObj;
+    [SerializeField] public GameObject wordsHolder;
+    [SerializeField] public TextMeshProUGUI poemText;
 
     private Book book;
     private bool wordsWereShown = false;
@@ -32,7 +32,7 @@ public class BookController : MonoBehaviour
         wordsWereShown = true;
         poemObj.SetActive(true);
         wordsHolder.SetActive(true);
-        book.interactable = false;
+        //book.interactable = false;
     }
 
     public void HidePoemAndWords()

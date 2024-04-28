@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class Scales : MonoBehaviour
 {
-    [SerializeField] NumberDisplayer ones;
-    [SerializeField] NumberDisplayer tens;
-    [SerializeField] NumberDisplayer hundreds;
-    [SerializeField] NumberDisplayer thousands;
-    [SerializeField] NumberDisplayer tenThousands;
+    [SerializeField] public NumberDisplayer ones;
+    [SerializeField] public NumberDisplayer tens;
+    [SerializeField] public NumberDisplayer hundreds;
+    [SerializeField] public NumberDisplayer thousands;
+    [SerializeField] public NumberDisplayer tenThousands;
 
     public void SetColor(Color newColor)
     {
@@ -31,6 +31,7 @@ public class Scales : MonoBehaviour
         int thousandsDigit = (weight / 1000) % 10;
         int tenThousandsDigit = (weight / 10000) % 10;
 
+        return;
         // Display each digit using the respective NumberDisplayer
         ones.ShowNumber(onesDigit);
         tens.ShowNumber(tensDigit);

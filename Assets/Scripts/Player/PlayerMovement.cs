@@ -19,10 +19,10 @@ public class PlayerMovement : MonoBehaviour
     private bool isMoving = false;
     private int stepsTaken = 0;
 
-    private InputManager playerInput;
-    private bool _canMove = true;
+    public InputManager playerInput;
+    public bool _canMove = true;
 
-    private BattlePlayerController battlePlayerController;
+    public BattlePlayerController battlePlayerController;
 
     public float maxPitch = 0.85f;
     public float minPitch = 0.65f;
@@ -35,8 +35,8 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<InputManager>();
         battlePlayerController = GetComponent<BattlePlayerController>();
 
-        animSync = GameObject.Find("AnimSync").GetComponent<Animator>();
-        doorAnimator = GameObject.Find("Door").GetComponent<Animator>();
+        //animSync = GameObject.Find("AnimSync").GetComponent<Animator>();
+        //doorAnimator = GameObject.Find("Door").GetComponent<Animator>();
 
 
         if (moveSound != null)
@@ -64,11 +64,11 @@ public class PlayerMovement : MonoBehaviour
         }
         if (!isInteracting)
         {
-            movement = playerInput.inputVector;
+           // movement = playerInput.inputVector;
 
-            animator.SetFloat("Horizontal", movement.x);
-            animator.SetFloat("Vertical", movement.y);
-            animator.SetFloat("Speed", movement.sqrMagnitude);
+            //animator.SetFloat("Horizontal", movement.x);
+            //animator.SetFloat("Vertical", movement.y);
+            //animator.SetFloat("Speed", movement.sqrMagnitude);
         }
 
         if (BattlePlayerController.isPlaying && battlePlayerController.IsBlocking())
@@ -127,7 +127,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void StartMovementSound()
+    public void StartMovementSound()
     {
         if (moveSound != null && !isMoving)
         {
@@ -136,7 +136,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void StopMovementSound()
+    public void StopMovementSound()
     {
         if (moveSound != null && isMoving)
         {
@@ -145,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void AdjustSoundProperties()
+    public void AdjustSoundProperties()
     {
         // This ensures pitch adjustments occur only when the sound is not being adjusted for step timing
         if (moveSound != null && stepsTaken % 2 != 0)
