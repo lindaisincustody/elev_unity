@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23276845611745371}
   - component: {fileID: 8762852080788992112}
   m_Layer: 5
-  m_Name: SanityBar
+  m_Name: ExperienceBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -92,7 +92,7 @@ MonoBehaviour:
   mask: {fileID: 9178857457889128665}
   fill: {fileID: 4236518128642888012}
   color: {r: 0.94509804, g: 0.4745098, b: 0, a: 1}
-  currentExperience: 137
+  currentExperience: 0
   maxExperience: 300
 --- !u!1 &629682528435260878
 GameObject:
@@ -241,7 +241,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.45666668
+  m_FillAmount: 0
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
