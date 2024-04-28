@@ -39,10 +39,6 @@ public class PlayerMovement : MonoBehaviour
         playerInput = GetComponent<InputManager>();
         battlePlayerController = GetComponent<BattlePlayerController>();
 
-        animSync = GameObject.Find("AnimSync").GetComponent<Animator>();
-        doorAnimator = GameObject.Find("Door").GetComponent<Animator>();
-
-
         if (moveSound != null)
         {
             moveSound.loop = true;
@@ -55,25 +51,19 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        //if (animSync != null && isInteracting)
-        //{
-        //    float syncTime = animSync.GetCurrentAnimatorStateInfo(0).normalizedTime;
-        //    animator.Play(0, -1, syncTime);
-        //    doorAnimator.Play(0, -1, syncTime);
-        //}
+
         if (!_canMove)
         {
             StopMovementSound();
             return;
         }
-        if (!isInteracting)
-        {
+
             movement = playerInput.inputVector;
 
             animator.SetFloat("Horizontal", movement.x);
             animator.SetFloat("Vertical", movement.y);
             animator.SetFloat("Speed", movement.sqrMagnitude);
-        }
+
 
         if (BattlePlayerController.isPlaying && battlePlayerController.IsBlocking())
         {
@@ -163,13 +153,11 @@ public class PlayerMovement : MonoBehaviour
         _canMove = canMove;
         if (!canMove)
         {
-            if (!isInteracting)
-            {
+
                 movement = Vector2.zero;
                 animator.SetFloat("Horizontal", movement.x);
                 animator.SetFloat("Vertical", movement.y);
                 animator.SetFloat("Speed", movement.sqrMagnitude);
-            }
         }
     }
 

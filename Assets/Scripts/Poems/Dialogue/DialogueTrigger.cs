@@ -13,6 +13,7 @@ public class DialogueTrigger : Interactable
     [SerializeField] private SpriteRenderer targetRenderer;
     [SerializeField] private bool isDoorInteraction;
 
+    public int expAmount = 100;
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -52,15 +53,31 @@ public class DialogueTrigger : Interactable
         if (playerIsInTrigger && !isPopup)
         {
             base.HandleInteract();
-            if (!isDoorInteraction)
+            ExperienceBar.instance.AddExperience(expAmount);
+            if (isDoorInteraction)
+            {
+                // Subscribe to the stopped event
+                director.stopped += OnPlaybackStopped;
+                director.Play();
+            }
+            else if (!isDoorInteraction)
             {
                 dialogueController.ActivateDialogue(dialogueData, this);
                 dialogueController.NextAction();
             }
-            if (isDoorInteraction)
-            {
-                director.Play();
-            }
+        }
+    }
+
+    private void OnPlaybackStopped(PlayableDirector aDirector)
+    {
+        // Unsubscribe to prevent the event from being called multiple times
+        director.stopped -= OnPlaybackStopped;
+
+        // Check if the stopped director is the one we're interested in
+        if (aDirector == director)
+        {
+            dialogueController.ActivateDialogue(dialogueData, this);
+            dialogueController.NextAction();
         }
     }
     public void ChangeMaterial()
