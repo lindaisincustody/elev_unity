@@ -46,6 +46,8 @@ public class DialogueController : MonoBehaviour
     private bool isMinigamesBoxActive = false;
     private DialogueTrigger currentTrigger;
 
+  
+
     private void Start()
     {
         player = Player.instance;
@@ -143,6 +145,7 @@ public class DialogueController : MonoBehaviour
         if (currentTrigger != null)
         {
             currentTrigger.ChangeMaterial();
+            
             currentTrigger = null; // Reset the trigger reference after use
         }
     }

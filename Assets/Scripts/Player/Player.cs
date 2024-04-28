@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     [SerializeField] InputManager inputManager;
 
     private DataManager dataManager;
-    private PlayerData playerData;
+    public PlayerData playerData;
     private TrainMovement trainMovement;
 
 
@@ -21,6 +21,15 @@ public class Player : MonoBehaviour
     public InputManager GetInputManager => inputManager;
 
     private Inventory _inventory = new Inventory();
+
+    private void OnEnable()
+    {
+        ExperienceBar.instance.OnExperienceChange += HandleExperienceChange;
+    }
+    private void OnDisable()
+    {
+        ExperienceBar.instance.OnExperienceChange -= HandleExperienceChange;
+    }
 
     private void Awake()
     {
@@ -78,6 +87,27 @@ public class Player : MonoBehaviour
         return _inventory.GetGold();
     }
 
+    public int GetExprerience()
+    {
+        return playerData.currentExperience;
+    }
+
+    private void HandleExperienceChange(int newExperience)
+    {
+        ExperienceBar.instance.currentExperience += newExperience;
+        if (playerData.currentExperience >= ExperienceBar.instance.maxExperience)
+        {
+            LevelUp();
+        }
+    }
+
+    private void LevelUp()
+    {
+        playerData.currentLevel++;
+        playerData.currentExperience = 0;
+        playerData.maxExperience += 100;
+    }
+
     public void AddGoldMultiplier(Attribute attribute, float multiplier)
     {
         _inventory.AddGoldMultiplier(attribute, multiplier);
@@ -111,6 +141,10 @@ public class PlayerData
     public Vector2 lastPos;
     
     public int gold;
+
+    public int currentExperience = 0;
+    public int maxExperience = 300;
+    public int currentLevel = 1;
 
     public float heroStrength;
     public float heroCoordination;

@@ -1226,12 +1226,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
   isPopup: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!61 &54159284
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -4300,7 +4302,7 @@ MonoBehaviour:
   m_IsGlobal: 1
   priority: 0
   blendDistance: 0
-  weight: 0.009
+  weight: 0.302
   sharedProfile: {fileID: 11400000, guid: 8d896eec792f3ec49977c378cb326539, type: 2}
 --- !u!4 &344273428
 Transform:
@@ -7714,7 +7716,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &606747879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10017,12 +10019,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
   isPopup: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!61 &832870073
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -10466,12 +10470,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
   isPopup: 0
   newMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   targetRenderer: {fileID: 857580308}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!61 &857580311
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -14255,12 +14261,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: f7e6f62559b85224e868f72a8d480ad2, type: 2}
   isPopup: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!61 &1096744857
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16254,12 +16262,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: e8b21748992dd1f4b9feb426d72fb770, type: 2}
   isPopup: 1
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!1 &1276167721
 GameObject:
   m_ObjectHideFlags: 0
@@ -18175,12 +18185,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
   isPopup: 0
   newMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   targetRenderer: {fileID: 1481364076}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!1 &1488742852
 GameObject:
   m_ObjectHideFlags: 0
@@ -22201,12 +22213,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
   isPopup: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
+  expAmount: 100
 --- !u!61 &1965678121
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -24171,7 +24185,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 505232307698590991, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_Name
-      value: SanityBar
+      value: ExperienceBar
       objectReference: {fileID: 0}
     - target: {fileID: 3438065229502251464, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_Pivot.x
@@ -24203,7 +24217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3438065229502251464, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 55.4249
+      value: 29.8014
       objectReference: {fileID: 0}
     - target: {fileID: 3438065229502251464, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -24239,7 +24253,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3438065229502251464, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -104.020096
+      value: -91.20831
       objectReference: {fileID: 0}
     - target: {fileID: 3438065229502251464, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -24254,7 +24268,31 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
+      propertyPath: color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
+      propertyPath: color.g
+      value: 0.4762677
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
+      propertyPath: color.r
+      value: 0.94509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
+      propertyPath: current
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
+      propertyPath: maximum
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
       propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8762852080788992112, guid: a92bcaad70fee284e85927ea355e5ef3, type: 3}
+      propertyPath: currentExperience
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []

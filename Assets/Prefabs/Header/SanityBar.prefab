@@ -89,12 +89,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9318668a09e7d0f44b749664008ae857, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minimum: 0
-  maximum: 100
-  current: 80
   mask: {fileID: 9178857457889128665}
   fill: {fileID: 4236518128642888012}
-  color: {r: 0.1715023, g: 0.4355149, b: 0.7735849, a: 1}
+  color: {r: 0.94509804, g: 0.4745098, b: 0, a: 1}
+  currentExperience: 137
+  maxExperience: 300
 --- !u!1 &629682528435260878
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,7 +152,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.1715023, g: 0.4355149, b: 0.7735849, a: 1}
+  m_Color: {r: 0.94509804, g: 0.4745098, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -242,7 +241,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.8
+  m_FillAmount: 0.45666668
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
