@@ -10,8 +10,10 @@ public class DialogueController : MonoBehaviour
     [Header("DialogueBox References")]
     [SerializeField] GameObject CanvasBG;
     [SerializeField] GameObject DialogueObj;
+    [SerializeField] GameObject NarratorObj;
     [SerializeField] GameObject MinigamesBoxObj;
-    [SerializeField] TextMeshProUGUI dialogueText;
+    [SerializeField] TextMeshProUGUI dialogueText;    
+    [SerializeField] TextMeshProUGUI narratorText;
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Image mainCharacterImage;
     [SerializeField] Image otherCharacterImage;
@@ -37,6 +39,7 @@ public class DialogueController : MonoBehaviour
 
     DialogueData dialogueData;
     Coroutine dialogueCoroutine;
+    Coroutine cursorCoroutine;
     private int currentDialogueLine = 0;
     private float delay = 0.05f;
     private string fullText;
@@ -45,8 +48,6 @@ public class DialogueController : MonoBehaviour
     private bool isDialogueActive = false;
     private bool isMinigamesBoxActive = false;
     private DialogueTrigger currentTrigger;
-
-  
 
     private void Start()
     {
@@ -57,7 +58,7 @@ public class DialogueController : MonoBehaviour
         playerInput.OnUICancel += ExitDialogue;
 
         minigameUI = new MinigameUI(MinigamesBoxObj, multiplierFrame, strengthRect, intelligenceRect, coordinationRect, neutralityRect);
-        dialogueUI = new DialogueUI(DialogueObj, dialogueText, nameText, mainCharacterImage, otherCharacterImage, mainCharacterImageHolder, otherCharacterImageHolder, minigameUI);
+        dialogueUI = new DialogueUI(DialogueObj, NarratorObj, dialogueText, nameText, mainCharacterImage, otherCharacterImage, mainCharacterImageHolder, otherCharacterImageHolder, minigameUI);
     }
 
     private void OnDestroy()
@@ -69,17 +70,44 @@ public class DialogueController : MonoBehaviour
     public void ActivateDialogue(DialogueData newDialogueData, DialogueTrigger trigger)
     {
         currentTrigger = trigger;
-        InventoryUI.Instance.CanOpenInventory(false);
-        CanvasBG.SetActive(true);
-        particles.SetDialogueData(newDialogueData);
         dialogueData = newDialogueData;
+        InventoryUI.Instance.CanOpenInventory(false);
         currentDialogueLine = 0;
         isDialogueActive = true;
-
-        //playerMovement.SetMovement(false);
-        dialogueUI.ActivateDialogueBox(newDialogueData);
-
+        if (newDialogueData.dialogueType == DialogueType.Dialogue)
+        {
+            ActivateDialogue(newDialogueData);
+        }
+        else if (newDialogueData.dialogueType == DialogueType.SelfDialogue)
+        {
+            ActivateSelfDialogue(newDialogueData);
+        }
+        else if (newDialogueData.dialogueType == DialogueType.Narrator)
+        {
+            ActivateNarrator(newDialogueData);
+        }
         //NextAction();
+    }
+
+    private void ActivateDialogue(DialogueData newDialogueData)
+    {
+        CanvasBG.SetActive(true);
+        particles.SetDialogueData(newDialogueData);
+        playerMovement.SetMovement(false);
+        dialogueUI.ActivateDialogueBox(newDialogueData);
+    }
+
+    private void ActivateSelfDialogue(DialogueData newDialogueData)
+    {
+        CanvasBG.SetActive(true);
+        playerMovement.SetMovement(false);
+        dialogueUI.ActivateDialogueBox(newDialogueData);
+    }
+
+    private void ActivateNarrator(DialogueData newDialogueData)
+    {
+        playerMovement.SetMovement(false);
+        dialogueUI.ActivateNarratorBox(newDialogueData);
     }
 
     public void NextAction()
@@ -87,31 +115,57 @@ public class DialogueController : MonoBehaviour
         if (!isDialogueActive)
             return;
 
-        // Check if the text is fully displayed or being displayed
-        if (dialogueCoroutine != null && dialogueText.text != fullText)
+        if (dialogueData.dialogueType != DialogueType.Narrator)
         {
-            StopCoroutine(dialogueCoroutine); // Stop the currently running coroutine
-            dialogueText.text = fullText; // Immediately display the full text
-            dialogueCoroutine = null; // Reset coroutine variable
+            // Check if the text is fully displayed or being displayed
+            if (dialogueCoroutine != null && dialogueText.text != fullText)
+            {
+                StopCoroutine(dialogueCoroutine); // Stop the currently running coroutine
+                dialogueText.text = fullText; // Immediately display the full text
+                dialogueCoroutine = null; // Reset coroutine variable
+            }
+            else
+            {
+                // Increment dialogue line or end dialogue
+                if (currentDialogueLine < dialogueData.textList.Length)
+                    ShowNextDialogueLine();
+                else if (dialogueData.activateFight)
+                    ShowMinigameOptions();
+                else
+                    ExitDialogue();
+            }
         }
         else
         {
-            // Increment dialogue line or end dialogue
-            if (currentDialogueLine < dialogueData.textList.Length)
-                ShowNextDialogueLine();
-            else if (dialogueData.activateFight)
-                ShowMinigameOptions();
+            if (dialogueCoroutine != null && narratorText.text != fullText)
+            {
+                StopCoroutine(dialogueCoroutine); // Stop the currently running coroutine
+                narratorText.text = fullText; // Immediately display the full text
+                dialogueCoroutine = null; // Reset coroutine variable
+            }
             else
-                ExitDialogue();
+            {
+                // Increment dialogue line or end dialogue
+                if (currentDialogueLine < dialogueData.textList.Length)
+                {
+                    ShowNextDialogueLine();
+                }
+                else
+                    ExitDialogue();
+            }
         }
     }
+
     private void ShowNextDialogueLine()
     {
         if (dialogueCoroutine != null)
             StopCoroutine(dialogueCoroutine);
 
         dialogueUI.ShowNext(currentDialogueLine);
-        dialogueCoroutine = StartCoroutine(ShowText());
+        if (dialogueData.dialogueType != DialogueType.Narrator)
+            dialogueCoroutine = StartCoroutine(ShowText());
+        else
+            dialogueCoroutine = StartCoroutine(ShowNarratorText());
         currentDialogueLine++; // Move to the next line after setting up the coroutine
     }
 
@@ -122,6 +176,17 @@ public class DialogueController : MonoBehaviour
         {
             currentText = fullText.Substring(0, i);
             dialogueText.text = currentText;
+            yield return new WaitForSeconds(delay);
+        }
+    }
+
+    IEnumerator ShowNarratorText()
+    {
+        fullText = dialogueData.textList[currentDialogueLine].dialogueLineText;
+        for (int i = 0; i <= fullText.Length; i++)
+        {
+            currentText = fullText.Substring(0, i);
+            narratorText.text = currentText;
             yield return new WaitForSeconds(delay);
         }
     }
@@ -140,6 +205,13 @@ public class DialogueController : MonoBehaviour
 
         playerMovement.SetMovement(true);
         cursor.DeactivateCursor();
+        if (cursorCoroutine != null)
+            StopCoroutine(cursorCoroutine);
+        if (dialogueCoroutine != null)
+            StopCoroutine(dialogueCoroutine);
+
+        dialogueCoroutine = null;
+        cursorCoroutine = null;
         CanvasBG.SetActive(false);
 
         if (currentTrigger != null)
@@ -156,7 +228,7 @@ public class DialogueController : MonoBehaviour
         minigameUI.Show(dialogueData);
         isDialogueActive = false;
         isMinigamesBoxActive = true;
-        StartCoroutine(ActivateCursor());
+        cursorCoroutine = StartCoroutine(ActivateCursor());
     }
 
     private IEnumerator ActivateCursor()

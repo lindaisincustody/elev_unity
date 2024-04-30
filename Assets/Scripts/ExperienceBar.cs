@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[ExecuteInEditMode()]
 public class ExperienceBar : MonoBehaviour
 {
     public static ExperienceBar instance;

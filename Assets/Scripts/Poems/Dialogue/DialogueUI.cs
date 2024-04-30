@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DialogueUI
 {
     private GameObject dialogueBox;
+    private GameObject narratorBox;
     private TextMeshProUGUI dialogueText;
     private TextMeshProUGUI nameText;
     private Image mainCharacterImage;
@@ -17,9 +18,10 @@ public class DialogueUI
     private DialogueData dialogueData;
     private MinigameUI minigameUI;
 
-    public DialogueUI(GameObject box, TextMeshProUGUI text, TextMeshProUGUI name, Image mainImage, Image otherImage, GameObject mainHolder, GameObject otherHolder, MinigameUI minigame)
+    public DialogueUI(GameObject box, GameObject narratorbox, TextMeshProUGUI text, TextMeshProUGUI name, Image mainImage, Image otherImage, GameObject mainHolder, GameObject otherHolder, MinigameUI minigame)
     {
         dialogueBox = box;
+        narratorBox = narratorbox;
         dialogueText = text;
         nameText = name;
         mainCharacterImage = mainImage;
@@ -35,7 +37,14 @@ public class DialogueUI
         dialogueBox.SetActive(true);
         mainCharacterImage.sprite = dialogueData.mainCharacterImage;
         otherCharacterImage.sprite = dialogueData.otherCharacterImage;
+        Debug.Log(dialogueData.textList[0].isYourText + " -> " + dialogueData.textList[0].dialogueLineText);
         ChangeCharacterShown(dialogueData.textList[0].isYourText);
+    }
+
+    public void ActivateNarratorBox(DialogueData newDialogueData)
+    {
+        dialogueData = newDialogueData;
+        narratorBox.SetActive(true);
     }
 
     public void ShowNext(int currentDialogueLine)
@@ -76,6 +85,7 @@ public class DialogueUI
 
     public void Hide()
     {
+        narratorBox.SetActive(false);
         dialogueBox.SetActive(false);
         mainCharacterImageHolder.SetActive(false);
         otherCharacterImageHolder.SetActive(false);
