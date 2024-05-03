@@ -63,7 +63,6 @@ public class DialogueTrigger : Interactable
             else if (!isDoorInteraction)
             {
                 dialogueController.ActivateDialogue(dialogueData, this);
-                dialogueController.NextAction();
             }
         }
     }
