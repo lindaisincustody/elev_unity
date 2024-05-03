@@ -31,15 +31,15 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Enable();
         inputActions.UI.Enable();
 
-        inputActions.Player.Interact.performed    += Interact;
-        inputActions.Player.Cancel.performed      += Cancel;
-        inputActions.Player.Jump.performed        += Jump;
-        inputActions.Player.Next.performed        += Next;
+        inputActions.Player.Interact.started += Interact;
+        inputActions.Player.Cancel.started += Cancel;
+        inputActions.Player.Jump.started += Jump;
+        inputActions.Player.Next.started += Next;
 
-        inputActions.UI.Navigate.performed        += Navigate;
-        inputActions.UI.Submit.performed          += Sumbit;
-        inputActions.UI.Cancel.performed += UICancel;
-        inputActions.UI.Inventory.performed += UIInventory;
+        inputActions.UI.Navigate.performed += Navigate;
+        inputActions.UI.Submit.started += Sumbit;
+        inputActions.UI.Cancel.started += UICancel;
+        inputActions.UI.Inventory.started += UIInventory;
     }
 
     private void OnDisable()
@@ -57,13 +57,16 @@ public class InputManager : MonoBehaviour
     {
         if (context.performed)
         {
+            // I dont know a better solution, but started does not fucking work with vector2
+            if (inputActions.UI.Navigate.ReadValue<Vector2>() == Vector2.zero)
+                return;
             OnNavigate(inputActions.UI.Navigate.ReadValue<Vector2>());
         }
     }
 
     private void Sumbit(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnSubmit();
         }
@@ -71,7 +74,7 @@ public class InputManager : MonoBehaviour
 
     private void Interact(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnInteract();
         }
@@ -79,7 +82,7 @@ public class InputManager : MonoBehaviour
 
     private void Cancel(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnCancel();
         }
@@ -87,7 +90,7 @@ public class InputManager : MonoBehaviour
 
     private void Jump(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnJump();
         }
@@ -95,7 +98,7 @@ public class InputManager : MonoBehaviour
 
     private void Next(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnNext();
         }
@@ -103,7 +106,7 @@ public class InputManager : MonoBehaviour
 
     private void UICancel(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnUICancel();
         }
@@ -111,7 +114,7 @@ public class InputManager : MonoBehaviour
 
     private void UIInventory(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.started)
         {
             OnInventory();
         }

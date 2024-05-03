@@ -14,6 +14,8 @@ public class MainMenuCursorManager : MonoBehaviour
 
     private DataManager dataManager;
 
+    private bool submit = false;
+
     private void Start()
     {
         dataManager = DataManager.Instance;
@@ -22,9 +24,13 @@ public class MainMenuCursorManager : MonoBehaviour
 
     public void StartGame()
     {
+        if (submit)
+            return;
+
+        submit = true;
         string lastScene = dataManager.GetLastScene();
         if (string.IsNullOrEmpty(lastScene))
-            StartCoroutine(SceneController.instance.LoadScene(Constants.SceneNames.MainScene));
+            StartCoroutine(SceneController.instance.LoadScene(Constants.SceneNames.StationScene));
         else
             StartCoroutine(SceneController.instance.LoadScene(lastScene));
     }

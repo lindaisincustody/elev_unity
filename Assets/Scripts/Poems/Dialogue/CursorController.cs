@@ -54,6 +54,7 @@ public class CursorController : MonoBehaviour
         if (activeUI == null)
             return;
         // Calls a callback to poem/dialogue
+        SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         onSubmitAction?.Invoke();
         // Loads New Scene
         activeUI.elementAction?.Invoke();
@@ -89,7 +90,7 @@ public class CursorController : MonoBehaviour
                 break;
             }
         }
-
+        SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
         if (issMinigameCursor)
             UpdateFillerColor();
@@ -108,7 +109,7 @@ public class CursorController : MonoBehaviour
                 break;
             }
         }
-
+        SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
         if (issMinigameCursor)
             UpdateFillerColor();
@@ -127,7 +128,7 @@ public class CursorController : MonoBehaviour
                 break;
             }
         }
-
+        SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
         if (issMinigameCursor)
             UpdateFillerColor();
@@ -146,7 +147,7 @@ public class CursorController : MonoBehaviour
                 break;
             }
         }
-
+        SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
         if (issMinigameCursor)
             UpdateFillerColor();
