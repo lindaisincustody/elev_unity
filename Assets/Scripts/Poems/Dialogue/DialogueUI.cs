@@ -60,6 +60,7 @@ public class DialogueUI
         }
         else
         {
+            ShowOnlyBox(LineType.Enemy);
             nameText.text = dialogueData.otherCharacterName;
             ChangeCharacterShown(false, true);
         }
