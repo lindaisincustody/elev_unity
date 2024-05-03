@@ -18,6 +18,7 @@ public class TrainMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
         currentVelocity = initialSpeed; // Initialize current velocity
         cameraShake = Camera.main.GetComponent<CameraShake>(); // Get the CameraShake component from the main camera
+        SoundManager.PlaySound2D(SoundManager.Sound.TrainComing);
     }
 
     void FixedUpdate()
@@ -70,7 +71,13 @@ public class TrainMovement : MonoBehaviour
             yield return null;
         }
         rb.velocity = Vector2.zero; // Finally stop the train
+        Invoke("LeavingSound", 3);
         Invoke("PrepareToLeave", 5f); // Wait for 5 seconds before leaving
+    }
+
+    void LeavingSound()
+    {
+        SoundManager.PlaySound2D(SoundManager.Sound.TrainLeaving);
     }
 
     void PrepareToLeave()
