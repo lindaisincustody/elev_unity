@@ -162,7 +162,7 @@ public class DialogueController : MonoBehaviour
             StopCoroutine(dialogueCoroutine);
 
         dialogueUI.ShowNext(currentDialogueLine);
-        if (dialogueData.dialogueType != DialogueType.Narrator)
+        if (dialogueData.textList[currentDialogueLine].lineType != LineType.Narrator)
             dialogueCoroutine = StartCoroutine(ShowText());
         else
             dialogueCoroutine = StartCoroutine(ShowNarratorText());

@@ -37,8 +37,7 @@ public class DialogueUI
         dialogueBox.SetActive(true);
         mainCharacterImage.sprite = dialogueData.mainCharacterImage;
         otherCharacterImage.sprite = dialogueData.otherCharacterImage;
-        Debug.Log(dialogueData.textList[0].isYourText + " -> " + dialogueData.textList[0].dialogueLineText);
-        ChangeCharacterShown(dialogueData.textList[0].isYourText);
+        ChangeCharacterShown(dialogueData.textList[0].lineType == LineType.You);
     }
 
     public void ActivateNarratorBox(DialogueData newDialogueData)
@@ -52,16 +51,31 @@ public class DialogueUI
         dialogueText.text = string.Empty;
         if (currentDialogueLine <= dialogueData.textList.Length - 1)
         {
-            if (dialogueData.textList[currentDialogueLine].isYourText)
+            ShowOnlyBox(dialogueData.textList[currentDialogueLine].lineType);
+            if (dialogueData.textList[currentDialogueLine].lineType == LineType.You)
                 nameText.text = "You";
             else
                 nameText.text = dialogueData.otherCharacterName;
-            ChangeCharacterShown(dialogueData.textList[currentDialogueLine].isYourText);
+            ChangeCharacterShown(dialogueData.textList[currentDialogueLine].lineType == LineType.You);
         }
         else
         {
             nameText.text = dialogueData.otherCharacterName;
             ChangeCharacterShown(false, true);
+        }
+    }
+
+    private void ShowOnlyBox(LineType lineType)
+    {
+        if (lineType == LineType.Narrator)
+        {
+            narratorBox.SetActive(true);
+            dialogueBox.SetActive(false);
+        }
+        else
+        {
+            narratorBox.SetActive(false);
+            dialogueBox.SetActive(true);
         }
     }
 
