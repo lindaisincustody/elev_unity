@@ -73,7 +73,7 @@ public class DialogueController : MonoBehaviour
         dialogueData = newDialogueData;
         InventoryUI.Instance.CanOpenInventory(false);
         currentDialogueLine = 0;
-        isDialogueActive = true;
+        StartCoroutine(SetDialogueActive());
         if (newDialogueData.dialogueType == DialogueType.Dialogue)
         {
             ActivateDialogue(newDialogueData);
@@ -86,7 +86,14 @@ public class DialogueController : MonoBehaviour
         {
             ActivateNarrator(newDialogueData);
         }
+        ShowNextDialogueLine();
         //NextAction();
+    }
+
+    private IEnumerator SetDialogueActive()
+    {
+        yield return new WaitForSeconds(0.1f);
+        isDialogueActive = true;
     }
 
     private void ActivateDialogue(DialogueData newDialogueData)
@@ -115,7 +122,42 @@ public class DialogueController : MonoBehaviour
         if (!isDialogueActive)
             return;
 
-        if (dialogueData.dialogueType != DialogueType.Narrator)
+        if (dialogueData.dialogueType == DialogueType.Dialogue)
+        {
+            // Check if the text is fully displayed or being displayed
+            if (dialogueCoroutine != null)
+            {
+                if (dialogueData.textList[currentDialogueLine - 1].lineType == LineType.Narrator)
+                {
+                    if (narratorText.text != fullText)
+                    {
+                        StopCoroutine(dialogueCoroutine);
+                        narratorText.text = fullText;
+                    }
+                    dialogueCoroutine = null;
+                }
+                else
+                {
+                    if (dialogueText.text != fullText)
+                    {
+                        StopCoroutine(dialogueCoroutine); // Stop the currently running coroutine
+                        dialogueText.text = fullText; // Immediately display the full text
+                    }
+                    dialogueCoroutine = null; // Reset coroutine variable
+                }
+            }
+            else
+            {
+                // Increment dialogue line or end dialogue
+                if (currentDialogueLine < dialogueData.textList.Length)
+                    ShowNextDialogueLine();
+                else if (dialogueData.activateFight)
+                    ShowMinigameOptions();
+                else
+                    ExitDialogue();
+            }
+        }
+        else if (dialogueData.dialogueType == DialogueType.SelfDialogue)
         {
             // Check if the text is fully displayed or being displayed
             if (dialogueCoroutine != null && dialogueText.text != fullText)
@@ -129,13 +171,11 @@ public class DialogueController : MonoBehaviour
                 // Increment dialogue line or end dialogue
                 if (currentDialogueLine < dialogueData.textList.Length)
                     ShowNextDialogueLine();
-                else if (dialogueData.activateFight)
-                    ShowMinigameOptions();
                 else
                     ExitDialogue();
             }
         }
-        else
+        else if (dialogueData.dialogueType == DialogueType.Narrator)
         {
             if (dialogueCoroutine != null && narratorText.text != fullText)
             {
@@ -156,7 +196,7 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    private void ShowNextDialogueLine()
+    private void ShowNextDialogueLine(bool incrementLines = true)
     {
         if (dialogueCoroutine != null)
             StopCoroutine(dialogueCoroutine);
@@ -166,7 +206,9 @@ public class DialogueController : MonoBehaviour
             dialogueCoroutine = StartCoroutine(ShowText());
         else
             dialogueCoroutine = StartCoroutine(ShowNarratorText());
-        currentDialogueLine++; // Move to the next line after setting up the coroutine
+
+        if (incrementLines)
+            currentDialogueLine++; // Move to the next line after setting up the coroutine
     }
 
     IEnumerator ShowText()
