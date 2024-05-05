@@ -11,6 +11,7 @@ public class MazePlayerMovement : MonoBehaviour
     public float boostDecay = 2f;  // Adjust this value to control how quickly the boost decays
     public float boostDuration = 2f;
     public Rigidbody2D rb;
+    public Animator animator;
 
     public InputManager playerInput;
     public MazeManager mazeManager;
@@ -37,6 +38,10 @@ public class MazePlayerMovement : MonoBehaviour
         if (!canMove)
             return;
         movement = playerInput.inputVector;
+
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
 
         if (isLeashed)
             leashRenderer.SetPosition(0, transform.position);
