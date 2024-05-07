@@ -16,6 +16,8 @@ public class WeightCalculator : MonoBehaviour
     float totalLeftWeight = 0;
     float totalRightWeight = 0;
 
+
+
     public WeightSide SetMeshFilters(MeshFilter leftFilter, MeshFilter rightFilter)
     {
         leftMeshFilter = leftFilter;
@@ -107,6 +109,12 @@ public class WeightCalculator : MonoBehaviour
     public float GetWeightDifference()
     {
         return Mathf.Abs(totalLeftWeight * weightMultiplier - totalRightWeight * weightMultiplier);
+    }
+
+    public void SetWeightDifference(float x)
+    {
+        totalLeftWeight = x;
+        totalRightWeight = x;
     }
 }
 

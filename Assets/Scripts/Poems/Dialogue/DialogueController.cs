@@ -8,42 +8,42 @@ using System;
 public class DialogueController : MonoBehaviour
 {
     [Header("DialogueBox References")]
-    [SerializeField] GameObject CanvasBG;
-    [SerializeField] GameObject DialogueObj;
-    [SerializeField] GameObject MinigamesBoxObj;
-    [SerializeField] TextMeshProUGUI dialogueText;
-    [SerializeField] TextMeshProUGUI nameText;
-    [SerializeField] Image mainCharacterImage;
-    [SerializeField] Image otherCharacterImage;
-    [SerializeField] GameObject mainCharacterImageHolder;
-    [SerializeField] GameObject otherCharacterImageHolder;
-    [SerializeField] AttributeParticles particles;
+    [SerializeField] public GameObject CanvasBG;
+    [SerializeField] public GameObject DialogueObj;
+    [SerializeField] public GameObject MinigamesBoxObj;
+    [SerializeField] public TextMeshProUGUI dialogueText;
+    [SerializeField] public TextMeshProUGUI nameText;
+    [SerializeField] public Image mainCharacterImage;
+    [SerializeField] public Image otherCharacterImage;
+    [SerializeField] public GameObject mainCharacterImageHolder;
+    [SerializeField] public GameObject otherCharacterImageHolder;
+    [SerializeField] public AttributeParticles particles;
     [Header("Cursor References")]
-    [SerializeField] CursorController cursor;
-    [SerializeField] UIElementsHolder minigamebox;
+    [SerializeField] public CursorController cursor;
+    [SerializeField] public UIElementsHolder minigamebox;
     [Header("Attribute Bar References")]
-    [SerializeField] GameObject multiplierFrame;
-    [SerializeField] Image strengthRect;
-    [SerializeField] Image intelligenceRect;
-    [SerializeField] Image coordinationRect;
-    [SerializeField] Image neutralityRect;
+    [SerializeField] public GameObject multiplierFrame;
+    [SerializeField] public Image strengthRect;
+    [SerializeField] public Image intelligenceRect;
+    [SerializeField] public Image coordinationRect;
+    [SerializeField] public Image neutralityRect;
 
-    MinigameUI minigameUI;
-    DialogueUI dialogueUI;
+    public MinigameUI minigameUI;
+    public DialogueUI dialogueUI;
 
-    Player player;
-    InputManager playerInput;
-    PlayerMovement playerMovement;
+    public Player player;
+    public  InputManager playerInput;
+    public PlayerMovement playerMovement;
 
-    DialogueData dialogueData;
-    Coroutine dialogueCoroutine;
-    private int currentDialogueLine = 0;
+    public DialogueData dialogueData;
+    public  Coroutine dialogueCoroutine;
+    public int currentDialogueLine = 0;
     private float delay = 0.05f;
     private string fullText;
     private string currentText;
 
-    private bool isDialogueActive = false;
-    private bool isMinigamesBoxActive = false;
+    public bool isDialogueActive = false;
+    public bool isMinigamesBoxActive = false;
     private DialogueTrigger currentTrigger;
 
     private void Start()
@@ -103,7 +103,7 @@ public class DialogueController : MonoBehaviour
                 ExitDialogue();
         }
     }
-    private void ShowNextDialogueLine()
+    public void ShowNextDialogueLine()
     {
         if (dialogueCoroutine != null)
             StopCoroutine(dialogueCoroutine);
@@ -113,7 +113,7 @@ public class DialogueController : MonoBehaviour
         currentDialogueLine++; // Move to the next line after setting up the coroutine
     }
 
-    IEnumerator ShowText()
+    public IEnumerator ShowText()
     {
         fullText = dialogueData.textList[currentDialogueLine].dialogueLineText;
         for (int i = 0; i <= fullText.Length; i++)
@@ -136,6 +136,7 @@ public class DialogueController : MonoBehaviour
         dialogueUI.Hide();
         minigameUI.Hide();
 
+        if (playerMovement != null)
         playerMovement.SetMovement(true);
         cursor.DeactivateCursor();
         CanvasBG.SetActive(false);
@@ -147,7 +148,7 @@ public class DialogueController : MonoBehaviour
         }
     }
 
-    private void ShowMinigameOptions()
+    public void ShowMinigameOptions()
     {
         dialogueUI.ShowNext(currentDialogueLine);
         minigameUI.Show(dialogueData);

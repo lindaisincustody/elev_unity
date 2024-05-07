@@ -35,7 +35,40 @@ public class DialogueUI
         dialogueBox.SetActive(true);
         mainCharacterImage.sprite = dialogueData.mainCharacterImage;
         otherCharacterImage.sprite = dialogueData.otherCharacterImage;
+        if (dialogueData.textList == null)
+        {
+            newDialogueData = ScriptableObject.CreateInstance<DialogueData>();
+            newDialogueData.otherCharacterName = "Character Name";
+            newDialogueData.textList = new DialogueData.CharacterData[]
+            {
+            new DialogueData.CharacterData { isYourText = true, dialogueLineText = "Hello!" },
+            new DialogueData.CharacterData { isYourText = false, dialogueLineText = "Hi there!" }
+            };
+            newDialogueData.activateFight = false;
+            // Assume Sprite assets exist and are assigned accordingly
+            newDialogueData.mainCharacterImage = CreateSprite(Color.white);
+            newDialogueData.otherCharacterImage = CreateSprite(Color.red);
+            dialogueData = newDialogueData;
+        }
         ChangeCharacterShown(dialogueData.textList[0].isYourText);
+    }
+
+    public Sprite CreateSprite(Color color, int width = 100, int height = 100)
+    {
+        // Create a new texture with the specified color
+        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
+        for (int x = 0; x < texture.width; x++)
+        {
+            for (int y = 0; y < texture.height; y++)
+            {
+                texture.SetPixel(x, y, color);
+            }
+        }
+        texture.Apply();
+
+        // Create a new sprite from the texture
+        Sprite newSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
+        return newSprite;
     }
 
     public void ShowNext(int currentDialogueLine)

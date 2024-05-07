@@ -50,7 +50,7 @@ public class MazeGeneratorTests
         int mazeHeight = 10;
 
         // Act
-        //mazeGenerator.StartGeneratingMaze(mazeWidth, mazeHeight);
+        mazeGenerator.StartGeneratingMaze(mazeWidth, mazeHeight);
 
         // Assert
         Assert.AreEqual(mazeWidth, mazeGenerator._mazeWidth);

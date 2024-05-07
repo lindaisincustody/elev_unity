@@ -11,6 +11,7 @@ public class MinigameUI
     private Image intelligenceImage;
     private Image coordinationImage;
     private Image neutralityImage;
+    public bool isActive = false;
 
     public MinigameUI(GameObject bar, GameObject frame, Image strength, Image intelligence, Image coordination, Image neutrality)
     {
@@ -24,6 +25,7 @@ public class MinigameUI
 
     public void Show(DialogueData data)
     {
+        isActive = true;
         minigamesBox.SetActive(true);
         multiplierFrame.SetActive(true);
         strengthImage.fillAmount = data.strengthGameCoinsMultiplier / 4 - 0.25f;

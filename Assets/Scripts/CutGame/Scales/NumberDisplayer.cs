@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class NumberDisplayer : MonoBehaviour
 {
-    [SerializeField] GameObject[] lines;
-    [SerializeField] SpriteRenderer[] linesColor;
+    [SerializeField] public  GameObject[] lines;
+    [SerializeField] public SpriteRenderer[] linesColor;
 
     private int number = 0;
     

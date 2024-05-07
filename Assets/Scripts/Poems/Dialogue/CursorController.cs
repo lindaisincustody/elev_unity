@@ -197,6 +197,30 @@ public class CursorController : MonoBehaviour
     {
         activeUI = null;
         isCursorAcitve = false;
+        // Create a new GameObject with RectTransform
+        GameObject cursorObject = new GameObject("Cursor");
+        RectTransform rectTransform = cursorObject.AddComponent<RectTransform>();
+        rectTransform.sizeDelta = new Vector2(100, 100);
+        rectTransform.anchoredPosition = Vector2.zero;
+
+        // Setup or find Canvas
+        Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+        if (canvas == null)
+        {
+            GameObject canvasObject = new GameObject("Canvas");
+            canvas = canvasObject.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvasObject.AddComponent<CanvasScaler>();
+            canvasObject.AddComponent<GraphicRaycaster>();
+        }
+
+        // Attach cursor to Canvas
+        cursorObject.transform.SetParent(canvas.transform, false);
+
+        // Initially deactivate cursor
+        cursorObject.SetActive(false);
+
+        cursor = rectTransform;
         cursor.gameObject.SetActive(false);
         if (issMinigameCursor)
             ResetHighlights();

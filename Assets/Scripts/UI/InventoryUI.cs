@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    public static InventoryUI Instance { get; private set; }
+    public static InventoryUI Instance { get;  set; }
 
     [Header("Self References")]
     [SerializeField] GameObject inventoryPanel;

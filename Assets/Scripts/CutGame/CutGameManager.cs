@@ -27,7 +27,7 @@ public class CutGameManager : MonoBehaviour
     private float delay = 1f;
     public int spawnedFruits = 0;
 
-    private const float delayForEndScreen = 3f;
+    public const float delayForEndScreen = 3f;
 
     public DataManager dataManager;
 

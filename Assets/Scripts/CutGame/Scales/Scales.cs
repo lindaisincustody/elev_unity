@@ -10,6 +10,11 @@ public class Scales : MonoBehaviour
     [SerializeField] public NumberDisplayer thousands;
     [SerializeField] public NumberDisplayer tenThousands;
 
+    public Color GetCurrentColor()
+    {
+        return ones.linesColor[0].color;
+    }
+
     public void SetColor(Color newColor)
     {
         ones.SetColor(newColor);
@@ -39,4 +44,6 @@ public class Scales : MonoBehaviour
         thousands.ShowNumber(thousandsDigit);
         tenThousands.ShowNumber(tenThousandsDigit);
     }
+    
+
 }

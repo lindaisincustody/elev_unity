@@ -1,82 +1,97 @@
-using System.Collections;
-using System.Collections.Generic;
-using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
-using NSubstitute;
-using TMPro;
-using NavMeshPlus.Components;
+using NUnit.Framework;
 using UnityEngine.UI;
+using UnityEngine.TestTools; // For coroutine support in tests
 
-public class CutGameManagerTests 
+public class CutGameManagerTests
 {
-    private CutGameManager cutGameManager;
     private GameObject gameObject;
-    private GameObject fruitImagePrefab;
-    private Transform fruitImageHolder;
-    private GameObject objectsHolder;
-    private GameObject cutGameEndScreen;
-    private GameObject gameobjectCutter;
-    private GameObject weightCalculator;
-    private GameObject scales;
+    private CutGameManager cutGameManager;
 
     [SetUp]
     public void Setup()
     {
-        AssignDependencies();
-    }
-
-    private void AssignDependencies()
-    {
-        // Create GameObjects
         gameObject = new GameObject();
-        fruitImagePrefab = new GameObject();
-        fruitImageHolder = new GameObject().transform;
-        objectsHolder = new GameObject();
-        cutGameEndScreen = new GameObject();
-        gameobjectCutter = new GameObject();
-        weightCalculator = new GameObject();
-        scales = new GameObject();
-
-        // Add components
         cutGameManager = gameObject.AddComponent<CutGameManager>();
-        cutGameManager.fruitImagePrefab = fruitImagePrefab.GetComponent<Image>();
-        cutGameManager.fruitImageHolder = fruitImageHolder;
-        cutGameManager.objectsHolder = objectsHolder.transform;
-        cutGameManager.endScreen = cutGameEndScreen.GetComponent<CutGameEndScreen>();
-        cutGameManager.cutter = gameobjectCutter.AddComponent<GameobjectCutter>();
-        cutGameManager.calculator = weightCalculator.GetComponent<WeightCalculator>();
-        cutGameManager.precisionText = scales.GetComponent<Scales>();
-        cutGameManager.winColor = Color.white;
-        cutGameManager.loseColor = Color.black;
-        cutGameManager.spawnedFruits = 3;
+
+        // Setting up the required components and references
+        GameObject canvasObject = new GameObject("Canvas");
+        canvasObject.AddComponent<Canvas>();
+        cutGameManager.fruitImagePrefab = new GameObject().AddComponent<Image>();
+        cutGameManager.fruitImageHolder = new GameObject("FruitImageHolder").transform;
+        cutGameManager.objectsHolder = new GameObject("ObjectsHolder").transform;
+        cutGameManager.endScreen = new GameObject().AddComponent<CutGameEndScreen>();
+        cutGameManager.cutter = new GameObject().AddComponent<GameobjectCutter>();
+        cutGameManager.calculator = new GameObject().AddComponent<WeightCalculator>();
+
+        // Set up the Scales component with its NumberDisplayers
+        GameObject scalesObject = new GameObject("PrecisionText");
+        cutGameManager.precisionText = scalesObject.AddComponent<Scales>();
+        SetupNumberDisplayers(cutGameManager.precisionText);
+
+        // Additional setup for components that require it
+        cutGameManager.fruitsList = ScriptableObject.CreateInstance<FruitSpritesData>();
+        // Assume FruitSpritesData is properly initialized here if necessary
+
+        // Initialize the game for testing conditions
+        cutGameManager.SetUpGame();
     }
+
+    private void SetupNumberDisplayers(Scales scales)
+    {
+        scales.ones = CreateNumberDisplayer("Ones");
+        scales.tens = CreateNumberDisplayer("Tens");
+        scales.hundreds = CreateNumberDisplayer("Hundreds");
+        scales.thousands = CreateNumberDisplayer("Thousands");
+        scales.tenThousands = CreateNumberDisplayer("TenThousands");
+    }
+
+    private NumberDisplayer CreateNumberDisplayer(string name)
+    {
+        GameObject displayerObject = new GameObject(name);
+        NumberDisplayer displayer = displayerObject.AddComponent<NumberDisplayer>();
+
+        // Initialize the SpriteRenderers for each NumberDisplayer
+        displayer.linesColor = new SpriteRenderer[7]; // Assuming there are 7 segments in a typical digital number display
+        for (int i = 0; i < displayer.linesColor.Length; i++)
+        {
+            GameObject line = new GameObject($"Line{i}");
+            line.transform.parent = displayerObject.transform;
+            displayer.linesColor[i] = line.AddComponent<SpriteRenderer>();
+        }
+
+        // Initialize the lines array if necessary
+        displayer.lines = new GameObject[7];
+        for (int i = 0; i < displayer.lines.Length; i++)
+        {
+            displayer.lines[i] = new GameObject($"Segment{i}");
+        }
+
+        return displayer;
+    }
+
+
 
     [TearDown]
-    public void TearDown()
+    public void Teardown()
     {
-        Object.DestroyImmediate(gameObject);
-        Object.DestroyImmediate(fruitImagePrefab);
-        Object.DestroyImmediate(fruitImageHolder.gameObject);
-        Object.DestroyImmediate(objectsHolder);
-        Object.DestroyImmediate(cutGameEndScreen);
-        Object.DestroyImmediate(gameobjectCutter);
-        Object.DestroyImmediate(weightCalculator);
-        Object.DestroyImmediate(scales);
+        GameObject.DestroyImmediate(gameObject);
     }
 
     [Test]
-    public void OnCut_UpdatesPrecisionColor()
+    public void OnCut_UpdatesPrecisionAndHandlesGameProgress()
     {
-        Assert.AreNotEqual(cutGameManager.winColor, cutGameManager.loseColor);
+        // Set up the test conditions
+        cutGameManager.totalFruitsToSpawn = 5;
+        cutGameManager.spawnedFruits = 4;
+        cutGameManager.calculator.SetWeightDifference(5f);
+        cutGameManager.precision = 10f;
+
+        // Act by simulating a cut
+        cutGameManager.OnCut();
+
+        // Assert that the color is updated correctly and that we check for win condition
+        Assert.AreEqual(cutGameManager.winColor, cutGameManager.precisionText.GetCurrentColor());
+        // We assume GetCurrentColor() is a method to get the current color of the text
     }
-
-    [Test]
-    public void OnCut_WhenNotAllFruitsSpawned_ResetsCutting()
-    {
-        // Arrange
-
-        Assert.AreEqual(3, cutGameManager.spawnedFruits); // Check if spawned fruits are reset to 0
-    }
-
 }
