@@ -11,6 +11,11 @@ public static class SoundManager
         TrainStationAmbient,
         TrainComing,
         TrainLeaving,
+        Typing,
+        QuietClick,
+        HeartBeat,
+        Pulsating_1,
+        Pulsating_2
     }
 
     private static Dictionary<Sound, float> soundTimerDictionary;
@@ -21,6 +26,8 @@ public static class SoundManager
 
     private static GameObject audioHolder;
 
+    private static Dictionary<Sound, AudioSource> loopedSounds = new Dictionary<Sound, AudioSource>();
+
     public static void Initialize()
     {
         soundTimerDictionary = new Dictionary<Sound, float>();
@@ -28,8 +35,45 @@ public static class SoundManager
         audioHolder = new GameObject("All Sounds");
     }
 
+    public static void PlayLoopedSound(Sound sound, float volume = 1)
+    {
+        if (!CanPlaySound(sound))
+            return;
+
+        AudioSource audioSource;
+        if (loopedSounds.ContainsKey(sound))
+        {
+            audioSource = loopedSounds[sound];
+            if (audioSource.isPlaying)
+                return;
+        }
+        else
+        {
+            GameObject loopedSoundGameObject = new GameObject("Looped Sound");
+            loopedSoundGameObject.transform.parent = audioHolder.transform;
+            audioSource = loopedSoundGameObject.AddComponent<AudioSource>();
+            loopedSounds[sound] = audioSource;
+        }
+
+        audioSource.loop = true;
+        audioSource.volume = volume;
+        audioSource.clip = GetAudioClip(sound);
+        audioSource.Play();
+    }
+
+    public static void StopLoopedSound(Sound sound)
+    {
+        if (loopedSounds.ContainsKey(sound))
+        {
+            AudioSource audioSource = loopedSounds[sound];
+            audioSource.Stop();
+            Object.Destroy(audioSource.gameObject);  // Optionally, you can destroy the GameObject
+            loopedSounds.Remove(sound);
+        }
+    }
+
     // 3D Sounds
-    public static void PlaySound3D(Sound sound, Vector3 position, float volume = 1)
+    public static void PlaySound3DStatic(Sound sound, Vector3 position, float volume = 1)
     {
         if (!CanPlaySound(sound))
             return;
@@ -46,9 +90,27 @@ public static class SoundManager
         Object.Destroy(soundGameObject, audioSource.clip.length);
     }
 
+    public static void PlaySound3D(Sound sound, Transform parent, bool looped = false, float volume = 1, float dopplerEffect = 1, float spread = 0, float minDist = 1, float maxDist = 500)
+    {
+        GameObject soundGameObject = new GameObject("Sound");
+        soundGameObject.transform.parent = parent;
+        soundGameObject.transform.localPosition = Vector3.zero;
+        //Time.timeScale = 0f;
+        AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
+        audioSource.spatialBlend = 1;
+        audioSource.loop = looped;
+        audioSource.maxDistance = 3;
+        audioSource.volume = volume;
+        audioSource.dopplerLevel = dopplerEffect;
+        audioSource.spread = spread;
+        audioSource.minDistance = minDist;
+        audioSource.maxDistance = maxDist;
+        audioSource.clip = GetAudioClip(sound);
+        audioSource.Play();
+    }
+
     public static void PlayAmbientSound(Sound sound, bool additive = false, float volume = 1)
     {
-
         AudioSource audioSource;
 
         if (additive)

@@ -35,6 +35,7 @@ public class TutorialPopUp : MonoBehaviour
         text.text = ""; 
         text.gameObject.SetActive(true);
         string[] words = message.Split(' ');
+        SoundManager.PlayLoopedSound(SoundManager.Sound.Typing);
         foreach (string word in words)
         {
             if (word.Contains("color"))
@@ -51,6 +52,7 @@ public class TutorialPopUp : MonoBehaviour
                 text.text += " ";
             }
         }
+        SoundManager.StopLoopedSound(SoundManager.Sound.Typing);
     }
 
     public void DeactivatePopUp()

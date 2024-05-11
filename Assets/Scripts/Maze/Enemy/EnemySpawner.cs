@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private int expandingEnemyTicketCount;
     [SerializeField] private int followingEnemyTicketCount;
 
+    List<BaseEnemy> allEnemies = new List<BaseEnemy>();
     List<PatrolEnemy> createdPatrolEnemies = new List<PatrolEnemy>();
     PatrolEnemy chosenEnemy;
 
@@ -51,6 +52,7 @@ public class EnemySpawner : MonoBehaviour
 
         BaseEnemy enemy = ChooseEnemyToSpawn();
         BaseEnemy exp = Instantiate(enemy, enemyPos, Quaternion.identity);
+        allEnemies.Add(exp);
         if (exp.GetComponent<ExpandingEnemy>() != null)
             exp.GetComponent<ExpandingEnemy>().SetCellCoordinates(i + xPosVariation, j + yPosVariation, cellSize);
         else
@@ -92,5 +94,13 @@ public class EnemySpawner : MonoBehaviour
     public void ExitRageMode(Vector3 mainEnemyPos)
     {
         chosenEnemy.AppearEnemy(mainEnemyPos);
+    }
+
+    public void HideEnemies()
+    {
+        foreach (var enemy in allEnemies)
+        {
+            enemy.DisableEnemy();
+        }
     }
 }

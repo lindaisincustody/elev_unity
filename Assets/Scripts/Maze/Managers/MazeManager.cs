@@ -32,6 +32,7 @@ public class MazeManager : MonoBehaviour
 
     public void Lose()
     {
+        mazeGenerator.HideAllEnemies();
         playerCollider.enabled = false;
         playerMovement.StopPlayer();
         loseScreen.ShowEndScreen();
@@ -39,6 +40,7 @@ public class MazeManager : MonoBehaviour
 
     public void StartMaze()
     {
+        SoundManager.PlayAmbientSound(SoundManager.Sound.HeartBeat, false, 0.5f);
         int level = dataManager.GetLevel(Attribute.Coordination);
         mazeGenerator.StartGeneratingMaze(level + 5, level + 5);
     }
