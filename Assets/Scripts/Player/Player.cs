@@ -131,6 +131,10 @@ public class Player : MonoBehaviour
 
     public void ShowInteractUI(bool show)
     {
+        if (show == InteractableUI.activeSelf)
+            return;
+
+        SoundManager.PlaySound2D(SoundManager.Sound.QuietClick, 0.7f);
         InteractableUI.SetActive(show);
     }
 }

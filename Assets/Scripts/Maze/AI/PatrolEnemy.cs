@@ -95,6 +95,7 @@ public class PatrolEnemy : BaseEnemy
 
     public override void ActivateEnemy()
     {
+        SoundManager.PlaySound3D(SoundManager.Sound.Pulsating_1, transform, true, 0.1f, 1f, 40, 1f, 1.5f);
         spawnPos = transform.position;
         particleManager.StoreOriginalValues(particleSystems);
         currentState = new Idle(gameObject, agent, target.transform, mazeGenerator, patrolSpeed, followSpeed, enemyType);

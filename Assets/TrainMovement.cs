@@ -71,7 +71,7 @@ public class TrainMovement : MonoBehaviour
             yield return null;
         }
         rb.velocity = Vector2.zero; // Finally stop the train
-        Invoke("LeavingSound", 3);
+        Invoke("LeavingSound", 3.3f);
         Invoke("PrepareToLeave", 5f); // Wait for 5 seconds before leaving
     }
 

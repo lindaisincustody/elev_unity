@@ -31,7 +31,7 @@ public class SceneController : MonoBehaviour
     {
         transitionAnim.SetTrigger("End");
         dataManager.SaveScene(sceneName);
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
         transitionAnim.SetTrigger("Start");
     }
@@ -39,7 +39,7 @@ public class SceneController : MonoBehaviour
     {
         PlayerMovement playerController = FindObjectOfType<PlayerMovement>();
         transitionAnim.SetTrigger("End");
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2f);
 
         if (playerController != null)
             playerController.transform.position = new Vector3(x, y, playerController.transform.position.z);
