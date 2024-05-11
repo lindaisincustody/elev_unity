@@ -30,7 +30,8 @@ public class SceneController : MonoBehaviour
     public IEnumerator LoadScene(string sceneName)
     {
         transitionAnim.SetTrigger("End");
-        dataManager.SaveScene(sceneName);
+        if (sceneName != Constants.SceneNames.MainMenu)
+            dataManager.SaveScene(sceneName);
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
         transitionAnim.SetTrigger("Start");
