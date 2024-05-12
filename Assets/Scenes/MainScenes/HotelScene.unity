@@ -45533,8 +45533,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
+  isPopup: 0
+  newMaterial: {fileID: 0}
+  targetRenderer: {fileID: 0}
+  isDoorInteraction: 0
+  isInteractionCircle: 0
+  expAmount: 100
 --- !u!61 &1361709778
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -46553,6 +46560,10 @@ PrefabInstance:
     - target: {fileID: 5021889907224833503, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -56.545403
+      objectReference: {fileID: 0}
+    - target: {fileID: 5544791389713557244, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6397684750470102542, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
       propertyPath: m_Name
@@ -52769,7 +52780,7 @@ Transform:
   m_GameObject: {fileID: 9054320737149384884}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: -0.2, y: 4.9, z: -0.15292883}
+  m_LocalPosition: {x: -35.7, y: 7.92, z: -0.15292883}
   m_LocalScale: {x: 8.4022455, y: 9.594337, z: 9.556113}
   m_ConstrainProportionsScale: 0
   m_Children: []

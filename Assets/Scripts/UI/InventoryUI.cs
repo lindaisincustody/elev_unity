@@ -44,6 +44,9 @@ public class InventoryUI : MonoBehaviour
     float heroIntelligence;
     float heroNeutrality;
 
+    private int selectedIndex = 0;
+    private int numberOfColumns = 4;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -65,11 +68,15 @@ public class InventoryUI : MonoBehaviour
         playerInput = player.GetInputManager;
         playerMovement = player.GetPlayerMovement;
 
+        playerInput.OnNavigate += OnNavigate;
+        playerInput.OnSubmit += UseItem;
         playerInput.OnInventory += OpenInventory;
     }
 
     private void OnDestroy()
     {
+        playerInput.OnNavigate -= OnNavigate;
+        playerInput.OnSubmit -= UseItem;
         playerInput.OnInventory -= OpenInventory;
         if (Instance == this)
         {
@@ -87,6 +94,9 @@ public class InventoryUI : MonoBehaviour
         inventoryPanel.SetActive(isInventoryOpen);
         inventoryBG.SetActive(isInventoryOpen);
         playerMovement.SetMovement(!isInventoryOpen);
+        if(isInventoryOpen)
+        HighlightItem(selectedIndex);
+        else RemoveHighlight(selectedIndex);
     }
 
     public void CanOpenInventory(bool canOpen)
@@ -100,6 +110,7 @@ public class InventoryUI : MonoBehaviour
         UpdateLevels();
         UpdateGoldMultipliers();
         PopulateItems();
+        HighlightItem(0);
     }
 
     public void PopulateItems()
@@ -114,7 +125,37 @@ public class InventoryUI : MonoBehaviour
                 break;
             }
             itemSlots[slotIndex].Equip(item);
+            if (slotIndex == selectedIndex) // Highlight the selected index item
+            {
+                HighlightItem(slotIndex);
+            }
             slotIndex++;
+        }
+    }
+
+    private void UseItem()
+    {
+        if (!isInventoryOpen)
+            return;
+
+        ShopItem item = itemSlots[selectedIndex].GetItem(); // Retrieve the item from the selected slot
+        if (item == null)
+        {
+            Debug.Log("No item in the selected slot.");
+            return;
+        }
+
+        ItemsInventory.Instance.RemoveItem(item); // Remove the item from the inventory
+
+        itemSlots[selectedIndex].Clear(); // Clear the slot after removing the item
+        if (ItemsInventory.Instance.GetAllItems().Count > 0)
+        {
+            selectedIndex = Mathf.Min(selectedIndex, ItemsInventory.Instance.GetAllItems().Count - 1);
+            HighlightItem(selectedIndex);
+        }
+        else
+        {
+            //inventoryPanel.SetActive(false); 
         }
     }
 
@@ -163,6 +204,61 @@ public class InventoryUI : MonoBehaviour
     private string MultiplierFormatter(float multiplier)
     {
         return multiplier.ToString("0.00") + " x";
+    }
+
+    private void HighlightItem(int index)
+    {
+        if (index >= 0 && index < itemSlots.Length)
+            itemSlots[index].GetComponent<Image>().color = Color.blue; // Example color
+    }
+
+    private void RemoveHighlight(int index)
+    {
+        if (index >= 0 && index < itemSlots.Length)
+            itemSlots[index].GetComponent<Image>().color = Color.white; // Default color
+    }
+
+    private void OnNavigate(Vector2 direction)
+    {
+        if (!isInventoryOpen) return;
+
+        int prevIndex = selectedIndex;
+        int totalItems = ItemsInventory.Instance.GetAllItems().Count; // Assuming you only want to count filled slots.
+
+        if (direction.y > 0) // Up
+        {
+            if (selectedIndex >= numberOfColumns) // Move up a row
+                selectedIndex -= numberOfColumns;
+            else
+                selectedIndex = ((totalItems - 1) / numberOfColumns) * numberOfColumns + (selectedIndex % numberOfColumns); // Wrap to the bottom
+        }
+        else if (direction.y < 0) // Down
+        {
+            if (selectedIndex + numberOfColumns < totalItems) // Move down a row
+                selectedIndex += numberOfColumns;
+            else
+                selectedIndex = selectedIndex % numberOfColumns; // Wrap to the top
+        }
+
+        if (direction.x > 0) // Right
+        {
+            selectedIndex++;
+            if (selectedIndex >= totalItems) // Wrap to the first item
+                selectedIndex = 0;
+        }
+        else if (direction.x < 0) // Left
+        {
+            if (selectedIndex == 0) // Wrap to the last item
+                selectedIndex = totalItems - 1;
+            else
+                selectedIndex--;
+        }
+
+        if (prevIndex != selectedIndex)
+        {
+            RemoveHighlight(prevIndex);
+            HighlightItem(selectedIndex);
+        }
     }
 
 }

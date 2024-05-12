@@ -59,6 +59,20 @@ public class ItemsInventory : MonoBehaviour
         savingWrapper.SaveInventory(inventoryData);
     }
 
+    public void RemoveItem(ShopItem itemToRemove)
+    {
+        // Check if the item exists in the inventory
+        if (inventoryData.items.Contains(itemToRemove))
+        {
+            inventoryData.items.Remove(itemToRemove);
+            savingWrapper.SaveInventory(inventoryData); // Save changes
+        }
+        else
+        {
+            Debug.LogWarning("Attempted to remove an item not present in the inventory.");
+        }
+    }
+
     public List<ShopItem> GetAllItems()
     {
         return inventoryData.items;

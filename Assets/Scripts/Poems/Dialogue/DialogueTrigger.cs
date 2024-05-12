@@ -12,18 +12,31 @@ public class DialogueTrigger : Interactable
     [SerializeField] private Material newMaterial; // New material to apply after dialogue
     [SerializeField] private SpriteRenderer targetRenderer;
     [SerializeField] private bool isDoorInteraction;
+    [SerializeField] private bool isInteractionCircle;
+    [SerializeField] private ShopItem itemToAdd;
+    private bool itemAdded = false;
 
     public int expAmount = 100;
     private void OnTriggerEnter2D(Collider2D collision)
     {
+
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (!itemAdded && itemToAdd != null)
+            {
+                ItemsInventory.Instance.AddItem(itemToAdd);
+                itemAdded = true; // Set the flag to true so the item isn't added again
+            }
             playerIsInTrigger = true;
             if (isPopup)
             {
+                
+
+
                 // Automatically activate the dialogue if it's a popup
                 dialogueController.ActivateDialogue(dialogueData, this);
                 dialogueController.NextAction();
+
 
             }
             else
@@ -54,6 +67,20 @@ public class DialogueTrigger : Interactable
         {
             base.HandleInteract();
             ExperienceBar.instance.AddExperience(expAmount);
+
+            
+            if (isInteractionCircle)
+            {
+                Transform child = transform.Find("InteractionCircle");
+                if (child != null)
+                {
+                    SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
+                    if (spriteRenderer != null)
+                    {
+                        spriteRenderer.enabled = false; // Disable the SpriteRenderer
+                    }
+                }
+            }
             if (isDoorInteraction)
             {
                 // Subscribe to the stopped event
