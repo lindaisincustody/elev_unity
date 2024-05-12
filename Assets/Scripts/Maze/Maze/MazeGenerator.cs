@@ -412,4 +412,9 @@ public class MazeGenerator : MonoBehaviour
 
         return mazeGrid[x, y].transform.position;
     }
+
+    public void HideAllEnemies()
+    {
+        enemySpawner.HideEnemies();
+    }
 }

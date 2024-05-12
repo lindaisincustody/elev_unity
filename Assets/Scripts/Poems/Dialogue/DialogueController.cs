@@ -218,6 +218,7 @@ public class DialogueController : MonoBehaviour
         {
             currentText = fullText.Substring(0, i);
             dialogueText.text = currentText;
+            SoundManager.PlaySound2DRandomChanges(SoundManager.Sound.Navigate, 0.1f, 0.15f, 0.9f, 0.95f);
             yield return new WaitForSeconds(delay);
         }
     }
@@ -229,6 +230,7 @@ public class DialogueController : MonoBehaviour
         {
             currentText = fullText.Substring(0, i);
             narratorText.text = currentText;
+            SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
             yield return new WaitForSeconds(delay);
         }
     }
