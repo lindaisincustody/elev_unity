@@ -46,4 +46,9 @@ public class BaseEnemy : MonoBehaviour
     {
         throw new NotImplementedException("Please override ActivateEnemy in child class");
     }
+
+    public virtual void DisableEnemy()
+    {
+        gameObject.SetActive(false);
+    }
 }

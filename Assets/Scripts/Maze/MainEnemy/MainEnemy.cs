@@ -107,6 +107,7 @@ public class MainEnemy : BaseEnemy
 
     public override void ActivateEnemy()
     {
+        SoundManager.PlaySound3D(SoundManager.Sound.Pulsating_2, transform, true, 1f, 1f, 40, 7, 14);
         particleManager.StoreOriginalValues(particleSystems);
         Invoke("ActivateMainEnemy", rageModeCooldown);
     }
@@ -115,7 +116,10 @@ public class MainEnemy : BaseEnemy
     {
         if (collision.CompareTag("Player") && isActive)
         {
+            CancelInvoke("ActivateMainEnemy");
+            CancelInvoke("DeactivateMainEnemy");
             mazeManager.Lose();
+            gameObject.SetActive(false);
         }
     }
 }

@@ -18,5 +18,6 @@ public class Constants
         public const string MainScene = "Main";
         public const string StationScene = "StationScene";
         public const string HotelScene = "HotelScene";
+        public const string MainMenu = "MainMenu";
     }
 }
