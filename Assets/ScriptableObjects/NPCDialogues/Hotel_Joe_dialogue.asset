@@ -10,25 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
-  m_Name: MainCity_selfdialogue_1
+  m_Name: Hotel_Joe_dialogue
   m_EditorClassIdentifier: 
   dialogueType: 0
   otherCharacterName: You
   textList:
-  - lineType: 2
-    dialogueLineText: "He\u2019ll stop seeing\_ her."
-  - lineType: 2
-    dialogueLineText: "Elena \u2013 he\u2019ll stop seeing her."
+  - lineType: 1
+    dialogueLineText: "What\u2019re you so sad for today, Tony?"
   - lineType: 0
-    dialogueLineText: "Elena, I will give you a carnelian ring and an\_ abandoned
-      streetcar in Queens Plaza."
+    dialogueLineText: "A\u0161\_turiu\_apleisti\_jauuu\u2026\_That\u2019s\_how\_Valentin\u2019s\_aria\_\nbegins\_in\_Lithuanian."
+  - lineType: 1
+    dialogueLineText: What a musical language.
   - lineType: 0
-    dialogueLineText: "Elena, you will mould me a nobleman\u2019s\_ head, it\u2019s
-      in the cornice of a house on Pylimo Street, in Vilnius."
-  - lineType: 0
-    dialogueLineText: "Elena\u2026"
-  - lineType: 0
-    dialogueLineText: "don\u2019t make\_ me\_cry."
+    dialogueLineText: "Look at me, now I\u2019m an ambassador for the Lithuanian
+      nation."
   mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
   otherCharacterImage: {fileID: 21300000, guid: 48561c9dc6357f04988d1c4d45545e81, type: 3}
   activateFight: 0

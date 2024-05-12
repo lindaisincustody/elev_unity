@@ -10,25 +10,28 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
-  m_Name: MainCity_selfdialogue_1
+  m_Name: MainCity_Clothes_selfialogue
   m_EditorClassIdentifier: 
   dialogueType: 0
   otherCharacterName: You
   textList:
-  - lineType: 2
-    dialogueLineText: "He\u2019ll stop seeing\_ her."
-  - lineType: 2
-    dialogueLineText: "Elena \u2013 he\u2019ll stop seeing her."
   - lineType: 0
-    dialogueLineText: "Elena, I will give you a carnelian ring and an\_ abandoned
-      streetcar in Queens Plaza."
+    dialogueLineText: Elena, I will buy you new stockings.
   - lineType: 0
-    dialogueLineText: "Elena, you will mould me a nobleman\u2019s\_ head, it\u2019s
-      in the cornice of a house on Pylimo Street, in Vilnius."
+    dialogueLineText: "You\u2019re a bit care-less \u2013 your stockings are crooked,
+      the seam is all twisted, take them off, take them\_off."
   - lineType: 0
-    dialogueLineText: "Elena\u2026"
+    dialogueLineText: I will pull the new ones on to your legs myself.
   - lineType: 0
-    dialogueLineText: "don\u2019t make\_ me\_cry."
+    dialogueLineText: "Elena, I like saying your\_name."
+  - lineType: 0
+    dialogueLineText: To the tempo of a French waltz.
+  - lineType: 0
+    dialogueLineText: Ele-na, Ele-na, Ele-na, Ele-na, Ele-na-a.
+  - lineType: 0
+    dialogueLineText: "Thank God my fingers and toes aren\u2019t cold any more."
+  - lineType: 0
+    dialogueLineText: "Ele-na, Ele-na, Ele-na,\_Ele-na-a."
   mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
   otherCharacterImage: {fileID: 21300000, guid: 48561c9dc6357f04988d1c4d45545e81, type: 3}
   activateFight: 0
