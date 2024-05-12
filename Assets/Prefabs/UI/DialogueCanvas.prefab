@@ -15209,6 +15209,7 @@ GameObject:
   - component: {fileID: 2030925147574708090}
   - component: {fileID: 4202444951632431350}
   - component: {fileID: 7222429211234033683}
+  - component: {fileID: 2722458277087475311}
   m_Layer: 5
   m_Name: NarratorText
   m_TagString: Untagged
@@ -15332,6 +15333,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &2722458277087475311
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2790493824458116952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3c0f4276400d14d4abbec758126d89c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  waveSpeed: 5.5
+  waveFrequency: 16.52
+  waveAmplitude: 1.08
 --- !u!1 &3075647361162497439
 GameObject:
   m_ObjectHideFlags: 0

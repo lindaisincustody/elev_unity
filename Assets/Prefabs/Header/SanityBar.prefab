@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 23276845611745371}
   - component: {fileID: 8762852080788992112}
   m_Layer: 5
-  m_Name: ExperienceBar
+  m_Name: SanityBar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 505232307698590991}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9318668a09e7d0f44b749664008ae857, type: 3}
   m_Name: 
