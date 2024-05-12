@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
+  m_Name: FatherDIalogue
+  m_EditorClassIdentifier: 
+  dialogueType: 0
+  otherCharacterName: Father
+  textList:
+  - lineType: 0
+    dialogueLineText: Father?!
+  - lineType: 1
+    dialogueLineText: GET OUT OF MY FACE
+  - lineType: 0
+    dialogueLineText: What happened to you?
+  - lineType: 1
+    dialogueLineText: Get out or I will make you!
+  - lineType: 0
+    dialogueLineText: I'm sorry father. I didn't know...
+  mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
+  otherCharacterImage: {fileID: 21300000, guid: 48561c9dc6357f04988d1c4d45545e81, type: 3}
+  activateFight: 1
+  strengthGameCoinsMultiplier: 1.22
+  neutralityGameCoinsMultiplier: 1.717
+  intelligenceGameCoinsMultiplier: 1.382
+  coordinationGameCoinsMultiplier: 1.517

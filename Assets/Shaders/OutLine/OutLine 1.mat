@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: OutLine_Small
+  m_Name: OutLine 1
   m_Shader: {fileID: -6465566751694194690, guid: 51cd269cff1ef0c4b8ab91aae69f918f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7f7366cec2968dd4b87ede7447ac5eaf, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0d99937bd77c95d469537b2607f8c4c1, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -41,9 +41,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Thickness: 0
+    - _Thickness: 0.373
     m_Colors:
-    - _Color: {r: 16, g: 16, b: 16, a: 0}
+    - _Color: {r: 17.733871, g: 4.8781037, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6237148384183149611
 MonoBehaviour:

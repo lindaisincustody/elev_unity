@@ -5,9 +5,16 @@ using UnityEngine.SceneManagement;
 
 public class MiniGamesManager : MonoBehaviour
 {
+    private DataManager dataManager;
+
+    private void Awake()
+    {
+        dataManager = DataManager.Instance;
+    }
 
     public void StartMazeGame()
     {
+        dataManager.SavePosition(Player.instance.transform.position);
         SceneManager.LoadScene(Constants.SceneNames.CoordinationGameScene);
     }
 
