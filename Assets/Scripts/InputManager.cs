@@ -17,6 +17,7 @@ public class InputManager : MonoBehaviour
     public event Action OnSubmit = delegate { };
     public event Action OnUICancel = delegate { };
     public event Action OnInventory = delegate { };
+    public event Action OnPoem = delegate { };
     public Vector2 inputVector { get; private set; }
 
     Controls inputActions;
@@ -40,6 +41,7 @@ public class InputManager : MonoBehaviour
         inputActions.UI.Submit.started += Sumbit;
         inputActions.UI.Cancel.started += UICancel;
         inputActions.UI.Inventory.started += UIInventory;
+        inputActions.UI.Poem.started += UIPoem;
     }
 
     private void OnDisable()
@@ -117,6 +119,14 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             OnInventory();
+        }
+    }
+
+    private void UIPoem(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnPoem();
         }
     }
 }

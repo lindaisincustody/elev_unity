@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f124e6ce2cd06784483e3499c6f825f9, type: 3}
-  m_Name: Test2WordData
+  m_Name: Test2WordData 1
   m_EditorClassIdentifier: 
-  Poem: After _____ defeating the monster
-  WordPosition: {x: -320, y: 365}
-  oldWordPosition: {x: -320, y: 365}
+  Poem: The reward was ____. Even after the battle I felt guilt
+  WordPosition: {x: -60, y: 365}
+  oldWordPosition: {x: -60, y: 365}
   words:
   - word: brutally
     wordLength: 240
