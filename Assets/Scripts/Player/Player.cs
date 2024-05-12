@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [Header("Self-Referneces")]
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
+    [SerializeField] private GameObject poemAvailable; // Add this line
 
     private DataManager dataManager;
     public PlayerData playerData;
@@ -89,13 +90,13 @@ public class Player : MonoBehaviour
 
     public int GetExprerience()
     {
-        return playerData.currentExperience;
+        return ExperienceBar.instance.currentExperience;
     }
 
     private void HandleExperienceChange(int newExperience)
     {
         ExperienceBar.instance.currentExperience += newExperience;
-        if (playerData.currentExperience >= ExperienceBar.instance.maxExperience)
+        if (ExperienceBar.instance.currentExperience >= ExperienceBar.instance.maxExperience)
         {
             LevelUp();
         }
@@ -104,8 +105,10 @@ public class Player : MonoBehaviour
     private void LevelUp()
     {
         playerData.currentLevel++;
-        playerData.currentExperience = 0;
-        playerData.maxExperience += 100;
+        ExperienceBar.instance.currentExperience = 0;
+        ExperienceBar.instance.maxExperience += 100;
+
+        poemAvailable.SetActive(true);
     }
 
     public void AddGoldMultiplier(Attribute attribute, float multiplier)
