@@ -20,7 +20,6 @@ public class ExperienceBar : MonoBehaviour
 
     private void Awake()
     {
-        
         if (instance == null)
         {
             instance = this;

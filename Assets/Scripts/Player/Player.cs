@@ -58,6 +58,8 @@ public class Player : MonoBehaviour
         inputManager.OnPoem += OpenPoemBook;
         playerData = dataManager.GetPlayerData();
         SetUpPlayerData();
+
+        dataManager.SavePosition(transform.position);
     }
 
     private void OnDestroy()
@@ -78,9 +80,9 @@ public class Player : MonoBehaviour
     {
         _inventory.SetUpData(playerData);
         _inventory.AddGold(playerData.gold);
-        //Vector2 lastPos = playerData.lastPos;
-        //if (lastPos != null)
-        //    transform.position = lastPos;
+        Vector2 lastPos = playerData.lastPos;
+        if (lastPos != null)
+            transform.position = lastPos;
     }
 
     public void AddGold(int goldAmount)
