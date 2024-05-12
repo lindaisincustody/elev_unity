@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
     [SerializeField] private GameObject poemAvailable; // Add this line
+    [SerializeField] private WordData[] wordsData;
 
     private DataManager dataManager;
     public PlayerData playerData;
@@ -54,9 +55,16 @@ public class Player : MonoBehaviour
                 spriteRenderer.enabled = false;
             }
         }
+        inputManager.OnPoem += OpenPoemBook;
         playerData = dataManager.GetPlayerData();
         SetUpPlayerData();
     }
+
+    private void OnDestroy()
+    {
+        inputManager.OnPoem -= OpenPoemBook;
+    }
+
     private void Update()
     {
         if (SceneManager.GetActiveScene().name == "StationScene" && TrainMovement.hasArrived)
@@ -105,10 +113,27 @@ public class Player : MonoBehaviour
     private void LevelUp()
     {
         playerData.currentLevel++;
+        dataManager.SavePlayerData(playerData);
         ExperienceBar.instance.currentExperience = 0;
         ExperienceBar.instance.maxExperience += 100;
 
         poemAvailable.SetActive(true);
+    }
+
+    private void OpenPoemBook()
+    {
+        if (playerData.currentLevel > playerData.poemsUsed)
+        {
+            int poemToOpen = playerData.currentLevel;
+            if (playerData.currentLevel > wordsData.Length - 1)
+            {
+                poemToOpen = wordsData.Length - 1;
+            }
+            playerData.poemsUsed++;
+            dataManager.SavePlayerData(playerData);
+            PoemMenuController.instance.OpenPoemBook(wordsData[poemToOpen]);
+            Debug.Log(playerData.currentLevel + " " + playerData.poemsUsed);
+        }
     }
 
     public void AddGoldMultiplier(Attribute attribute, float multiplier)
@@ -151,7 +176,8 @@ public class PlayerData
 
     public int currentExperience = 0;
     public int maxExperience = 300;
-    public int currentLevel = 1;
+    public int currentLevel = 0;
+    public int poemsUsed = 0;
 
     public float heroStrength;
     public float heroCoordination;

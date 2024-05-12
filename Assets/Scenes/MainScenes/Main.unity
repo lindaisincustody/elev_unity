@@ -463,6 +463,7 @@ MonoBehaviour:
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
+  itemToAdd: {fileID: 0}
   expAmount: 100
 --- !u!114 &36409481
 MonoBehaviour:
@@ -3430,6 +3431,10 @@ PrefabInstance:
       propertyPath: sceneName
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 4466439560413038523, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5262561257987133797, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_Name
       value: teleporter
@@ -3439,12 +3444,20 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 4.7322497
+      objectReference: {fileID: 0}
+    - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 6.09912
+      objectReference: {fileID: 0}
+    - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.59
+      value: 3.39
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.64
+      value: 1.23
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3452,7 +3465,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalRotation.x
@@ -3464,7 +3477,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3476,7 +3489,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -12144,6 +12157,7 @@ MonoBehaviour:
   targetRenderer: {fileID: 1069959283}
   isDoorInteraction: 1
   isInteractionCircle: 1
+  itemToAdd: {fileID: 0}
   expAmount: 100
 --- !u!61 &1069959287
 BoxCollider2D:
@@ -14169,6 +14183,7 @@ MonoBehaviour:
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
+  itemToAdd: {fileID: 0}
   expAmount: 100
 --- !u!1 &1308701591
 GameObject:
@@ -14855,6 +14870,10 @@ PrefabInstance:
     - target: {fileID: 2618519904267588422, guid: 6c652134cdaab43448c4bb189e98ad8b, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3771312559036492636, guid: 6c652134cdaab43448c4bb189e98ad8b, type: 3}
+      propertyPath: sendRequests
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3994184836114717676, guid: 6c652134cdaab43448c4bb189e98ad8b, type: 3}
       propertyPath: m_Pivot.x
@@ -16116,6 +16135,7 @@ MonoBehaviour:
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 1
+  itemToAdd: {fileID: 0}
   expAmount: 100
 --- !u!61 &1447984681
 BoxCollider2D:
@@ -22075,6 +22095,7 @@ MonoBehaviour:
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
+  itemToAdd: {fileID: 0}
   expAmount: 100
 --- !u!61 &2006065280
 BoxCollider2D:
