@@ -80,9 +80,9 @@ public class Player : MonoBehaviour
     {
         _inventory.SetUpData(playerData);
         _inventory.AddGold(playerData.gold);
-        Vector2 lastPos = playerData.lastPos;
-        if (lastPos != null)
-            transform.position = lastPos;
+        //Vector2 lastPos = playerData.lastPos;
+        //if (lastPos != null)
+        //    transform.position = lastPos;
     }
 
     public void AddGold(int goldAmount)
