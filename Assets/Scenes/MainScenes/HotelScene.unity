@@ -311,6 +311,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2522071070326896256, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1579631991}
     - target: {fileID: 4374337027665353721, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -405,6 +409,28 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3028760963197185609, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
   m_PrefabInstance: {fileID: 226157191}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &226157193 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4497085372729849235, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+  m_PrefabInstance: {fileID: 226157191}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &226157194 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2420726787931653603, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+  m_PrefabInstance: {fileID: 226157191}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &261597894
 GameObject:
   m_ObjectHideFlags: 0
@@ -39240,6 +39266,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 892616029765692812, guid: 920675c092cda04479c0e6d0f13f419b, type: 3}
+      propertyPath: itemIcon
+      value: 
+      objectReference: {fileID: 226157194}
+    - target: {fileID: 892616029765692812, guid: 920675c092cda04479c0e6d0f13f419b, type: 3}
       propertyPath: inventory
       value: 
       objectReference: {fileID: 0}
@@ -39251,6 +39281,14 @@ PrefabInstance:
       propertyPath: playerMovement
       value: 
       objectReference: {fileID: 1856156264}
+    - target: {fileID: 892616029765692812, guid: 920675c092cda04479c0e6d0f13f419b, type: 3}
+      propertyPath: effectDurationText
+      value: 
+      objectReference: {fileID: 226157193}
+    - target: {fileID: 892616029765692812, guid: 920675c092cda04479c0e6d0f13f419b, type: 3}
+      propertyPath: postProcessingVolume
+      value: 
+      objectReference: {fileID: 344273427}
     - target: {fileID: 960554848993834609, guid: 920675c092cda04479c0e6d0f13f419b, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0

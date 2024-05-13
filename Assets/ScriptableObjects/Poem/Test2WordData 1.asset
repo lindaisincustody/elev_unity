@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f124e6ce2cd06784483e3499c6f825f9, type: 3}
   m_Name: Test2WordData 1
   m_EditorClassIdentifier: 
-  Poem: The reward was ____. Even after the battle I felt guilt
-  WordPosition: {x: -60, y: 365}
-  oldWordPosition: {x: -60, y: 365}
+  Poem: The waves crashed _____ <br> against the silent shore.
+  WordPosition: {x: -290, y: 320}
+  oldWordPosition: {x: -290, y: 320}
   words:
   - word: brutally
     wordLength: 240

@@ -155,6 +155,7 @@ public class InventoryUI : MonoBehaviour
 
         itemIcon.sprite = item.sprite;  // Assuming each ShopItem has a Sprite property 'Icon'
         itemIcon.gameObject.SetActive(true);  // Ensure the icon is visible
+        effectDurationText.gameObject.SetActive(true);
 
         ItemsInventory.Instance.RemoveItem(item); // Remove the item from the inventory
 
@@ -204,7 +205,8 @@ public class InventoryUI : MonoBehaviour
             chromaticAberration.intensity.value = 0f;
             lensDistortion.intensity.value = 0f;
             effectDurationText.text = "Effect Duration: 0.0s";
-            itemIcon.gameObject.SetActive(false);  // Hide the item icon
+            itemIcon.gameObject.SetActive(false);
+            effectDurationText.gameObject.SetActive(false);// Hide the item icon
         }
     }
 

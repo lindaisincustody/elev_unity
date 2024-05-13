@@ -109,6 +109,7 @@ public class Player : MonoBehaviour
 
     private void OpenPoemBook()
     {
+        poemAvailable.SetActive(false);
         if (playerData.currentLevel > playerData.poemsUsed)
         {
             int poemToOpen = playerData.currentLevel;
