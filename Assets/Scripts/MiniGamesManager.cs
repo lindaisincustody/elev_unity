@@ -14,22 +14,25 @@ public class MiniGamesManager : MonoBehaviour
 
     public void StartMazeGame()
     {
-        dataManager.SavePosition(Player.instance.transform.position);
+        Player.instance.SaveCurrentScenePosition();
         SceneManager.LoadScene(Constants.SceneNames.CoordinationGameScene);
     }
 
     public void StartNeutralityGame()
     {
+        Player.instance.SaveCurrentScenePosition();
         SceneManager.LoadScene(Constants.SceneNames.NeutralityGameScene);
     }
 
     public void StartIntelligenceGame()
     {
+        Player.instance.SaveCurrentScenePosition();
         SceneManager.LoadScene(Constants.SceneNames.IntelligenceGameScene);
     }
 
     public void StartStrengthGame()
     {
+        Player.instance.SaveCurrentScenePosition();
         SceneManager.LoadScene(Constants.SceneNames.StrengthGameScene);
     }
 }

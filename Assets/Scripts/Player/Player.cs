@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
 {
     [SerializeField] GameObject InteractableUI;
     [Header("Self-Referneces")]
+    [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
     [SerializeField] private GameObject poemAvailable; // Add this line
@@ -47,19 +48,9 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name == "StationScene")
-        {
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                spriteRenderer.enabled = false;
-            }
-        }
         inputManager.OnPoem += OpenPoemBook;
         playerData = dataManager.GetPlayerData();
         SetUpPlayerData();
-
-        dataManager.SavePosition(transform.position);
     }
 
     private void OnDestroy()
@@ -67,22 +58,16 @@ public class Player : MonoBehaviour
         inputManager.OnPoem -= OpenPoemBook;
     }
 
-    private void Update()
-    {
-        if (SceneManager.GetActiveScene().name == "StationScene" && TrainMovement.hasArrived)
-        {
-            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-            spriteRenderer.enabled = true;
-        }
-    }
-
     private void SetUpPlayerData()
     {
         _inventory.SetUpData(playerData);
         _inventory.AddGold(playerData.gold);
-        //Vector2 lastPos = playerData.lastPos;
-        //if (lastPos != null)
-        //    transform.position = lastPos;
+
+        Vector3? savedPosition = GetSavedScenePosition();
+        if (savedPosition.HasValue)
+        {
+            transform.position = savedPosition.Value;
+        }
     }
 
     public void AddGold(int goldAmount)
@@ -134,7 +119,6 @@ public class Player : MonoBehaviour
             playerData.poemsUsed++;
             dataManager.SavePlayerData(playerData);
             PoemMenuController.instance.OpenPoemBook(wordsData[poemToOpen]);
-            Debug.Log(playerData.currentLevel + " " + playerData.poemsUsed);
         }
     }
 
@@ -167,13 +151,44 @@ public class Player : MonoBehaviour
         SoundManager.PlaySound2D(SoundManager.Sound.QuietClick, 0.7f);
         InteractableUI.SetActive(show);
     }
+
+    public void ShowPlayer(bool show)
+    {
+        spriteRenderer.enabled = show;
+    }
+
+    public void SaveCurrentScenePosition()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        var scenePosition = playerData.scenePositions.Find(sp => sp.sceneName == currentScene);
+        if (scenePosition != null)
+        {
+            scenePosition.lastPos = transform.position;
+        }
+        else
+        {
+            playerData.scenePositions.Add(new ScenePosition { sceneName = currentScene, lastPos = transform.position });
+        }
+        dataManager.SavePlayerData(playerData);
+    }
+
+    // Method to get the saved position for the current scene
+    public Vector3? GetSavedScenePosition()
+    {
+        string currentScene = SceneManager.GetActiveScene().name;
+        var scenePosition = playerData.scenePositions.Find(sp => sp.sceneName == currentScene);
+        if (scenePosition != null)
+        {
+            return scenePosition.lastPos;
+        }
+        return null;
+    }
 }
 
 public class PlayerData
 {
     public string lastScene;
-    public Vector2 lastPos;
-    
+
     public int gold;
 
     public int currentExperience = 0;
@@ -190,5 +205,14 @@ public class PlayerData
     public int CoordinationLevel;
     public int IntelligenceLevel;
     public int NeutralityLevel;
+
+    public List<ScenePosition> scenePositions = new List<ScenePosition>();
+    public bool tutorialComplete = false;
 }
 
+[System.Serializable]
+public class ScenePosition
+{
+    public string sceneName;
+    public Vector3 lastPos;
+}

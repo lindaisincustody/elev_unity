@@ -30,8 +30,9 @@ public class SceneController : MonoBehaviour
     public IEnumerator LoadScene(string sceneName)
     {
         transitionAnim.SetTrigger("End");
-        if (sceneName != Constants.SceneNames.MainMenu)
-            dataManager.SaveScene(sceneName);
+        if (Player.instance != null)
+            Player.instance.SaveCurrentScenePosition();
+        DataManager.Instance.SaveScene(sceneName);
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
         transitionAnim.SetTrigger("Start");
@@ -44,7 +45,8 @@ public class SceneController : MonoBehaviour
 
         if (playerController != null)
             playerController.transform.position = new Vector3(x, y, playerController.transform.position.z);
-        dataManager.SavePosition(playerController.transform.position);
+        if (Player.instance != null)
+            Player.instance.SaveCurrentScenePosition();
         transitionAnim.SetTrigger("Start");
     }
 }

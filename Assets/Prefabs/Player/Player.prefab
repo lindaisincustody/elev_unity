@@ -233,6 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractableUI: {fileID: 8420326837088205274}
+  spriteRenderer: {fileID: 2226871447008519275}
   playerMovement: {fileID: 7905350812563266831}
   inputManager: {fileID: 614701009068581888}
   poemAvailable: {fileID: 0}
