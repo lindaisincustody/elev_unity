@@ -38,16 +38,16 @@ public class NeutralityManager : MonoBehaviour
     {
         Debug.Log("You Won");
         scoreToWin++;
-       // int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
-       // level++;
+        // int level = PlayerPrefs.GetInt(Constants.PlayerPrefs.NeutralityLevel);
+        // level++;
         //PlayerPrefs.SetInt(Constants.PlayerPrefs.NeutralityLevel, level);
-        SceneManager.LoadScene(Constants.SceneNames.MainScene);
+        SceneManager.LoadScene(DataManager.Instance.GetLastScene());
     }
 
     public void Lose()
     {
         Debug.Log("You Lost");
-        SceneManager.LoadScene(Constants.SceneNames.MainScene);
+        SceneManager.LoadScene(DataManager.Instance.GetLastScene());
     }
 
     public int GetScoreToWin()

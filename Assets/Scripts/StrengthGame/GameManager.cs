@@ -47,14 +47,14 @@ public class GameManager : MonoBehaviour
             dataManager.AddLevel(Attribute.Strength);
             Debug.Log("You Won!");
             BattlePlayerController.isPlaying = false;
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            SceneManager.LoadScene(DataManager.Instance.GetLastScene());
         }
 
         if (heartController.hp <= 0)
         {
             Debug.Log("You Lost!");
             BattlePlayerController.isPlaying = false;
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            SceneManager.LoadScene(DataManager.Instance.GetLastScene());
         }
 
     }
