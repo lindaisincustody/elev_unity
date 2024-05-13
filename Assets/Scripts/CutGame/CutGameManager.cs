@@ -22,7 +22,7 @@ public class CutGameManager : MonoBehaviour
     [SerializeField] Color winColor;
     [Header("Parameters")]
     public int totalFruitsToSpawn = 5;
-    public float precision = 10f;
+    public float precision = 50f;
 
     private float delay = 1f;
     private int spawnedFruits = 0;

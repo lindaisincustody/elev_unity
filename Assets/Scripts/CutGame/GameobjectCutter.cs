@@ -49,6 +49,7 @@ public class GameobjectCutter : MonoBehaviour
             ObjectToCut filter = hit.gameObject.GetComponent<ObjectToCut>();
             if (filter != null && filter.Cut() != null)
             {
+                SoundManager.PlaySound2D(SoundManager.Sound.Cut);
                 cutter.Cut(hit.gameObject, pointInPlane, cutPlaneNormal);   
                 break;
             }

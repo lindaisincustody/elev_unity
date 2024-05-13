@@ -15,7 +15,9 @@ public static class SoundManager
         QuietClick,
         HeartBeat,
         Pulsating_1,
-        Pulsating_2
+        Pulsating_2,
+        ShopBackground,
+        Cut
     }
 
     private static Dictionary<Sound, float> soundTimerDictionary;
