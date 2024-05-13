@@ -12,17 +12,32 @@ public class TrainMovement : MonoBehaviour
     public static bool hasArrived = false; // To check if the train has arrived
     private bool leaveStation = false; // To check if the train should start leaving
     public CameraShake cameraShake; // Reference to the CameraShake script
+    private bool active = true;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
         currentVelocity = initialSpeed; // Initialize current velocity
         cameraShake = Camera.main.GetComponent<CameraShake>(); // Get the CameraShake component from the main camera
-        SoundManager.PlaySound2D(SoundManager.Sound.TrainComing);
+        if (DataManager.Instance.GetPlayerData().tutorialComplete)
+        {
+            Player.instance.ShowPlayer(true);
+            gameObject.SetActive(false);
+            active = false;
+        }
+        else
+        {
+            Player.instance.ShowPlayer(false);
+            DataManager.Instance.CompleteTutorial();
+            SoundManager.PlaySound2D(SoundManager.Sound.TrainComing);
+        }
     }
 
     void FixedUpdate()
     {
+        if (!active)
+            return;
+
         // Move the train towards the station
         if (!hasArrived && transform.position.x - stopOvershoot > arrivalX + stopOvershoot)
         {
@@ -82,6 +97,7 @@ public class TrainMovement : MonoBehaviour
 
     void PrepareToLeave()
     {
+        Player.instance.ShowPlayer(true);
         leaveStation = true;
         currentVelocity = initialSpeed / 2; // Start leaving at half the initial speed
         rb.velocity = new Vector2(currentVelocity, 0);

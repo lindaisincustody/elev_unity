@@ -144,6 +144,8 @@ public static class SoundManager
         if (oneShotGameObject == null)
         {
             oneShotGameObject = new GameObject("One Shot Sound");
+            if (oneShotGameObject == null)
+                return;
             oneShotGameObject.transform.parent = audioHolder.transform;
             oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
         }
