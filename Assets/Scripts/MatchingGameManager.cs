@@ -219,12 +219,12 @@ public class GameController : MonoBehaviour
                 ActualGameLevel++;
                 dataManager.AddLevel(Attribute.Intelligence);
                 Debug.Log("You won!");
-                SceneManager.LoadScene(Constants.SceneNames.MainScene);
+                SceneManager.LoadScene(DataManager.Instance.GetLastScene());
             }
             else
             {
                 Debug.Log("You Lost!");
-                SceneManager.LoadScene(Constants.SceneNames.MainScene);
+                SceneManager.LoadScene(DataManager.Instance.GetLastScene());
             }
         }
     }

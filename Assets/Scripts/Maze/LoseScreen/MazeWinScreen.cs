@@ -27,7 +27,7 @@ public class MazeWinScreen : MonoBehaviour
     {
         if (GoBackText.activeSelf)
         {
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            SceneManager.LoadScene(DataManager.Instance.GetLastScene());
         }
     }
 
