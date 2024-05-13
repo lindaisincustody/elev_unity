@@ -17,31 +17,31 @@ MonoBehaviour:
   oldWordPosition: {x: -290, y: 207.5}
   words:
   - word: brutally
-    wordLength: 240
+    wordLength: 260
     strengthWeight: 1
     intelligenceWeight: 0
     coordinationWeight: 0.144
     neutralWeight: 0
-  - word: mercilessly
-    wordLength: 270
+  - word: nicely
+    wordLength: 230
     strengthWeight: 1
     intelligenceWeight: 0
     coordinationWeight: 0
     neutralWeight: 0
   - word: fearlessly
-    wordLength: 250
+    wordLength: 280
     strengthWeight: 1
     intelligenceWeight: 0
     coordinationWeight: 0.149
     neutralWeight: 0
   - word: nervously
-    wordLength: 250
+    wordLength: 290
     strengthWeight: 0
     intelligenceWeight: 0
     coordinationWeight: 0
     neutralWeight: 0.787
   - word: quickly
-    wordLength: 240
+    wordLength: 250
     strengthWeight: 0
     intelligenceWeight: 0.477
     coordinationWeight: 0.708
@@ -53,19 +53,19 @@ MonoBehaviour:
     coordinationWeight: 0.698
     neutralWeight: 0
   - word: fashionly
-    wordLength: 300
+    wordLength: 280
     strengthWeight: 0
     intelligenceWeight: 0
     coordinationWeight: 0.59
     neutralWeight: 0.579
   - word: magically
-    wordLength: 250
+    wordLength: 290
     strengthWeight: 0
     intelligenceWeight: 0.161
     coordinationWeight: 0
     neutralWeight: 1
   - word: amazingly
-    wordLength: 250
+    wordLength: 280
     strengthWeight: 0
     intelligenceWeight: 0.2
     coordinationWeight: 1
