@@ -209,6 +209,7 @@ public class PlayerData
 
     public List<ScenePosition> scenePositions = new List<ScenePosition>();
     public bool tutorialComplete = false;
+    public float pillTimeLeft = 0;
 }
 
 [System.Serializable]
