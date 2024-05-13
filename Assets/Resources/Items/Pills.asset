@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2259d99ad868ee64d9981c0db9a68ae0, type: 3}
   m_Name: Pills
   m_EditorClassIdentifier: 
-  itemId: 8901f4b7-9dc2-4103-8b63-15ba97635373
-  itemName: Fish
+  itemId: 1
+  itemName: Pill
   description: Medicine pills.
   sprite: {fileID: -1556781683, guid: daa0ae379432b294fbfba1739ae8496a, type: 3}
   item: {fileID: 11400000, guid: 8dfed0013d6a3ef43b239765a3399f0e, type: 2}

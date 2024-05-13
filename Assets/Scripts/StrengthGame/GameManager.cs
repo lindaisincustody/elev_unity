@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     {
         Heart heartController = FindObjectOfType<Heart>();
 
-        if (score >= 500)
+        if (score >= 3)
         {
             GameLevel++;
             dataManager.AddLevel(Attribute.Strength);
