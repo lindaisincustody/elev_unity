@@ -14,7 +14,9 @@ public class PauseMenu : MonoBehaviour
 
     private void Start()
     {
-        playerInput = Player.instance.GetInputManager;
+        if (Player.instance != null)
+            playerInput = Player.instance.GetInputManager;
+        playerInput = FindObjectOfType<InputManager>();
         playerInput.OnCancel += PauseGame;
     }
 
