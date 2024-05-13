@@ -23517,6 +23517,10 @@ PrefabInstance:
       propertyPath: poemAvailable
       value: 
       objectReference: {fileID: 691894322}
+    - target: {fileID: 938505823323063305, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: wordsData.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
     - target: {fileID: 2226871447008519275, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_Enabled
       value: 1

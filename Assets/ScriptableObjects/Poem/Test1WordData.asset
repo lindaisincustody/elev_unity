@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f124e6ce2cd06784483e3499c6f825f9, type: 3}
   m_Name: Test1WordData
   m_EditorClassIdentifier: 
-  Poem: And Then I _____ <br>looked at the monster
-  WordPosition: {x: -150, y: 365}
-  oldWordPosition: {x: -150, y: 365}
+  Poem: In the moon's silver glow, <br> the night whispered <br>  _____
+  WordPosition: {x: -290, y: 207.5}
+  oldWordPosition: {x: -290, y: 207.5}
   words:
   - word: cautiously
     wordLength: 260
