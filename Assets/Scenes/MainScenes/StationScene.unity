@@ -27760,6 +27760,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerImage
       objectReference: {fileID: 0}
+    - target: {fileID: 2522071070326896256, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1579631991}
     - target: {fileID: 4374337027665353721, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
       propertyPath: m_Pivot.x
       value: 0
