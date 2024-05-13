@@ -23,7 +23,7 @@ MonoBehaviour:
     dialogueLineText: Okay, bum...
   mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
   otherCharacterImage: {fileID: 21300000, guid: 7f7366cec2968dd4b87ede7447ac5eaf, type: 3}
-  activateFight: 0
+  activateFight: 1
   strengthGameCoinsMultiplier: 1
   neutralityGameCoinsMultiplier: 2
   intelligenceGameCoinsMultiplier: 1.491

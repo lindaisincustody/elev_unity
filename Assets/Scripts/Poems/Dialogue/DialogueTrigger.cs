@@ -16,7 +16,7 @@ public class DialogueTrigger : Interactable
     [SerializeField] private ShopItem itemToAdd;
     private bool itemAdded = false;
 
-    public int expAmount = 100;
+    private int expAmount = 150;
     private void OnTriggerEnter2D(Collider2D collision)
     {
 
