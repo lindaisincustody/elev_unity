@@ -37,7 +37,7 @@ public class CutGameManager : MonoBehaviour
     private void Start()
     {
         dataManager = DataManager.Instance;
-        totalFruitsToSpawn = dataManager.GetLevel(Attribute.Neutrality);
+        totalFruitsToSpawn = dataManager.GetLevel(Attribute.Neutrality) + 1;
 
         cutter.Init(OnCut);
         cutter.EnableCutting();
