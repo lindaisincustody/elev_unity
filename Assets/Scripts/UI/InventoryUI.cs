@@ -55,6 +55,8 @@ public class InventoryUI : MonoBehaviour
     private int selectedIndex = 0;
     private int numberOfColumns = 4;
 
+    public float savedDuration = 0;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -79,6 +81,14 @@ public class InventoryUI : MonoBehaviour
         playerInput.OnNavigate += OnNavigate;
         playerInput.OnSubmit += UseItem;
         playerInput.OnInventory += OpenInventory;
+
+        float pilltimeleft = dataManager.GetPlayerData().pillTimeLeft;
+
+        if (pilltimeleft > 0)
+        {
+            itemIcon.gameObject.SetActive(true);
+            StartCoroutine(ApplyTrippyEffects(pilltimeleft));
+        }
     }
 
     private void OnDestroy()
@@ -169,12 +179,12 @@ public class InventoryUI : MonoBehaviour
         {
             //inventoryPanel.SetActive(false); 
         }
-        StartCoroutine(ApplyTrippyEffects());
+        StartCoroutine(ApplyTrippyEffects(60));
     }
 
-    private IEnumerator ApplyTrippyEffects()
+    private IEnumerator ApplyTrippyEffects(float duration)
     {
-        float duration = 60f;  // Total duration of the effect
+  // Total duration of the effect
         float elapsed = 0f;
 
         ChromaticAberration chromaticAberration = null;
@@ -192,7 +202,7 @@ public class InventoryUI : MonoBehaviour
             {
                 float remainingTime = duration - elapsed;
                 effectDurationText.text = $"Effect Duration: {remainingTime.ToString("0.0")}s";  // Update the duration text
-
+                savedDuration = remainingTime;
                 float sinusoidalFactor = Mathf.Sin(2 * Mathf.PI * frequencyMultiplier * elapsed / duration);
                 chromaticAberration.intensity.value = (sinusoidalFactor + 1f) / 2 * maxChromaticIntensity;
                 lensDistortion.intensity.value = sinusoidalFactor * (maxLensDistortion - minLensDistortion) / 2 + (maxLensDistortion + minLensDistortion) / 2;

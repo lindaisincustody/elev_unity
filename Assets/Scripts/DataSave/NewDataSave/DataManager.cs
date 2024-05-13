@@ -61,6 +61,12 @@ public class DataManager : MonoBehaviour
         return _inventory;
     }
 
+    public void SavePillTime()
+    {
+        playerData.pillTimeLeft = InventoryUI.Instance.savedDuration;
+        SavePlayerData(playerData);
+    }
+
     public void CompleteTutorial()
     {
         playerData.tutorialComplete = true;
