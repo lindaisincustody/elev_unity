@@ -45844,7 +45844,6 @@ MonoBehaviour:
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
-  expAmount: 100
 --- !u!61 &1361709778
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -47447,11 +47446,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1.11
+      value: 3.97
       objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.74
+      value: -3.55
       objectReference: {fileID: 0}
     - target: {fileID: 7495908359777589927, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_LocalPosition.z
