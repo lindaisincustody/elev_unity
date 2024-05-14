@@ -20,7 +20,6 @@ public class Cutter : MonoBehaviour
         if (isBusy)
             return;
 
-        //Debug.Log($"Point: {contactPoint} Normal: {cutNormal}");
         isBusy = true;
 
         Plane cutPlane = new Plane(originalGameObject.transform.InverseTransformDirection(-cutNormal), originalGameObject.transform.InverseTransformPoint(contactPoint));

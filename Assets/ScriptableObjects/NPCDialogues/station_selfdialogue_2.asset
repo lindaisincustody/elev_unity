@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
   m_Name: station_selfdialogue_2
   m_EditorClassIdentifier: 
+  dialogueType: 1
   otherCharacterName: You
   textList:
   - isYourText: 1

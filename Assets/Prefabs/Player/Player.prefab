@@ -180,11 +180,13 @@ MonoBehaviour:
   moveSpeed: 2.5
   rb: {fileID: 6418275811729181238}
   animator: {fileID: 6330455195613800542}
+  doorObj: {fileID: 0}
   moveSound: {fileID: 6117977592564839130}
   maxPitch: 0.85
   minPitch: 0.65
   stepTimingAdjustment: 0.95
   stepInterval: 0.435
+  isInteracting: 0
 --- !u!95 &6330455195613800542
 Animator:
   serializedVersion: 5
@@ -231,8 +233,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractableUI: {fileID: 8420326837088205274}
+  spriteRenderer: {fileID: 2226871447008519275}
   playerMovement: {fileID: 7905350812563266831}
   inputManager: {fileID: 614701009068581888}
+  poemAvailable: {fileID: 0}
+  wordsData:
+  - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
+  - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
+  - {fileID: 11400000, guid: ff08f7d0b0c6c2046909fde5f131fcfe, type: 2}
+  - {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
 --- !u!1 &5795484339065585095
 GameObject:
   m_ObjectHideFlags: 0

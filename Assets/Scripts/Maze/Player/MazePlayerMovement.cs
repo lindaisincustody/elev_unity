@@ -11,6 +11,9 @@ public class MazePlayerMovement : MonoBehaviour
     public float boostDecay = 2f;  // Adjust this value to control how quickly the boost decays
     public float boostDuration = 2f;
     public Rigidbody2D rb;
+    public Animator animator;
+
+    public AudioSource moveSound; // AudioSource to manage movement sounds
 
     public InputManager playerInput;
     public MazeManager mazeManager;
@@ -21,6 +24,13 @@ public class MazePlayerMovement : MonoBehaviour
     private DistanceJoint2D joint;
 
     private bool isLeashed = false;
+    private bool isMoving = false;
+    private int stepsTaken = 0;
+
+    private float maxPitch = 0.85f;
+    private float minPitch = 0.65f;
+    private float stepTimingAdjustment = 0.95f;
+    private float stepInterval = 0.1f;
 
     private void Awake()
     {
@@ -30,6 +40,14 @@ public class MazePlayerMovement : MonoBehaviour
 
         joint = GetComponent<DistanceJoint2D>();
         leashRenderer = GetComponent<LineRenderer>();
+        if (moveSound != null)
+        {
+            moveSound.loop = true;
+        }
+        else
+        {
+            Debug.LogWarning("Move sound AudioSource is not assigned!");
+        }
     }
 
     void Update()
@@ -38,8 +56,74 @@ public class MazePlayerMovement : MonoBehaviour
             return;
         movement = playerInput.inputVector;
 
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
+
         if (isLeashed)
             leashRenderer.SetPosition(0, transform.position);
+
+        if (movement != Vector2.zero)
+        {
+            if (!isMoving)
+            {
+                StartMovementSound();
+                isMoving = true;
+            }
+            AdjustSoundProperties();
+        }
+        else if (isMoving)
+        {
+            StopMovementSound();
+            isMoving = false;
+        }
+    }
+    private IEnumerator PlayStepSound()
+    {
+        stepsTaken++;
+        if (stepsTaken % 2 == 0)
+        {
+            moveSound.pitch *= stepTimingAdjustment;
+        }
+        else
+        {
+            moveSound.pitch = Mathf.Lerp(minPitch, maxPitch, movement.magnitude / moveSpeed);
+        }
+
+        moveSound.Play();
+
+        yield return new WaitForSeconds(stepInterval);
+
+        if (isMoving)
+        {
+            StartCoroutine(PlayStepSound());
+        }
+    }
+
+    private void StartMovementSound()
+    {
+        if (moveSound != null && !isMoving)
+        {
+            stepsTaken = 0;
+            StartCoroutine(PlayStepSound());
+        }
+    }
+
+    private void StopMovementSound()
+    {
+        if (moveSound != null && isMoving)
+        {
+            moveSound.Stop();
+            StopAllCoroutines(); // Stop the coroutine when the player stops moving
+        }
+    }
+
+    private void AdjustSoundProperties()
+    {
+        if (moveSound != null && stepsTaken % 2 != 0)
+        {
+            moveSound.pitch = Mathf.Lerp(minPitch, maxPitch, movement.magnitude / moveSpeed);
+        }
     }
 
     void FixedUpdate()

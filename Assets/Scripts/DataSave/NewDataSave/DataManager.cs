@@ -55,16 +55,23 @@ public class DataManager : MonoBehaviour
         return playerData;
     }
 
-    public Vector2 GetLastPos()
-    {
-        return playerData.lastPos;
-    }
 
     public InventoryData GetInventoryData()
     {
         return _inventory;
     }
 
+    public void SavePillTime()
+    {
+        playerData.pillTimeLeft = InventoryUI.Instance.savedDuration;
+        SavePlayerData(playerData);
+    }
+
+    public void CompleteTutorial()
+    {
+        playerData.tutorialComplete = true;
+        SavePlayerData(playerData);
+    }
 
     public string GetLastScene()
     {
@@ -80,12 +87,6 @@ public class DataManager : MonoBehaviour
     public void SaveScene(string scene)
     {
         playerData.lastScene = scene;
-        SavePlayerData(playerData);
-    }
-
-    public void SavePosition(Vector2 pos)
-    {
-        playerData.lastPos = pos;
         SavePlayerData(playerData);
     }
 

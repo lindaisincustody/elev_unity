@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f124e6ce2cd06784483e3499c6f825f9, type: 3}
+  m_Name: Test2WordData 1
+  m_EditorClassIdentifier: 
+  Poem: The waves crashed _____ <br> against the silent shore.
+  WordPosition: {x: -290, y: 320}
+  oldWordPosition: {x: -290, y: 320}
+  words:
+  - word: brutally
+    wordLength: 260
+    strengthWeight: 1
+    intelligenceWeight: 0
+    coordinationWeight: 0.144
+    neutralWeight: 0
+  - word: nicely
+    wordLength: 230
+    strengthWeight: 1
+    intelligenceWeight: 0
+    coordinationWeight: 0
+    neutralWeight: 0
+  - word: fearlessly
+    wordLength: 280
+    strengthWeight: 1
+    intelligenceWeight: 0
+    coordinationWeight: 0.149
+    neutralWeight: 0
+  - word: nervously
+    wordLength: 290
+    strengthWeight: 0
+    intelligenceWeight: 0
+    coordinationWeight: 0
+    neutralWeight: 0.787
+  - word: quickly
+    wordLength: 250
+    strengthWeight: 0
+    intelligenceWeight: 0.477
+    coordinationWeight: 0.708
+    neutralWeight: 0
+  - word: swiftly
+    wordLength: 230
+    strengthWeight: 0
+    intelligenceWeight: 0.771
+    coordinationWeight: 0.698
+    neutralWeight: 0
+  - word: fashionly
+    wordLength: 280
+    strengthWeight: 0
+    intelligenceWeight: 0
+    coordinationWeight: 0.59
+    neutralWeight: 0.579
+  - word: magically
+    wordLength: 290
+    strengthWeight: 0
+    intelligenceWeight: 0.161
+    coordinationWeight: 0
+    neutralWeight: 1
+  - word: amazingly
+    wordLength: 280
+    strengthWeight: 0
+    intelligenceWeight: 0.2
+    coordinationWeight: 1
+    neutralWeight: 0

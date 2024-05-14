@@ -198,7 +198,7 @@
                 {
                     "name": "",
                     "id": "7d906ffa-05b5-4548-a85a-4cfc7d554213",
-                    "path": "<Keyboard>/q",
+                    "path": "<Keyboard>/backquote",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -265,6 +265,15 @@
                     "name": "Inventory",
                     "type": "Button",
                     "id": "25eaf02f-d1b5-47f8-b840-d057f4b01992",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Poem",
+                    "type": "Button",
+                    "id": "ee2537fc-9f1d-4094-b0b3-aad8740d2ab5",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -566,6 +575,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "Inventory",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9b5b31c0-ddb2-428d-8bc6-1819d418623c",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Poem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

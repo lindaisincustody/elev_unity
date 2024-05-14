@@ -8,51 +8,51 @@ using UnityEngine.SceneManagement;
 public class CutGameManager : MonoBehaviour
 {
     [Header("Prefabs")]
-    [SerializeField] public  FruitSpritesData fruitsList;
-    [SerializeField] public Image fruitImagePrefab;
-    [SerializeField] public Transform fruitImageHolder;
+    [SerializeField] FruitSpritesData fruitsList;
+    [SerializeField] Image fruitImagePrefab;
+    [SerializeField] Transform fruitImageHolder;
     [Header("References")]
-    [SerializeField] public CutGameEndScreen endScreen;
-    [SerializeField] public Transform objectsHolder;
-    [SerializeField] public GameobjectCutter cutter;
-    [SerializeField] public WeightCalculator calculator;
+    [SerializeField] CutGameEndScreen endScreen;
+    [SerializeField] Transform objectsHolder;
+    [SerializeField] GameobjectCutter cutter;
+    [SerializeField] WeightCalculator calculator;
     [Header("Precision")]
-    [SerializeField] public Scales precisionText;
-    [SerializeField] public Color loseColor;
-    [SerializeField] public Color winColor;
+    [SerializeField] Scales precisionText;
+    [SerializeField] Color loseColor;
+    [SerializeField] Color winColor;
     [Header("Parameters")]
     public int totalFruitsToSpawn = 5;
-    public float precision = 10f;
+    public float precision = 50f;
 
     private float delay = 1f;
-    public int spawnedFruits = 0;
+    private int spawnedFruits = 0;
 
-    public const float delayForEndScreen = 3f;
+    private const float delayForEndScreen = 3f;
 
-    public DataManager dataManager;
+    private DataManager dataManager;
 
     private List<GameObject> fruits = new List<GameObject>();
     private List<Image> fruitImages = new List<Image>();
 
-    public void Start()
+    private void Start()
     {
-        //dataManager = DataManager.Instance;
-        //totalFruitsToSpawn = dataManager.GetLevel(Attribute.Neutrality);
+        dataManager = DataManager.Instance;
+        totalFruitsToSpawn = dataManager.GetLevel(Attribute.Neutrality) + 1;
 
-        //cutter.Init(OnCut);
-        //cutter.EnableCutting();
-        //SetUpGame();
-        //SetUpFruits();
-        //SpawnNewObject();
+        cutter.Init(OnCut);
+        cutter.EnableCutting();
+        SetUpGame();
+        SetUpFruits();
+        SpawnNewObject();
     }
 
-    public void SetUpGame()
+    private void SetUpGame()
     {
         precisionText.UpdateScales(precision);
-        //precisionText.SetColor(winColor);
+        precisionText.SetColor(winColor);
     }
 
-    public void OnCut()
+    private void OnCut()
     {
         UpdatePrecisionColor();
         if (spawnedFruits < totalFruitsToSpawn)
@@ -74,7 +74,7 @@ public class CutGameManager : MonoBehaviour
             precisionText.SetColor(loseColor);
     }
 
-    public void CheckWinCondiiton()
+    private void CheckWinCondiiton()
     {
         if (calculator.GetWeightDifference() <= precision)
         {

@@ -222,7 +222,7 @@ namespace UnityEngine.InputSystem
                 {
                     ""name"": """",
                     ""id"": ""7d906ffa-05b5-4548-a85a-4cfc7d554213"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/backquote"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -289,6 +289,15 @@ namespace UnityEngine.InputSystem
                     ""name"": ""Inventory"",
                     ""type"": ""Button"",
                     ""id"": ""25eaf02f-d1b5-47f8-b840-d057f4b01992"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Poem"",
+                    ""type"": ""Button"",
+                    ""id"": ""ee2537fc-9f1d-4094-b0b3-aad8740d2ab5"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
@@ -592,6 +601,17 @@ namespace UnityEngine.InputSystem
                     ""action"": ""Inventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9b5b31c0-ddb2-428d-8bc6-1819d418623c"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Poem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -672,6 +692,7 @@ namespace UnityEngine.InputSystem
             m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
             m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
             m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
+            m_UI_Poem = m_UI.FindAction("Poem", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -815,6 +836,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_UI_Submit;
         private readonly InputAction m_UI_Cancel;
         private readonly InputAction m_UI_Inventory;
+        private readonly InputAction m_UI_Poem;
         public struct UIActions
         {
             private @Controls m_Wrapper;
@@ -823,6 +845,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Submit => m_Wrapper.m_UI_Submit;
             public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
             public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
+            public InputAction @Poem => m_Wrapper.m_UI_Poem;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -844,6 +867,9 @@ namespace UnityEngine.InputSystem
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
+                @Poem.started += instance.OnPoem;
+                @Poem.performed += instance.OnPoem;
+                @Poem.canceled += instance.OnPoem;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -860,6 +886,9 @@ namespace UnityEngine.InputSystem
                 @Inventory.started -= instance.OnInventory;
                 @Inventory.performed -= instance.OnInventory;
                 @Inventory.canceled -= instance.OnInventory;
+                @Poem.started -= instance.OnPoem;
+                @Poem.performed -= instance.OnPoem;
+                @Poem.canceled -= instance.OnPoem;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -936,6 +965,7 @@ namespace UnityEngine.InputSystem
             void OnSubmit(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
             void OnInventory(InputAction.CallbackContext context);
+            void OnPoem(InputAction.CallbackContext context);
         }
     }
 }

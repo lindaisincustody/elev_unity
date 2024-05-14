@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -29,6 +31,12 @@ public class InventoryUI : MonoBehaviour
     [Header("Items")]
     [SerializeField] InventoryItemSlot[] itemSlots;
 
+    [SerializeField] private Volume postProcessingVolume;
+
+    [Header("Effect Display")]
+    [SerializeField] private Image itemIcon;  // For displaying the item icon
+    [SerializeField] private TextMeshProUGUI effectDurationText;  // For displaying the duration of the effect
+
     Player player;
     DataManager dataManager;
     InputManager playerInput;
@@ -43,6 +51,11 @@ public class InventoryUI : MonoBehaviour
     float heroCoordination;
     float heroIntelligence;
     float heroNeutrality;
+
+    private int selectedIndex = 0;
+    private int numberOfColumns = 4;
+
+    public float savedDuration = 0;
 
     private void Awake()
     {
@@ -65,11 +78,23 @@ public class InventoryUI : MonoBehaviour
         playerInput = player.GetInputManager;
         playerMovement = player.GetPlayerMovement;
 
+        playerInput.OnNavigate += OnNavigate;
+        playerInput.OnSubmit += UseItem;
         playerInput.OnInventory += OpenInventory;
+
+        float pilltimeleft = dataManager.GetPlayerData().pillTimeLeft;
+
+        if (pilltimeleft > 0)
+        {
+            itemIcon.gameObject.SetActive(true);
+            StartCoroutine(ApplyTrippyEffects(pilltimeleft));
+        }
     }
 
     private void OnDestroy()
     {
+        playerInput.OnNavigate -= OnNavigate;
+        playerInput.OnSubmit -= UseItem;
         playerInput.OnInventory -= OpenInventory;
         if (Instance == this)
         {
@@ -87,6 +112,9 @@ public class InventoryUI : MonoBehaviour
         inventoryPanel.SetActive(isInventoryOpen);
         inventoryBG.SetActive(isInventoryOpen);
         playerMovement.SetMovement(!isInventoryOpen);
+        if(isInventoryOpen)
+        HighlightItem(selectedIndex);
+        else RemoveHighlight(selectedIndex);
     }
 
     public void CanOpenInventory(bool canOpen)
@@ -100,6 +128,7 @@ public class InventoryUI : MonoBehaviour
         UpdateLevels();
         UpdateGoldMultipliers();
         PopulateItems();
+        HighlightItem(0);
     }
 
     public void PopulateItems()
@@ -114,9 +143,83 @@ public class InventoryUI : MonoBehaviour
                 break;
             }
             itemSlots[slotIndex].Equip(item);
+            if (slotIndex == selectedIndex) // Highlight the selected index item
+            {
+                HighlightItem(slotIndex);
+            }
             slotIndex++;
         }
     }
+
+    private void UseItem()
+    {
+        if (!isInventoryOpen)
+            return;
+
+        ShopItem item = itemSlots[selectedIndex].GetItem(); // Retrieve the item from the selected slot
+        if (item == null)
+        {
+            Debug.Log("No item in the selected slot.");
+            return;
+        }
+
+        itemIcon.sprite = item.sprite;  // Assuming each ShopItem has a Sprite property 'Icon'
+        itemIcon.gameObject.SetActive(true);  // Ensure the icon is visible
+        effectDurationText.gameObject.SetActive(true);
+
+        ItemsInventory.Instance.RemoveItem(item); // Remove the item from the inventory
+
+        itemSlots[selectedIndex].Clear(); // Clear the slot after removing the item
+        if (ItemsInventory.Instance.GetAllItems().Count > 0)
+        {
+            selectedIndex = Mathf.Min(selectedIndex, ItemsInventory.Instance.GetAllItems().Count - 1);
+            HighlightItem(selectedIndex);
+        }
+        else
+        {
+            //inventoryPanel.SetActive(false); 
+        }
+        StartCoroutine(ApplyTrippyEffects(60));
+    }
+
+    private IEnumerator ApplyTrippyEffects(float duration)
+    {
+  // Total duration of the effect
+        float elapsed = 0f;
+
+        ChromaticAberration chromaticAberration = null;
+        LensDistortion lensDistortion = null;
+
+        if (postProcessingVolume.profile.TryGet(out chromaticAberration) &&
+            postProcessingVolume.profile.TryGet(out lensDistortion))
+        {
+            float maxChromaticIntensity = 1f; // Maximum intensity for Chromatic Aberration
+            float minLensDistortion = -1f; // Minimum intensity for Lens Distortion
+            float maxLensDistortion = 1f; // Maximum intensity for Lens Distortion
+            float frequencyMultiplier = 5f; // Oscillation frequency
+
+            while (elapsed < duration)
+            {
+                float remainingTime = duration - elapsed;
+                effectDurationText.text = $"Effect Duration: {remainingTime.ToString("0.0")}s";  // Update the duration text
+                savedDuration = remainingTime;
+                float sinusoidalFactor = Mathf.Sin(2 * Mathf.PI * frequencyMultiplier * elapsed / duration);
+                chromaticAberration.intensity.value = (sinusoidalFactor + 1f) / 2 * maxChromaticIntensity;
+                lensDistortion.intensity.value = sinusoidalFactor * (maxLensDistortion - minLensDistortion) / 2 + (maxLensDistortion + minLensDistortion) / 2;
+
+                elapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            // Reset effects and UI
+            chromaticAberration.intensity.value = 0f;
+            lensDistortion.intensity.value = 0f;
+            effectDurationText.text = "Effect Duration: 0.0s";
+            itemIcon.gameObject.SetActive(false);
+            effectDurationText.gameObject.SetActive(false);// Hide the item icon
+        }
+    }
+
 
     private void UpdateGoldText()
     {
@@ -163,6 +266,61 @@ public class InventoryUI : MonoBehaviour
     private string MultiplierFormatter(float multiplier)
     {
         return multiplier.ToString("0.00") + " x";
+    }
+
+    private void HighlightItem(int index)
+    {
+        if (index >= 0 && index < itemSlots.Length)
+            itemSlots[index].GetComponent<Image>().color = Color.blue; // Example color
+    }
+
+    private void RemoveHighlight(int index)
+    {
+        if (index >= 0 && index < itemSlots.Length)
+            itemSlots[index].GetComponent<Image>().color = Color.white; // Default color
+    }
+
+    private void OnNavigate(Vector2 direction)
+    {
+        if (!isInventoryOpen) return;
+
+        int prevIndex = selectedIndex;
+        int totalItems = ItemsInventory.Instance.GetAllItems().Count; // Assuming you only want to count filled slots.
+
+        if (direction.y > 0) // Up
+        {
+            if (selectedIndex >= numberOfColumns) // Move up a row
+                selectedIndex -= numberOfColumns;
+            else
+                selectedIndex = ((totalItems - 1) / numberOfColumns) * numberOfColumns + (selectedIndex % numberOfColumns); // Wrap to the bottom
+        }
+        else if (direction.y < 0) // Down
+        {
+            if (selectedIndex + numberOfColumns < totalItems) // Move down a row
+                selectedIndex += numberOfColumns;
+            else
+                selectedIndex = selectedIndex % numberOfColumns; // Wrap to the top
+        }
+
+        if (direction.x > 0) // Right
+        {
+            selectedIndex++;
+            if (selectedIndex >= totalItems) // Wrap to the first item
+                selectedIndex = 0;
+        }
+        else if (direction.x < 0) // Left
+        {
+            if (selectedIndex == 0) // Wrap to the last item
+                selectedIndex = totalItems - 1;
+            else
+                selectedIndex--;
+        }
+
+        if (prevIndex != selectedIndex)
+        {
+            RemoveHighlight(prevIndex);
+            HighlightItem(selectedIndex);
+        }
     }
 
 }

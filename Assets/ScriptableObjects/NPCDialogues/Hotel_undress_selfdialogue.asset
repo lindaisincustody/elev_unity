@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
+  m_Name: Hotel_undress_selfdialogue
+  m_EditorClassIdentifier: 
+  dialogueType: 0
+  otherCharacterName: You
+  textList:
+  - lineType: 2
+    dialogueLineText: Shiny numbers on the corners of the lapels. An 87 on the left,
+      an 87 on the right.
+  - lineType: 0
+    dialogueLineText: "If\_a guest is dissatisfied with an elevator operator he can
+      note the number and report\_\nhim to the starter."
+  - lineType: 0
+    dialogueLineText: That 87 is a son-of-a-bitch!
+  - lineType: 0
+    dialogueLineText: That 87 took me four floors too high!
+  - lineType: 0
+    dialogueLineText: 87 87 87, I wasted two minutes in this box, that goddam son-of-a-bitch
+      87!
+  - lineType: 0
+    dialogueLineText: "Right now I\u2019m\_alone and I\u2019ll take a pill and have
+      more fun."
+  - lineType: 0
+    dialogueLineText: "Tik tik, tik tik \u2013 my heart."
+  - lineType: 0
+    dialogueLineText: In my brain, in my veins, in my dreams.
+  mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
+  otherCharacterImage: {fileID: 21300000, guid: 48561c9dc6357f04988d1c4d45545e81, type: 3}
+  activateFight: 0
+  strengthGameCoinsMultiplier: 1
+  neutralityGameCoinsMultiplier: 2
+  intelligenceGameCoinsMultiplier: 1.491
+  coordinationGameCoinsMultiplier: 1.16

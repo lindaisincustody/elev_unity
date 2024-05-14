@@ -41,20 +41,20 @@ public class GameManager : MonoBehaviour
     {
         Heart heartController = FindObjectOfType<Heart>();
 
-        if (score >= 500)
+        if (score >= 3)
         {
             GameLevel++;
             dataManager.AddLevel(Attribute.Strength);
             Debug.Log("You Won!");
             BattlePlayerController.isPlaying = false;
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            SceneManager.LoadScene(DataManager.Instance.GetLastScene());
         }
 
         if (heartController.hp <= 0)
         {
             Debug.Log("You Lost!");
             BattlePlayerController.isPlaying = false;
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            SceneManager.LoadScene(DataManager.Instance.GetLastScene());
         }
 
     }

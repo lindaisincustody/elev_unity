@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 356129a07ee771d44958428d04b34c98, type: 3}
+  m_Name: Hotel_blackman_dialogue
+  m_EditorClassIdentifier: 
+  dialogueType: 0
+  otherCharacterName: You
+  textList:
+  - lineType: 1
+    dialogueLineText: "\u201CHow\u2019re you doing?\u201D"
+  - lineType: 0
+    dialogueLineText: Fine, and you?
+  - lineType: 0
+    dialogueLineText: "One day his arm suddenly\_felt very hot, it fell on to a block
+      of ice, the hot arm must have melted the ice."
+  - lineType: 2
+    dialogueLineText: "This\_black guy is a fanatic."
+  - lineType: 2
+    dialogueLineText: To sacrifice your arm for a piece of ice?
+  - lineType: 2
+    dialogueLineText: A heroic gesture.
+  - lineType: 2
+    dialogueLineText: "He\u2019s paid a dollar fourteen an hour."
+  mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
+  otherCharacterImage: {fileID: 21300000, guid: 48561c9dc6357f04988d1c4d45545e81, type: 3}
+  activateFight: 0
+  strengthGameCoinsMultiplier: 1
+  neutralityGameCoinsMultiplier: 2
+  intelligenceGameCoinsMultiplier: 1.491
+  coordinationGameCoinsMultiplier: 1.16

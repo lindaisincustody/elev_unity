@@ -40,4 +40,9 @@ public class DebugPanel : MonoBehaviour
     {
         goldMultiplierDisplayer.UpdateText();
     }
+
+    public void DeleteAllData()
+    {
+        SavingWrapper.Instance.DeleteAllData();
+    }
 }

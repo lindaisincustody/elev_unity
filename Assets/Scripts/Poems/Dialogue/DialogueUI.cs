@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DialogueUI
 {
     private GameObject dialogueBox;
+    private GameObject narratorBox;
     private TextMeshProUGUI dialogueText;
     private TextMeshProUGUI nameText;
     private Image mainCharacterImage;
@@ -17,9 +18,10 @@ public class DialogueUI
     private DialogueData dialogueData;
     private MinigameUI minigameUI;
 
-    public DialogueUI(GameObject box, TextMeshProUGUI text, TextMeshProUGUI name, Image mainImage, Image otherImage, GameObject mainHolder, GameObject otherHolder, MinigameUI minigame)
+    public DialogueUI(GameObject box, GameObject narratorbox, TextMeshProUGUI text, TextMeshProUGUI name, Image mainImage, Image otherImage, GameObject mainHolder, GameObject otherHolder, MinigameUI minigame)
     {
         dialogueBox = box;
+        narratorBox = narratorbox;
         dialogueText = text;
         nameText = name;
         mainCharacterImage = mainImage;
@@ -35,40 +37,13 @@ public class DialogueUI
         dialogueBox.SetActive(true);
         mainCharacterImage.sprite = dialogueData.mainCharacterImage;
         otherCharacterImage.sprite = dialogueData.otherCharacterImage;
-        if (dialogueData.textList == null)
-        {
-            newDialogueData = ScriptableObject.CreateInstance<DialogueData>();
-            newDialogueData.otherCharacterName = "Character Name";
-            newDialogueData.textList = new DialogueData.CharacterData[]
-            {
-            new DialogueData.CharacterData { isYourText = true, dialogueLineText = "Hello!" },
-            new DialogueData.CharacterData { isYourText = false, dialogueLineText = "Hi there!" }
-            };
-            newDialogueData.activateFight = false;
-            // Assume Sprite assets exist and are assigned accordingly
-            newDialogueData.mainCharacterImage = CreateSprite(Color.white);
-            newDialogueData.otherCharacterImage = CreateSprite(Color.red);
-            dialogueData = newDialogueData;
-        }
-        ChangeCharacterShown(dialogueData.textList[0].isYourText);
+        ChangeCharacterShown(dialogueData.textList[0].lineType == LineType.You);
     }
 
-    public Sprite CreateSprite(Color color, int width = 100, int height = 100)
+    public void ActivateNarratorBox(DialogueData newDialogueData)
     {
-        // Create a new texture with the specified color
-        Texture2D texture = new Texture2D(width, height, TextureFormat.RGBA32, false);
-        for (int x = 0; x < texture.width; x++)
-        {
-            for (int y = 0; y < texture.height; y++)
-            {
-                texture.SetPixel(x, y, color);
-            }
-        }
-        texture.Apply();
-
-        // Create a new sprite from the texture
-        Sprite newSprite = Sprite.Create(texture, new Rect(0.0f, 0.0f, texture.width, texture.height), new Vector2(0.5f, 0.5f), 100.0f);
-        return newSprite;
+        dialogueData = newDialogueData;
+        narratorBox.SetActive(true);
     }
 
     public void ShowNext(int currentDialogueLine)
@@ -76,16 +51,32 @@ public class DialogueUI
         dialogueText.text = string.Empty;
         if (currentDialogueLine <= dialogueData.textList.Length - 1)
         {
-            if (dialogueData.textList[currentDialogueLine].isYourText)
+            ShowOnlyBox(dialogueData.textList[currentDialogueLine].lineType);
+            if (dialogueData.textList[currentDialogueLine].lineType == LineType.You)
                 nameText.text = "You";
             else
                 nameText.text = dialogueData.otherCharacterName;
-            ChangeCharacterShown(dialogueData.textList[currentDialogueLine].isYourText);
+            ChangeCharacterShown(dialogueData.textList[currentDialogueLine].lineType == LineType.You);
         }
         else
         {
+            ShowOnlyBox(LineType.Enemy);
             nameText.text = dialogueData.otherCharacterName;
             ChangeCharacterShown(false, true);
+        }
+    }
+
+    private void ShowOnlyBox(LineType lineType)
+    {
+        if (lineType == LineType.Narrator)
+        {
+            narratorBox.SetActive(true);
+            dialogueBox.SetActive(false);
+        }
+        else
+        {
+            narratorBox.SetActive(false);
+            dialogueBox.SetActive(true);
         }
     }
 
@@ -109,6 +100,7 @@ public class DialogueUI
 
     public void Hide()
     {
+        narratorBox.SetActive(false);
         dialogueBox.SetActive(false);
         mainCharacterImageHolder.SetActive(false);
         otherCharacterImageHolder.SetActive(false);
