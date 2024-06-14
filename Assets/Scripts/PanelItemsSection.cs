@@ -105,7 +105,7 @@ public class PanelItemsSection : MonoBehaviour
         //    return;
 
         ItemsInventory.Instance.AddItem(selectedItem);
-        player.AddGold(selectedItem.cost);
+        player.AddGold(-selectedItem.cost);
         shopUI.RefreshShopUI();
     }
     

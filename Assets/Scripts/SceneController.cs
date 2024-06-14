@@ -35,7 +35,8 @@ public class SceneController : MonoBehaviour
             Player.instance.SaveCurrentScenePosition();
             DataManager.Instance.SavePillTime();
         }
-        DataManager.Instance.SaveScene(sceneName);
+        if (sceneName != Constants.SceneNames.MainMenu)
+            DataManager.Instance.SaveScene(sceneName);
 
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
