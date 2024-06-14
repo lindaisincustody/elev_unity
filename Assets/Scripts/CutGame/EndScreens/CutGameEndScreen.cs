@@ -27,7 +27,7 @@ public class CutGameEndScreen : MonoBehaviour
     private void ExitMinigame()
     {
         if (GoBackText.activeSelf)
-            SceneManager.LoadScene(Constants.SceneNames.MainScene);
+            SceneManager.LoadScene(DataManager.Instance.GetLastScene());
     }
 
     public void ShowWinScreen()

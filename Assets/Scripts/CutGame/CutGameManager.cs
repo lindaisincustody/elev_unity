@@ -91,6 +91,7 @@ public class CutGameManager : MonoBehaviour
         yield return new WaitForSeconds(delayForEndScreen);
         Debug.Log("You Won");
         dataManager.AddLevel(Attribute.Neutrality);
+        dataManager.AddGold((int)(4 * dataManager.GetPlayerData().heroNeutrality));
         endScreen.ShowWinScreen();
     }
 

@@ -24,7 +24,7 @@ public class MazeManager : MonoBehaviour
     public void Win()
     {
         dataManager.AddLevel(Attribute.Coordination);
-        dataManager.AddGold(4);
+        dataManager.AddGold((int)(4 * dataManager.GetPlayerData().heroCoordination));
         playerCollider.enabled = false;
         playerMovement.StopPlayer();
         winScreen.ShowEndScreen();
