@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+
 [RequireComponent(typeof(Book))]
 public class AutoFlip : MonoBehaviour {
     private BookController bookController;

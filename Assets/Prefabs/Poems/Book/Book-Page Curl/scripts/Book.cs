@@ -11,6 +11,7 @@ public enum FlipMode
     RightToLeft,
     LeftToRight
 }
+
 [ExecuteInEditMode]
 public class Book : MonoBehaviour {
     private BookController bookController;

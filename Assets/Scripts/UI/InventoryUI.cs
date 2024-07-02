@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -30,8 +28,6 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] Image neutralitySlider;
     [Header("Items")]
     [SerializeField] InventoryItemSlot[] itemSlots;
-
-    [SerializeField] private Volume postProcessingVolume;
 
     [Header("Effect Display")]
     [SerializeField] private Image itemIcon;  // For displaying the item icon
@@ -82,13 +78,13 @@ public class InventoryUI : MonoBehaviour
         playerInput.OnSubmit += UseItem;
         playerInput.OnInventory += OpenInventory;
 
-        float pilltimeleft = dataManager.GetPlayerData().pillTimeLeft;
+        //float pilltimeleft = dataManager.GetPlayerData().pillTimeLeft;
 
-        if (pilltimeleft > 0)
-        {
-            itemIcon.gameObject.SetActive(true);
-            StartCoroutine(ApplyTrippyEffects(pilltimeleft));
-        }
+        //if (pilltimeleft > 0)
+        //{
+        //    itemIcon.gameObject.SetActive(true);
+        //    StartCoroutine(ApplyTrippyEffects(pilltimeleft));
+        //}
     }
 
     private void OnDestroy()
@@ -179,47 +175,9 @@ public class InventoryUI : MonoBehaviour
         {
             //inventoryPanel.SetActive(false); 
         }
-        StartCoroutine(ApplyTrippyEffects(60));
+
+        item.item.UseItem();
     }
-
-    private IEnumerator ApplyTrippyEffects(float duration)
-    {
-  // Total duration of the effect
-        float elapsed = 0f;
-
-        ChromaticAberration chromaticAberration = null;
-        LensDistortion lensDistortion = null;
-
-        if (postProcessingVolume.profile.TryGet(out chromaticAberration) &&
-            postProcessingVolume.profile.TryGet(out lensDistortion))
-        {
-            float maxChromaticIntensity = 1f; // Maximum intensity for Chromatic Aberration
-            float minLensDistortion = -1f; // Minimum intensity for Lens Distortion
-            float maxLensDistortion = 1f; // Maximum intensity for Lens Distortion
-            float frequencyMultiplier = 5f; // Oscillation frequency
-
-            while (elapsed < duration)
-            {
-                float remainingTime = duration - elapsed;
-                effectDurationText.text = $"Effect Duration: {remainingTime.ToString("0.0")}s";  // Update the duration text
-                savedDuration = remainingTime;
-                float sinusoidalFactor = Mathf.Sin(2 * Mathf.PI * frequencyMultiplier * elapsed / duration);
-                chromaticAberration.intensity.value = (sinusoidalFactor + 1f) / 2 * maxChromaticIntensity;
-                lensDistortion.intensity.value = sinusoidalFactor * (maxLensDistortion - minLensDistortion) / 2 + (maxLensDistortion + minLensDistortion) / 2;
-
-                elapsed += Time.deltaTime;
-                yield return null;
-            }
-
-            // Reset effects and UI
-            chromaticAberration.intensity.value = 0f;
-            lensDistortion.intensity.value = 0f;
-            effectDurationText.text = "Effect Duration: 0.0s";
-            itemIcon.gameObject.SetActive(false);
-            effectDurationText.gameObject.SetActive(false);// Hide the item icon
-        }
-    }
-
 
     private void UpdateGoldText()
     {

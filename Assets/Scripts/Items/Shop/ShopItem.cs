@@ -11,6 +11,6 @@ public class ShopItem : ScriptableObject
     [TextArea]
     public string description;
     public Sprite sprite;
-    public MiniGameItem item;
+    public Item item;
     public int cost;
 }
