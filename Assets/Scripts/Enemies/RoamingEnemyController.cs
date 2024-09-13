@@ -5,6 +5,7 @@ using UnityEngine.Experimental.Rendering.Universal; // Needed for Light2D
 public class EnemyController : MonoBehaviour
 {
     public GameObject sparkleEffect;  // Reference to the sparkle effect object
+    public GameObject healthBar;
     public float moveSpeed = 2f;      // Movement speed of the enemy
     public float changeTargetTime = 2f; // Time after which the enemy changes its target point
     public Light2D enemyLight;
@@ -92,6 +93,7 @@ public class EnemyController : MonoBehaviour
         if (sparkleEffect != null)
         {
             sparkleEffect.SetActive(false);  // Hide the sparkle effect
+            healthBar.SetActive(true);
         }
         // Decrease the light intensity when in the underworld
         if (enemyLight != null)
@@ -114,6 +116,7 @@ public class EnemyController : MonoBehaviour
         if (sparkleEffect != null)
         {
             sparkleEffect.SetActive(true);  // Show the harmless sparkle effect
+            healthBar.SetActive(false);
         }
     }
 }
