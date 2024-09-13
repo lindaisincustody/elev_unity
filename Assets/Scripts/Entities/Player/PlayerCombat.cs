@@ -12,19 +12,27 @@ public class PlayerCombat : MonoBehaviour
     private List<Bullet> bulletPool = new List<Bullet>();
     private GameObject poolHolder;
 
+    private Player player;
+    private InputManager inputManager;
+
+    private void Awake()
+    {
+        player = GetComponent<Player>();
+        inputManager = player.GetInputManager;
+
+        inputManager.OnShoot += Shoot;
+    }
+
     private void Start()
     {
         InitializeBulletPool();
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && SanityEffectHandler.IsPlayerInUnderworld)
-            Shoot();
-    }
-
     private void Shoot()
     {
+        if (!SanityEffectHandler.IsPlayerInUnderworld)
+            return;
+
         Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
 
@@ -64,5 +72,10 @@ public class PlayerCombat : MonoBehaviour
             }
         }
         return null;
+    }
+
+    private void OnDestroy()
+    {
+        inputManager.OnShoot -= Shoot;
     }
 }

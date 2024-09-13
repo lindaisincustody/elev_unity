@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     public event Action OnJump        = delegate { };
     public event Action OnFire        = delegate { };
     public event Action OnNext        = delegate { };
+    public event Action OnShoot       = delegate { };
     // UI
     public event Action<Vector2> OnNavigate    = delegate { };
     public event Action OnSubmit = delegate { };
@@ -36,6 +37,7 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Cancel.started += Cancel;
         inputActions.Player.Jump.started += Jump;
         inputActions.Player.Next.started += Next;
+        inputActions.Player.Shoot.started += Shoot;
 
         inputActions.UI.Navigate.performed += Navigate;
         inputActions.UI.Submit.started += Sumbit;
@@ -103,6 +105,14 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             OnNext();
+        }
+    }
+    
+    private void Shoot(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnShoot();
         }
     }
 
