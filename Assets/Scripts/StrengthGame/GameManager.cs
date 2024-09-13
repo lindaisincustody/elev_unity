@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
         GameLevel = dataManager.GetLevel(Attribute.Strength);
         // Start the coroutine to instantiate projectiles
-        StartCoroutine(InstantiateProjectiles());
+  
 
     }
 
@@ -59,24 +59,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    IEnumerator InstantiateProjectiles()
-    {
-        EnemyController enemyController = enemy.GetComponent<EnemyController>(); // Reference to the enemy controller
 
-        while (true)
-        {
-            // Wait until the enemy reaches its target position
-            yield return new WaitUntil(() => Vector2.Distance(enemyController.transform.position, enemyController.targetPosition) > 17f);
-
-            // Instantiate a projectile targeting the heart or player
-            GameObject projectile = Instantiate(projectilePrefab, enemyController.transform.position, Quaternion.identity);
-            Projectile projectileScript = projectile.GetComponent<Projectile>();
-            projectileScript.target = (Random.value > 0.5f) ? heart : player; // Randomize target
-
-            // Wait before checking again
-            yield return new WaitForSeconds(2f);
-        }
-    }
 
 
     Vector2 GetSpawnPosition(Vector2 direction)
