@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: ripple
-  m_Shader: {fileID: 4800000, guid: 10e8ba0a8189d8a408d8700bf72687d1, type: 3}
+  m_Name: DistortionMaterial
+  m_Shader: {fileID: 4800000, guid: 617983f4e146d564a9ff66732a08f4ba, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 8065c125ba8eb0f4ab6667beec45cc98, type: 3}
+        m_Texture: {fileID: 2800000, guid: c96b78bbb53f1894498fbe124be7ab92, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -41,13 +41,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Distortion: 1.7202606
     - _EnableExternalAlpha: 0
-    - _Opacity: 0.09
-    - _RippleSpeed: 0.5
-    - _RippleStrength: 0.0005
+    - _Glossiness: 0.5
+    - _Metallic: 0
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
-    - _RippleCenter: {r: 0.59, g: 0.53, b: 0, a: 0}
   m_BuildTextureStacks: []
