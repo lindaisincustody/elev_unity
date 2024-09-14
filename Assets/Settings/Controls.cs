@@ -73,6 +73,15 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""c72dc03b-6907-471a-bff0-b2c2c13e6032"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -249,6 +258,17 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Next"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f09b10f9-0364-4980-b29b-fa279a277996"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -686,6 +706,7 @@ namespace UnityEngine.InputSystem
             m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
+            m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -759,6 +780,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Cancel;
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Next;
+        private readonly InputAction m_Player_Shoot;
         public struct PlayerActions
         {
             private @Controls m_Wrapper;
@@ -768,6 +790,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Cancel => m_Wrapper.m_Player_Cancel;
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Next => m_Wrapper.m_Player_Next;
+            public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -792,6 +815,9 @@ namespace UnityEngine.InputSystem
                 @Next.started += instance.OnNext;
                 @Next.performed += instance.OnNext;
                 @Next.canceled += instance.OnNext;
+                @Shoot.started += instance.OnShoot;
+                @Shoot.performed += instance.OnShoot;
+                @Shoot.canceled += instance.OnShoot;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -811,6 +837,9 @@ namespace UnityEngine.InputSystem
                 @Next.started -= instance.OnNext;
                 @Next.performed -= instance.OnNext;
                 @Next.canceled -= instance.OnNext;
+                @Shoot.started -= instance.OnShoot;
+                @Shoot.performed -= instance.OnShoot;
+                @Shoot.canceled -= instance.OnShoot;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -958,6 +987,7 @@ namespace UnityEngine.InputSystem
             void OnCancel(InputAction.CallbackContext context);
             void OnJump(InputAction.CallbackContext context);
             void OnNext(InputAction.CallbackContext context);
+            void OnShoot(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
