@@ -20748,6 +20748,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   globalVolume: {fileID: 1881862907}
   sanityLight: {fileID: 1641838273}
+  PlayerAnimator: {fileID: 1856156274}
   rippleMaterial: {fileID: 2100000, guid: 770db0076aa830142b4907f509e0e057, type: 2}
 --- !u!1 &1473558559
 GameObject:
@@ -24750,6 +24751,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5beb78b4967497b45ac1f663e6d993bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &1856156274 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6330455195613800542, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+  m_PrefabInstance: {fileID: 1820411673}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1857217145
 GameObject:
   m_ObjectHideFlags: 0
