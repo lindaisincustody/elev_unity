@@ -30,7 +30,7 @@ public class MainMenuCursorManager : MonoBehaviour
         submit = true;
         string lastScene = dataManager.GetLastScene();
         if (string.IsNullOrEmpty(lastScene))
-            StartCoroutine(SceneController.instance.LoadScene(Constants.SceneNames.StationScene));
+            StartCoroutine(SceneController.instance.LoadScene(Constants.SceneNames.TrainStation));
         else
             StartCoroutine(SceneController.instance.LoadScene(lastScene));
     }

@@ -15,6 +15,7 @@ public class SanityEffectHandler : MonoBehaviour
     private FilmGrain filmGrain;
     private Bloom bloom;
     private MotionBlur motionBlur;
+    public Animator PlayerAnimator;
     private DepthOfField depthOfField;
     private float timeElapsed;
     public Material rippleMaterial;  // Reference to the ripple material
@@ -34,6 +35,7 @@ public class SanityEffectHandler : MonoBehaviour
         LoadVolumeComponents();
         ResetEffects();
         IsPlayerInUnderworld = false; // Ensure it starts as false
+        PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
     }
 
     private void Update()
@@ -64,6 +66,7 @@ public class SanityEffectHandler : MonoBehaviour
             sanityLight.color = new Color32(0x00, 0xE7, 0xFF, 0xFF);  // Blue light
             sanityLight.intensity = 2f;
             IsPlayerInUnderworld = true; // Set the player to be in the underworld
+            PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", true);
             isAnimating = true;
             StartCoroutine(AnimateSchizophrenicEffects());
         }
@@ -72,6 +75,7 @@ public class SanityEffectHandler : MonoBehaviour
             sanityLight.color = new Color32(0xF8, 0xC4, 0x64, 0xFF);  // Yellow light
             sanityLight.intensity = 1f;
             IsPlayerInUnderworld = false; // Player exits the underworld
+            PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
             StopAllCoroutines();  // Stop the animation if sanity goes back up
             ResetEffects();
             isAnimating = false;

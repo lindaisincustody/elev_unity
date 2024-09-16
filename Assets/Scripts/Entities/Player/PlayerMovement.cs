@@ -78,6 +78,8 @@ public class PlayerMovement : MonoBehaviour
             StopMovementSound();
             isMoving = false;
         }
+
+
     }
 
     void FixedUpdate()
