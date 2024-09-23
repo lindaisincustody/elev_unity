@@ -108,7 +108,7 @@ public class SanityEffectHandler : MonoBehaviour
                 c.colorFilter.value = Color.Lerp(new Color(0.5f, 0f, 0f), Color.red, Mathf.PerlinNoise(timeElapsed * 0.5f, timeElapsed * 0.5f));
             });
             AnimateEffect(filmGrain, f => f.intensity.value = Mathf.Lerp(0.4f, 1.0f, Mathf.PerlinNoise(timeElapsed * 0.5f, 0.0f)));
-            AnimateEffect(bloom, b => b.intensity.value = Mathf.Lerp(0.1f, 0.3f, Mathf.PerlinNoise(timeElapsed * 0.3f, timeElapsed * 0.3f)));
+
             AnimateEffect(motionBlur, m => m.intensity.value = Mathf.Lerp(0.5f, 1.0f, Mathf.PerlinNoise(timeElapsed * 1f, 0.0f)));
             AnimateEffect(depthOfField, d => d.focusDistance.value = Mathf.Lerp(10f, 0.1f, Mathf.Sin(timeElapsed * 0.5f)));
 
@@ -130,7 +130,6 @@ public class SanityEffectHandler : MonoBehaviour
             c.colorFilter.value = Color.white;
         });
         ResetEffect(filmGrain, f => f.intensity.value = 0f);
-        ResetEffect(bloom, b => b.intensity.value = 0.5f);
         ResetEffect(motionBlur, m => m.intensity.value = 0f);
         ResetEffect(depthOfField, d => d.focusDistance.value = 10f);
     }
@@ -142,7 +141,6 @@ public class SanityEffectHandler : MonoBehaviour
         globalVolume.profile.TryGet(out colorAdjustments);
         globalVolume.profile.TryGet(out lensDistortion);
         globalVolume.profile.TryGet(out filmGrain);
-        globalVolume.profile.TryGet(out bloom);
         globalVolume.profile.TryGet(out motionBlur);
         globalVolume.profile.TryGet(out depthOfField);
     }

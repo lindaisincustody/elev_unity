@@ -16,6 +16,7 @@ TagManager:
   - O
   - Wall
   - CorrectDestination
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -29,7 +30,7 @@ TagManager:
   - Consumable
   - Joint
   - UnderworldLayer
-  - 
+  - Enemy
   - 
   - 
   - 
