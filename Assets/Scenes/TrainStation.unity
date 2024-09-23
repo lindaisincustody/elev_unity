@@ -7553,7 +7553,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 471
+    m_Bits: 4567
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -19065,6 +19065,17 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.7325808, y: 0.4586044}
   m_EdgeRadius: 0
+--- !u!114 &1309009183 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1912533170821455443, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+  m_PrefabInstance: {fileID: 5591660499357508618}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1309702525
 GameObject:
   m_ObjectHideFlags: 0
@@ -23940,6 +23951,14 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 519420031}
+    - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: combatModeText
+      value: 
+      objectReference: {fileID: 1309009183}
+    - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: chinchillaPrefab
+      value: 
+      objectReference: {fileID: 7920130587965075085, guid: ff49d55c0d22ab541b0162df80738cca, type: 3}
     - target: {fileID: 5795484339065585095, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_Layer
       value: 8

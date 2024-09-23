@@ -1,23 +1,23 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.Playables;
 
 public class PlayerMovement : MonoBehaviour
 {
-    
     public float moveSpeed = 1f;
+    public float dashSpeed = 5f;         // Dash speed multiplier
+    public float dashDuration = 0.2f;    // Duration of the dash
+    public float dashCooldown = 1f;      // Cooldown time between dashes
+    private bool isDashing = false;      // Check if player is currently dashing
+    private bool canDash = true;         // Check if player can dash
+
     public Rigidbody2D rb;
     public Animator animator;
-    protected Animator animSync;
-    protected Animator doorAnimator;
-    public GameObject doorObj;
 
     public AudioSource moveSound;
+    private Coroutine stepSoundCoroutine;
 
-    private Vector2 movement;
-    private Vector2 lastDirection = Vector2.up;
+    public Vector2 movement;
+    public Vector2 lastDirection = Vector2.up;
     private bool isMoving = false;
     private int stepsTaken = 0;
 
@@ -30,11 +30,11 @@ public class PlayerMovement : MonoBehaviour
     public float stepInterval = 0.435f; // Interval between steps, decrease to make loop faster
     public bool isInteracting = false;
 
-
-
     private void Awake()
     {
         playerInput = GetComponent<InputManager>();
+
+        playerInput.OnDash += HandleDash;
 
         if (moveSound != null)
         {
@@ -46,6 +46,11 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        playerInput.OnDash -= HandleDash;
+    }
+
     void Update()
     {
         if (!_canMove)
@@ -54,85 +59,150 @@ public class PlayerMovement : MonoBehaviour
             return;
         }
 
+        if (!isDashing)
+        {
             movement = playerInput.inputVector;
+
+            if (movement != Vector2.zero)
+            {
+                lastDirection = movement;
+
+                if (!isMoving)
+                {
+                    isMoving = true;
+                    StartMovementSound(); // Start the sound coroutine when movement starts
+                }
+
+                AdjustSoundProperties();
+            }
+            else if (isMoving)
+            {
+                isMoving = false;
+                StopMovementSound(); // Stop the sound coroutine when movement stops
+            }
 
             animator.SetFloat("Horizontal", movement.x);
             animator.SetFloat("Vertical", movement.y);
             animator.SetFloat("Speed", movement.sqrMagnitude);
-
-
-        if (movement != Vector2.zero)
-        {
-            lastDirection = movement;
-            if (!isMoving)
-            {
-                StartMovementSound();
-                isMoving = true;
-            }
-            AdjustSoundProperties();
-
-          
         }
-        else if (isMoving)
-        {
-            StopMovementSound();
-            isMoving = false;
-        }
-
-
     }
 
     void FixedUpdate()
     {
-        if (!isInteracting)
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        if (!isInteracting && !isDashing)
+        {
+            rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        }
     }
 
-    private IEnumerator PlayStepSound()
+    private IEnumerator Dash()
     {
-        stepsTaken++;
-        if (stepsTaken % 2 == 0)
+        isDashing = true;
+        canDash = false;
+
+        // Stop the movement sound coroutine if it's running
+        StopMovementSound();
+
+        // Set the dash direction based on the current input direction
+        Vector2 dashDirection = movement.normalized;
+
+        // Set the appropriate animation trigger based on dash direction
+        if (dashDirection.x > 0)
         {
-            moveSound.pitch *= stepTimingAdjustment;
+            animator.SetTrigger("DashRight");
         }
-        else
+        else if (dashDirection.x < 0)
         {
-            moveSound.pitch = Mathf.Lerp(minPitch, maxPitch, movement.magnitude / moveSpeed);
+            animator.SetTrigger("DashLeft");
         }
 
-        moveSound.Play();
+        float startTime = Time.time;
 
-        // Wait for the specified interval before playing the next step sound
-        yield return new WaitForSeconds(stepInterval);
-
-        // Check if the player is still moving before playing the next sound
-        if (isMoving)
+        // Dash for a limited time
+        while (Time.time < startTime + dashDuration)
         {
-            StartCoroutine(PlayStepSound());
+            rb.MovePosition(rb.position + dashDirection * dashSpeed * Time.fixedDeltaTime);
+            yield return new WaitForFixedUpdate();  // Ensure the loop yields each frame
+        }
+
+        isDashing = false;
+
+        // Reset the triggers after the dash is complete
+        animator.ResetTrigger("DashRight");
+        animator.ResetTrigger("DashLeft");
+
+
+        //restart movement sound
+        if (movement != Vector2.zero)
+        {
+            StartMovementSound();
+        }
+
+        // Cooldown before the next dash
+        yield return new WaitForSeconds(dashCooldown);
+        canDash = true;  // Reset the ability to dash
+        
+    }
+
+
+
+
+    private void HandleDash()
+    {
+        if (canDash && !isDashing)
+        {
+            // Ensure dash always uses the latest input direction
+            if (movement != Vector2.zero)
+            {
+                StartCoroutine(Dash());
+            }
         }
     }
 
     private void StartMovementSound()
     {
-        if (moveSound != null && !isMoving)
+        // Only start the coroutine if it's not already running
+        if (moveSound != null && stepSoundCoroutine == null)
         {
             stepsTaken = 0;
-            StartCoroutine(PlayStepSound());
+            stepSoundCoroutine = StartCoroutine(PlayStepSound());
         }
     }
 
     private void StopMovementSound()
     {
-        if (moveSound != null && isMoving)
+        if (moveSound != null && stepSoundCoroutine != null)
         {
+            StopCoroutine(stepSoundCoroutine);
             moveSound.Stop();
-            StopAllCoroutines(); // Stop the coroutine when the player stops moving
+            stepSoundCoroutine = null;
         }
+    }
+
+    private IEnumerator PlayStepSound()
+    {
+        while (isMoving)
+        {
+            stepsTaken++;
+            if (stepsTaken % 2 == 0)
+            {
+                moveSound.pitch *= stepTimingAdjustment;
+            }
+            else
+            {
+                moveSound.pitch = Mathf.Lerp(minPitch, maxPitch, movement.magnitude / moveSpeed);
+            }
+
+            moveSound.Play();
+
+            yield return new WaitForSeconds(stepInterval);
+        }
+
+        stepSoundCoroutine = null; // Reset the coroutine reference when finished
     }
 
     private void AdjustSoundProperties()
     {
-        // This ensures pitch adjustments occur only when the sound is not being adjusted for step timing
         if (moveSound != null && stepsTaken % 2 != 0)
         {
             moveSound.pitch = Mathf.Lerp(minPitch, maxPitch, movement.magnitude / moveSpeed);
@@ -144,11 +214,10 @@ public class PlayerMovement : MonoBehaviour
         _canMove = canMove;
         if (!canMove)
         {
-
-                movement = Vector2.zero;
-                animator.SetFloat("Horizontal", movement.x);
-                animator.SetFloat("Vertical", movement.y);
-                animator.SetFloat("Speed", movement.sqrMagnitude);
+            movement = Vector2.zero;
+            animator.SetFloat("Horizontal", movement.x);
+            animator.SetFloat("Vertical", movement.y);
+            animator.SetFloat("Speed", movement.sqrMagnitude);
         }
     }
 }

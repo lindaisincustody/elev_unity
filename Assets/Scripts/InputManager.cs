@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
     public event Action OnFire        = delegate { };
     public event Action OnNext        = delegate { };
     public event Action OnShoot       = delegate { };
+    public event Action OnDash        = delegate { };
     // UI
     public event Action<Vector2> OnNavigate    = delegate { };
     public event Action OnSubmit = delegate { };
@@ -38,12 +39,14 @@ public class InputManager : MonoBehaviour
         inputActions.Player.Jump.started += Jump;
         inputActions.Player.Next.started += Next;
         inputActions.Player.Shoot.started += Shoot;
+        inputActions.Player.Dash.started += Dash;
 
         inputActions.UI.Navigate.performed += Navigate;
         inputActions.UI.Submit.started += Sumbit;
         inputActions.UI.Cancel.started += UICancel;
         inputActions.UI.Inventory.started += UIInventory;
         inputActions.UI.Poem.started += UIPoem;
+
     }
 
     private void OnDisable()
@@ -97,6 +100,14 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             OnJump();
+        }
+    }
+
+    private void Dash(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            OnDash();
         }
     }
 
