@@ -7,10 +7,23 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private Transform healthBarTransform;
     [SerializeField] private Transform healthBarBackground;
     [SerializeField] private int maxHealth = 100;
+    [SerializeField] private SpriteRenderer enemySpriteRenderer;
+    [SerializeField] private float flashDuration = 0.1f;
 
     private float currentHealth;
     private Vector3 initialScale;
     private Vector3 initialPosition;
+    private Color originalColor;
+    private Material enemyMaterial;
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+        initialScale = healthBarTransform.localScale;
+        initialPosition = healthBarTransform.localPosition;
+        originalColor = enemySpriteRenderer.color; // Store the original color
+        enemyMaterial = enemySpriteRenderer.material;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -20,25 +33,27 @@ public class EnemyHealth : MonoBehaviour
         }
     }
 
-    void Start()
-    {
-        currentHealth = maxHealth;
-        initialScale = healthBarTransform.localScale;
-        initialPosition = healthBarTransform.localPosition;
-    }
-
     private void TakeDamage(int amount)
     {
-        maxHealth -= amount;
-        maxHealth = Mathf.Max(maxHealth, 0);
+        currentHealth -= amount;
+        currentHealth = Mathf.Max(currentHealth, 0);
         UpdateHealthBar();
-        if (maxHealth == 0)
+        StartCoroutine(FlashWhite());
+
+        if (currentHealth == 0)
             Die();
+    }
+
+    private IEnumerator FlashWhite()
+    {
+        enemyMaterial.SetFloat("_FlashIntensity", 1f);
+        yield return new WaitForSeconds(flashDuration);
+        enemyMaterial.SetFloat("_FlashIntensity", 0f);
     }
 
     private void Die()
     {
-        transform.gameObject.SetActive(false);
+        gameObject.SetActive(false);
     }
 
     private void UpdateHealthBar()
@@ -48,7 +63,7 @@ public class EnemyHealth : MonoBehaviour
 
         // Update the scale of the health bar
         Vector3 newScale = initialScale;
-        newScale.x /= healthPercentage;
+        newScale.x *= healthPercentage;
         healthBarTransform.localScale = newScale;
 
         // Update the position so it decreases from right to left

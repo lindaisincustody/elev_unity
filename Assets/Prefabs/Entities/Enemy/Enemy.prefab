@@ -601,3 +601,5 @@ MonoBehaviour:
   healthBarTransform: {fileID: 7056229134798131346}
   healthBarBackground: {fileID: 6719587443123937243}
   maxHealth: 100
+  enemySpriteRenderer: {fileID: 4005172728810027083}
+  flashDuration: 0.1
