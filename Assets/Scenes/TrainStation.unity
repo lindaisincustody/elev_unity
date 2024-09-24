@@ -23948,6 +23948,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
     - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: bomb
+      value: 
+      objectReference: {fileID: 8795458875112227674, guid: b37d4395d8c6f5240a16756e9ef44b7d, type: 3}
+    - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 519420031}
@@ -24024,8 +24028,16 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7905350812563266831, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: dashSpeed
+      value: 7.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905350812563266831, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: moveSpeed
       value: 2.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905350812563266831, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: dashDuration
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 7905350812563266831, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: stepInterval
