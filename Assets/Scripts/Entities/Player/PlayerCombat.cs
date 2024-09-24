@@ -5,24 +5,31 @@ using UnityEngine.UI;
 public class PlayerCombat : MonoBehaviour
 {
     [SerializeField] Bullet bullet;
+    [SerializeField] Bomb bomb;
     [SerializeField] GameObject chinchillaPrefab;
     [SerializeField] Camera mainCamera;
     [SerializeField] Text combatModeText;
 
     private int poolSize = 10;
     private List<Bullet> bulletPool = new List<Bullet>();
+    private List<Bomb> bombPool = new List<Bomb>();
+
+    private int activeBombCount = 0;
+    private const int maxActiveBombs = 3;
+
     private GameObject poolHolder;
 
     private Player player;
     private InputManager inputManager;
 
-    // Enum for combat modes
     private CombatMode currentMode = CombatMode.Bullet;
     private CombatMode[] combatModes;
+
     public enum CombatMode
     {
         Bullet,
-        Chinchilla
+        Chinchilla,
+        Bomb
     }
 
     private void Awake()
@@ -37,6 +44,7 @@ public class PlayerCombat : MonoBehaviour
     private void Start()
     {
         InitializeBulletPool();
+        InitializeBombPool();
         UpdateCombatModeUI();
     }
 
@@ -58,6 +66,9 @@ public class PlayerCombat : MonoBehaviour
 
             case CombatMode.Chinchilla:
                 SummonChinchilla();
+                break;
+            case CombatMode.Bomb:
+                ShootBomb();
                 break;
         }
     }
@@ -81,24 +92,61 @@ public class PlayerCombat : MonoBehaviour
         newBullet.Fly(direction);
     }
 
-    private void HandleModeSwitching()
+    private void ShootBomb()
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel");
-
-        if (scroll > 0f)
+        if (activeBombCount >= maxActiveBombs)
         {
-            // Scroll up (next mode)
-            int nextIndex = (System.Array.IndexOf(combatModes, currentMode) + 1) % combatModes.Length;
-            currentMode = combatModes[nextIndex];
-        }
-        else if (scroll < 0f)
-        {
-            // Scroll down (previous mode)
-            int previousIndex = (System.Array.IndexOf(combatModes, currentMode) - 1 + combatModes.Length) % combatModes.Length;
-            currentMode = combatModes[previousIndex];
+            return;
         }
 
-        UpdateCombatModeUI();
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
+
+        Vector3 direction = (mousePosition - transform.position).normalized;
+
+        Bomb newBomb = GetPooledBomb();
+        if (newBomb == null)
+        {
+            newBomb = Instantiate(bomb, poolHolder.transform);
+            newBomb.gameObject.SetActive(false);
+            bombPool.Add(newBomb);
+        }
+
+        newBomb.transform.position = transform.position;
+        newBomb.Fly(direction);
+        activeBombCount++;
+
+        newBomb.OnBombExploded -= HandleBombExploded;
+        newBomb.OnBombExploded += HandleBombExploded;
+    }
+
+    private void HandleBombExploded()
+    {
+        activeBombCount--;
+    }
+
+    private Bullet GetPooledBullet()
+    {
+        foreach (Bullet bullet in bulletPool)
+        {
+            if (!bullet.Flying)
+            {
+                return bullet;
+            }
+        }
+        return null;
+    }
+
+    private Bomb GetPooledBomb()
+    {
+        foreach (Bomb bomb in bombPool)
+        {
+            if (!bomb.Flying && bomb.HasExploded)
+            {
+                return bomb;
+            }
+        }
+        return null;
     }
 
     private void InitializeBulletPool()
@@ -113,26 +161,46 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
-    private Bullet GetPooledBullet()
+    private void InitializeBombPool()
     {
-        foreach (Bullet bullet in bulletPool)
+        poolHolder = new GameObject("Bombs");
+        bombPool = new List<Bomb>();
+        for (int i = 0; i < poolSize; i++)
         {
-            if (!bullet.Flying)
-            {
-                return bullet;
-            }
+            Bomb newBomb = Instantiate(bomb, poolHolder.transform);
+            newBomb.gameObject.SetActive(false);
+            bombPool.Add(newBomb);
         }
-        return null;
     }
+
+    private void HandleModeSwitching()
+    {
+        float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+        if (scroll > 0f)
+        {
+            int nextIndex = (System.Array.IndexOf(combatModes, currentMode) + 1) % combatModes.Length;
+            currentMode = combatModes[nextIndex];
+        }
+        else if (scroll < 0f)
+        {
+            int previousIndex = (System.Array.IndexOf(combatModes, currentMode) - 1 + combatModes.Length) % combatModes.Length;
+            currentMode = combatModes[previousIndex];
+        }
+
+        UpdateCombatModeUI();
+    }
+
     private void UpdateCombatModeUI()
     {
-        combatModeText.text = "Mode: " + currentMode.ToString(); // Update the UI with the current mode
+        combatModeText.text = "Mode: " + currentMode.ToString();
     }
 
     private void OnDestroy()
     {
         inputManager.OnShoot -= Shoot;
     }
+
     private void SummonChinchilla()
     {
         if (chinchillaPrefab != null)

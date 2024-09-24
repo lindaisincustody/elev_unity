@@ -9892,7 +9892,7 @@ GameObject:
   - component: {fileID: 8795458875112227674}
   m_Layer: 0
   m_Name: Bomb
-  m_TagString: Projectile
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9933,7 +9933,7 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 0
+  m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: 8ffc7ae2623fac446b7653cf3eddd71f, type: 2}
@@ -9976,14 +9976,14 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7066645271399216686}
-  m_BodyType: 1
+  m_BodyType: 0
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 6.94
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 7
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -10010,7 +10010,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -10024,7 +10024,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -10092,3 +10092,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e8f2a42d0e073e4a93cb6b90e9a8cfa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 1274198681844283951}
+  speed: 10
+  explosionRadius: 3
+  enemyLayer:
+    serializedVersion: 2
+    m_Bits: 4096
+  explosionDelay: 3
+  damage: 20
+  Flying: 0
