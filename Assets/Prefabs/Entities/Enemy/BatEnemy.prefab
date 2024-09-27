@@ -689,6 +689,9 @@ MonoBehaviour:
   maxHealth: 100
   healthBarTransform: {fileID: 7056229134798131346}
   healthBarBackground: {fileID: 6719587443123937243}
+  maxHealth: 100
+  enemySpriteRenderer: {fileID: 3038532075928870572}
+  flashDuration: 0.1
 --- !u!114 &4433329208213227517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,6 +746,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7861521255961741394}
     m_Modifications:
+    - target: {fileID: 4445126656023411518, guid: b09ec1d26d9b5b64bb950ff193a81d60, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4445126656023411518, guid: b09ec1d26d9b5b64bb950ff193a81d60, type: 3}
       propertyPath: m_SortingLayer
       value: 4
