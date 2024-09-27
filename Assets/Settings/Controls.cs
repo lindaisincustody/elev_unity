@@ -82,6 +82,15 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Dash"",
+                    ""type"": ""Button"",
+                    ""id"": ""c1ce57ed-6dac-4302-96c3-2c9cf1078ee4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -264,11 +273,22 @@ namespace UnityEngine.InputSystem
                 {
                     ""name"": """",
                     ""id"": ""f09b10f9-0364-4980-b29b-fa279a277996"",
-                    ""path"": ""<Keyboard>/space"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""09edb068-35d5-420c-b693-e5fc2322b7e1"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dash"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -707,6 +727,7 @@ namespace UnityEngine.InputSystem
             m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
             m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
             m_Player_Shoot = m_Player.FindAction("Shoot", throwIfNotFound: true);
+            m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -781,6 +802,7 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_Player_Jump;
         private readonly InputAction m_Player_Next;
         private readonly InputAction m_Player_Shoot;
+        private readonly InputAction m_Player_Dash;
         public struct PlayerActions
         {
             private @Controls m_Wrapper;
@@ -791,6 +813,7 @@ namespace UnityEngine.InputSystem
             public InputAction @Jump => m_Wrapper.m_Player_Jump;
             public InputAction @Next => m_Wrapper.m_Player_Next;
             public InputAction @Shoot => m_Wrapper.m_Player_Shoot;
+            public InputAction @Dash => m_Wrapper.m_Player_Dash;
             public InputActionMap Get() { return m_Wrapper.m_Player; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -818,6 +841,9 @@ namespace UnityEngine.InputSystem
                 @Shoot.started += instance.OnShoot;
                 @Shoot.performed += instance.OnShoot;
                 @Shoot.canceled += instance.OnShoot;
+                @Dash.started += instance.OnDash;
+                @Dash.performed += instance.OnDash;
+                @Dash.canceled += instance.OnDash;
             }
 
             private void UnregisterCallbacks(IPlayerActions instance)
@@ -840,6 +866,9 @@ namespace UnityEngine.InputSystem
                 @Shoot.started -= instance.OnShoot;
                 @Shoot.performed -= instance.OnShoot;
                 @Shoot.canceled -= instance.OnShoot;
+                @Dash.started -= instance.OnDash;
+                @Dash.performed -= instance.OnDash;
+                @Dash.canceled -= instance.OnDash;
             }
 
             public void RemoveCallbacks(IPlayerActions instance)
@@ -988,6 +1017,7 @@ namespace UnityEngine.InputSystem
             void OnJump(InputAction.CallbackContext context);
             void OnNext(InputAction.CallbackContext context);
             void OnShoot(InputAction.CallbackContext context);
+            void OnDash(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
