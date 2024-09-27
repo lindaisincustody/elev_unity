@@ -1,0 +1,857 @@
+fileFormatVersion: 2
+guid: a7f5596970550994e9413725a623b1a5
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc1b9d6abadfc204790896c5b761c781
+      internalID: 1553096343
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_1
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d58024c870cc28f4fbd3b226cb118669
+      internalID: -777567239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_2
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4af264dba2dfc14418fbec0fe9e9ec91
+      internalID: -941676379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_3
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cc671ff7b2f275a4ab4b7cdc6976e687
+      internalID: 312132459
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_4
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 93622bff75f0dab4f972987f30f2619e
+      internalID: -1041879406
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_5
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 81d7970ba18c003489023c7bf69f43a0
+      internalID: -273995819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_6
+      rect:
+        serializedVersion: 2
+        x: 1434
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8ef9b6e495d3efd469ed38fa7d6d8b72
+      internalID: 1236173720
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_7
+      rect:
+        serializedVersion: 2
+        x: 1673
+        y: 786
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b56280bb3c149b9479996649ac1bdaf8
+      internalID: -712649163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: de40568b0ff973349a98605971d21182
+      internalID: -370793077
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_9
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0040a35605b5889408d8149aee1c916b
+      internalID: -1626601282
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_10
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4f512f9921d3f9d41a80647d2b3ab3c2
+      internalID: -1158513439
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_11
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 236a64d01d5e7fb4a8e3b265ed96fad7
+      internalID: 1410963919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_12
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ef1cb413f45225f42a87d95cbbe50b3d
+      internalID: 608674416
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_13
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82e18667e1911a4478af9edb526e0d09
+      internalID: -554894240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_14
+      rect:
+        serializedVersion: 2
+        x: 1434
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4de25b78b0556fc489cfcad08786d38e
+      internalID: -1097300953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_15
+      rect:
+        serializedVersion: 2
+        x: 1673
+        y: 524
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c2a108288cf74c94e85a2f21d10075c1
+      internalID: 520015103
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: faafd1745f7d35447a3f6a640174a6b1
+      internalID: 35982965
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_17
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8fe0d498ce65864a9dcb786bbcee961
+      internalID: -490155088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_18
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 384a9a1a756d0f94a8afd42edacfdd8b
+      internalID: 1965354335
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_19
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba7db702e0ed5f94da161089aa43e83a
+      internalID: -1886134742
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_20
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dc88b29efacd9dc4f901891f585389fe
+      internalID: 377230040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_21
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 126b75b9779b6124fbd7313797d352c4
+      internalID: 264275632
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_22
+      rect:
+        serializedVersion: 2
+        x: 1434
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0cc8638f51588404291e4347e9224b79
+      internalID: -108740615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_23
+      rect:
+        serializedVersion: 2
+        x: 1673
+        y: 262
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: afb5724aeb9459f40909c7aaff46294d
+      internalID: -92533917
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 686f5a2b90baa3a4dbe7a4ea68a20941
+      internalID: -480375704
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_25
+      rect:
+        serializedVersion: 2
+        x: 239
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 594064fa123f58d4685a1262e68bd12a
+      internalID: 872411152
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_26
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 82536658bc565a24d8a5ef6375ef48b6
+      internalID: -122965323
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_27
+      rect:
+        serializedVersion: 2
+        x: 717
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ba42953accdf75d479c2680bf0ee68e1
+      internalID: 591066463
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_28
+      rect:
+        serializedVersion: 2
+        x: 956
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dce7e8b191720a14d961d2c150194ded
+      internalID: -283204788
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_29
+      rect:
+        serializedVersion: 2
+        x: 1195
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3392ca3e5f361bc4bbbfbed2b5f4be55
+      internalID: -2018391530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_30
+      rect:
+        serializedVersion: 2
+        x: 1434
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fded1036f87070b4a83ad62c689e9ae1
+      internalID: 388936296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Bat 239x262 (Idle Run Attack Death)_31
+      rect:
+        serializedVersion: 2
+        x: 1673
+        y: 0
+        width: 239
+        height: 262
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 584b8cd50e5da3149a6c2954bdf43349
+      internalID: -509386769
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Bat 239x262 (Idle Run Attack Death)_0: 1553096343
+      Bat 239x262 (Idle Run Attack Death)_1: -777567239
+      Bat 239x262 (Idle Run Attack Death)_10: -1158513439
+      Bat 239x262 (Idle Run Attack Death)_11: 1410963919
+      Bat 239x262 (Idle Run Attack Death)_12: 608674416
+      Bat 239x262 (Idle Run Attack Death)_13: -554894240
+      Bat 239x262 (Idle Run Attack Death)_14: -1097300953
+      Bat 239x262 (Idle Run Attack Death)_15: 520015103
+      Bat 239x262 (Idle Run Attack Death)_16: 35982965
+      Bat 239x262 (Idle Run Attack Death)_17: -490155088
+      Bat 239x262 (Idle Run Attack Death)_18: 1965354335
+      Bat 239x262 (Idle Run Attack Death)_19: -1886134742
+      Bat 239x262 (Idle Run Attack Death)_2: -941676379
+      Bat 239x262 (Idle Run Attack Death)_20: 377230040
+      Bat 239x262 (Idle Run Attack Death)_21: 264275632
+      Bat 239x262 (Idle Run Attack Death)_22: -108740615
+      Bat 239x262 (Idle Run Attack Death)_23: -92533917
+      Bat 239x262 (Idle Run Attack Death)_24: -480375704
+      Bat 239x262 (Idle Run Attack Death)_25: 872411152
+      Bat 239x262 (Idle Run Attack Death)_26: -122965323
+      Bat 239x262 (Idle Run Attack Death)_27: 591066463
+      Bat 239x262 (Idle Run Attack Death)_28: -283204788
+      Bat 239x262 (Idle Run Attack Death)_29: -2018391530
+      Bat 239x262 (Idle Run Attack Death)_3: 312132459
+      Bat 239x262 (Idle Run Attack Death)_30: 388936296
+      Bat 239x262 (Idle Run Attack Death)_31: -509386769
+      Bat 239x262 (Idle Run Attack Death)_4: -1041879406
+      Bat 239x262 (Idle Run Attack Death)_5: -273995819
+      Bat 239x262 (Idle Run Attack Death)_6: 1236173720
+      Bat 239x262 (Idle Run Attack Death)_7: -712649163
+      Bat 239x262 (Idle Run Attack Death)_8: -370793077
+      Bat 239x262 (Idle Run Attack Death)_9: -1626601282
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

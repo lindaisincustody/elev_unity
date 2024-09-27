@@ -24,13 +24,16 @@ public class SanityEffectHandler : MonoBehaviour
     private bool isRippleActive = false;
     private bool isAnimating = false; // Keep track of animation state
 
-    private void Start()
+    private void Awake()
     {
         if (SanityBar.instance != null)
         {
             SanityBar.instance.OnSanityChange += OnSanityChange;
         }
+    }
 
+    private void Start()
+    {
         LoadVolumeComponents();
         ResetEffects();
         IsPlayerInUnderworld = false; // Ensure it starts as false
