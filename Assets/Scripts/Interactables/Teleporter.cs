@@ -57,7 +57,7 @@ public class Teleporter : Interactable
             case Scene.Main:
                 return Constants.SceneNames.MainScene;
             case Scene.Station:
-                return Constants.SceneNames.StationScene;
+                return Constants.SceneNames.TrainStation;
             case Scene.Hotel:
                 return Constants.SceneNames.HotelScene;
             default:

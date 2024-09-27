@@ -6,9 +6,23 @@ public class EnemyHealth : Health
 {
     [SerializeField] private Transform healthBarTransform;
     [SerializeField] private Transform healthBarBackground;
+    [SerializeField] private int maxHealth = 100;
+    [SerializeField] private SpriteRenderer enemySpriteRenderer;
+    [SerializeField] private float flashDuration = 0.1f;
 
     private Vector3 initialScale;
     private Vector3 initialPosition;
+    private Color originalColor;
+    private Material enemyMaterial;
+
+    private void Start()
+    {
+        currentHealth = maxHealth;
+        initialScale = healthBarTransform.localScale;
+        initialPosition = healthBarTransform.localPosition;
+        originalColor = enemySpriteRenderer.color; // Store the original color
+        enemyMaterial = enemySpriteRenderer.material;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -18,16 +32,27 @@ public class EnemyHealth : Health
         }
     }
 
-    void Start()
+    public void TakeDamage(int amount)
     {
-        currentHealth = maxHealth;
-        initialScale = healthBarTransform.localScale;
-        initialPosition = healthBarTransform.localPosition;
+        currentHealth -= amount;
+        currentHealth = Mathf.Max(currentHealth, 0);
+        UpdateHealthBar();
+        StartCoroutine(FlashWhite());
+
+        if (currentHealth == 0)
+            Die();
     }
 
-    protected override void Die()
+    private IEnumerator FlashWhite()
     {
-        transform.gameObject.SetActive(false);
+        enemyMaterial.SetFloat("_FlashIntensity", 1f);
+        yield return new WaitForSeconds(flashDuration);
+        enemyMaterial.SetFloat("_FlashIntensity", 0f);
+    }
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
     }
 
     protected override void UpdateHealthBar()
