@@ -4,23 +4,19 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - MazeEnd
   - Consumable
   - Pin
   - HollowCircle
-  - LeftZone
-  - RightZone
   - Heart
   - Projectile
-  - X
-  - O
   - Wall
-  - CorrectDestination
+  - BatEnemy
+  - Body
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Projectile
   - Water
   - UI
   - Ground
@@ -29,8 +25,8 @@ TagManager:
   - Consumable
   - Joint
   - UnderworldLayer
-  - 
-  - 
+  - Body
+  - Sensor
   - 
   - 
   - 

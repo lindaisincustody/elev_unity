@@ -2,13 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class EnemyHealth : Health
 {
     [SerializeField] private Transform healthBarTransform;
     [SerializeField] private Transform healthBarBackground;
-    [SerializeField] private int maxHealth = 100;
 
-    private float currentHealth;
     private Vector3 initialScale;
     private Vector3 initialPosition;
 
@@ -27,33 +25,26 @@ public class EnemyHealth : MonoBehaviour
         initialPosition = healthBarTransform.localPosition;
     }
 
-    private void TakeDamage(int amount)
-    {
-        maxHealth -= amount;
-        maxHealth = Mathf.Max(maxHealth, 0);
-        UpdateHealthBar();
-        if (maxHealth == 0)
-            Die();
-    }
-
-    private void Die()
+    protected override void Die()
     {
         transform.gameObject.SetActive(false);
     }
 
-    private void UpdateHealthBar()
+    protected override void UpdateHealthBar()
     {
-        // Calculate the health percentage
         float healthPercentage = currentHealth / maxHealth;
 
-        // Update the scale of the health bar
         Vector3 newScale = initialScale;
-        newScale.x /= healthPercentage;
+        newScale.x *= healthPercentage;
         healthBarTransform.localScale = newScale;
 
-        // Update the position so it decreases from right to left
         Vector3 newPosition = initialPosition;
         newPosition.x = initialPosition.x - (initialScale.x - newScale.x) / 2;
         healthBarTransform.localPosition = newPosition;
+    }
+
+    public float NormalizedHealth()
+    {
+        return currentHealth / maxHealth;
     }
 }
