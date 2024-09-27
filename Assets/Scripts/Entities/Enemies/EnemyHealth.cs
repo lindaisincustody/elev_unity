@@ -6,7 +6,6 @@ public class EnemyHealth : Health
 {
     [SerializeField] private Transform healthBarTransform;
     [SerializeField] private Transform healthBarBackground;
-    [SerializeField] private int maxHealth = 100;
     [SerializeField] private SpriteRenderer enemySpriteRenderer;
     [SerializeField] private float flashDuration = 0.1f;
 
