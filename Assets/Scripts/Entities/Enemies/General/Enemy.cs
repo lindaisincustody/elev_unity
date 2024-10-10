@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject overworldBody;
 
     [SerializeField] private EnemyMovement enemyMovement;
+    [SerializeField] private List<Component> components;
 
     public Vector2 minBound { get; set; }
     public Vector2 maxBound { get; set; }
@@ -18,6 +19,19 @@ public class Enemy : MonoBehaviour
         SanityBar.instance.OnSanityChange += SanityChange;
         SanityChange(0);
         SetBounds();
+    }
+
+    public T Get<T>() where T : Component
+    {
+        foreach (var item in components)
+        {
+            if (item is T)
+            {
+                return item as T;
+            }
+        }
+
+        return null;
     }
 
     private void SetBounds()

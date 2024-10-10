@@ -7,6 +7,7 @@ public class EnemyHealth : Health
     [SerializeField] private Transform healthBarTransform;
     [SerializeField] private Transform healthBarBackground;
     [SerializeField] private SpriteRenderer enemySpriteRenderer;
+    [SerializeField] private EnemyAnimator animator;
     [SerializeField] private float flashDuration = 0.1f;
 
     private Vector3 initialScale;
@@ -38,8 +39,8 @@ public class EnemyHealth : Health
         UpdateHealthBar();
         StartCoroutine(FlashWhite());
 
-        if (currentHealth == 0)
-            Die();
+        if (currentHealth == 0 && !isDead)
+            StartCoroutine(Die());
     }
 
     private IEnumerator FlashWhite()
@@ -49,8 +50,11 @@ public class EnemyHealth : Health
         enemyMaterial.SetFloat("_FlashIntensity", 0f);
     }
 
-    private void Die()
+    private IEnumerator Die()
     {
+        isDead = true;
+        animator.PlayAnimation(EnemyAnimator.AnimationType.Die);
+        yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
     }
 

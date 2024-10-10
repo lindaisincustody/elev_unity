@@ -9,7 +9,8 @@ public class Brain : MonoBehaviour
 
     public List<AIAction> actions;
     public Context context;
-    
+
+    public Enemy enemy;
     public EnemyMovement movement;
     public EnemyHealth health;
     public EnemyAttack attack;
@@ -45,7 +46,9 @@ public class Brain : MonoBehaviour
     {
         UpdateContext();
 
-        if (isActionBusy) return;
+        if (isActionBusy || health.isDead) return;
+
+        movement.Move();
 
         AIAction bestAction = null;
         float hightestUtility = float.MinValue;
