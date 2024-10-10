@@ -1,0 +1,857 @@
+fileFormatVersion: 2
+guid: a5714655a274bed43bd34345a4de5418
+TextureImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 12
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 3
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 3
+    buildTarget: Server
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5f43ae92cb665b4c85589dcc0ec6c19
+      internalID: -2064468079
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_1
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c0a632b9793bf0744bbfc4a54d274fe4
+      internalID: 1707638315
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_2
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 19ed43ca114eb214984892983d2977bd
+      internalID: -2127354238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_3
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95dc2184fe8bd4f40a47f6d76eeeff99
+      internalID: 394142140
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_4
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94eb746fc3f347e479ff05d61cc07c29
+      internalID: 98596155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_5
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e1fb1a1fab8b0924cb6a230cdd5784dc
+      internalID: -541462227
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_6
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a681ac49ef7410d4aa69c2324f9c1320
+      internalID: 1316729722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_7
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 855
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 9f8cb0e2deaea934bb08ad75259f4748
+      internalID: -1355507547
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58acad38bfbeac74d90195b5f89337ac
+      internalID: -606614484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_9
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 77e677a4fdb4d4b4d98c31a9d22ac0b8
+      internalID: -426738264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_10
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a7e3c4f6ca3167048a6837cd6c20c205
+      internalID: -1688349168
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_11
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73d31803e3e7b5d4c8e84b9d69148bad
+      internalID: -640330033
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_12
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 35abcaf2bc311ac439c906ab6bf88c02
+      internalID: -2140939931
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_13
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 194c850005f59994685264e48c497fe4
+      internalID: 1889185835
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_14
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 31020375df5b782409b4543092843b9e
+      internalID: -588309693
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_15
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 570
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 95b79d32121a7124f8e00971f7c9ce65
+      internalID: 1379980896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_16
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 502ce52cc91d48740b9b8072090f1279
+      internalID: -1513272859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_17
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0dc630102abc8384a954da6c14b30034
+      internalID: -653366127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_18
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3489a3a37921a194d97c16eb67b5a69f
+      internalID: -595199553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_19
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 46fef17457b97fa4a828d950deda1526
+      internalID: 1523382998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_20
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 0eab6d79950d7be46a6cee0f2d8dbabc
+      internalID: -71204427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_21
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c5c1069f6241ce442b1e43580de59401
+      internalID: 59008800
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_22
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e45b46026b3b5d9439e4d879bc48d74f
+      internalID: 1161790204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_23
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 285
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a4e09aeb8753df44c8d8b207f5a15bda
+      internalID: -53012551
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 57c3aa557e8b44e4eabd9c9cbe27bb7d
+      internalID: 1911872155
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_25
+      rect:
+        serializedVersion: 2
+        x: 270
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 86b96385427c1e44b9f58ca02e3f79a2
+      internalID: -2103268135
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_26
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 10a801cf7cdcd694386573eeecdd270e
+      internalID: -1744906493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_27
+      rect:
+        serializedVersion: 2
+        x: 810
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 92a6718fa719af14b8b6dad5e8fb8631
+      internalID: -1457976186
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_28
+      rect:
+        serializedVersion: 2
+        x: 1080
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2d1253796917764dae910f047d17ef4
+      internalID: -1015316771
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_29
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 596eb0a1fedaf3d4a9da1e658c75428c
+      internalID: 149900164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_30
+      rect:
+        serializedVersion: 2
+        x: 1620
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d8168400dc0f55c4bbcf69c25d7a0010
+      internalID: -524859722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Ghost 270x285 (Idle Run Attack Death)_31
+      rect:
+        serializedVersion: 2
+        x: 1890
+        y: 0
+        width: 270
+        height: 285
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29158ec8f66ee274bb30329f2f0a492f
+      internalID: -1609703232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    nameFileIdTable:
+      Ghost 270x285 (Idle Run Attack Death)_0: -2064468079
+      Ghost 270x285 (Idle Run Attack Death)_1: 1707638315
+      Ghost 270x285 (Idle Run Attack Death)_10: -1688349168
+      Ghost 270x285 (Idle Run Attack Death)_11: -640330033
+      Ghost 270x285 (Idle Run Attack Death)_12: -2140939931
+      Ghost 270x285 (Idle Run Attack Death)_13: 1889185835
+      Ghost 270x285 (Idle Run Attack Death)_14: -588309693
+      Ghost 270x285 (Idle Run Attack Death)_15: 1379980896
+      Ghost 270x285 (Idle Run Attack Death)_16: -1513272859
+      Ghost 270x285 (Idle Run Attack Death)_17: -653366127
+      Ghost 270x285 (Idle Run Attack Death)_18: -595199553
+      Ghost 270x285 (Idle Run Attack Death)_19: 1523382998
+      Ghost 270x285 (Idle Run Attack Death)_2: -2127354238
+      Ghost 270x285 (Idle Run Attack Death)_20: -71204427
+      Ghost 270x285 (Idle Run Attack Death)_21: 59008800
+      Ghost 270x285 (Idle Run Attack Death)_22: 1161790204
+      Ghost 270x285 (Idle Run Attack Death)_23: -53012551
+      Ghost 270x285 (Idle Run Attack Death)_24: 1911872155
+      Ghost 270x285 (Idle Run Attack Death)_25: -2103268135
+      Ghost 270x285 (Idle Run Attack Death)_26: -1744906493
+      Ghost 270x285 (Idle Run Attack Death)_27: -1457976186
+      Ghost 270x285 (Idle Run Attack Death)_28: -1015316771
+      Ghost 270x285 (Idle Run Attack Death)_29: 149900164
+      Ghost 270x285 (Idle Run Attack Death)_3: 394142140
+      Ghost 270x285 (Idle Run Attack Death)_30: -524859722
+      Ghost 270x285 (Idle Run Attack Death)_31: -1609703232
+      Ghost 270x285 (Idle Run Attack Death)_4: 98596155
+      Ghost 270x285 (Idle Run Attack Death)_5: -541462227
+      Ghost 270x285 (Idle Run Attack Death)_6: 1316729722
+      Ghost 270x285 (Idle Run Attack Death)_7: -1355507547
+      Ghost 270x285 (Idle Run Attack Death)_8: -606614484
+      Ghost 270x285 (Idle Run Attack Death)_9: -426738264
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

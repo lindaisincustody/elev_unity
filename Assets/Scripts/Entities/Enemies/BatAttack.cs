@@ -15,6 +15,7 @@ public class BatAttack : EnemyAttack
     private Vector3 beforeShakePosition;
 
     private bool canAttack = false;
+
     public override void Attack(Health targetHeatlh, EnemyAnimator animator, System.Action onAttackEnd)
     {
         originalPosition = transform.position;
@@ -86,6 +87,7 @@ public class BatAttack : EnemyAttack
     {
         if (shakeCoruotine != null)
             StopCoroutine(shakeCoruotine);
+
         spriteRenderer.color = Color.white;
         canAttack = false;
     }

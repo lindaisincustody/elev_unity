@@ -19,7 +19,6 @@ public class SpawnEnemy : MonoBehaviour
 
     private void SpawnEnemies()
     {
-        Vector2 offset;
         for (int i = 0; i < spawnPoint.Count; i++)
         {
             Enemy newEnemy = Instantiate(enemyPrefab, spawnPoint[i].position, Quaternion.identity);

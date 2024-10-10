@@ -17,12 +17,14 @@ public class EnemyMovement : MonoBehaviour
                 return;
 
             _target = value;
+            animator.PlayAnimation(EnemyAnimator.AnimationType.Walk);
             UpdateBody();
         }
     }
 
     [SerializeField] private Transform body;
     [SerializeField] private Rigidbody2D rb;
+    [SerializeField] private EnemyAnimator animator;
     [SerializeField] private float daySpeed;
     [SerializeField] private float nightSpeed;
     [SerializeField] private float smoothTime = 0.3f;
@@ -49,7 +51,7 @@ public class EnemyMovement : MonoBehaviour
         speed = SanityEffectHandler.IsPlayerInUnderworld ? nightSpeed : daySpeed;
     }
 
-    private void FixedUpdate()
+    public void Move()
     {
         if (target.HasValue)
         {
@@ -73,8 +75,11 @@ public class EnemyMovement : MonoBehaviour
 
         if (Vector2.Distance(rb.position, targetPos) < 0.1f)
         {
+            animator.PlayAnimation(EnemyAnimator.AnimationType.Idle);
             target = null;
         }
+
+        UpdateBody();
     }
 
     private void UpdateBody()

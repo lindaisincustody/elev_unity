@@ -7,7 +7,7 @@ public class Health : MonoBehaviour
     [SerializeField] protected int maxHealth = 100;
 
     protected float currentHealth;
-    protected bool isDead = false;
+    public bool isDead { get; set; }
 
     public void TakeDamage(int amount)
     {
