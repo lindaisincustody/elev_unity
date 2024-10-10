@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,9 +18,13 @@ public class PlayerCombat : MonoBehaviour
     private int activeBombCount = 0;
     private const int maxActiveBombs = 3;
 
+    [SerializeField] private float meleeAttackRange = 2f; 
+    [SerializeField] private int meleeDamage = 20; 
+
     private GameObject poolHolder;
 
     private Player player;
+    private Animator animator;
     private InputManager inputManager;
 
     private CombatMode currentMode = CombatMode.Bullet;
@@ -29,12 +34,14 @@ public class PlayerCombat : MonoBehaviour
     {
         Bullet,
         Chinchilla,
-        Bomb
+        Bomb,
+        Melee
     }
 
     private void Awake()
     {
         player = GetComponent<Player>();
+        animator = GetComponent<Animator>();
         inputManager = player.GetInputManager;
         inputManager.OnShoot += Shoot;
 
@@ -69,6 +76,9 @@ public class PlayerCombat : MonoBehaviour
                 break;
             case CombatMode.Bomb:
                 ShootBomb();
+                break;
+            case CombatMode.Melee:
+                PerformMeleeAttack(); 
                 break;
         }
     }
@@ -119,6 +129,47 @@ public class PlayerCombat : MonoBehaviour
         newBomb.OnBombExploded -= HandleBombExploded;
         newBomb.OnBombExploded += HandleBombExploded;
     }
+
+    private void PerformMeleeAttack()
+    {
+        player.GetComponent<PlayerMovement>().isAttacking = true;
+
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
+
+        Vector3 direction = (mousePosition - transform.position).normalized;
+
+        if (direction.x > 0)
+        {
+            animator.SetBool("MeleeRight", true);
+        }
+        else
+        {
+            animator.SetBool("MeleeLeft", true);
+        }
+
+        StartCoroutine(ResetMeleeAnimation());
+        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, meleeAttackRange);
+
+        foreach (Collider2D enemy in hitEnemies)
+        {
+            if (enemy.CompareTag("Enemy"))
+            {
+                enemy.GetComponent<EnemyHealth>().TakeDamage(meleeDamage);
+            }
+        }
+    }
+
+    private IEnumerator ResetMeleeAnimation()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        animator.SetBool("MeleeRight", false);
+        animator.SetBool("MeleeLeft", false);
+
+        player.GetComponent<PlayerMovement>().isAttacking = false;
+    }
+
 
     private void HandleBombExploded()
     {
@@ -212,4 +263,5 @@ public class PlayerCombat : MonoBehaviour
             Debug.LogWarning("Chinchilla prefab not assigned!");
         }
     }
+
 }

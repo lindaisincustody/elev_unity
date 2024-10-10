@@ -24092,6 +24092,14 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
     - target: {fileID: 2226871447008519275, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_Size.x
+      value: 1.7142857
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226871447008519275, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_Size.y
+      value: 1.7142857
+      objectReference: {fileID: 0}
+    - target: {fileID: 2226871447008519275, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -24127,6 +24135,10 @@ PrefabInstance:
       propertyPath: chinchillaPrefab
       value: 
       objectReference: {fileID: 7920130587965075085, guid: ff49d55c0d22ab541b0162df80738cca, type: 3}
+    - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: meleeAttackRange
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5795484339065585095, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_Layer
       value: 8
@@ -24138,6 +24150,14 @@ PrefabInstance:
     - target: {fileID: 6117977592564839130, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_PlayOnAwake
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769244744475398257, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.x
+      value: 1.7142857
+      objectReference: {fileID: 0}
+    - target: {fileID: 6769244744475398257, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_SpriteTilingProperty.newSize.y
+      value: 1.7142857
       objectReference: {fileID: 0}
     - target: {fileID: 7209615563578176535, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_Layer
