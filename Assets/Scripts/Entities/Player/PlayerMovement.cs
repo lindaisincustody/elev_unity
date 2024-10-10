@@ -29,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
     public float stepTimingAdjustment = 0.95f;
     public float stepInterval = 0.435f; // Interval between steps, decrease to make loop faster
     public bool isInteracting = false;
+    public bool isAttacking = false;
 
     private void Awake()
     {
@@ -53,6 +54,16 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (isAttacking)
+        {
+            movement = Vector2.zero;
+            StopMovementSound();
+            animator.SetFloat("Horizontal", 0);
+            animator.SetFloat("Vertical", 0);
+            animator.SetFloat("Speed", 0);
+            return;
+        }
+
         if (!_canMove)
         {
             StopMovementSound();
