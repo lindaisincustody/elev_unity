@@ -153,7 +153,7 @@ public class PlayerCombat : MonoBehaviour
 
         foreach (Collider2D enemy in hitEnemies)
         {
-            if (enemy.CompareTag("Enemy"))
+            if (enemy.CompareTag("Body"))
             {
                 enemy.GetComponent<EnemyHealth>().TakeDamage(meleeDamage);
             }
