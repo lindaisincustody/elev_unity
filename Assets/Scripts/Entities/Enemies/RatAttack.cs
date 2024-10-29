@@ -9,10 +9,10 @@ public class RatAttack : EnemyAttack
     [SerializeField] private Transform body;
     [SerializeField] private float attackRange;
 
-    public override void Attack(Health targetHeatlh, EnemyAnimator animator, Action onAttackEnd)
-    {  
-        animator.PlayAnimation(EnemyAnimator.AnimationType.Attack);
-        StartCoroutine(AttackSequence(targetHeatlh, onAttackEnd));
+    public override void Attack(AttackRequest attackRequest)
+    {
+        attackRequest.animator.Play(EnemyAnimator.AnimationType.Attack);
+        StartCoroutine(AttackSequence(attackRequest.targetHealth, attackRequest.onAttackEnd));
     }
 
     private IEnumerator AttackSequence(Health targetHeatlh, Action onAttackEnd)

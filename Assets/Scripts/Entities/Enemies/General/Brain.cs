@@ -11,10 +11,6 @@ public class Brain : MonoBehaviour
     public Context context;
 
     public Enemy enemy;
-    public EnemyMovement movement;
-    public EnemyHealth health;
-    public EnemyAttack attack;
-    public EnemyAnimator animator;
 
     private bool _isActionBusy;
 
@@ -33,8 +29,7 @@ public class Brain : MonoBehaviour
 
     private void Awake()
     {
-        context = new Context(this, sensor, movement);
-        health = GetComponent<EnemyHealth>();
+        context = new Context(this, sensor, enemy.Get<EnemyMovement>());
 
         foreach (var action in actions)
         {
@@ -46,9 +41,9 @@ public class Brain : MonoBehaviour
     {
         UpdateContext();
 
-        if (isActionBusy || health.isDead) return;
+        if (isActionBusy || enemy.Get<Health>().isDead) return;
 
-        movement.Move();
+        enemy.Get<EnemyMovement>().Move();
 
         AIAction bestAction = null;
         float hightestUtility = float.MinValue;
@@ -79,6 +74,6 @@ public class Brain : MonoBehaviour
 
     private void UpdateContext()
     {
-        context.SetData("Health", health.NormalizedHealth());
+        context.SetData("Health", enemy.Get<EnemyHealth>().NormalizedHealth());
     }
 }

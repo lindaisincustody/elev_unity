@@ -8,11 +8,11 @@ public class GolemAttack : EnemyAttack
     [SerializeField] private EnemyProjectile bolder;
     [SerializeField] private Transform body;
 
-    public override void Attack(Health targetHeatlh, EnemyAnimator animator, Action onAttackEnd)
+    public override void Attack(AttackRequest attackRequest)
     {
-        FaceTarget(targetHeatlh.transform);
-        animator.PlayAnimation(EnemyAnimator.AnimationType.Attack);
-        StartCoroutine(AttackSequence(onAttackEnd));
+        FaceTarget(attackRequest.targetHealth.transform);
+        attackRequest.animator.Play(EnemyAnimator.AnimationType.Attack);
+        StartCoroutine(AttackSequence(attackRequest.onAttackEnd));
     }
 
     private IEnumerator AttackSequence(Action onAttackEnd)

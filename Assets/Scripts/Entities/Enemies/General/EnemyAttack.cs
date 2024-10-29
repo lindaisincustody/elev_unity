@@ -2,9 +2,31 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class EnemyAttack : MonoBehaviour
+public abstract class EnemyAttack : Component
 {
     public int damageAmount;
-    public abstract void Attack(Health targetHeatlh, EnemyAnimator animator, System.Action onAttackEnd);
+    public abstract void Attack(AttackRequest attackRequest);
     public abstract void ResetAttack();
+}
+
+public struct AttackRequest
+{
+    public Health targetHealth;
+    public EnemyAnimator animator;
+    public AttackType attackType;
+    public System.Action onAttackEnd;
+
+    public AttackRequest(Health health, EnemyAnimator anim, AttackType type, System.Action action)
+    {
+        this.targetHealth = health;
+        this.animator = anim;
+        this.attackType = type;
+        this.onAttackEnd = action;
+    }
+}
+
+public enum AttackType
+{
+    Default,
+    Special
 }

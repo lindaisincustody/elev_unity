@@ -8,8 +8,9 @@ public class Enemy : MonoBehaviour
     [SerializeField] private GameObject underworldBody;
     [SerializeField] private GameObject overworldBody;
 
-    [SerializeField] private EnemyMovement enemyMovement;
     [SerializeField] private List<Component> components;
+
+    private Dictionary<System.Type, Component> componentCache = new Dictionary<System.Type, Component>();
 
     public Vector2 minBound { get; set; }
     public Vector2 maxBound { get; set; }
@@ -23,10 +24,18 @@ public class Enemy : MonoBehaviour
 
     public T Get<T>() where T : Component
     {
+        var type = typeof(T);
+
+        if (componentCache.TryGetValue(type, out Component cachedComponent))
+        {
+            return cachedComponent as T;
+        }
+
         foreach (var item in components)
         {
             if (item is T)
             {
+                componentCache[type] = item;
                 return item as T;
             }
         }
@@ -36,8 +45,8 @@ public class Enemy : MonoBehaviour
 
     private void SetBounds()
     {
-        enemyMovement.minBound = minBound;
-        enemyMovement.maxBound = maxBound;
+        Get<EnemyMovement>().minBound = minBound;
+        Get<EnemyMovement>().maxBound = maxBound;
     }
 
     private void SanityChange(int amount)
