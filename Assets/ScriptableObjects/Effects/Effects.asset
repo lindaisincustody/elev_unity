@@ -9,8 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16ac685c91a62bd428ec6593620edd23, type: 3}
-  m_Name: GhostAttack
+  m_Script: {fileID: 11500000, guid: 805120227ab0a0949b0aed17183fa83a, type: 3}
+  m_Name: Effects
   m_EditorClassIdentifier: 
-  targetTag: Player
-  consideration: {fileID: 11400000, guid: adce0fb78e4784347ba75ac838336cad, type: 2}
+  effects:
+  - Type: 0
+    effectObj: {fileID: 1416251203960089665, guid: 3dca521e285aa41428dd86e0019a156c, type: 3}

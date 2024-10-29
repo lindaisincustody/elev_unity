@@ -16,17 +16,17 @@ public class BatAttack : EnemyAttack
 
     private bool canAttack = false;
 
-    public override void Attack(Health targetHeatlh, EnemyAnimator animator, System.Action onAttackEnd)
+    public override void Attack(AttackRequest attackRequest)
     {
         originalPosition = transform.position;
 
         if (canAttack)
         {
-            animator.PlayAnimation(EnemyAnimator.AnimationType.Attack);
-            StartCoroutine(QuickAttack(targetHeatlh, onAttackEnd));
+            attackRequest.animator.Play(EnemyAnimator.AnimationType.Attack);
+            StartCoroutine(QuickAttack(attackRequest.targetHealth, attackRequest.onAttackEnd));
         }
         else
-            PrepareAttack(onAttackEnd);
+            PrepareAttack(attackRequest.onAttackEnd);
     }
 
     private void PrepareAttack(System.Action onAttackEnd)

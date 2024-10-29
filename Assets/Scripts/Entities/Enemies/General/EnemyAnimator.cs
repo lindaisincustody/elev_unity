@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyAnimator : MonoBehaviour
+public class EnemyAnimator : Component
 {
     [SerializeField] private Animator animator;
 
@@ -10,7 +10,7 @@ public class EnemyAnimator : MonoBehaviour
 
     private bool isDead = false;
 
-    public void PlayAnimation(AnimationType anim)
+    public void Play(AnimationType anim)
     {
         if (isDead)
             return;
@@ -21,15 +21,36 @@ public class EnemyAnimator : MonoBehaviour
         if (!animator.gameObject.activeInHierarchy)
             return;
 
-        animator.Play(anim.ToString());
+        animator.SetInteger("State", (int)anim);
         lastAnim = anim;
+    }
+
+    public void PlayInstant(AnimationType anim)
+    {
+        if (isDead)
+            return;
+
+        if (anim == AnimationType.Die)
+            isDead = true;
+
+        if (!animator.gameObject.activeInHierarchy)
+            return;
+
+        animator.Play(anim.ToString(), -1, 0f);  // -1 for default layer, 0f to start from the beginning
+        lastAnim = anim;
+    }
+
+
+
+    public void ResetAnimator()
+    {
+        animator.SetInteger("State", 0);
     }
 
     public enum AnimationType
     {
         Idle,
         Walk,
-        Run,
         Attack,
         Die
     }

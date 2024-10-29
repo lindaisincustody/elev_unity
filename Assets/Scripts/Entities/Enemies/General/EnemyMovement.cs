@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyMovement : MonoBehaviour
+public class EnemyMovement : Component
 {
     private Vector2? _target;
     public Vector2? target
@@ -17,8 +17,8 @@ public class EnemyMovement : MonoBehaviour
                 return;
 
             _target = value;
-            animator.PlayAnimation(EnemyAnimator.AnimationType.Walk);
-            UpdateBody();
+            animator.Play(EnemyAnimator.AnimationType.Walk);
+            bodyHandler.UpdateBody(_target);
         }
     }
 
@@ -34,14 +34,18 @@ public class EnemyMovement : MonoBehaviour
     public Vector2 maxBound { get; set; }
     public float passedTime { get; set; }
 
+    private Body bodyHandler;
+    private AvoidBehaviour enemyBehavior;
     private Vector2 velocity = Vector2.zero;
     private float speed;
 
     private void Start()
     {
+        bodyHandler = new(body);
+        enemyBehavior = new (rb, minBound, maxBound);
         spawnPos = transform.position;
         target = Vector2.zero;
-        
+
         SanityBar.instance.OnSanityChange += SanityChange;
         SanityChange(0);
     }
@@ -49,6 +53,19 @@ public class EnemyMovement : MonoBehaviour
     private void SanityChange(int amount)
     {
         speed = SanityEffectHandler.IsPlayerInUnderworld ? nightSpeed : daySpeed;
+    }
+
+    public void Avoid(Transform player)
+    {
+        Vector2 directionAwayFromPlayer = (rb.position - (Vector2)player.position).normalized;
+
+        Vector2 proposedPosition = rb.position + enemyBehavior.GetDirection(directionAwayFromPlayer);
+
+        proposedPosition.x = Mathf.Clamp(proposedPosition.x, minBound.x, maxBound.x);
+        proposedPosition.y = Mathf.Clamp(proposedPosition.y, minBound.y, maxBound.y);
+
+        target = proposedPosition;
+        Move();
     }
 
     public void Move()
@@ -75,28 +92,10 @@ public class EnemyMovement : MonoBehaviour
 
         if (Vector2.Distance(rb.position, targetPos) < 0.1f)
         {
-            animator.PlayAnimation(EnemyAnimator.AnimationType.Idle);
+            animator.Play(EnemyAnimator.AnimationType.Idle);
             target = null;
         }
 
-        UpdateBody();
-    }
-
-    private void UpdateBody()
-    {
-        if (!target.HasValue)
-            return;
-
-        Vector2 targetPos = target.Value;
-        Vector2 currentPos = transform.position;
-
-        if (targetPos.x < currentPos.x)
-        {
-            body.localScale = new Vector3(1, 1, 1);
-        }
-        else
-        {
-            body.localScale = new Vector3(-1, 1, 1);
-        }
+        bodyHandler.UpdateBody(_target);
     }
 }

@@ -9,13 +9,13 @@ public class RoamAction : AIAction
 
     public override void Execute(Context context)
     {
-        if (context.brain.movement.passedTime >= roamCooldown)
+        if (context.brain.enemy.Get<EnemyMovement>().passedTime >= roamCooldown)
         {
             GetNewPosition(context);
-            context.brain.movement.passedTime = 0f; 
+            context.brain.enemy.Get<EnemyMovement>().passedTime = 0f; 
         }
 
-        context.brain.movement.passedTime += Time.deltaTime;
+        context.brain.enemy.Get<EnemyMovement>().passedTime += Time.deltaTime;
     }
 
     private void GetNewPosition(Context context)
@@ -27,7 +27,7 @@ public class RoamAction : AIAction
                        Random.Range(context.movement.minBound.y, context.movement.maxBound.y));
 
        context.movement.target = newPosition;
-       context.brain.animator.PlayAnimation(EnemyAnimator.AnimationType.Walk);
+       context.brain.enemy.Get<EnemyAnimator>().Play(EnemyAnimator.AnimationType.Walk);
     }
 
     public override void Reset(Context context)

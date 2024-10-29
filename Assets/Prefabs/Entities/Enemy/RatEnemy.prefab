@@ -653,8 +653,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   underworldBody: {fileID: 7458510192768412762}
   overworldBody: {fileID: 1490766261496143763}
-  enemyMovement: {fileID: 4433329208213227517}
-  components: []
+  components:
+  - {fileID: 5580081335637333945}
+  - {fileID: 4345423784217660443}
+  - {fileID: 4433329208213227517}
+  - {fileID: 1133784126604518903}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -673,10 +676,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 8f473cd1d1567c34294a367b009110c5, type: 2}
   - {fileID: 11400000, guid: 7ff0afac6dda38d48a759a8057098123, type: 2}
   enemy: {fileID: 1186790290414908665}
-  movement: {fileID: 4433329208213227517}
-  health: {fileID: 1133784126604518903}
-  attack: {fileID: 5580081335637333945}
-  animator: {fileID: 4345423784217660443}
 --- !u!114 &1133784126604518903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -692,7 +691,7 @@ MonoBehaviour:
   maxHealth: 100
   healthBarTransform: {fileID: 7056229134798131346}
   healthBarBackground: {fileID: 6719587443123937243}
-  enemySpriteRenderer: {fileID: 6487846436552796970}
+  body: {fileID: 6487846436552796970}
   animator: {fileID: 4345423784217660443}
   flashDuration: 0.1
 --- !u!114 &4433329208213227517

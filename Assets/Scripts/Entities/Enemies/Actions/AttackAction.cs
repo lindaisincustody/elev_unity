@@ -15,19 +15,23 @@ public class AttackAction : AIAction
     {
         context.brain.isActionBusy = true;
         var health = context.target.GetComponent<Health>();
-        var animator = context.brain.animator;
+        var animator = context.brain.enemy.Get<EnemyAnimator>();
         var lastAnim = animator.lastAnim;
-        context.brain.attack.Attack(health, animator, () =>
-            {
-                context.brain.isActionBusy = false;
-                animator.PlayAnimation(lastAnim);
-            }
-        );
+        AttackRequest attackRequest = new AttackRequest(
+            health, animator, AttackType.Default, 
+                () =>
+                {
+                    context.brain.isActionBusy = false;
+                    animator.Play(lastAnim);
+                }
+            );
+
+        context.brain.enemy.Get<EnemyAttack>().Attack(attackRequest);;
     }
 
     public override void Reset(Context context)
     {
-        context.brain.attack.ResetAttack();
+        context.brain.enemy.Get<EnemyAttack>().ResetAttack();
         //context.brain.isActionBusy = false;
     }
 }
