@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Stun : Component
 {
+    [SerializeField] private Vector3 offset;
     private float stunDuration = 2f;
 
     private Coroutine coroutine;
@@ -27,8 +28,9 @@ public class Stun : Component
     private IEnumerator DisableEnemy(float time)
     {
         var effect = EffectSystem.GetEffect(EffectType.Stun);
-        effect.transform.position = transform.position;
+        effect.transform.position = transform.position + offset;
         brain.isActionBusy = true;
+        brain.enemy.Get<EnemyAnimator>().ResetAnimator();
         yield return new WaitForSeconds(time);
         brain.isActionBusy = false;
         EffectSystem.ReturnEffect(EffectType.Stun, effect);
