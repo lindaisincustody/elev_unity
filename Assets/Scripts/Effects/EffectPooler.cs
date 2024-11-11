@@ -34,5 +34,6 @@ public class EffectPooler
 
 public enum EffectType
 {
-    Stun
+    Stun,
+    Swipe
 }

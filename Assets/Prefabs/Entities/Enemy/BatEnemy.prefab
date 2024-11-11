@@ -690,7 +690,7 @@ MonoBehaviour:
   maxHealth: 100
   healthBarTransform: {fileID: 7056229134798131346}
   healthBarBackground: {fileID: 6719587443123937243}
-  enemySpriteRenderer: {fileID: 3038532075928870572}
+  body: {fileID: 3038532075928870572}
   animator: {fileID: 4345423784217660443}
   flashDuration: 0.1
 --- !u!114 &4433329208213227517
@@ -725,6 +725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageAmount: 5
   spriteRenderer: {fileID: 3038532075928870572}
+  body: {fileID: 7861521255961741394}
   duration: 1
   shakeIntensity: 0.1
 --- !u!114 &4345423784217660443
@@ -760,6 +761,10 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -883732801
       objectReference: {fileID: 0}
+    - target: {fileID: 7784125878354345092, guid: b09ec1d26d9b5b64bb950ff193a81d60, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 22100000, guid: 68ecbca3df089734aa793351b536847a, type: 2}
     - target: {fileID: 8105946582860392032, guid: b09ec1d26d9b5b64bb950ff193a81d60, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5185

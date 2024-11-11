@@ -160,6 +160,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7536345240086897810}
+  - {fileID: 2777073065484110003}
   m_Father: {fileID: 3125106365101848434}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4405576109257782871
@@ -326,6 +327,37 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &5988231182631291196
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2777073065484110003}
+  m_Layer: 0
+  m_Name: Attack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2777073065484110003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5988231182631291196}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.28, y: -0.41, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7861521255961741394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &7458510192768412762
 GameObject:
   m_ObjectHideFlags: 0
@@ -588,6 +620,7 @@ GameObject:
   - component: {fileID: 4433329208213227517}
   - component: {fileID: 4345423784217660443}
   - component: {fileID: 5580081335637333945}
+  - component: {fileID: 1408901347221157211}
   m_Layer: 0
   m_Name: RatEnemy
   m_TagString: Untagged
@@ -738,9 +771,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 5
-  movement: {fileID: 4433329208213227517}
-  body: {fileID: 7861521255961741394}
   attackRange: 2
+  attackPos: {fileID: 2777073065484110003}
+  body: {fileID: 7861521255961741394}
+  movement: {fileID: 4433329208213227517}
+--- !u!114 &1408901347221157211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8405266591562419230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c600c17d484c5a469ab83966bd52529, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 1.37, z: 0}
 --- !u!1001 &551591545548602052
 PrefabInstance:
   m_ObjectHideFlags: 0

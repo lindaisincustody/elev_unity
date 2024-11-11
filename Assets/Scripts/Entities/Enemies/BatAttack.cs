@@ -5,10 +5,12 @@ using UnityEngine;
 public class BatAttack : EnemyAttack
 {
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private Transform body;
     [SerializeField] private float duration = 1f;
     [SerializeField] private float shakeIntensity = 0.1f;
 
     private Coroutine shakeCoruotine;
+    private EnemyAnimator animator;
 
     private float attackSpeed = 16f;
     private Vector3 originalPosition;
@@ -19,19 +21,20 @@ public class BatAttack : EnemyAttack
     public override void Attack(AttackRequest attackRequest)
     {
         originalPosition = transform.position;
-
+        animator = attackRequest.animator;
         if (canAttack)
         {
-            attackRequest.animator.Play(EnemyAnimator.AnimationType.Attack);
+            animator.Play(EnemyAnimator.AnimationType.Attack);
             StartCoroutine(QuickAttack(attackRequest.targetHealth, attackRequest.onAttackEnd));
         }
         else
-            PrepareAttack(attackRequest.onAttackEnd);
+            PrepareAttack(attackRequest.targetHealth.transform, attackRequest.onAttackEnd);
     }
 
-    private void PrepareAttack(System.Action onAttackEnd)
+    private void PrepareAttack(Transform target, System.Action onAttackEnd)
     {
         beforeShakePosition = transform.position;
+        FaceTarget(target);
         shakeCoruotine = StartCoroutine(ChangeColorAndShake(onAttackEnd));
     }
 
@@ -81,6 +84,21 @@ public class BatAttack : EnemyAttack
 
         OnAttackEnd?.Invoke();
     }
+
+    private void FaceTarget(Transform target)
+    {
+        float directionToTarget = target.position.x - transform.position.x;
+
+        if (directionToTarget > 0)
+        {
+            body.localScale = new Vector3(-1, body.localScale.y, body.localScale.z);
+        }
+        else if (directionToTarget < 0)
+        {
+            body.localScale = new Vector3(1, body.localScale.y, body.localScale.z);
+        }
+    }
+
 
 
     public override void ResetAttack()
