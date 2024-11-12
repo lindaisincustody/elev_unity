@@ -12,6 +12,7 @@ TagManager:
   - Wall
   - BatEnemy
   - Body
+  - Hoppy_Obstacle
   layers:
   - Default
   - TransparentFX
@@ -28,7 +29,7 @@ TagManager:
   - Body
   - Sensor
   - Prediction
-  - 
+  - Drawing
   - 
   - 
   - 
