@@ -26,7 +26,7 @@ public class AttackAction : AIAction
                 }
             );
 
-        context.brain.enemy.Get<EnemyAttack>().Attack(attackRequest);;
+        context.brain.enemy.Get<EnemyAttack>().Attack(context, attackRequest);
     }
 
     public override void Reset(Context context)

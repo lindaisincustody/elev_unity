@@ -8,7 +8,7 @@ public class GolemAttack : EnemyAttack
     [SerializeField] private EnemyProjectile bolder;
     [SerializeField] private Transform body;
 
-    public override void Attack(AttackRequest attackRequest)
+    public override void Attack(Context context, AttackRequest attackRequest)
     {
         FaceTarget(attackRequest.targetHealth.transform);
         attackRequest.animator.Play(EnemyAnimator.AnimationType.Attack);

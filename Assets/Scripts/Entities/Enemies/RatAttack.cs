@@ -15,7 +15,7 @@ public class RatAttack : EnemyAttack
     private const float ANIMATION_DELAY = 1f;
     private const float SIMPLE_ATTACK_COOLDOWN = 0.3f;
 
-    public override void Attack(AttackRequest attackRequest)
+    public override void Attack(Context context, AttackRequest attackRequest)
     {
         FaceTarget(attackRequest.targetHealth.transform);
         animator = attackRequest.animator;

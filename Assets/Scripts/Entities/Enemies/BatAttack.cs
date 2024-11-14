@@ -18,7 +18,7 @@ public class BatAttack : EnemyAttack
 
     private bool canAttack = false;
 
-    public override void Attack(AttackRequest attackRequest)
+    public override void Attack(Context context, AttackRequest attackRequest)
     {
         originalPosition = transform.position;
         animator = attackRequest.animator;

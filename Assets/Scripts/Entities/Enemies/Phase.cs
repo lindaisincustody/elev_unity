@@ -47,7 +47,7 @@ public class Phase : Component
             AttackType.Special,
             onEnd
         );
-        context.brain.enemy.Get<EnemyAttack>().Attack(attackRequest);
+        context.brain.enemy.Get<EnemyAttack>().Attack(context, attackRequest);
 
         if (dodgeCoroutine != null)
         {

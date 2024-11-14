@@ -5,7 +5,7 @@ using UnityEngine;
 public abstract class EnemyAttack : Component
 {
     public int damageAmount;
-    public abstract void Attack(AttackRequest attackRequest);
+    public abstract void Attack(Context context, AttackRequest attackRequest);
     public abstract void ResetAttack();
 }
 

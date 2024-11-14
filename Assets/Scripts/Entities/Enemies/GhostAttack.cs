@@ -9,6 +9,7 @@ public class GhostAttack : EnemyAttack
     [SerializeField] private int projectileCount = 5;
     [SerializeField] private float angleOffset = 10f;
 
+    private Context _context;
     private EnemyAnimator animator;
 
     private const float ANIMATION_DELAY = 0.65f;
@@ -16,19 +17,37 @@ public class GhostAttack : EnemyAttack
     private const float SPECIAL_ATTACK_BURST_INVERVAL = 0.4f;
     private const float SPECIAL_ATTACK_COOLDOWN = 1.2f;
 
-    public override void Attack(AttackRequest attackRequest)
+    public override void Attack(Context context, AttackRequest attackRequest)
     {
+        _context = context;
         animator = attackRequest.animator;
         FaceTarget(attackRequest.targetHealth.transform);
         switch (attackRequest.attackType)
         {
             case AttackType.Default:
-                StartCoroutine(SimpleAttack(attackRequest.targetHealth, attackRequest.onAttackEnd));
+                StartCoroutine(RhythmSequence(attackRequest));
                 break;
             case AttackType.Special:
-                StartCoroutine(ThrowProjectilesAround(projectileCount * 2, attackRequest.onAttackEnd));
+                StartCoroutine(RhythmSequence(attackRequest));
                 break;
         }
+    }
+
+    private IEnumerator RhythmSequence(AttackRequest attackRequest)
+    {
+        yield return StartCoroutine(SimpleAttack(attackRequest.targetHealth, null));
+
+        yield return StartCoroutine(SimpleAttack(attackRequest.targetHealth, null));
+
+        yield return StartCoroutine(SimpleAttack(attackRequest.targetHealth, null));
+
+        yield return StartCoroutine(ThrowProjectilesAround(projectileCount * 2, null));
+
+        _context.brain.enemy.Get<EnemyMovement>().Avoid(_context.target);
+
+        yield return new WaitForSeconds(10f);
+
+        attackRequest.onAttackEnd?.Invoke();
     }
 
     private IEnumerator SimpleAttack(Health targetHeatlh, Action onAttackEnd)
@@ -50,7 +69,6 @@ public class GhostAttack : EnemyAttack
             newBolder.Shoot(offsetDirection);
         }
         yield return new WaitForSeconds(SIMPLE_ATTACK_COOLDOWN);
-        onAttackEnd?.Invoke();
     }
 
     public IEnumerator ThrowProjectilesAround(int numProjectiles, Action onAttackEnd)
@@ -76,7 +94,6 @@ public class GhostAttack : EnemyAttack
         }
 
         yield return new WaitForSeconds(SPECIAL_ATTACK_COOLDOWN);
-        onAttackEnd?.Invoke();
     }
 
     private Vector2 RotateVector(Vector2 v, float degrees)
