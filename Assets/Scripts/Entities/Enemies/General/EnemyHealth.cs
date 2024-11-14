@@ -65,7 +65,7 @@ public class EnemyHealth : Health
         body.color = bodyColor;
     }
 
-    private IEnumerator Die()
+    public IEnumerator Die()
     {
         isDead = true;
         animator.Play(EnemyAnimator.AnimationType.Die);

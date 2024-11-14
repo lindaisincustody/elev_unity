@@ -30728,7 +30728,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &696116373
 RectTransform:
   m_ObjectHideFlags: 0
@@ -44781,7 +44781,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1228420362
 RectTransform:
   m_ObjectHideFlags: 0
@@ -46907,24 +46907,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_BrainParameters:
-    VectorObservationSize: 121
-    NumStackedVectorObservations: 1
-    m_ActionSpec:
-      m_NumContinuousActions: 0
-      BranchSizes: 01000000
-    VectorActionSize: 01000000
-    VectorActionDescriptions: []
-    VectorActionSpaceType: 0
-    hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: 70c879ce3b2ae9a4b8f07a979067f5bc, type: 3}
-  m_InferenceDevice: 3
-  m_BehaviorType: 2
-  m_BehaviorName: HandwritingBehavior
-  TeamId: 0
-  m_UseChildSensors: 1
-  m_UseChildActuators: 1
-  m_ObservableAttributeHandling: 0
 --- !u!4 &1389888345
 Transform:
   m_ObjectHideFlags: 0
@@ -46952,8 +46934,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 1
-  TakeActionsBetweenDecisions: 1
 --- !u!64 &1389888348
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -46988,21 +46968,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88b6042bc9a5d4aa58d931eae49442e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_PolicyFactory: {fileID: 0}
-  agentParameters:
-    maxStep: 0
-  hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
-  m_Reward: 0
-  m_GroupReward: 0
-  m_CumulativeReward: 0
-  m_RequestAction: 0
-  m_RequestDecision: 0
-  m_StepCount: 0
-  m_CompletedEpisodes: 0
-  m_EpisodeId: 0
-  m_Initialized: 0
-  m_GroupId: 0
 --- !u!1 &1452290247
 GameObject:
   m_ObjectHideFlags: 0
@@ -48816,6 +48781,10 @@ PrefabInstance:
     - target: {fileID: 7905350812563266831, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: dashDuration
       value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7905350812563266831, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: baseMoveSpeed
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8420326837088205274, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_IsActive

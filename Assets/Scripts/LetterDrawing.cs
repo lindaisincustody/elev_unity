@@ -238,9 +238,9 @@ public class LetterDrawing : MonoBehaviour
             currentLetterIndex++;
             UpdatePoemDisplay();
 
-            CorrectLetterUI.Instance.Show(currentPoemLetter);
+            //CorrectLetterUI.Instance.Show(currentPoemLetter);
 
-            TriggerHomingBullet();
+            //TriggerHomingBullet();
 
             if (currentLetterIndex >= poem.Length)
             {
@@ -249,9 +249,9 @@ public class LetterDrawing : MonoBehaviour
             }
         }
         else {
-            CorrectLetterUI.Instance.ShowWrong(currentPoemLetter);
+            //CorrectLetterUI.Instance.ShowWrong(currentPoemLetter);
         }
-
+        TriggerHomingBullet(predictedLetter);
         output.Dispose();
         capturedTexture.Apply();
         Destroy(capturedTexture);
@@ -310,12 +310,21 @@ public class LetterDrawing : MonoBehaviour
         Time.timeScale = 1.0f; // Ensure normal speed when script is destroyed
     }
 
-    private void TriggerHomingBullet()
+    private void TriggerHomingBullet(string predictedLetter)
     {
         PlayerCombat playerCombat = GetComponent<PlayerCombat>();
         if (playerCombat != null)
         {
-            playerCombat.ShootHomingBullet();
+            //playerCombat.ShootHomingBullet();
+        }
+
+        // Convert the predictedLetter to a character for matching
+        char drawnLetter = predictedLetter[0];
+
+        // Check if the drawn letter matches any letters above enemies
+        foreach (var enemy in FindObjectsOfType<Enemy>())
+        {
+            enemy.CheckLetterMatch(drawnLetter);
         }
     }
 
