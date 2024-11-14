@@ -68,7 +68,7 @@ public class PlayerCombat : MonoBehaviour
         switch (currentMode)
         {
             case CombatMode.Bullet:
-                ShootBullet();
+                //ShootBullet();
                 break;
 
             case CombatMode.Chinchilla:
@@ -101,6 +101,40 @@ public class PlayerCombat : MonoBehaviour
         newBullet.transform.position = transform.position;
         newBullet.Fly(direction);
     }
+
+    public void ShootHomingBullet()
+    {
+        Bullet homingBullet = GetPooledBullet();
+        if (homingBullet == null)
+        {
+            homingBullet = Instantiate(bullet, poolHolder.transform);
+            bulletPool.Add(homingBullet);
+        }
+
+        homingBullet.transform.position = transform.position;
+        homingBullet.gameObject.SetActive(true);
+        homingBullet.Fly(Vector2.zero, FindClosestEnemy()); // Pass the closest enemy as target
+    }
+
+
+    private Transform FindClosestEnemy()
+    {
+        float minDistance = Mathf.Infinity;
+        Transform closestEnemy = null;
+
+        foreach (Enemy enemy in EnemyManager.Instance.GetAllEnemies())
+        {
+            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                closestEnemy = enemy.transform;
+            }
+        }
+
+        return closestEnemy;
+    }
+
 
     private void ShootBomb()
     {

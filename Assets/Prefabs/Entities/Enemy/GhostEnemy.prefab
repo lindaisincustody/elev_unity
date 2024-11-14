@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7056229134798131346}
   - component: {fileID: 1937316805664490758}
   - component: {fileID: 4659428080967367923}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: HealthBarFront
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,7 +106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8688148705025252073}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: OverworldBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -139,7 +139,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7861521255961741394}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,7 +173,7 @@ GameObject:
   - component: {fileID: 5468036142099492940}
   - component: {fileID: 8711681221161778507}
   - component: {fileID: 3013501357702502671}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Sensor
   m_TagString: BatEnemy
   m_Icon: {fileID: 0}
@@ -254,7 +254,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5728805475636841965}
   - component: {fileID: 6181014876272312459}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Light 2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -335,7 +335,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3125106365101848434}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: UnderworldBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -370,7 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6365202536346333615}
   - component: {fileID: 9172587836215137465}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: SparkleLight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -451,7 +451,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1395525773853516595}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 6719587443123937243}
   - component: {fileID: 1030609452476557195}
   - component: {fileID: 8553644845925651105}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: HealthBarBack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -590,7 +590,7 @@ GameObject:
   - component: {fileID: 8677061338189981954}
   - component: {fileID: 7547989171807475967}
   - component: {fileID: 8556093329737631821}
-  m_Layer: 0
+  m_Layer: 18
   m_Name: GhostEnemy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -771,6 +771,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c600c17d484c5a469ab83966bd52529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1001 &8024551549944741491
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -853,7 +854,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8460819491689818700, guid: 834062e8111a83b488d5736e2ab4ae3c, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 18
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

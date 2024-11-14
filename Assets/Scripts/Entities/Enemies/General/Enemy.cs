@@ -68,4 +68,11 @@ public class Enemy : MonoBehaviour
         underworldBody.SetActive(false);
         overworldBody.SetActive(true);
     }
+    void OnDestroy()
+    {
+        if (EnemyManager.Instance != null)
+        {
+            EnemyManager.Instance.UnregisterEnemy(this);
+        }
+    }
 }

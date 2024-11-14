@@ -25,6 +25,9 @@ public class SpawnEnemy : MonoBehaviour
             newEnemy.name += "_" + i.ToString();
             newEnemy.minBound = minBound.position;
             newEnemy.maxBound = maxBound.position;
+
+            EnemyManager.Instance.RegisterEnemy(newEnemy);
         }
     }
+
 }
