@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Bullet : MonoBehaviour
@@ -22,13 +20,14 @@ public class Bullet : MonoBehaviour
     {
         if (Flying)
         {
-            if (target != null)
+            if (target != null && target.gameObject.activeInHierarchy) // Check if target is valid
             {
                 HomeInOnTarget();
             }
             else
             {
-                CheckDistance();
+                // If target is null or inactive, deactivate bullet
+                Deactivate();
             }
         }
     }
@@ -57,9 +56,8 @@ public class Bullet : MonoBehaviour
         Vector3 direction = (target.position - transform.position).normalized;
         rb.velocity = direction * speed;
 
-        if (Vector3.Distance(transform.position, target.position) < 0.05f)
+        if (Vector3.Distance(transform.position, target.position) < 0.1f)
         {
-            target.GetComponent<EnemyHealth>()?.TakeDamage(damage);
             Deactivate();
         }
     }
