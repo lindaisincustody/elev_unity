@@ -145,6 +145,14 @@ public class PlayerMovement : MonoBehaviour
         {
             animator.SetTrigger("DashLeft");
         }
+        else if (dashDirection.y > 0)
+        {
+            animator.SetTrigger("DashBack");
+        }
+        else if (dashDirection.y < 0)
+        {
+            animator.SetTrigger("DashFront");
+        }
 
         float startTime = Time.time;
 
@@ -157,6 +165,8 @@ public class PlayerMovement : MonoBehaviour
         isDashing = false;
         animator.ResetTrigger("DashRight");
         animator.ResetTrigger("DashLeft");
+        animator.ResetTrigger("DashBack");
+        animator.ResetTrigger("DashFront");
 
         if (movement != Vector2.zero)
         {
