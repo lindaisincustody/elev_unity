@@ -26,8 +26,6 @@ public class LetterDrawing : MonoBehaviour
     private RenderTexture renderTexture;
     private IWorker worker;
 
-    private Coroutine timeScaleCoroutine;
-
     private readonly string[] _labels = {
         "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
@@ -124,12 +122,6 @@ public class LetterDrawing : MonoBehaviour
             secondaryLineRenderer.positionCount = 0;
         }
 
-        // Start smooth transition to slow-motion
-        if (timeScaleCoroutine != null)
-        {
-            StopCoroutine(timeScaleCoroutine);
-        }
-        timeScaleCoroutine = StartCoroutine(SmoothTimeScaleTransition(0.1f, 0.5f)); // Slow down over 0.5 seconds
     }
 
     private void AddPoint()
@@ -149,33 +141,6 @@ public class LetterDrawing : MonoBehaviour
     private void EndDrawing()
     {
         renderCamera.Render();
-
-        // Start smooth transition back to normal speed
-        if (timeScaleCoroutine != null)
-        {
-            StopCoroutine(timeScaleCoroutine);
-        }
-        timeScaleCoroutine = StartCoroutine(SmoothTimeScaleTransition(1.0f, 0.5f)); // Speed up over 0.5 seconds
-    }
-
-    private IEnumerator SmoothTimeScaleTransition(float targetTimeScale, float duration)
-    {
-        float startScale = Time.timeScale;
-        float startFixedDeltaTime = Time.fixedDeltaTime;
-        float targetFixedDeltaTime = 0.02f * targetTimeScale; // 0.02 is Unity's default fixed delta time
-        float time = 0f;
-
-        while (time < duration)
-        {
-            float t = time / duration;
-            Time.timeScale = Mathf.Lerp(startScale, targetTimeScale, t);
-            Time.fixedDeltaTime = Mathf.Lerp(startFixedDeltaTime, targetFixedDeltaTime, t);
-            time += Time.unscaledDeltaTime; // Use unscaledDeltaTime to keep smooth transition
-            yield return null;
-        }
-
-        Time.timeScale = targetTimeScale;
-        Time.fixedDeltaTime = targetFixedDeltaTime;
     }
 
     private void CenterDrawingInTexture()
@@ -307,7 +272,6 @@ public class LetterDrawing : MonoBehaviour
     {
         renderTexture?.Release();
         worker?.Dispose();
-        Time.timeScale = 1.0f; // Ensure normal speed when script is destroyed
     }
 
     private void TriggerHomingBullet(string predictedLetter)

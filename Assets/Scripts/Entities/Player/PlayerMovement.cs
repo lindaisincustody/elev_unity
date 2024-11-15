@@ -4,8 +4,6 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float baseMoveSpeed = 4f;     // Original move speed
-    public float slowMotionTargetSpeed = 2.5f; // Target speed during slow motion
-    private float adjustedMoveSpeed;     // Adjusted movement speed based on time scale    // Adjusted move speed based on time scale
     public float dashSpeed = 5f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
@@ -55,7 +53,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        AdjustSpeedForSlowMotion(); // Adjust speed and animation at each frame based on time scale
 
         if (isAttacking)
         {
@@ -106,27 +103,9 @@ public class PlayerMovement : MonoBehaviour
         if (!isInteracting && !isDashing)
         {
             // Use adjustedMoveSpeed to move the player
-            rb.MovePosition(rb.position + movement * adjustedMoveSpeed * Time.fixedDeltaTime);
+            rb.MovePosition(rb.position + movement * baseMoveSpeed * Time.fixedDeltaTime);
         }
     }
-
-    private void AdjustSpeedForSlowMotion()
-    {
-        // Check if the game is in slow-motion
-        if (Time.timeScale < 1.0f)
-        {
-            // Use slow motion speed
-            adjustedMoveSpeed = slowMotionTargetSpeed / Time.timeScale;
-            animator.speed = 1f / Time.timeScale; // Adjust animation speed for slow motion
-        }
-        else
-        {
-            // Use normal base speed when time scale is 1.0
-            adjustedMoveSpeed = baseMoveSpeed;
-            animator.speed = 1f; // Normal animation speed
-        }
-    }
-
 
     private IEnumerator Dash()
     {

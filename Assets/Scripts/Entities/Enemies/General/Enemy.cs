@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -21,6 +22,7 @@ public class Enemy : MonoBehaviour
     private HashSet<char> activeLetters = new HashSet<char>();
     private EnemyHealth enemyHealth;
 
+
     void Start()
     {
         SanityBar.instance.OnSanityChange += SanityChange;
@@ -42,8 +44,15 @@ public class Enemy : MonoBehaviour
 
             TMP_Text letterText = letterObject.GetComponent<TMP_Text>();
 
-            // Assign a random letter
-            char randomLetter = (char)('A' + UnityEngine.Random.Range(0, 26));
+            char randomLetter;
+
+            // Assign a random letter, excluding 'L'
+            do
+            {
+                randomLetter = (char)('A' + UnityEngine.Random.Range(0, 26));
+            }
+            while (randomLetter == 'L'); // Keep re-generating until it's not 'L'
+
             letterText.text = randomLetter.ToString();
             displayedLetters.Add(letterText);
             activeLetters.Add(randomLetter);
@@ -52,24 +61,43 @@ public class Enemy : MonoBehaviour
 
     public void CheckLetterMatch(char drawnLetter)
     {
-        if (activeLetters.Contains(drawnLetter))
-        {
-            // Find and remove the matched letter
-            TMP_Text matchedLetter = displayedLetters.Find(letter => letter.text == drawnLetter.ToString());
-            if (matchedLetter != null)
-            {
-                displayedLetters.Remove(matchedLetter);
-                activeLetters.Remove(drawnLetter);
-                Destroy(matchedLetter.gameObject);
-            }
+        char upperCaseLetter = char.ToUpper(drawnLetter);
 
-            // If no letters remain, call Die() in EnemyHealth
-            if (activeLetters.Count == 0 && enemyHealth != null)
+        if (activeLetters.Contains(upperCaseLetter))
+        {
+            // Find all matching letters in displayedLetters
+            var matchedLetters = displayedLetters.FindAll(letter => letter.text.Equals(upperCaseLetter.ToString(), StringComparison.OrdinalIgnoreCase));
+
+            if (matchedLetters.Count > 0)
             {
-                enemyHealth.StartCoroutine(enemyHealth.Die());
+                Debug.Log($"Destroying all instances of letter: {upperCaseLetter}");
+                foreach (var matchedLetter in matchedLetters)
+                {
+                    displayedLetters.Remove(matchedLetter); // Remove from list
+                    Destroy(matchedLetter.gameObject);      // Destroy the GameObject
+                }
+
+                // Remove the letter from activeLetters
+                activeLetters.Remove(upperCaseLetter);
+
+                // Check if all letters have been destroyed
+                if (activeLetters.Count == 0 && enemyHealth != null)
+                {
+                    Debug.Log("All letters destroyed. Enemy dying.");
+                    enemyHealth.StartCoroutine(enemyHealth.Die());
+                }
+            }
+            else
+            {
+                Debug.LogError($"No matching visual letter found for: {upperCaseLetter}, but it exists in activeLetters.");
             }
         }
+        else
+        {
+            Debug.Log($"Letter {drawnLetter} does not match any active letters.");
+        }
     }
+
 
     public T Get<T>() where T : Component
     {
