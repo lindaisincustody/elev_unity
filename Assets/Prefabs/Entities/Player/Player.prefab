@@ -41,6 +41,7 @@ Transform:
   - {fileID: 2420360173590594345}
   - {fileID: 4225432172241833081}
   - {fileID: 2251423315567385419}
+  - {fileID: 5534933685275003079}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2226871447008519275
@@ -124,10 +125,10 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.006244302, y: 0}
+  m_Offset: {x: 0.006244302, y: -0.044991404}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -138,7 +139,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.6028061, y: 1.7142857}
+  m_Size: {x: 0.51290315, y: 1.5951838}
   m_EdgeRadius: 0
 --- !u!50 &6418275811729181238
 Rigidbody2D:
@@ -179,16 +180,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78bc07dd70983d43bac902a2faa12ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2.5
+  baseMoveSpeed: 4
+  dashSpeed: 5
+  dashDuration: 0.2
+  dashCooldown: 1
   rb: {fileID: 6418275811729181238}
   animator: {fileID: 6330455195613800542}
-  doorObj: {fileID: 0}
   moveSound: {fileID: 6117977592564839130}
+  movement: {x: 0, y: 0}
+  lastDirection: {x: 0, y: 1}
   maxPitch: 0.85
   minPitch: 0.65
   stepTimingAdjustment: 0.95
   stepInterval: 0.435
   isInteracting: 0
+  isAttacking: 0
 --- !u!95 &6330455195613800542
 Animator:
   serializedVersion: 5
@@ -257,7 +263,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bullet: {fileID: 3218015436945908501, guid: d05202522b871084a919a26579a311e7, type: 3}
+  bomb: {fileID: 0}
+  chinchillaPrefab: {fileID: 0}
   mainCamera: {fileID: 0}
+  combatModeText: {fileID: 0}
+  meleeAttackRange: 2
+  meleeDamage: 20
 --- !u!114 &8454522013865968226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,6 +364,73 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &6026462742497456992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5534933685275003079}
+  - component: {fileID: 6416396186489896408}
+  m_Layer: 0
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5534933685275003079
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6026462742497456992}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 0.31, z: 0}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7495908359777589927}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!70 &6416396186489896408
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6026462742497456992}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.47, y: 0.43}
+  m_Direction: 1
 --- !u!1 &7209615563578176535
 GameObject:
   m_ObjectHideFlags: 0

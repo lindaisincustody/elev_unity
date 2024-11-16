@@ -20,8 +20,8 @@ public class BrainEditor : Editor
 
             foreach (var action in brain.actions)
             {
-                float utility = action.CalculateUtility(brain.context);
-                EditorGUILayout.LabelField(action.name, utility.ToString());
+                float utility = action.action.CalculateUtility(brain.context);
+                EditorGUILayout.LabelField(action.action.name, utility.ToString());
             }
         }
         else

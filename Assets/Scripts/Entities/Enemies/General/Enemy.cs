@@ -22,6 +22,13 @@ public class Enemy : MonoBehaviour
     private HashSet<char> activeLetters = new HashSet<char>();
     private EnemyHealth enemyHealth;
 
+    private void Awake()
+    {
+        foreach (var component in components)
+        {
+            component.Init(this);
+        }
+    }
 
     void Start()
     {

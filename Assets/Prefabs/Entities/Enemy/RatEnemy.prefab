@@ -621,6 +621,7 @@ GameObject:
   - component: {fileID: 4345423784217660443}
   - component: {fileID: 5580081335637333945}
   - component: {fileID: 1408901347221157211}
+  - component: {fileID: 6574206921253460702}
   m_Layer: 0
   m_Name: RatEnemy
   m_TagString: Untagged
@@ -691,6 +692,8 @@ MonoBehaviour:
   - {fileID: 4345423784217660443}
   - {fileID: 4433329208213227517}
   - {fileID: 1133784126604518903}
+  - {fileID: 6574206921253460702}
+  letterTextEnemy: {fileID: 0}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,9 +708,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 3013501357702502671}
   actions:
-  - {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
-  - {fileID: 11400000, guid: 8f473cd1d1567c34294a367b009110c5, type: 2}
-  - {fileID: 11400000, guid: 7ff0afac6dda38d48a759a8057098123, type: 2}
+  - action: {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
+    actionType: 1
+    available: 1
+  - action: {fileID: 11400000, guid: 8f473cd1d1567c34294a367b009110c5, type: 2}
+    actionType: 4
+    available: 1
+  - action: {fileID: 11400000, guid: 7ff0afac6dda38d48a759a8057098123, type: 2}
+    actionType: 2
+    available: 1
+  - action: {fileID: 11400000, guid: 5c9c18de3f20f4845bc6047294f7570f, type: 2}
+    actionType: 6
+    available: 1
   enemy: {fileID: 1186790290414908665}
 --- !u!114 &1133784126604518903
 MonoBehaviour:
@@ -788,6 +800,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   offset: {x: 0, y: 1.37, z: 0}
+--- !u!114 &6574206921253460702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8405266591562419230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c34d446869162f48bf49c8501ce83e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &551591545548602052
 PrefabInstance:
   m_ObjectHideFlags: 0

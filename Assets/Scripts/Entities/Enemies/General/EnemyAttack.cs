@@ -13,13 +13,15 @@ public struct AttackRequest
 {
     public Health targetHealth;
     public EnemyAnimator animator;
+    public int attackCount;
     public AttackType attackType;
     public System.Action onAttackEnd;
 
-    public AttackRequest(Health health, EnemyAnimator anim, AttackType type, System.Action action)
+    public AttackRequest(Health health, EnemyAnimator anim, int attackCount, AttackType type, System.Action action)
     {
         this.targetHealth = health;
         this.animator = anim;
+        this.attackCount = attackCount;
         this.attackType = type;
         this.onAttackEnd = action;
     }

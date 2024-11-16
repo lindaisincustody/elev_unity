@@ -658,6 +658,7 @@ MonoBehaviour:
   - {fileID: 5810250247408253937}
   - {fileID: 4433329208213227517}
   - {fileID: 1133784126604518903}
+  letterTextEnemy: {fileID: 0}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -672,8 +673,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 3013501357702502671}
   actions:
-  - {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
-  - {fileID: 11400000, guid: 7db5d4f758ef7cc4e8a3de615b34ca89, type: 2}
+  - action: {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
+    actionType: 1
+    available: 1
+  - action: {fileID: 11400000, guid: 7db5d4f758ef7cc4e8a3de615b34ca89, type: 2}
+    actionType: 2
+    available: 1
   enemy: {fileID: 1186790290414908665}
 --- !u!114 &1133784126604518903
 MonoBehaviour:

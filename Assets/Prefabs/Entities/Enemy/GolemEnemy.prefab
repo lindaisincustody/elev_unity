@@ -658,6 +658,7 @@ MonoBehaviour:
   - {fileID: 4345423784217660443}
   - {fileID: 4433329208213227517}
   - {fileID: 1133784126604518903}
+  letterTextEnemy: {fileID: 0}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -672,8 +673,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 3013501357702502671}
   actions:
-  - {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
-  - {fileID: 11400000, guid: 61773d7b343842b4fbde26caef8630ae, type: 2}
+  - action: {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
+    actionType: 1
+    available: 1
+  - action: {fileID: 11400000, guid: 61773d7b343842b4fbde26caef8630ae, type: 2}
+    actionType: 2
+    available: 1
   enemy: {fileID: 1186790290414908665}
 --- !u!114 &1133784126604518903
 MonoBehaviour:
@@ -690,7 +695,7 @@ MonoBehaviour:
   maxHealth: 100
   healthBarTransform: {fileID: 7056229134798131346}
   healthBarBackground: {fileID: 6719587443123937243}
-  enemySpriteRenderer: {fileID: 7422681207920226276}
+  body: {fileID: 0}
   animator: {fileID: 4345423784217660443}
   flashDuration: 0.1
 --- !u!114 &4433329208213227517
@@ -863,10 +868,5 @@ CapsuleCollider2D:
 --- !u!95 &3941827395804473438 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 7784125878354345092, guid: d53ec1f7a724d424c8293f00f3ca3017, type: 3}
-  m_PrefabInstance: {fileID: 6535543429054092506}
-  m_PrefabAsset: {fileID: 0}
---- !u!212 &7422681207920226276 stripped
-SpriteRenderer:
-  m_CorrespondingSourceObject: {fileID: 4445126656023411518, guid: d53ec1f7a724d424c8293f00f3ca3017, type: 3}
   m_PrefabInstance: {fileID: 6535543429054092506}
   m_PrefabAsset: {fileID: 0}

@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1ce7d5969a0c7f448e6ef535eb094e9, type: 3}
+  m_Name: Special Attack Action
+  m_EditorClassIdentifier: 
+  targetTag: Player
+  consideration: {fileID: 11400000, guid: 74cfee1545bd73642a783c6dc5d4f370, type: 2}

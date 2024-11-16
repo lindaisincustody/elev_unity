@@ -44,6 +44,7 @@ public class Phase : Component
         var attackRequest = new AttackRequest(
             context.target.GetComponent<Health>(),
             context.brain.enemy.Get<EnemyAnimator>(),
+            1,
             AttackType.Special,
             onEnd
         );

@@ -98,4 +98,39 @@ public class EnemyMovement : Component
 
         bodyHandler.UpdateBody(_target);
     }
+
+    public void FaceTarget(Transform target)
+    {
+        float directionToTarget = target.position.x - transform.position.x;
+
+        if (directionToTarget > 0)
+        {
+            body.localScale = new Vector3(-1, body.localScale.y, body.localScale.z);
+        }
+        else if (directionToTarget < 0)
+        {
+            body.localScale = new Vector3(1, body.localScale.y, body.localScale.z);
+        }
+    }
+
+    public void Dash(Context context, float dashSpeed, System.Action OnEnd)
+    {
+        FaceTarget(context.target);
+        Vector2 targetPosition = context.target.position;
+        targetPosition.x = Mathf.Clamp(targetPosition.x, minBound.x, maxBound.x);
+        targetPosition.y = Mathf.Clamp(targetPosition.y, minBound.y, maxBound.y);
+
+        Vector2 direction = (targetPosition - rb.position).normalized;
+
+        rb.velocity = direction * dashSpeed;
+
+        StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); // Adjust time as needed
+    }
+
+    private IEnumerator StopDashAfterTime(float time, System.Action OnEnd)
+    {
+        yield return new WaitForSeconds(time);
+        rb.velocity = Vector2.zero;
+        OnEnd?.Invoke();
+    }
 }

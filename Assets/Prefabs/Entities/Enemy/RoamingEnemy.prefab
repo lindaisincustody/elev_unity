@@ -694,7 +694,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   underworldBody: {fileID: 7458510192768412762}
   overworldBody: {fileID: 1490766261496143763}
-  enemyMovement: {fileID: 4433329208213227517}
+  components: []
+  letterTextEnemy: {fileID: 0}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,12 +709,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensor: {fileID: 2095172793349347849}
-  movement: {fileID: 4433329208213227517}
   actions:
-  - {fileID: 11400000, guid: 9f0671254a3a5214eb758edd1228f306, type: 2}
-  - {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
-  health: {fileID: 1133784126604518903}
-  attack: {fileID: 335113545763451316}
+  - action: {fileID: 11400000, guid: 9f0671254a3a5214eb758edd1228f306, type: 2}
+    actionType: 0
+    available: 1
+  - action: {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
+    actionType: 1
+    available: 1
+  enemy: {fileID: 0}
 --- !u!114 &1133784126604518903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,6 +732,9 @@ MonoBehaviour:
   maxHealth: 100
   healthBarTransform: {fileID: 7056229134798131346}
   healthBarBackground: {fileID: 6719587443123937243}
+  body: {fileID: 0}
+  animator: {fileID: 0}
+  flashDuration: 0.1
 --- !u!114 &4433329208213227517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -741,7 +747,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a30b52b45e468e241bda50bb1935bb28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  body: {fileID: 0}
   rb: {fileID: 9124663997054935065}
+  animator: {fileID: 0}
   daySpeed: 0.2
   nightSpeed: 0.9
   smoothTime: 0.3
@@ -758,3 +766,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damageAmount: 0
+  spriteRenderer: {fileID: 0}
+  body: {fileID: 0}
+  duration: 1
+  shakeIntensity: 0.1

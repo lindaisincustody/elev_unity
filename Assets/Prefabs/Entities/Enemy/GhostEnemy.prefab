@@ -848,9 +848,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sensor: {fileID: 3013501357702502671}
   actions:
-  - {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
-  - {fileID: 11400000, guid: 15712b70a84ac5645b6edfa68248ffff, type: 2}
-  - {fileID: 11400000, guid: f203a09f6ff5c834cab24a2f8f8bcc0a, type: 2}
+  - action: {fileID: 11400000, guid: 614c25a3599b3ed4b9a1c51a4237a167, type: 2}
+    actionType: 1
+    available: 1
+  - action: {fileID: 11400000, guid: 15712b70a84ac5645b6edfa68248ffff, type: 2}
+    actionType: 2
+    available: 1
+  - action: {fileID: 11400000, guid: f203a09f6ff5c834cab24a2f8f8bcc0a, type: 2}
+    actionType: 3
+    available: 1
   enemy: {fileID: 1186790290414908665}
 --- !u!114 &1133784126604518903
 MonoBehaviour:

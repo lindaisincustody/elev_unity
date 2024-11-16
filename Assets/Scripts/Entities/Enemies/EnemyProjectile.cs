@@ -27,6 +27,12 @@ public class EnemyProjectile : MonoBehaviour
         {
             collision.GetComponent<PlayerHealth>().TakeDamage(damage);
             Destroy(gameObject);
+            return;
         }
+
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+            return;
+
+        Destroy(gameObject);
     }
 }

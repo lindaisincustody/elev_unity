@@ -7,7 +7,7 @@ public class Brain : MonoBehaviour
 {
     [SerializeField] private Sensor sensor;
 
-    public List<AIAction> actions;
+    public List<ActionData> actions;
     public Context context;
 
     public Enemy enemy;
@@ -33,7 +33,7 @@ public class Brain : MonoBehaviour
 
         foreach (var action in actions)
         {
-            action.Initialize(context);
+            action.action.Initialize(context);
         }
     }
 
@@ -50,11 +50,13 @@ public class Brain : MonoBehaviour
 
         foreach (var action in actions)
         {
-            float utility = action.CalculateUtility(context);
+            if (!action.available)
+                continue;
+            float utility = action.action.CalculateUtility(context);
             if (utility > hightestUtility)
             {
                 hightestUtility = utility;
-                bestAction = action;
+                bestAction = action.action;
             }
         }
 
@@ -65,9 +67,20 @@ public class Brain : MonoBehaviour
 
         foreach (var action in actions)
         {
-            if (action != bestAction)
+            if (action.action != bestAction)
             {
-                action.Reset(context);
+                action.action.Reset(context);
+            }
+        }
+    }
+
+    public void SetActionState(ActionType actionType, bool state)
+    {
+        foreach (var item in actions)
+        {
+            if (item.actionType == actionType)
+            {
+                item.available = state;
             }
         }
     }
@@ -75,5 +88,24 @@ public class Brain : MonoBehaviour
     private void UpdateContext()
     {
         context.SetData("Health", enemy.Get<EnemyHealth>().NormalizedHealth());
+    }
+
+    [System.Serializable]
+    public class ActionData
+    {
+        public AIAction action;
+        public ActionType actionType;
+        public bool available = true;
+    }
+
+    public enum ActionType
+    {
+        Idle,
+        Roam,
+        Attack,
+        Phase,
+        ChasePlayer,
+        Dash,
+        SpecialAttack
     }
 }

@@ -43,11 +43,13 @@ public class GhostAttack : EnemyAttack
 
         yield return StartCoroutine(ThrowProjectilesAround(projectileCount * 2, null));
 
-        _context.brain.enemy.Get<EnemyMovement>().Avoid(_context.target);
+        _context.brain.SetActionState(Brain.ActionType.Attack, false);
+
+        attackRequest.onAttackEnd?.Invoke();
 
         yield return new WaitForSeconds(10f);
 
-        attackRequest.onAttackEnd?.Invoke();
+        _context.brain.SetActionState(Brain.ActionType.Attack, true);
     }
 
     private IEnumerator SimpleAttack(Health targetHeatlh, Action onAttackEnd)

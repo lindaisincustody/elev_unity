@@ -18,7 +18,7 @@ public class AttackAction : AIAction
         var animator = context.brain.enemy.Get<EnemyAnimator>();
         var lastAnim = animator.lastAnim;
         AttackRequest attackRequest = new AttackRequest(
-            health, animator, AttackType.Default, 
+            health, animator, 1, AttackType.Default, 
                 () =>
                 {
                     context.brain.isActionBusy = false;
