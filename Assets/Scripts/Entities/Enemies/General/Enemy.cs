@@ -78,7 +78,9 @@ public class Enemy : MonoBehaviour
                 }
 
                 // Remove the letter from activeLetters
+                enemyHealth.StartCoroutine(enemyHealth.FlashWhite());
                 activeLetters.Remove(upperCaseLetter);
+                
 
                 // Check if all letters have been destroyed
                 if (activeLetters.Count == 0 && enemyHealth != null)

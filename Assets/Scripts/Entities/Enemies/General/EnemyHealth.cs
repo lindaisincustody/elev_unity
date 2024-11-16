@@ -9,7 +9,7 @@ public class EnemyHealth : Health
     [SerializeField] private Transform healthBarBackground;
     [SerializeField] private SpriteRenderer body;
     [SerializeField] private EnemyAnimator animator;
-    [SerializeField] private float flashDuration = 0.1f;
+    [SerializeField] private float flashDuration = 1f;
 
     public bool Immune { get; set; }
     public Action OnDamage; 
@@ -51,9 +51,9 @@ public class EnemyHealth : Health
             StartCoroutine(Die());
     }
 
-    private IEnumerator FlashWhite()
+    public IEnumerator FlashWhite()
     {
-        enemyMaterial.SetFloat("_FlashIntensity", 1f);
+        enemyMaterial.SetFloat("_FlashIntensity", 4f);
         yield return new WaitForSeconds(flashDuration);
         enemyMaterial.SetFloat("_FlashIntensity", 0f);
     }
