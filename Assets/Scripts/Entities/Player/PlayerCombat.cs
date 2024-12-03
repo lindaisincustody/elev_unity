@@ -168,21 +168,27 @@ public class PlayerCombat : MonoBehaviour
     {
         player.GetComponent<PlayerMovement>().isAttacking = true;
 
-        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0;
+        Vector2 attackDirection = player.GetComponent<PlayerMovement>().lastDirection;
 
-        Vector3 direction = (mousePosition - transform.position).normalized;
-
-        if (direction.x > 0)
+        // Determine the attack direction and set the corresponding animation
+        if (attackDirection.x > 0) // Right
         {
-            animator.SetBool("MeleeRight", true);
+            animator.SetTrigger("MeleeRight");
         }
-        else
+        else if (attackDirection.x < 0) // Left
         {
-            animator.SetBool("MeleeLeft", true);
+            animator.SetTrigger("MeleeLeft");
+        }
+        else if (attackDirection.y > 0) // Back
+        {
+            animator.SetTrigger("MeleeBack");
+        }
+        else if (attackDirection.y < 0) // Front
+        {
+            animator.SetTrigger("MeleeFront");
         }
 
-        StartCoroutine(ResetMeleeAnimation());
+        // Detect enemies within melee range
         Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, meleeAttackRange);
 
         foreach (Collider2D enemy in hitEnemies)
@@ -192,17 +198,24 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<EnemyHealth>().TakeDamage(meleeDamage);
             }
         }
+
+        // Reset attack after a short delay
+        StartCoroutine(ResetMeleeAnimation());
     }
 
     private IEnumerator ResetMeleeAnimation()
     {
         yield return new WaitForSeconds(0.5f);
 
-        animator.SetBool("MeleeRight", false);
-        animator.SetBool("MeleeLeft", false);
+        // Reset all melee animation triggers
+        animator.ResetTrigger("MeleeRight");
+        animator.ResetTrigger("MeleeLeft");
+        animator.ResetTrigger("MeleeBack");
+        animator.ResetTrigger("MeleeFront");
 
         player.GetComponent<PlayerMovement>().isAttacking = false;
     }
+
 
 
     private void HandleBombExploded()

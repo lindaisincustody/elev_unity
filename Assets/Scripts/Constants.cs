@@ -15,7 +15,7 @@ public class Constants
         public const string StrengthGameScene = "StrengthGame";
         public const string NeutralityGameScene = "CutGame";
         public const string CoordinationGameScene = "MazeGame";
-        public const string MainScene = "Main";
+        public const string MainScene = "City";
         public const string TrainStation = "TrainStation";
         public const string HotelScene = "HotelScene";
         public const string MainMenu = "MainMenu";
