@@ -5,6 +5,7 @@ using UnityEngine;
 public class RatSpecialAttack : Component
 {
     private float _cooldown = 5f;
+    private float _interval = 2f;
     private RatAttack ratAttack;
     private EnemyMovement enemyMovement;
 
@@ -22,22 +23,22 @@ public class RatSpecialAttack : Component
     private IEnumerator AttackSequence(Context context, System.Action OnEnd)
     {
         context.brain.SetActionState(Brain.ActionType.SpecialAttack, false);
-        Dash(context, 3);
-        yield return new WaitForSeconds(1f);
-        Dash(context, 9);
-        yield return new WaitForSeconds(1f);
+        Dash(context, AttackType.Default);
+        yield return new WaitForSeconds(_interval);
+        Dash(context, AttackType.Special);
+        yield return new WaitForSeconds(_interval);
         OnEnd?.Invoke();
         yield return new WaitForSeconds(_cooldown);
         context.brain.SetActionState(Brain.ActionType.SpecialAttack, true);
     }
 
-    private void Attack(Context context, int swipeCount)
+    private void Attack(Context context, AttackType attackType)
     {
         var health = context.target.GetComponent<Health>();
         var animator = context.brain.enemy.Get<EnemyAnimator>();
         var lastAnim = animator.lastAnim;
         AttackRequest attackRequest = new AttackRequest(
-            health, animator, swipeCount, AttackType.Default,
+            health, animator, 1, attackType,
                 () =>
                 {
                     animator.Play(lastAnim);
@@ -47,8 +48,8 @@ public class RatSpecialAttack : Component
         ratAttack.Attack(context, attackRequest);
     }
 
-    private void Dash(Context context, int swipeCount)
+    private void Dash(Context context, AttackType attackType)
     {
-        enemyMovement.Dash(context, 10, () => Attack(context, swipeCount));
+        enemyMovement.Dash(context, 10, () => Attack(context, attackType));
     }
 }
