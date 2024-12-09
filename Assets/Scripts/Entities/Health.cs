@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class Health : Component
 {
-    [SerializeField] protected int maxHealth = 100;
+    [SerializeField] public int maxHealth = 100;
 
-    protected float currentHealth;
+    public float currentHealth { get; set; }
     public bool isDead { get; set; }
+    public System.Action OnDamage { get; set; }
 
     public void TakeDamage(int amount)
     {

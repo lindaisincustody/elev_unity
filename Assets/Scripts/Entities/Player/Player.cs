@@ -8,11 +8,13 @@ public class Player : MonoBehaviour
 {
     [SerializeField] GameObject InteractableUI;
     [Header("Self-Referneces")]
-    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] public SpriteRenderer spriteRenderer;
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
     [SerializeField] private GameObject poemAvailable; // Add this line
     [SerializeField] private WordData[] wordsData;
+    [field: SerializeField] public PlayerHealth PlayerHealth { get; private set; }
+
 
     private DataManager dataManager;
     public PlayerData playerData;

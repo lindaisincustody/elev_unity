@@ -19,7 +19,7 @@ public class EnemyHealth : Health
     private Color originalColor;
     private Material enemyMaterial;
 
-    private void Start()
+    private void Awake()
     {
         currentHealth = maxHealth;
         initialScale = healthBarTransform.localScale;
