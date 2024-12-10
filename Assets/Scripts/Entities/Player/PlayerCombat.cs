@@ -19,7 +19,9 @@ public class PlayerCombat : MonoBehaviour
     private const int maxActiveBombs = 3;
 
     [SerializeField] private float meleeAttackRange = 2f; 
-    [SerializeField] private int meleeDamage = 20; 
+    [SerializeField] private int meleeDamage = 5;
+    private float meleeCooldown = 0.7f;
+    private float nextMeleeTime = 0f;
 
     private GameObject poolHolder;
 
@@ -166,36 +168,68 @@ public class PlayerCombat : MonoBehaviour
 
     private void PerformMeleeAttack()
     {
+        // Check if the current time is greater than or equal to the next allowed melee time
+        if (Time.time < nextMeleeTime)
+        {
+            return; // Exit if melee attack is on cooldown
+        }
+
+        // Update the next allowed melee time
+        nextMeleeTime = Time.time + meleeCooldown;
+
         player.GetComponent<PlayerMovement>().isAttacking = true;
 
-        Vector2 attackDirection = player.GetComponent<PlayerMovement>().lastDirection;
+        // Get the mouse position in world space
+        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mousePosition.z = 0;
+
+        // Calculate the direction vector from the player to the mouse
+        Vector2 attackDirection = (mousePosition - transform.position).normalized;
 
         // Determine the attack direction and set the corresponding animation
-        if (attackDirection.x > 0) // Right
+        if (Mathf.Abs(attackDirection.x) > Mathf.Abs(attackDirection.y))
         {
-            animator.SetTrigger("MeleeRight");
+            if (attackDirection.x > 0) // Right
+            {
+                animator.SetTrigger("MeleeRight");
+            }
+            else // Left
+            {
+                animator.SetTrigger("MeleeLeft");
+            }
         }
-        else if (attackDirection.x < 0) // Left
+        else
         {
-            animator.SetTrigger("MeleeLeft");
+            if (attackDirection.y > 0) // Back
+            {
+                animator.SetTrigger("MeleeBack");
+            }
+            else // Front
+            {
+                animator.SetTrigger("MeleeFront");
+            }
         }
-        else if (attackDirection.y > 0) // Back
-        {
-            animator.SetTrigger("MeleeBack");
-        }
-        else if (attackDirection.y < 0) // Front
-        {
-            animator.SetTrigger("MeleeFront");
-        }
+
+        // Start the delayed hit detection
+        StartCoroutine(DelayedMeleeHitDetection(0.2f)); // Adjust delay to match the animation's strike frame
+    }
+
+    private IEnumerator DelayedMeleeHitDetection(float delay)
+    {
+        yield return new WaitForSeconds(delay);
 
         // Detect enemies within melee range
-        Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(transform.position, meleeAttackRange);
+        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(transform.position, meleeAttackRange);
 
-        foreach (Collider2D enemy in hitEnemies)
+        foreach (Collider2D collider in hitObjects)
         {
-            if (enemy.CompareTag("Body"))
+            // Check if the object has an EnemyHealth component
+            EnemyHealth enemyHealth = collider.GetComponent<EnemyHealth>();
+            Enemy enemyComponent = collider.GetComponent<Enemy>();
+
+            if (enemyHealth != null && enemyHealth.currentHealth > 0 && enemyComponent.activeLetters.Count == 0)
             {
-                enemy.GetComponent<EnemyHealth>().TakeDamage(meleeDamage);
+                enemyHealth.TakeDamage(meleeDamage);
             }
         }
 
@@ -205,7 +239,7 @@ public class PlayerCombat : MonoBehaviour
 
     private IEnumerator ResetMeleeAnimation()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.3f);
 
         // Reset all melee animation triggers
         animator.ResetTrigger("MeleeRight");

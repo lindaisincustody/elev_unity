@@ -45829,8 +45829,12 @@ PrefabInstance:
       objectReference: {fileID: 1186790290414908665, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
     - target: {fileID: 4639523295586963794, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: spawnPoint.Array.size
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 4639523295586963794, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
+      propertyPath: spawnPoint.Array.data[1]
+      value: 
+      objectReference: {fileID: 1521904794}
     - target: {fileID: 5004025273945126502, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_Name
       value: EnemySpawner
@@ -46611,6 +46615,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1521904794 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4287423213270966045, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
+  m_PrefabInstance: {fileID: 1313087634}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1527470254 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
@@ -47677,6 +47686,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 514501729019924183, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 938505823323063305, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: poemAvailable
       value: 
@@ -47709,6 +47722,14 @@ PrefabInstance:
       propertyPath: chinchillaPrefab
       value: 
       objectReference: {fileID: 7920130587965075085, guid: ff49d55c0d22ab541b0162df80738cca, type: 3}
+    - target: {fileID: 6026462742497456992, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6416396186489896408, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: m_ExcludeLayers.m_Bits
+      value: 262144
+      objectReference: {fileID: 0}
     - target: {fileID: 6418275811729181238, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: m_BodyType
       value: 0

@@ -29,9 +29,16 @@ public class Stun : Component
     {
         var effect = EffectSystem.GetEffect(EffectType.Stun);
         effect.transform.position = transform.position + offset;
+
+        brain.SetActionState(Brain.ActionType.Attack, false);
+        brain.SetActionState(Brain.ActionType.SpecialAttack, false);
+        brain.SetActionState(Brain.ActionType.Dash, false);
+        brain.SetActionState(Brain.ActionType.ChasePlayer, false);
+
         brain.isActionBusy = true;
         brain.enemy.Get<EnemyAnimator>().ResetAnimator();
         yield return new WaitForSeconds(time);
+
         brain.isActionBusy = false;
         EffectSystem.ReturnEffect(EffectType.Stun, effect);
     }
@@ -39,5 +46,13 @@ public class Stun : Component
     private void OnDestroy()
     {
         brain.enemy.Get<EnemyHealth>().OnDamage -= Execute;
+    }
+
+    public void TriggerStun()
+    {
+        if (coroutine != null)
+            StopCoroutine(coroutine);
+
+        coroutine = StartCoroutine(DisableEnemy(stunDuration + 10f));
     }
 }

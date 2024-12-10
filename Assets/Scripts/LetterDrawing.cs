@@ -77,15 +77,15 @@ public class LetterDrawing : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(1))
         {
             StartDrawing();
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(1))
         {
             AddPoint();
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(1))
         {
             EndDrawing();
             CenterDrawingInTexture();

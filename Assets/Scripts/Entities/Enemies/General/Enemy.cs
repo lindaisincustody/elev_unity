@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private GameObject letterTextEnemy;
     private List<TMP_Text> displayedLetters = new List<TMP_Text>();
-    private HashSet<char> activeLetters = new HashSet<char>();
+    public HashSet<char> activeLetters = new HashSet<char>();
     private EnemyHealth enemyHealth;
 
     private void Awake()
@@ -42,11 +42,11 @@ public class Enemy : MonoBehaviour
 
     private void GenerateRandomLetters()
     {
-        float letterSpacing = 0.5f;
+        float letterSpacing = 1f;
         for (int i = 0; i < 3; i++)
         {
             // Create a letter object above the enemy with horizontal alignment
-            Vector3 letterPosition = transform.position + new Vector3(i * letterSpacing, 1, 0); // Increment x-axis for horizontal layout
+            Vector3 letterPosition = transform.position + new Vector3(i * letterSpacing  - 1 , 4, 0); // Increment x-axis for horizontal layout
             GameObject letterObject = Instantiate(letterTextEnemy, letterPosition, Quaternion.identity, transform);
 
             TMP_Text letterText = letterObject.GetComponent<TMP_Text>();
@@ -87,13 +87,17 @@ public class Enemy : MonoBehaviour
                 // Remove the letter from activeLetters
                 enemyHealth.StartCoroutine(enemyHealth.FlashWhite());
                 activeLetters.Remove(upperCaseLetter);
-                
 
                 // Check if all letters have been destroyed
-                if (activeLetters.Count == 0 && enemyHealth != null)
+                if (activeLetters.Count == 0)
                 {
-                    Debug.Log("All letters destroyed. Enemy dying.");
-                    enemyHealth.StartCoroutine(enemyHealth.Die());
+                    Debug.Log("All letters destroyed. Stun enemy.");
+                    // Trigger the stun effect
+                    var stunComponent = GetComponent<Stun>();
+                    if (stunComponent != null)
+                    {
+                        stunComponent.TriggerStun();
+                    }
                 }
             }
             else
