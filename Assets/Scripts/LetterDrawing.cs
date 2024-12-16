@@ -1,10 +1,11 @@
-using System;
+﻿using System;
 using System.Linq;
 using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
 
 public class LetterDrawing : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class LetterDrawing : MonoBehaviour
     [SerializeField] private RawImage renderTextureDisplay;
     [SerializeField] private bool invert = true;
     [SerializeField] private TextMesh textMesh;
+    [SerializeField] private GameObject heartParticlePrefab;
 
     [SerializeField] private TextMeshProUGUI poemTextDisplay;  // UI Text for displaying poem in the book
     [SerializeField, TextArea] private string poem = "Your poem text goes here."; // The full poem text
@@ -25,12 +27,59 @@ public class LetterDrawing : MonoBehaviour
     private Camera renderCamera;
     private RenderTexture renderTexture;
     private IWorker worker;
+    private Coroutine heartStreamCoroutine;
+
 
     private readonly string[] _labels = {
-        "0", "1", "2", "3", "4", "5", "6", "7", "8", "9",
-        "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
-        "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"
-    };
+    "_Capricorn",
+    "_Heart",
+    "_Leo",
+    "_Moon",
+    "_Rightarrow",
+    "_bowtie",
+    "_clubsuit",
+    "_descnode",
+    "_diagup",
+    "_diamond",
+    "_downarrow",
+    "_infty",
+    "_ocircle",
+    "_oplus",
+    "_spadesuit",
+    "_square",
+    "_star",
+    "_textgamma",
+    "_textmusicalnote",
+    "_varphi"
+};
+
+    private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
+{
+    { "_Capricorn", "♑" },
+    { "_Heart", "♥" },
+    { "_Leo", "♌" },
+    { "_Moon", "☾" },
+    { "_Rightarrow", "⇒" },
+    { "_bowtie", "⧓" },
+    { "_clubsuit", "♣" },
+    { "_descnode", "⤵" },
+    { "_diagup", "/" },
+    { "_diamond", "♦" },
+    { "_downarrow", "↓" },
+    { "_infty", "∞" },
+    { "_ocircle", "⦾" },
+    { "_oplus", "⊕" },
+    { "_spadesuit", "♠" },
+    { "_square", "■" },
+    { "_star", "★" },
+    { "_textgamma", "γ" },
+    { "_textmusicalnote", "♪" },
+    { "_varphi", "φ" }
+};
+
+
+
+
 
     [Serializable]
     public struct Prediction
@@ -42,10 +91,21 @@ public class LetterDrawing : MonoBehaviour
         {
             predicted = t.AsFloats();
             int predictedIndex = Array.IndexOf(predicted, predicted.Max());
-            predictedLabel = labels[predictedIndex];
-            Debug.Log($"Predicted Character: {predictedLabel}");
+
+            // Ensure the predicted index is within bounds of the labels array
+            if (predictedIndex >= 0 && predictedIndex < labels.Length)
+            {
+                predictedLabel = labels[predictedIndex];
+                Debug.Log($"Predicted Symbol: {predictedLabel}");
+            }
+            else
+            {
+                predictedLabel = "Unknown";
+                Debug.LogWarning("Predicted index is out of bounds of the labels array.");
+            }
         }
     }
+
     public Prediction prediction;
 
     void Start()
@@ -89,13 +149,13 @@ public class LetterDrawing : MonoBehaviour
         {
             EndDrawing();
             CenterDrawingInTexture();
-            PredictNumber();
+            PredictSymbol();
         }
     }
 
     private void InitializeCamera()
     {
-        renderTexture = new RenderTexture(28, 28, 16, RenderTextureFormat.R8);
+        renderTexture = new RenderTexture(96, 96, 16, RenderTextureFormat.R8);
         renderCamera = new GameObject("Render Camera").AddComponent<Camera>();
 
         renderCamera.orthographic = true;
@@ -121,13 +181,26 @@ public class LetterDrawing : MonoBehaviour
         {
             secondaryLineRenderer.positionCount = 0;
         }
+    }
 
+    private void DebugInputTexture(Texture2D texture)
+    {
+        byte[] bytes = texture.EncodeToPNG();
+        System.IO.File.WriteAllBytes("DebugInput.png", bytes);
+        Debug.Log("Input texture saved for debugging: DebugInput.png");
     }
 
     private void AddPoint()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
+
+        if (lineRenderer.positionCount > 0)
+        {
+            Vector3 lastPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
+            mousePosition = Vector3.Lerp(lastPosition, mousePosition, 0.5f); // Smooth input
+        }
+
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, mousePosition);
 
@@ -138,6 +211,7 @@ public class LetterDrawing : MonoBehaviour
         }
     }
 
+
     private void EndDrawing()
     {
         renderCamera.Render();
@@ -145,67 +219,69 @@ public class LetterDrawing : MonoBehaviour
 
     private void CenterDrawingInTexture()
     {
+        // Calculate the bounds of the drawing
         Bounds bounds = new Bounds(lineRenderer.GetPosition(0), Vector3.zero);
         for (int i = 1; i < lineRenderer.positionCount; i++)
         {
             bounds.Encapsulate(lineRenderer.GetPosition(i));
         }
 
+        // Center the render camera on the drawing
         Vector3 center = bounds.center;
         renderCamera.transform.position = new Vector3(center.x, center.y, renderCamera.transform.position.z);
 
+        // Calculate the required orthographic size to fit the drawing with a margin
         float marginFactor = 1.2f;
         float maxDrawingSize = Mathf.Max(bounds.size.x, bounds.size.y) * marginFactor;
         renderCamera.orthographicSize = maxDrawingSize / 2f;
 
+        // Adjust the LineRenderer width based on the zoom level
+        float baseWidth = 0.1f; // Base width for the LineRenderer
+        float zoomLevel = renderCamera.orthographicSize; // Higher orthographicSize means more zoomed out
+        float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f); // Adjust multiplier limits as needed
+        lineRenderer.widthMultiplier = baseWidth * widthMultiplier;
+
+        if (secondaryLineRenderer != null)
+        {
+            secondaryLineRenderer.widthMultiplier = lineRenderer.widthMultiplier * 0.8f; // Slightly thinner for secondary
+        }
+
+        // Render the drawing
         renderCamera.Render();
     }
 
-    private string NormalizePrediction(string predictedLabel)
-    {
-        if (predictedLabel == "0" || predictedLabel.ToUpper() == "O") return "O";
 
-        else if (predictedLabel == "1" || predictedLabel.ToUpper() == "I" || predictedLabel.ToUpper() == "L")
-        {
-            return "I";
-        }
-        return predictedLabel.ToUpper();
-    }
-
-    private void PredictNumber()
+    private void PredictSymbol()
     {
-        Texture2D capturedTexture = new Texture2D(28, 28, TextureFormat.R8, false);
+        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.R8, false);
         RenderTexture.active = renderTexture;
-        capturedTexture.ReadPixels(new Rect(0, 0, 28, 28), 0, 0);
-        if (invert)
-        {
-            InvertTextureColors(capturedTexture);
-        }
+        capturedTexture.ReadPixels(new Rect(0, 0, 96, 96), 0, 0);
 
         using var inputTensor = new Tensor(renderTexture, 1);
         worker.Execute(inputTensor);
         Tensor output = worker.PeekOutput();
 
+        // Use the labels array for prediction
         prediction.SetPrediction(output, _labels);
-        string predictedLetter = NormalizePrediction(prediction.predictedLabel);
+        string predictedSymbol = prediction.predictedLabel;
 
-        // Skip non-letter characters in the poem
-        while (!isComplete && (poem[currentLetterIndex] == ' ' || !char.IsLetter(poem[currentLetterIndex])))
+        MatchSymbolWithPoem(predictedSymbol);
+
+        output.Dispose();
+        capturedTexture.Apply();
+
+        DebugInputTexture(capturedTexture);
+        Destroy(capturedTexture);
+    }
+
+
+    private void MatchSymbolWithPoem(string predictedSymbol)
+    {
+        string currentPoemSymbol = poem[currentLetterIndex].ToString();
+        if (!isComplete && predictedSymbol == currentPoemSymbol)
         {
             currentLetterIndex++;
             UpdatePoemDisplay();
-        }
-
-        // Check if the normalized predicted letter matches the current letter in the poem
-        string currentPoemLetter = NormalizePrediction(poem[currentLetterIndex].ToString());
-        if (!isComplete && predictedLetter == currentPoemLetter)
-        {
-            currentLetterIndex++;
-            UpdatePoemDisplay();
-
-            //CorrectLetterUI.Instance.Show(currentPoemLetter);
-
-            //TriggerHomingBullet();
 
             if (currentLetterIndex >= poem.Length)
             {
@@ -213,24 +289,21 @@ public class LetterDrawing : MonoBehaviour
                 Debug.Log("Poem completed!");
             }
         }
-        else {
-            //CorrectLetterUI.Instance.ShowWrong(currentPoemLetter);
+        else
+        {
+            Debug.Log($"Incorrect symbol. Expected: {currentPoemSymbol}, Predicted: {predictedSymbol}");
         }
-        TriggerHomingBullet(predictedLetter);
-        output.Dispose();
-        capturedTexture.Apply();
-        Destroy(capturedTexture);
+
+        TriggerHomingBullet(predictedSymbol);
     }
 
     private void UpdatePoemDisplay()
     {
-        // Skip non-letter characters and spaces
         while (currentLetterIndex < poem.Length && (poem[currentLetterIndex] == ' ' || !char.IsLetter(poem[currentLetterIndex])))
         {
             currentLetterIndex++;
         }
 
-        // Display the current target letter to draw
         if (currentLetterIndex < poem.Length)
         {
             string currentTargetLetter = poem[currentLetterIndex].ToString();
@@ -241,19 +314,12 @@ public class LetterDrawing : MonoBehaviour
             currentLetterText.text = "Poem completed!";
         }
 
-        // Get the parts of the poem string for highlighting
         string before = poem.Substring(0, currentLetterIndex);
         string highlighted = currentLetterIndex < poem.Length ? $"<color=#000000><b>{poem[currentLetterIndex]}</b></color>" : "";
+        string after = currentLetterIndex + 1 < poem.Length ? $"<color=#00000080>{poem.Substring(currentLetterIndex + 1)}</color>" : "";
 
-        // Make the 'after' text more transparent
-        string after = currentLetterIndex + 1 < poem.Length
-            ? $"<color=#00000080>{poem.Substring(currentLetterIndex + 1)}</color>"  // 80 is ~50% opacity in hex
-            : "";
-
-        // Update the poem text display
         poemTextDisplay.text = before + highlighted + after;
     }
-
 
     private void InvertTextureColors(Texture2D texture)
     {
@@ -274,22 +340,58 @@ public class LetterDrawing : MonoBehaviour
         worker?.Dispose();
     }
 
-    private void TriggerHomingBullet(string predictedLetter)
+    private void TriggerHomingBullet(string predictedSymbol)
     {
-        PlayerCombat playerCombat = GetComponent<PlayerCombat>();
-        if (playerCombat != null)
-        {
-            //playerCombat.ShootHomingBullet();
-        }
+        string predictedUnicodeSymbol = latexToUnicode.ContainsKey(predictedSymbol) ? latexToUnicode[predictedSymbol] : predictedSymbol;
 
-        // Convert the predictedLetter to a character for matching
-        char drawnLetter = predictedLetter[0];
-
-        // Check if the drawn letter matches any letters above enemies
         foreach (var enemy in FindObjectsOfType<Enemy>())
         {
-            enemy.CheckLetterMatch(drawnLetter);
+            if (enemy.activeSymbols.Contains(predictedUnicodeSymbol))
+            {
+                enemy.CheckSymbolMatch(predictedUnicodeSymbol);
+
+                if (predictedSymbol == "_Heart")
+                {
+                    // Trigger heart animation towards this enemy
+                    //TriggerHeartAnimation(enemy.transform.position);
+                }
+            }
         }
+    }
+
+
+    private void TriggerHeartAnimation(Vector3 targetPosition)
+    {
+        if (secondaryLineRenderer.positionCount <= 0) return;
+
+        StartCoroutine(SpawnAndStreamParticles(targetPosition));
+    }
+
+    private IEnumerator SpawnAndStreamParticles(Vector3 targetPosition)
+    {
+        List<GameObject> heartParticles = new List<GameObject>();
+
+        // Spawn particles along the LineRenderer shape
+        for (int i = 0; i < secondaryLineRenderer.positionCount; i++)
+        {
+            Vector3 pointPosition = secondaryLineRenderer.GetPosition(i);
+
+            GameObject heartParticle = Instantiate(heartParticlePrefab, pointPosition, Quaternion.identity);
+            heartParticles.Add(heartParticle);
+        }
+
+        yield return new WaitForSeconds(0.5f);
+
+        // Stream the particles into the enemy
+        foreach (GameObject particle in heartParticles)
+        {
+            if (particle != null)
+            {
+                var particleMover = particle.AddComponent<ParticleMover>();
+                particleMover.Initialize(targetPosition, 10f); 
+            }
+        }
+        secondaryLineRenderer.positionCount = 0;
     }
 
 }

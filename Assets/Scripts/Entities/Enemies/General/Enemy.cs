@@ -1,9 +1,7 @@
-using System;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 public class Enemy : MonoBehaviour
 {
@@ -17,10 +15,58 @@ public class Enemy : MonoBehaviour
     public Vector2 minBound { get; set; }
     public Vector2 maxBound { get; set; }
 
-    [SerializeField] private GameObject letterTextEnemy;
-    private List<TMP_Text> displayedLetters = new List<TMP_Text>();
-    public HashSet<char> activeLetters = new HashSet<char>();
+    [SerializeField] private GameObject symbolTextEnemy;
+    private List<TMP_Text> displayedSymbols = new List<TMP_Text>();
+    public HashSet<string> activeSymbols = new HashSet<string>();
     private EnemyHealth enemyHealth;
+
+
+    private readonly string[] _labels = {
+        "_Capricorn",
+        "_Heart",
+        "_Leo",
+        "_Moon",
+        "_Rightarrow",
+        "_bowtie",
+        "_clubsuit",
+        "_descnode",
+        "_diagup",
+        "_diamond",
+        "_downarrow",
+        "_infty",
+        "_ocircle",
+        "_oplus",
+        "_spadesuit",
+        "_square",
+        "_star",
+        "_textgamma",
+        "_textmusicalnote",
+        "_varphi"
+    };
+
+    private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
+{
+    { "_Capricorn", "♑" },
+    { "_Heart", "♥" },
+    { "_Leo", "♌" },
+    { "_Moon", "☾" },
+    { "_Rightarrow", "⇒" },
+    { "_bowtie", "⧓" },
+    { "_clubsuit", "♣" },
+    { "_descnode", "⤵" },
+    { "_diagup", "/" },
+    { "_diamond", "♦" },
+    { "_downarrow", "↓" },
+    { "_infty", "∞" },
+    { "_ocircle", "⦾" },
+    { "_oplus", "⊕" },
+    { "_spadesuit", "♠" },
+    { "_square", "■" },
+    { "_star", "★" },
+    { "_textgamma", "γ" },
+    { "_textmusicalnote", "♪" },
+    { "_varphi", "φ" }
+};
 
     private void Awake()
     {
@@ -35,63 +81,64 @@ public class Enemy : MonoBehaviour
         SanityBar.instance.OnSanityChange += SanityChange;
         SanityChange(0);
         SetBounds();
-        GenerateRandomLetters();
+        GenerateRandomSymbols();
 
         enemyHealth = GetComponent<EnemyHealth>();
     }
 
-    private void GenerateRandomLetters()
+    private void GenerateRandomSymbols()
     {
-        float letterSpacing = 1f;
+        float symbolSpacing = 1f;
+
+        // Create a filtered list of labels excluding specific symbols
+        var filteredLabels = new List<string>(_labels);
+        filteredLabels.Remove("_descnode");
+        filteredLabels.Remove("_textmusicalnote");
+        filteredLabels.Remove("_oplus");
+        filteredLabels.Remove("_infty");
+
         for (int i = 0; i < 3; i++)
         {
-            // Create a letter object above the enemy with horizontal alignment
-            Vector3 letterPosition = transform.position + new Vector3(i * letterSpacing  - 1 , 4, 0); // Increment x-axis for horizontal layout
-            GameObject letterObject = Instantiate(letterTextEnemy, letterPosition, Quaternion.identity, transform);
+            // Create a symbol object above the enemy with horizontal alignment
+            Vector3 symbolPosition = transform.position + new Vector3(i * symbolSpacing - 1, 4, 0); // Increment x-axis for horizontal layout
+            GameObject symbolObject = Instantiate(symbolTextEnemy, symbolPosition, Quaternion.identity, transform);
 
-            TMP_Text letterText = letterObject.GetComponent<TMP_Text>();
+            TMP_Text symbolText = symbolObject.GetComponent<TMP_Text>();
 
-            char randomLetter;
-
-            // Assign a random letter, excluding 'L'
-            do
-            {
-                randomLetter = (char)('A' + UnityEngine.Random.Range(0, 26));
-            }
-            while (randomLetter == 'L'); // Keep re-generating until it's not 'L'
-
-            letterText.text = randomLetter.ToString();
-            displayedLetters.Add(letterText);
-            activeLetters.Add(randomLetter);
+            // Assign a random symbol from the filtered list
+            string randomSymbolKey = filteredLabels[UnityEngine.Random.Range(0, filteredLabels.Count)];
+            string randomSymbol = latexToUnicode.ContainsKey(randomSymbolKey) ? latexToUnicode[randomSymbolKey] : randomSymbolKey;
+            symbolText.text = randomSymbol;
+            displayedSymbols.Add(symbolText);
+            activeSymbols.Add(randomSymbol);
         }
     }
 
-    public void CheckLetterMatch(char drawnLetter)
+
+    public void CheckSymbolMatch(string drawnSymbol)
     {
-        char upperCaseLetter = char.ToUpper(drawnLetter);
-
-        if (activeLetters.Contains(upperCaseLetter))
+        if (activeSymbols.Contains(drawnSymbol))
         {
-            // Find all matching letters in displayedLetters
-            var matchedLetters = displayedLetters.FindAll(letter => letter.text.Equals(upperCaseLetter.ToString(), StringComparison.OrdinalIgnoreCase));
+            // Find all matching symbols in displayedSymbols
+            var matchedSymbols = displayedSymbols.FindAll(symbol => symbol.text == drawnSymbol);
 
-            if (matchedLetters.Count > 0)
+            if (matchedSymbols.Count > 0)
             {
-                Debug.Log($"Destroying all instances of letter: {upperCaseLetter}");
-                foreach (var matchedLetter in matchedLetters)
+                Debug.Log($"Destroying all instances of symbol: {drawnSymbol}");
+                foreach (var matchedSymbol in matchedSymbols)
                 {
-                    displayedLetters.Remove(matchedLetter); // Remove from list
-                    Destroy(matchedLetter.gameObject);      // Destroy the GameObject
+                    displayedSymbols.Remove(matchedSymbol); // Remove from list
+                    Destroy(matchedSymbol.gameObject);      // Destroy the GameObject
                 }
 
-                // Remove the letter from activeLetters
+                // Remove the symbol from activeSymbols
                 enemyHealth.StartCoroutine(enemyHealth.FlashWhite());
-                activeLetters.Remove(upperCaseLetter);
+                activeSymbols.Remove(drawnSymbol);
 
-                // Check if all letters have been destroyed
-                if (activeLetters.Count == 0)
+                // Check if all symbols have been destroyed
+                if (activeSymbols.Count == 0)
                 {
-                    Debug.Log("All letters destroyed. Stun enemy.");
+                    Debug.Log("All symbols destroyed. Stun enemy.");
                     // Trigger the stun effect
                     var stunComponent = GetComponent<Stun>();
                     if (stunComponent != null)
@@ -102,15 +149,14 @@ public class Enemy : MonoBehaviour
             }
             else
             {
-                Debug.LogError($"No matching visual letter found for: {upperCaseLetter}, but it exists in activeLetters.");
+                Debug.LogError($"No matching visual symbol found for: {drawnSymbol}, but it exists in activeSymbols.");
             }
         }
         else
         {
-            Debug.Log($"Letter {drawnLetter} does not match any active letters.");
+            Debug.Log($"Symbol {drawnSymbol} does not match any active symbols.");
         }
     }
-
 
     public T Get<T>() where T : Component
     {
@@ -158,6 +204,7 @@ public class Enemy : MonoBehaviour
         underworldBody.SetActive(false);
         overworldBody.SetActive(true);
     }
+
     void OnDestroy()
     {
         if (EnemyManager.Instance != null)

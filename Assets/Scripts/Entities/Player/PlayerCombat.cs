@@ -227,7 +227,7 @@ public class PlayerCombat : MonoBehaviour
             EnemyHealth enemyHealth = collider.GetComponent<EnemyHealth>();
             Enemy enemyComponent = collider.GetComponent<Enemy>();
 
-            if (enemyHealth != null && enemyHealth.currentHealth > 0 && enemyComponent.activeLetters.Count == 0)
+            if (enemyHealth != null && enemyHealth.currentHealth > 0 && enemyComponent.activeSymbols.Count == 0)
             {
                 enemyHealth.TakeDamage(meleeDamage);
             }

@@ -926,12 +926,16 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2524244512325843035, guid: cc9111edd6d19d044b72046e8d6a576b, type: 3}
+      propertyPath: m_Parameters.numCornerVertices
+      value: 76
+      objectReference: {fileID: 0}
+    - target: {fileID: 2524244512325843035, guid: cc9111edd6d19d044b72046e8d6a576b, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].time
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2524244512325843035, guid: cc9111edd6d19d044b72046e8d6a576b, type: 3}
       propertyPath: m_Parameters.widthCurve.m_Curve.Array.data[0].value
-      value: 0.76354676
+      value: 0.32676518
       objectReference: {fileID: 0}
     - target: {fileID: 5796848547794311640, guid: cc9111edd6d19d044b72046e8d6a576b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1091,7 +1095,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7496336467584829003, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
       propertyPath: m_SortingOrder
-      value: 31
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 9141734026007474170, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
       propertyPath: m_LocalPosition.x
@@ -47966,10 +47970,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lineRenderer: {fileID: 297478991}
   secondaryLineRenderer: {fileID: 1313547638}
-  _model: {fileID: 5022602860645237092, guid: 52d6ec667514e3b489e693ee53b4dfda, type: 3}
+  _model: {fileID: 5022602860645237092, guid: cc11e77015fc7514e8112c5da2cda4c5, type: 3}
   renderTextureDisplay: {fileID: 2058740483}
   invert: 1
   textMesh: {fileID: 1631165611}
+  heartParticlePrefab: {fileID: 6708089141918931328, guid: cd3b449bac1639d4d8e42ae59003eecc, type: 3}
   poemTextDisplay: {fileID: 83122430}
   poem: 'In whispers soft, the daylight fades,
 
