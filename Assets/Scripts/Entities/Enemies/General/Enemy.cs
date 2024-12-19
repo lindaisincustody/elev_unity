@@ -128,6 +128,7 @@ public class Enemy : MonoBehaviour
                 foreach (var matchedSymbol in matchedSymbols)
                 {
                     displayedSymbols.Remove(matchedSymbol); // Remove from list
+                    GlyphBook.instance.GlyphWritten(this, matchedSymbol);
                     Destroy(matchedSymbol.gameObject);      // Destroy the GameObject
                 }
 
@@ -140,11 +141,9 @@ public class Enemy : MonoBehaviour
                 {
                     Debug.Log("All symbols destroyed. Stun enemy.");
                     // Trigger the stun effect
-                    var stunComponent = GetComponent<Stun>();
-                    if (stunComponent != null)
-                    {
-                        stunComponent.TriggerStun();
-                    }
+                    Get<Stun>().Execute();
+                    Get<EnemyVisuals>().DeactivateShield();
+                    Get<EnemyHealth>().ActivateHealthBar();
                 }
             }
             else

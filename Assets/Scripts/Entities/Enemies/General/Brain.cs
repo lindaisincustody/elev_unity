@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ using UnityEngine.AI;
 public class Brain : MonoBehaviour
 {
     [SerializeField] private Sensor sensor;
+
+    public Action ActionReset { get; private set; }
 
     public List<ActionData> actions;
     public Context context;
@@ -35,6 +38,18 @@ public class Brain : MonoBehaviour
         {
             action.action.Initialize(context);
         }
+
+        ActionReset += ActionsReset;
+    }
+
+    private void ActionsReset()
+    {
+        foreach (var action in actions)
+        {
+            action.action.Stop(context);
+        }
+
+        enemy.Get<EnemyAnimator>().StopAttack();
     }
 
     private void Update()
@@ -88,6 +103,11 @@ public class Brain : MonoBehaviour
     private void UpdateContext()
     {
         context.SetData("Health", enemy.Get<EnemyHealth>().NormalizedHealth());
+    }
+
+    private void OnDestroy()
+    {
+        ActionReset -= ActionsReset;
     }
 
     [System.Serializable]

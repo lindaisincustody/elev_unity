@@ -71,6 +71,7 @@ public class SanityEffectHandler : MonoBehaviour
             IsPlayerInUnderworld = true; // Set the player to be in the underworld
             PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", true);
             isAnimating = true;
+            EnemyManager.Instance.SetUpGlyphs();
             StartCoroutine(AnimateSchizophrenicEffects());
         }
         else if (currentSanity > 50)

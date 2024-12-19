@@ -127,6 +127,11 @@ public class EnemyMovement : Component
         StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); // Adjust time as needed
     }
 
+    public void Stop()
+    {
+        StopAllCoroutines();
+    }
+
     private IEnumerator StopDashAfterTime(float time, System.Action OnEnd)
     {
         yield return new WaitForSeconds(time);

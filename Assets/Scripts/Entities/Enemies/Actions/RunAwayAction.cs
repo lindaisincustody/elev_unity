@@ -14,4 +14,8 @@ public class RunAwayAction : AIAction
     {
 
     }
+
+    public override void Stop(Context context)
+    {
+    }
 }

@@ -99,4 +99,10 @@ public class RatAttack : EnemyAttack
     public override void ResetAttack()
     {
     }
+
+    public override void Stop()
+    {
+        StopAllCoroutines();
+        animator.ResetAnimator();
+    }
 }

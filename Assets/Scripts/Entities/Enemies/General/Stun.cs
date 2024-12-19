@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Stun : Component
 {
-    [SerializeField] private Vector3 offset;
-    private float stunDuration = 2f;
+    [SerializeField] private Transform stunParticlePosition;
+    private float stunDuration = 5f;
 
     private Coroutine coroutine;
 
@@ -14,11 +14,9 @@ public class Stun : Component
     private void Awake()
     {
         brain = GetComponent<Brain>();
-
-        brain.enemy.Get<EnemyHealth>().OnDamage += Execute;
     }
 
-    private void Execute()
+    public void Execute()
     {
         if (coroutine != null)
             StopCoroutine(coroutine);
@@ -26,15 +24,11 @@ public class Stun : Component
     }
 
     private IEnumerator DisableEnemy(float time)
-    {
+    {        
         var effect = EffectSystem.GetEffect(EffectType.Stun);
-        effect.transform.position = transform.position + offset;
+        effect.transform.position = stunParticlePosition.position;
 
-        brain.SetActionState(Brain.ActionType.Attack, false);
-        brain.SetActionState(Brain.ActionType.SpecialAttack, false);
-        brain.SetActionState(Brain.ActionType.Dash, false);
-        brain.SetActionState(Brain.ActionType.ChasePlayer, false);
-
+        brain.ActionReset?.Invoke();
         brain.isActionBusy = true;
         brain.enemy.Get<EnemyAnimator>().ResetAnimator();
         yield return new WaitForSeconds(time);
@@ -45,14 +39,5 @@ public class Stun : Component
 
     private void OnDestroy()
     {
-        brain.enemy.Get<EnemyHealth>().OnDamage -= Execute;
-    }
-
-    public void TriggerStun()
-    {
-        if (coroutine != null)
-            StopCoroutine(coroutine);
-
-        coroutine = StartCoroutine(DisableEnemy(stunDuration + 10f));
     }
 }

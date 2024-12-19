@@ -34,4 +34,9 @@ public class AttackAction : AIAction
         context.brain.enemy.Get<EnemyAttack>().ResetAttack();
         //context.brain.isActionBusy = false;
     }
+
+    public override void Stop(Context context)
+    {
+        context.brain.enemy.Get<EnemyAttack>().Stop();
+    }
 }

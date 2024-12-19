@@ -24,4 +24,9 @@ public class DashToTarget : AIAction
     {
 
     }
+
+    public override void Stop(Context context)
+    {
+        context.movement.Stop();
+    }
 }

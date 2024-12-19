@@ -23,4 +23,9 @@ public class MoveToTargetAIAction : AIAction
     {
 
     }
+
+    public override void Stop(Context context)
+    {
+        context.movement.target = null;
+    }
 }

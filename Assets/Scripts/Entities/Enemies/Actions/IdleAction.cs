@@ -13,4 +13,9 @@ public class IdleAction : AIAction
     public override void Reset(Context context)
     {
     }
+
+    public override void Stop(Context context)
+    {
+
+    }
 }

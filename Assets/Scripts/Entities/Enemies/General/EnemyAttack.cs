@@ -7,6 +7,7 @@ public abstract class EnemyAttack : Component
     public int damageAmount;
     public abstract void Attack(Context context, AttackRequest attackRequest);
     public abstract void ResetAttack();
+    public abstract void Stop();
 }
 
 public struct AttackRequest

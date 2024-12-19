@@ -9,6 +9,8 @@ public class GhostAttack : EnemyAttack
     [SerializeField] private int projectileCount = 5;
     [SerializeField] private float angleOffset = 10f;
 
+    private Coroutine _sequence;
+
     private Context _context;
     private EnemyAnimator animator;
 
@@ -25,10 +27,10 @@ public class GhostAttack : EnemyAttack
         switch (attackRequest.attackType)
         {
             case AttackType.Default:
-                StartCoroutine(RhythmSequence(attackRequest));
+                _sequence = StartCoroutine(RhythmSequence(attackRequest));
                 break;
             case AttackType.Special:
-                StartCoroutine(RhythmSequence(attackRequest));
+                _sequence = StartCoroutine(RhythmSequence(attackRequest));
                 break;
         }
     }
@@ -118,6 +120,13 @@ public class GhostAttack : EnemyAttack
         {
             body.localScale = new Vector3(1, body.localScale.y, body.localScale.z);
         }
+    }
+
+    public override void Stop()
+    {
+        StopAllCoroutines();
+        _context.brain.SetActionState(Brain.ActionType.Attack, true);
+        animator.ResetAnimator();
     }
 
     public override void ResetAttack()

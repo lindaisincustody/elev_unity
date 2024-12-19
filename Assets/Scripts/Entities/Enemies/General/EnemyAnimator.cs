@@ -40,7 +40,10 @@ public class EnemyAnimator : Component
         lastAnim = anim;
     }
 
-
+    public void StopAttack()
+    {
+        animator.SetTrigger("StopAttack");
+    }
 
     public void ResetAnimator()
     {

@@ -22,4 +22,9 @@ public class SpecialAttackAction : AIAction
     {
 
     }
+
+    public override void Stop(Context context)
+    {
+        context.brain.enemy.Get<RatSpecialAttack>().Stop();
+    }
 }

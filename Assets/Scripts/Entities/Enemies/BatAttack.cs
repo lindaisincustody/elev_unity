@@ -99,7 +99,10 @@ public class BatAttack : EnemyAttack
         }
     }
 
-
+    public override void Stop()
+    {
+        ResetAttack();
+    }
 
     public override void ResetAttack()
     {

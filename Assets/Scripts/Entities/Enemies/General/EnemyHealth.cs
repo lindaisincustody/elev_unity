@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyHealth : Health
 {
+    [SerializeField] private GameObject healthBar;
     [SerializeField] private Transform healthBarTransform;
     [SerializeField] private Transform healthBarBackground;
     [SerializeField] private SpriteRenderer body;
@@ -34,6 +35,11 @@ public class EnemyHealth : Health
         {
             TakeDamage(collision.GetComponent<Bullet>().damage);
         }
+    }
+
+    public void ActivateHealthBar()
+    {
+        healthBar.SetActive(true);
     }
 
     public void TakeDamage(int amount)

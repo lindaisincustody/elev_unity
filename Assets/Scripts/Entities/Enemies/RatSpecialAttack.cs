@@ -6,8 +6,10 @@ public class RatSpecialAttack : Component
 {
     private float _cooldown = 5f;
     private float _interval = 2f;
+    
     private RatAttack ratAttack;
     private EnemyMovement enemyMovement;
+    private Context _context;
 
     private void Start()
     {
@@ -17,7 +19,14 @@ public class RatSpecialAttack : Component
 
     public void Execute(Context context, System.Action OnEnd)
     {
+        _context = context;
         StartCoroutine(AttackSequence(context, OnEnd));
+    }
+
+    public void Stop()
+    {
+        StopAllCoroutines();
+        _context.brain.SetActionState(Brain.ActionType.SpecialAttack, true);
     }
 
     private IEnumerator AttackSequence(Context context, System.Action OnEnd)

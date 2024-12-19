@@ -8,8 +8,11 @@ public class GolemAttack : EnemyAttack
     [SerializeField] private EnemyProjectile bolder;
     [SerializeField] private Transform body;
 
+    private EnemyAnimator _animator;
+
     public override void Attack(Context context, AttackRequest attackRequest)
     {
+        _animator = attackRequest.animator;
         FaceTarget(attackRequest.targetHealth.transform);
         attackRequest.animator.Play(EnemyAnimator.AnimationType.Attack);
         StartCoroutine(AttackSequence(attackRequest.onAttackEnd));
@@ -37,6 +40,12 @@ public class GolemAttack : EnemyAttack
         {
             body.localScale = new Vector3(1, body.localScale.y, body.localScale.z);
         }
+    }
+
+    public override void Stop()
+    {
+        StopAllCoroutines();
+        _animator.ResetAnimator();
     }
 
     public override void ResetAttack()

@@ -14,4 +14,9 @@ public class PhaseAction : AIAction
     public override void Reset(Context context)
     {
     }
+
+    public override void Stop(Context context)
+    {
+        context.brain.enemy.Get<Phase>().Stop();
+    }
 }

@@ -30,7 +30,20 @@ public class Phase : Component
 
         StartCoroutine(PhaseRoutine(onEnd));
         dodgeCoroutine = StartCoroutine(DodgeRoutine());
-        cooldownCoroutine = StartCoroutine(CooldownRoutine());
+    }
+
+    public void Stop()
+    {
+        currentCooldownTime = 0f;
+
+        if (dodgeCoroutine != null)
+            StopCoroutine(dodgeCoroutine);
+        if (cooldownCoroutine != null)
+            StopCoroutine(cooldownCoroutine);
+
+        var enemyHealth = context.brain.enemy.Get<EnemyHealth>();
+        enemyHealth.SetAlpha(1f);
+        enemyHealth.Immune = false;
     }
 
     private IEnumerator PhaseRoutine(Action onEnd)

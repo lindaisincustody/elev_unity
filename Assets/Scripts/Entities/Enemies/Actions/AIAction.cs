@@ -16,4 +16,5 @@ public abstract class AIAction : ScriptableObject
 
     public abstract void Execute(Context context);
     public abstract void Reset(Context context);
+    public abstract void Stop(Context context);
 }
