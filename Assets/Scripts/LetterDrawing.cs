@@ -91,18 +91,8 @@ public class LetterDrawing : MonoBehaviour
         {
             predicted = t.AsFloats();
             int predictedIndex = Array.IndexOf(predicted, predicted.Max());
-
-            // Ensure the predicted index is within bounds of the labels array
-            if (predictedIndex >= 0 && predictedIndex < labels.Length)
-            {
-                predictedLabel = labels[predictedIndex];
-                Debug.Log($"Predicted Symbol: {predictedLabel}");
-            }
-            else
-            {
-                predictedLabel = "Unknown";
-                Debug.LogWarning("Predicted index is out of bounds of the labels array.");
-            }
+            predictedLabel = (predictedIndex >= 0 && predictedIndex < labels.Length) ? labels[predictedIndex] : "Unknown";
+            Debug.Log($"Predicted Symbol: {predictedLabel}");
         }
     }
 

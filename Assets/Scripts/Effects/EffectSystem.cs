@@ -27,6 +27,12 @@ public static class EffectSystem
 
     public static void ReturnEffect(EffectType type, GameObject effect)
     {
+        Vector3 positiveScale = new Vector3(
+               Mathf.Abs(effect.transform.localScale.x),
+               Mathf.Abs(effect.transform.localScale.y),
+               Mathf.Abs(effect.transform.localScale.z)
+           );
+        effect.transform.localScale = positiveScale;
         pooler.ReturnEffectToPool(type, effect);
     }
 }

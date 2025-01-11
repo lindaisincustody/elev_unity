@@ -26,29 +26,23 @@ public class RatAttack : EnemyAttack
         movement.FaceTarget(attackRequest.targetHealth.transform);
         animator = attackRequest.animator;
         animator.Play(EnemyAnimator.AnimationType.Attack);
-        switch (attackRequest.attackType)
-        {
-            case AttackType.Special:
-                StartCoroutine(SpecialAttack(attackRequest.targetHealth, attackRequest.onAttackEnd));
-                break;
-            default:
-                StartCoroutine(DefaultAttack(attackRequest.targetHealth, attackRequest.onAttackEnd));
-                break;
-        }
+
+        StartCoroutine(attackRequest.attackType == AttackType.Special
+             ? SpecialAttack(attackRequest.targetHealth, attackRequest.onAttackEnd)
+             : DefaultAttack(attackRequest.targetHealth, attackRequest.onAttackEnd));
     }
 
     private IEnumerator SpecialAttack(Health targetHealth, Action onAttackEnd)
     {
-        float distance = Vector3.Distance(attackPos.position, body.position);
-
         var effect = EffectSystem.GetEffect(EffectType.WhiteSlashFull);
+
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
         swipe.Init(targetHealth, damageAmount);
 
         effect.transform.position = body.position;
 
-        StartCoroutine(ActivateSwipe(effect, swipe));
+        StartCoroutine(ActivateSwipe(effect, swipe, EffectType.WhiteSlashFull));
 
         yield return new WaitForSeconds(ANIMATION_DURATION);
         onAttackEnd?.Invoke();
@@ -82,18 +76,20 @@ public class RatAttack : EnemyAttack
             effect.transform.localScale = scale;
         }
 
-        StartCoroutine(ActivateSwipe(effect, swipe));
+        Debug.Log(effect.transform.localScale);
+
+        StartCoroutine(ActivateSwipe(effect, swipe, EffectType.WhiteSlash));
     }
 
 
-    private IEnumerator ActivateSwipe(GameObject effect, Swipe swipe)
+    private IEnumerator ActivateSwipe(GameObject effect, Swipe swipe, EffectType effectType)
     {
         yield return new WaitForSeconds(SWIPE_APPEAR_DELAY);
         animator.ResetAnimator();
         effect.SetActive(true);
-        yield return new WaitForSeconds(SWIPE_APPEAR_DELAY - SWIPE_DURATION);
         swipe.ActivateCollider();
-        EffectSystem.ReturnEffect(EffectType.Swipe, effect);
+        yield return new WaitForSeconds(SWIPE_APPEAR_DELAY - SWIPE_DURATION);
+        EffectSystem.ReturnEffect(effectType, effect);
     }
 
     public override void ResetAttack()
