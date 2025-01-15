@@ -9,18 +9,18 @@ using System.Collections.Generic;
 
 public class LetterDrawing : MonoBehaviour
 {
-    [SerializeField] private LineRenderer lineRenderer;          // Primary line renderer
-    [SerializeField] private LineRenderer secondaryLineRenderer; // Secondary overlay line renderer
+    [SerializeField] private LineRenderer lineRenderer;         
+    [SerializeField] private LineRenderer secondaryLineRenderer;
     [SerializeField] private NNModel _model;
     [SerializeField] private RawImage renderTextureDisplay;
     [SerializeField] private bool invert = true;
     [SerializeField] private TextMesh textMesh;
     [SerializeField] private GameObject heartParticlePrefab;
 
-    [SerializeField] private TextMeshProUGUI poemTextDisplay;  // UI Text for displaying poem in the book
-    [SerializeField, TextArea] private string poem = "Your poem text goes here."; // The full poem text
-    private int currentLetterIndex = 0; // Tracks current letter in poem to match
-    [SerializeField] private TextMeshProUGUI currentLetterText; // UI Text to display the current letter
+    [SerializeField] private TextMeshProUGUI poemTextDisplay; 
+    [SerializeField, TextArea] private string poem = "Your poem text goes here."; 
+    private int currentLetterIndex = 0; 
+    [SerializeField] private TextMeshProUGUI currentLetterText;
 
     private bool isComplete = false;
 
@@ -107,14 +107,13 @@ public class LetterDrawing : MonoBehaviour
         lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
         renderCamera.cullingMask = LayerMask.GetMask("Drawing");
 
-        // Assign a trippy shader material to the primary line
         Material trippyMaterial = new Material(Shader.Find("Unlit/Color"));
         Material trippyMaterialSecondary = new Material(Shader.Find("Custom/TrippyTransparent"));
         trippyMaterial.SetColor("_Color", Color.red);
         trippyMaterial.SetFloat("_Transparency", 0.5f);
         trippyMaterial.SetFloat("_TimeSpeed", 1.0f);
         trippyMaterialSecondary.SetColor("_Color", Color.black);
-        trippyMaterialSecondary.SetFloat("_Transparency", 0.2f);
+        trippyMaterialSecondary.SetFloat("_Transparency", 0.5f);
         trippyMaterialSecondary.SetFloat("_TimeSpeed", 1.0f);
         lineRenderer.material = trippyMaterial;
         secondaryLineRenderer.material = trippyMaterialSecondary;
@@ -209,34 +208,30 @@ public class LetterDrawing : MonoBehaviour
 
     private void CenterDrawingInTexture()
     {
-        // Calculate the bounds of the drawing
         Bounds bounds = new Bounds(lineRenderer.GetPosition(0), Vector3.zero);
         for (int i = 1; i < lineRenderer.positionCount; i++)
         {
             bounds.Encapsulate(lineRenderer.GetPosition(i));
         }
 
-        // Center the render camera on the drawing
         Vector3 center = bounds.center;
         renderCamera.transform.position = new Vector3(center.x, center.y, renderCamera.transform.position.z);
 
-        // Calculate the required orthographic size to fit the drawing with a margin
         float marginFactor = 1.2f;
         float maxDrawingSize = Mathf.Max(bounds.size.x, bounds.size.y) * marginFactor;
         renderCamera.orthographicSize = maxDrawingSize / 2f;
 
-        // Adjust the LineRenderer width based on the zoom level
-        float baseWidth = 0.1f; // Base width for the LineRenderer
-        float zoomLevel = renderCamera.orthographicSize; // Higher orthographicSize means more zoomed out
-        float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f); // Adjust multiplier limits as needed
+
+        float baseWidth = 0.1f; 
+        float zoomLevel = renderCamera.orthographicSize; 
+        float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f);
         lineRenderer.widthMultiplier = baseWidth * widthMultiplier;
 
         if (secondaryLineRenderer != null)
         {
-            secondaryLineRenderer.widthMultiplier = lineRenderer.widthMultiplier * 0.8f; // Slightly thinner for secondary
+            secondaryLineRenderer.widthMultiplier = lineRenderer.widthMultiplier * 0.8f; 
         }
 
-        // Render the drawing
         renderCamera.Render();
     }
 
@@ -251,7 +246,6 @@ public class LetterDrawing : MonoBehaviour
         worker.Execute(inputTensor);
         Tensor output = worker.PeekOutput();
 
-        // Use the labels array for prediction
         prediction.SetPrediction(output, _labels);
         string predictedSymbol = prediction.predictedLabel;
 
@@ -361,7 +355,6 @@ public class LetterDrawing : MonoBehaviour
     {
         List<GameObject> heartParticles = new List<GameObject>();
 
-        // Spawn particles along the LineRenderer shape
         for (int i = 0; i < secondaryLineRenderer.positionCount; i++)
         {
             Vector3 pointPosition = secondaryLineRenderer.GetPosition(i);
@@ -372,7 +365,6 @@ public class LetterDrawing : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        // Stream the particles into the enemy
         foreach (GameObject particle in heartParticles)
         {
             if (particle != null)

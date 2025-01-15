@@ -46,24 +46,24 @@ public class Enemy : MonoBehaviour
 
     private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
 {
-    { "_Capricorn", "♑" },
+    { "_Capricorn", "♑" }, 
     { "_Heart", "♥" },
-    { "_Leo", "♌" },
-    { "_Moon", "☾" },
+    { "_Leo", "♌" }, 
+    { "_Moon", "☾" }, 
     { "_Rightarrow", "⇒" },
     { "_bowtie", "⧓" },
-    { "_clubsuit", "♣" },
+    { "_clubsuit", "♣" }, 
     { "_descnode", "⤵" },
-    { "_diagup", "/" },
-    { "_diamond", "♦" },
-    { "_downarrow", "↓" },
+    { "_diagup", "/" }, 
+    { "_diamond", "♦" }, 
+    { "_downarrow", "↓" }, 
     { "_infty", "∞" },
     { "_ocircle", "⦾" },
     { "_oplus", "⊕" },
-    { "_spadesuit", "♠" },
-    { "_square", "■" },
-    { "_star", "★" },
-    { "_textgamma", "γ" },
+    { "_spadesuit", "♠" }, 
+    { "_square", "■" }, 
+    { "_star", "★" }, 
+    { "_textgamma", "γ" }, 
     { "_textmusicalnote", "♪" },
     { "_varphi", "φ" }
 };
@@ -90,22 +90,20 @@ public class Enemy : MonoBehaviour
     {
         float symbolSpacing = 1f;
 
-        // Create a filtered list of labels excluding specific symbols
         var filteredLabels = new List<string>(_labels);
         filteredLabels.Remove("_descnode");
         filteredLabels.Remove("_textmusicalnote");
         filteredLabels.Remove("_oplus");
         filteredLabels.Remove("_infty");
+        filteredLabels.Remove("_ocircle");
 
         for (int i = 0; i < 3; i++)
         {
-            // Create a symbol object above the enemy with horizontal alignment
-            Vector3 symbolPosition = transform.position + new Vector3(i * symbolSpacing - 1, 4, 0); // Increment x-axis for horizontal layout
+            Vector3 symbolPosition = transform.position + new Vector3(i * symbolSpacing - 1, 4, 0);
             GameObject symbolObject = Instantiate(symbolTextEnemy, symbolPosition, Quaternion.identity, transform);
 
             TMP_Text symbolText = symbolObject.GetComponent<TMP_Text>();
 
-            // Assign a random symbol from the filtered list
             string randomSymbolKey = filteredLabels[UnityEngine.Random.Range(0, filteredLabels.Count)];
             string randomSymbol = latexToUnicode.ContainsKey(randomSymbolKey) ? latexToUnicode[randomSymbolKey] : randomSymbolKey;
             symbolText.text = randomSymbol;
@@ -119,7 +117,7 @@ public class Enemy : MonoBehaviour
     {
         if (activeSymbols.Contains(drawnSymbol))
         {
-            // Find all matching symbols in displayedSymbols
+
             var matchedSymbols = displayedSymbols.FindAll(symbol => symbol.text == drawnSymbol);
 
             if (matchedSymbols.Count > 0)
@@ -127,20 +125,20 @@ public class Enemy : MonoBehaviour
                 Debug.Log($"Destroying all instances of symbol: {drawnSymbol}");
                 foreach (var matchedSymbol in matchedSymbols)
                 {
-                    displayedSymbols.Remove(matchedSymbol); // Remove from list
+                    displayedSymbols.Remove(matchedSymbol); 
                     GlyphBook.instance.GlyphWritten(this, matchedSymbol);
-                    Destroy(matchedSymbol.gameObject);      // Destroy the GameObject
+                    Destroy(matchedSymbol.gameObject);   
                 }
 
-                // Remove the symbol from activeSymbols
+
                 enemyHealth.StartCoroutine(enemyHealth.FlashWhite());
                 activeSymbols.Remove(drawnSymbol);
 
-                // Check if all symbols have been destroyed
+
                 if (activeSymbols.Count == 0)
                 {
                     Debug.Log("All symbols destroyed. Stun enemy.");
-                    // Trigger the stun effect
+
                     Get<Stun>().Execute();
                     Get<EnemyVisuals>().DeactivateShield();
                     Get<EnemyHealth>().ActivateHealthBar();

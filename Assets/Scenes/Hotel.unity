@@ -17437,11 +17437,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 596539546512051079, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -15.07
+      value: 35.1
       objectReference: {fileID: 0}
     - target: {fileID: 596539546512051079, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -7.57
+      value: -1.4
       objectReference: {fileID: 0}
     - target: {fileID: 1768737373042410718, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.x
@@ -17485,11 +17485,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4287423213270966045, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.9
+      value: 37.07
       objectReference: {fileID: 0}
     - target: {fileID: 4287423213270966045, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.75
+      value: 1.53
       objectReference: {fileID: 0}
     - target: {fileID: 4639523295586963794, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: enemyPrefab
@@ -17509,19 +17509,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8850700966980162224, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.87
+      value: 48.76
       objectReference: {fileID: 0}
     - target: {fileID: 8850700966980162224, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 6.92
+      value: 12.36
       objectReference: {fileID: 0}
     - target: {fileID: 8855227963639498921, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 4.8
+      value: 44.82
       objectReference: {fileID: 0}
     - target: {fileID: 8855227963639498921, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.05
+      value: 10.98
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
