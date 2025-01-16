@@ -56,12 +56,18 @@ public class PlayerMovement : MonoBehaviour
 
         if (isAttacking)
         {
-            movement = Vector2.zero;
+            // movement = Vector2.zero;
+            baseMoveSpeed = 2f;
             StopMovementSound();
             animator.SetFloat("Horizontal", 0);
             animator.SetFloat("Vertical", 0);
             animator.SetFloat("Speed", 0);
             return;
+        }
+        else
+        {
+
+            baseMoveSpeed = 4f;
         }
 
         if (!_canMove)
@@ -158,7 +164,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDash()
     {
-        if (canDash && !isDashing)
+        if (canDash && !isDashing && !isAttacking)
         {
             if (movement != Vector2.zero)
             {
