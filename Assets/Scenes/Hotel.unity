@@ -1948,31 +1948,31 @@ Tilemap:
   - first: {x: 33, y: 5, z: 0}
     second:
       serializedVersion: 2
-      m_TileIndex: 0
-      m_TileSpriteIndex: 0
-      m_TileMatrixIndex: 3
+      m_TileIndex: 2
+      m_TileSpriteIndex: 2
+      m_TileMatrixIndex: 2
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
       m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
-  - m_RefCount: 15
+  - m_RefCount: 14
     m_Data: {fileID: 11400000, guid: 28f8888c389ff6f498567bc8c41941d4, type: 2}
   - m_RefCount: 41
     m_Data: {fileID: 11400000, guid: 2476c4eb08b0d32448a1da4648daec37, type: 2}
-  - m_RefCount: 8
+  - m_RefCount: 9
     m_Data: {fileID: 11400000, guid: fdb87cd969c25a7428cb6ddd51e831c9, type: 2}
   - m_RefCount: 55
     m_Data: {fileID: 11400000, guid: 2cf6a0f2275c04445811ed3a6b4efc1f, type: 2}
   - m_RefCount: 55
     m_Data: {fileID: 11400000, guid: cfd607f267756e643b81b6ea2ee996fe, type: 2}
   m_TileSpriteArray:
-  - m_RefCount: 15
+  - m_RefCount: 14
     m_Data: {fileID: -87915434, guid: d3090db8465b770489a0fd38f41430a6, type: 3}
   - m_RefCount: 41
     m_Data: {fileID: -284067110, guid: d3090db8465b770489a0fd38f41430a6, type: 3}
-  - m_RefCount: 8
+  - m_RefCount: 9
     m_Data: {fileID: 984916588, guid: d3090db8465b770489a0fd38f41430a6, type: 3}
   - m_RefCount: 55
     m_Data: {fileID: -1547971852, guid: d3090db8465b770489a0fd38f41430a6, type: 3}
@@ -2015,7 +2015,7 @@ Tilemap:
       e31: 0
       e32: 0
       e33: 1
-  - m_RefCount: 3
+  - m_RefCount: 4
     m_Data:
       e00: 1
       e01: 0
@@ -2033,7 +2033,7 @@ Tilemap:
       e31: 0
       e32: 0
       e33: 1
-  - m_RefCount: 8
+  - m_RefCount: 7
     m_Data:
       e00: 0
       e01: -1
@@ -21519,7 +21519,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &1692472260
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -21581,7 +21581,7 @@ Transform:
   m_GameObject: {fileID: 1692472259}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 24.5895, y: 15.7617, z: 0}
+  m_LocalPosition: {x: 23, y: 15.7617, z: 0}
   m_LocalScale: {x: 8.473294, y: 8.473294, z: 8.473294}
   m_ConstrainProportionsScale: 0
   m_Children: []
