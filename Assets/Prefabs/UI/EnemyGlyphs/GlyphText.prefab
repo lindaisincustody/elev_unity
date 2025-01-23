@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8007469221645179299}
   - component: {fileID: 4695397433658059526}
   - component: {fileID: 3653343745858172493}
+  - component: {fileID: 6894633278396711608}
   m_Layer: 5
   m_Name: GlyphText
   m_TagString: Untagged
@@ -59,6 +60,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glyphText: {fileID: 5635194889337265190, guid: 4ce35da505d6c3f4a855a28f1f582420, type: 3}
+  canvasGroup: {fileID: 6894633278396711608}
 --- !u!114 &3653343745858172493
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -85,3 +87,15 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!225 &6894633278396711608
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6685933952707460628}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

@@ -15,6 +15,8 @@ public class Enemy : MonoBehaviour
     public Vector2 minBound { get; set; }
     public Vector2 maxBound { get; set; }
 
+    public Action<Enemy> OnDeath { get; set; }
+
     [SerializeField] private GameObject symbolTextEnemy;
     private List<TMP_Text> displayedSymbols = new List<TMP_Text>();
     public HashSet<string> activeSymbols = new HashSet<string>();
@@ -84,6 +86,7 @@ public class Enemy : MonoBehaviour
         GenerateRandomSymbols();
 
         enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth.OnDeath += OnEnemyDeath;
     }
 
     private void GenerateRandomSymbols()
@@ -184,7 +187,7 @@ public class Enemy : MonoBehaviour
 
     private void SanityChange(int amount)
     {
-        if (SanityEffectHandler.IsPlayerInUnderworld)
+        if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
             ShowEnemy();
         else
             ShowSparkle();
@@ -202,11 +205,14 @@ public class Enemy : MonoBehaviour
         overworldBody.SetActive(true);
     }
 
+    private void OnEnemyDeath()
+    {
+        OnDeath?.Invoke(this);
+    }
+
     void OnDestroy()
     {
-        if (EnemyManager.Instance != null)
-        {
-            EnemyManager.Instance.UnregisterEnemy(this);
-        }
+        SanityBar.instance.OnSanityChange -= SanityChange;
+        enemyHealth.OnDeath -= OnEnemyDeath;
     }
 }

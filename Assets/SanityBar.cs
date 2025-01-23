@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class SanityBar : MonoBehaviour
 {
+    [field: SerializeField] public SanityEffectHandler sanityEffectHandler { get; private set; }
     public static SanityBar instance;
 
     public delegate void SanityChangeHandler(int amount);
@@ -51,6 +53,24 @@ public class SanityBar : MonoBehaviour
 
         OnSanityChange?.Invoke(amount);
         UpdateSanityUI();
+    }
+
+    public void SanityToMin()
+    {
+        DOVirtual.Int(currentSanity, 0, 150, (val) => {
+            currentSanity = val;
+            OnSanityChange?.Invoke(currentSanity);
+            UpdateSanityUI();
+        }).SetSpeedBased(true);
+    }
+
+    public void SanityToMax()
+    {
+        DOVirtual.Int(currentSanity, maxSanity, 150, (val) => {
+            currentSanity = val;
+            OnSanityChange?.Invoke(currentSanity);
+            UpdateSanityUI();
+        }).SetSpeedBased(true);
     }
 
     private void DecreaseSanityBy50()

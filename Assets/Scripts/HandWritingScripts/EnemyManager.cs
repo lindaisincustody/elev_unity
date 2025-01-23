@@ -20,15 +20,6 @@ public class EnemyManager : MonoBehaviour
         }
     }
 
-    public void SetUpGlyphs()
-    {
-        GlyphBook.instance.ActivateBook();
-        foreach (Enemy enemy in enemies)
-        {
-            GlyphBook.instance.AddEnemy(enemy);
-        }
-    }
-
     public void RegisterEnemy(Enemy enemy)
     {
         enemies.Add(enemy);

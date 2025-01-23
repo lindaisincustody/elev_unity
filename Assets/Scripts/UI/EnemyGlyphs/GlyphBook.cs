@@ -11,8 +11,11 @@ public class GlyphBook : MonoBehaviour
     private Dictionary<Enemy, GlyphText> keyValuePairs = new Dictionary<Enemy, GlyphText>();
 
     [SerializeField] private GlyphText glyphPrefab;
+    [SerializeField] private EnglishText englishTextPrefab;
     [SerializeField] private Transform glyphPanel;
     [SerializeField] private GameObject glyphBook;
+
+    private float bookScaleTime = 0.6f;
 
     private void Awake()
     {
@@ -21,7 +24,9 @@ public class GlyphBook : MonoBehaviour
 
     public void ActivateBook()
     {
+        glyphBook.transform.localScale = Vector3.zero;
         glyphBook.SetActive(true);
+        glyphBook.transform.DOScale(Vector3.one, bookScaleTime).SetEase(Ease.OutBack);
     }
 
     public void AddEnemy(Enemy enemy)
@@ -70,5 +75,49 @@ public class GlyphBook : MonoBehaviour
             Destroy(newGlpyh.gameObject);
         }
         );
+    }
+
+    public void TranslateGlyphs()
+    {
+        List<string> allGlyphs = new List<string>();
+        int glyphCount = keyValuePairs.Count; // Total glyphs that need to fade out
+        int completedFades = 0; // Track completed fade-outs
+
+        foreach (var entry in keyValuePairs)
+        {
+            GlyphText glyphText = entry.Value;
+            if (glyphText != null)
+            {
+                foreach (var pair in glyphText.activeGlyphs) // Accessing stored glyphs
+                {
+                    allGlyphs.Add(pair.Value); // Collect the text representation
+                }
+            }
+
+            // Fade out each glyph and check if all are done
+            glyphText.FadeOutText(() =>
+            {
+                completedFades++;
+                if (completedFades >= glyphCount)
+                {
+                    InterprateText();
+                }
+
+                Destroy(glyphText.gameObject);
+            });
+        }
+
+        string translatedText = string.Join(" ", allGlyphs);
+    }
+
+    private void InterprateText()
+    {
+        EnglishText newGlyphText = Instantiate(englishTextPrefab, glyphPanel);
+        newGlyphText.WriteText("This a test text. All glyphs have faded out. Now interpreting the text..", () => HideBook());
+    }
+
+    private void HideBook()
+    {
+        glyphBook.transform.DOScale(Vector3.zero, bookScaleTime).OnComplete(() => glyphBook.SetActive(false)).SetDelay(2f);
     }
 }

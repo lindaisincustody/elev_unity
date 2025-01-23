@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Experimental.Rendering.Universal; // Needed for Light2D
+using System;
 
 public class SanityEffectHandler : MonoBehaviour
 {
@@ -20,7 +21,21 @@ public class SanityEffectHandler : MonoBehaviour
     private float timeElapsed;
     public Material rippleMaterial;  // Reference to the ripple material
 
-    public static bool IsPlayerInUnderworld { get; private set; } // Flag to track if player is in the underworld
+    private bool _isPlayerInUnderworld;
+    public bool IsPlayerInUnderworld
+    {
+        get => _isPlayerInUnderworld;
+        private set
+        {
+            if (_isPlayerInUnderworld != value) // Only trigger if value changes
+            {
+                _isPlayerInUnderworld = value;
+                OnWorldChange?.Invoke();
+            }
+        }
+    }
+
+    public Action OnWorldChange { get; set; }
 
     private bool isRippleActive = false;
     private bool isAnimating = false; // Keep track of animation state
@@ -71,7 +86,6 @@ public class SanityEffectHandler : MonoBehaviour
             IsPlayerInUnderworld = true; // Set the player to be in the underworld
             PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", true);
             isAnimating = true;
-            EnemyManager.Instance.SetUpGlyphs();
             StartCoroutine(AnimateSchizophrenicEffects());
         }
         else if (currentSanity > 50)

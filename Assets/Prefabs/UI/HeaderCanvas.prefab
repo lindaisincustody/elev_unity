@@ -2021,11 +2021,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3523306356231875940, guid: e39d5167cfb14f84c98810a7fd6a35ad, type: 3}
+      propertyPath: <sanityEffectHandler>k__BackingField
+      value: 
+      objectReference: {fileID: 3994255670301189}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e39d5167cfb14f84c98810a7fd6a35ad, type: 3}
+--- !u!114 &3994255670301189 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 709220804637521774, guid: e39d5167cfb14f84c98810a7fd6a35ad, type: 3}
+  m_PrefabInstance: {fileID: 709765891858015595}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6ef9e843fafdc04cbc6b972f3f1029c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2769694311392486563 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3438065229502251464, guid: e39d5167cfb14f84c98810a7fd6a35ad, type: 3}

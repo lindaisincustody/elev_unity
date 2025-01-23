@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class SpawnEnemy : MonoBehaviour
     [Header("Bounds")]
     [SerializeField] private Transform minBound;
     [SerializeField] private Transform maxBound;
+
+    public Action<Enemy> OnSpawn { get; set; }
 
     void Start()
     {
@@ -26,8 +29,8 @@ public class SpawnEnemy : MonoBehaviour
             newEnemy.minBound = minBound.position;
             newEnemy.maxBound = maxBound.position;
 
+            OnSpawn?.Invoke(newEnemy);
             EnemyManager.Instance.RegisterEnemy(newEnemy);
         }
     }
-
 }

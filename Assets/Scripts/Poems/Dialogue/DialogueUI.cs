@@ -11,24 +11,18 @@ public class DialogueUI
     private TextMeshProUGUI dialogueText;
     private TextMeshProUGUI nameText;
     private Image mainCharacterImage;
-    private Image otherCharacterImage;
     private GameObject mainCharacterImageHolder;
-    private GameObject otherCharacterImageHolder;
 
     private DialogueData dialogueData;
-    private MinigameUI minigameUI;
 
-    public DialogueUI(GameObject box, GameObject narratorbox, TextMeshProUGUI text, TextMeshProUGUI name, Image mainImage, Image otherImage, GameObject mainHolder, GameObject otherHolder, MinigameUI minigame)
+    public DialogueUI(GameObject box, GameObject narratorbox, TextMeshProUGUI text, TextMeshProUGUI name, Image mainImage, GameObject mainHolder)
     {
         dialogueBox = box;
         narratorBox = narratorbox;
         dialogueText = text;
         nameText = name;
         mainCharacterImage = mainImage;
-        otherCharacterImage = otherImage;
         mainCharacterImageHolder = mainHolder;
-        otherCharacterImageHolder = otherHolder;
-        minigameUI = minigame;
     }
 
     public void ActivateDialogueBox(DialogueData newDialogueData)
@@ -36,7 +30,6 @@ public class DialogueUI
         dialogueData = newDialogueData;
         dialogueBox.SetActive(true);
         mainCharacterImage.sprite = dialogueData.mainCharacterImage;
-        otherCharacterImage.sprite = dialogueData.otherCharacterImage;
         ChangeCharacterShown(dialogueData.textList[0].lineType == LineType.You);
     }
 
@@ -62,7 +55,19 @@ public class DialogueUI
         {
             ShowOnlyBox(LineType.Enemy);
             nameText.text = dialogueData.otherCharacterName;
-            ChangeCharacterShown(false, true);
+            ChangeCharacterShown(false);
+        }
+    }
+
+    private void ChangeCharacterShown(bool showMaincharacter)
+    {
+        if (showMaincharacter)
+        {
+            mainCharacterImage.sprite = dialogueData.mainCharacterImage;
+        }
+        else
+        {
+            mainCharacterImage.sprite = dialogueData.otherCharacterImage;
         }
     }
 
@@ -80,29 +85,11 @@ public class DialogueUI
         }
     }
 
-    private void ChangeCharacterShown(bool showMaincharacter, bool showAttributesBar = false)
-    {
-        if (showMaincharacter)
-        {
-            mainCharacterImageHolder.SetActive(true);
-            otherCharacterImageHolder.SetActive(false);
-        }
-        else
-        {
-            mainCharacterImageHolder.SetActive(false);
-            otherCharacterImageHolder.SetActive(true);
-        }
-        if (showAttributesBar)
-        {
-            minigameUI.Show(dialogueData);
-        }
-    }
 
     public void Hide()
     {
         narratorBox.SetActive(false);
         dialogueBox.SetActive(false);
         mainCharacterImageHolder.SetActive(false);
-        otherCharacterImageHolder.SetActive(false);
     }
 }

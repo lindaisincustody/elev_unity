@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,8 +8,9 @@ using UnityEngine.UI;
 public class GlyphText : MonoBehaviour
 {
     [SerializeField] public Glyph glyphText;
+    [SerializeField] private CanvasGroup canvasGroup;
 
-    private Dictionary<Glyph, string> activeGlyphs = new();
+    public Dictionary<Glyph, string> activeGlyphs = new();
 
     public void SetText(string text)
     {
@@ -30,5 +32,11 @@ public class GlyphText : MonoBehaviour
             }
         }
         return null; // Return null if no match is found
+    }
+
+    public void FadeOutText(System.Action OnComplete)
+    {
+        canvasGroup.DOFade(0f, 1f).OnComplete
+            (() => OnComplete?.Invoke());
     }
 }

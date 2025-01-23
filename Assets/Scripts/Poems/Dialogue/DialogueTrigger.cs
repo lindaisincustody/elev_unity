@@ -1,50 +1,39 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Playables;
 
 public class DialogueTrigger : Interactable
 {
-    [SerializeField] public PlayableDirector director;
-    [SerializeField] DialogueController dialogueController;
-    [SerializeField] DialogueData dialogueData;
-    [SerializeField] private bool isPopup = false; // Determines trigger type
-    [SerializeField] private Material newMaterial; // New material to apply after dialogue
+    [SerializeField] private DialogueController dialogueController;
+    [SerializeField] private DialogueData dialogueData;
+    [SerializeField] private PlayableDirector director;
+    [SerializeField] private bool instant = false;
+    [SerializeField] private Material newMaterial;
     [SerializeField] private SpriteRenderer targetRenderer;
     [SerializeField] private bool isDoorInteraction;
     [SerializeField] private bool isInteractionCircle;
     [SerializeField] private ShopItem itemToAdd;
+    [SerializeField] public UnityEvent OnComplete;
     private bool itemAdded = false;
 
-    private int expAmount = 150;
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!collision.gameObject.CompareTag("Player")) return;
 
-        if (collision.gameObject.CompareTag("Player"))
+        HandleItemAddition();
+
+        playerIsInTrigger = true;
+
+        if (instant)
         {
-            if (!itemAdded && itemToAdd != null)
-            {
-                ItemsInventory.Instance.AddItem(itemToAdd);
-                itemAdded = true; // Set the flag to true so the item isn't added again
-            }
-            playerIsInTrigger = true;
-            if (isPopup)
-            {
-                
-
-
-                // Automatically activate the dialogue if it's a popup
-                dialogueController.ActivateDialogue(dialogueData, this);
-                dialogueController.NextAction();
-
-
-            }
-            else
-            {
-                // Show interact prompt if it requires player interaction
-                
-                player.ShowInteractUI(true);
-            }
+            dialogueController?.ActivateDialogue(dialogueData, this);
+            dialogueController?.NextAction();
+        }
+        else
+        {
+            player.ShowInteractUI(true);
         }
     }
 
@@ -53,9 +42,8 @@ public class DialogueTrigger : Interactable
         if (collision.gameObject.CompareTag("Player"))
         {
             playerIsInTrigger = false;
-            if (!isPopup)
+            if (!instant)
             {
-                // Only hide the interact UI if it's not a popup
                 player.ShowInteractUI(false);
             }
         }
@@ -63,49 +51,56 @@ public class DialogueTrigger : Interactable
 
     protected override void HandleInteract()
     {
-        if (playerIsInTrigger && !isPopup)
-        {
-            base.HandleInteract();
-            ExperienceBar.instance.AddExperience(expAmount);
+        if (!playerIsInTrigger || instant) return;
 
-            
-            if (isInteractionCircle)
-            {
-                Transform child = transform.Find("InteractionCircle");
-                if (child != null)
-                {
-                    SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
-                    if (spriteRenderer != null)
-                    {
-                        spriteRenderer.enabled = false; // Disable the SpriteRenderer
-                    }
-                }
-            }
-            if (isDoorInteraction)
-            {
-                // Subscribe to the stopped event
-                director.stopped += OnPlaybackStopped;
-                director.Play();
-            }
-            else if (!isDoorInteraction)
-            {
-                dialogueController.ActivateDialogue(dialogueData, this);
-            }
+        base.HandleInteract();
+
+        if (isInteractionCircle)
+        {
+            DisableInteractionCircle();
+        }
+
+        if (isDoorInteraction)
+        {
+            director.stopped += OnPlaybackStopped;
+            director.Play();
+        }
+        else
+        {
+            dialogueController?.ActivateDialogue(dialogueData, this);
+        }
+    }
+
+    private void HandleItemAddition()
+    {
+        if (itemAdded || itemToAdd == null) return;
+
+        ItemsInventory.Instance.AddItem(itemToAdd);
+        itemAdded = true;
+    }
+
+    private void DisableInteractionCircle()
+    {
+        Transform child = transform.Find("InteractionCircle");
+        if (child == null) return;
+
+        SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.enabled = false;
         }
     }
 
     private void OnPlaybackStopped(PlayableDirector aDirector)
     {
-        // Unsubscribe to prevent the event from being called multiple times
+        if (aDirector != director) return;
+
         director.stopped -= OnPlaybackStopped;
 
-        // Check if the stopped director is the one we're interested in
-        if (aDirector == director)
-        {
-            dialogueController.ActivateDialogue(dialogueData, this);
-            dialogueController.NextAction();
-        }
+        dialogueController?.ActivateDialogue(dialogueData, this);
+        dialogueController?.NextAction();
     }
+
     public void ChangeMaterial()
     {
         if (targetRenderer != null && newMaterial != null)
@@ -113,11 +108,9 @@ public class DialogueTrigger : Interactable
             targetRenderer.material = newMaterial;
         }
     }
+
     public void ActivateDialogue()
     {
-        if (dialogueController != null)
-        {
-            dialogueController.ActivateDialogue(dialogueData, this); // Pass this reference
-        }
+        dialogueController?.ActivateDialogue(dialogueData, this);
     }
 }

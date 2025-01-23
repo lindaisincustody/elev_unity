@@ -52,7 +52,7 @@ public class EnemyMovement : Component
 
     private void SanityChange(int amount)
     {
-        speed = SanityEffectHandler.IsPlayerInUnderworld ? nightSpeed : daySpeed;
+        speed = SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld ? nightSpeed : daySpeed;
     }
 
     public void Avoid(Transform player)
@@ -137,5 +137,10 @@ public class EnemyMovement : Component
         yield return new WaitForSeconds(time);
         rb.velocity = Vector2.zero;
         OnEnd?.Invoke();
+    }
+
+    private void OnDestroy()
+    {
+        SanityBar.instance.OnSanityChange -= SanityChange;
     }
 }

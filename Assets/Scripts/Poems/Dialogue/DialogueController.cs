@@ -11,26 +11,12 @@ public class DialogueController : MonoBehaviour
     [SerializeField] GameObject CanvasBG;
     [SerializeField] GameObject DialogueObj;
     [SerializeField] GameObject NarratorObj;
-    [SerializeField] GameObject MinigamesBoxObj;
     [SerializeField] TextMeshProUGUI dialogueText;    
     [SerializeField] TextMeshProUGUI narratorText;
     [SerializeField] TextMeshProUGUI nameText;
-    [SerializeField] Image mainCharacterImage;
-    [SerializeField] Image otherCharacterImage;
-    [SerializeField] GameObject mainCharacterImageHolder;
-    [SerializeField] GameObject otherCharacterImageHolder;
-    [SerializeField] AttributeParticles particles;
-    [Header("Cursor References")]
-    [SerializeField] CursorController cursor;
-    [SerializeField] UIElementsHolder minigamebox;
-    [Header("Attribute Bar References")]
-    [SerializeField] GameObject multiplierFrame;
-    [SerializeField] Image strengthRect;
-    [SerializeField] Image intelligenceRect;
-    [SerializeField] Image coordinationRect;
-    [SerializeField] Image neutralityRect;
+    [SerializeField] Image characterImage;
+    [SerializeField] GameObject characterImageHolder;
 
-    MinigameUI minigameUI;
     DialogueUI dialogueUI;
 
     Player player;
@@ -40,6 +26,7 @@ public class DialogueController : MonoBehaviour
     DialogueData dialogueData;
     Coroutine dialogueCoroutine;
     Coroutine cursorCoroutine;
+
     private int currentDialogueLine = 0;
     private float delay = 0.05f;
     private string fullText;
@@ -47,6 +34,7 @@ public class DialogueController : MonoBehaviour
 
     private bool isDialogueActive = false;
     private bool isMinigamesBoxActive = false;
+
     private DialogueTrigger currentTrigger;
 
     private void Start()
@@ -57,8 +45,7 @@ public class DialogueController : MonoBehaviour
         playerInput.OnInteract += NextAction;
         playerInput.OnUICancel += ExitDialogue;
 
-        minigameUI = new MinigameUI(MinigamesBoxObj, multiplierFrame, strengthRect, intelligenceRect, coordinationRect, neutralityRect);
-        dialogueUI = new DialogueUI(DialogueObj, NarratorObj, dialogueText, nameText, mainCharacterImage, otherCharacterImage, mainCharacterImageHolder, otherCharacterImageHolder, minigameUI);
+        dialogueUI = new DialogueUI(DialogueObj, NarratorObj, dialogueText, nameText, characterImage, characterImageHolder);
     }
 
     private void OnDestroy()
@@ -87,7 +74,6 @@ public class DialogueController : MonoBehaviour
             ActivateNarrator(newDialogueData);
         }
         ShowNextDialogueLine();
-        //NextAction();
     }
 
     private IEnumerator SetDialogueActive()
@@ -99,7 +85,6 @@ public class DialogueController : MonoBehaviour
     private void ActivateDialogue(DialogueData newDialogueData)
     {
         CanvasBG.SetActive(true);
-        particles.SetDialogueData(newDialogueData);
         playerMovement.SetMovement(false);
         dialogueUI.ActivateDialogueBox(newDialogueData);
     }
@@ -151,8 +136,6 @@ public class DialogueController : MonoBehaviour
                 // Increment dialogue line or end dialogue
                 if (currentDialogueLine < dialogueData.textList.Length)
                     ShowNextDialogueLine();
-                else if (dialogueData.activateFight)
-                    ShowMinigameOptions();
                 else
                     ExitDialogue();
             }
@@ -245,10 +228,8 @@ public class DialogueController : MonoBehaviour
         currentDialogueLine = 0;
 
         dialogueUI.Hide();
-        minigameUI.Hide();
 
         playerMovement.SetMovement(true);
-        cursor.DeactivateCursor();
         if (cursorCoroutine != null)
             StopCoroutine(cursorCoroutine);
         if (dialogueCoroutine != null)
@@ -258,46 +239,13 @@ public class DialogueController : MonoBehaviour
         cursorCoroutine = null;
         CanvasBG.SetActive(false);
 
+        currentTrigger.OnComplete?.Invoke();
+
         if (currentTrigger != null)
         {
             currentTrigger.ChangeMaterial();
             
             currentTrigger = null; // Reset the trigger reference after use
         }
-    }
-
-    private void ShowMinigameOptions()
-    {
-        dialogueUI.ShowNext(currentDialogueLine);
-        minigameUI.Show(dialogueData);
-        isDialogueActive = false;
-        isMinigamesBoxActive = true;
-        cursorCoroutine = StartCoroutine(ActivateCursor());
-    }
-
-    private IEnumerator ActivateCursor()
-    {
-        yield return new WaitForSeconds(0.3f);
-        cursor.ActivateCursor(minigamebox.cursorElements, () => isMinigamesBoxActive = false);
-    }
-
-    public void ChosenGame(int gameAttribute)
-    {
-        switch (gameAttribute)
-        {
-            case 0:
-                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Strength, dialogueData.strengthGameCoinsMultiplier);
-                break;
-            case 1:
-                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Coordination, dialogueData.coordinationGameCoinsMultiplier);
-                break;
-            case 2:
-                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Intelligence, dialogueData.intelligenceGameCoinsMultiplier);
-                break;
-            case 3:
-                ActionManager.OnGoldMultiplierChange.Invoke(Attribute.Neutrality, dialogueData.neutralityGameCoinsMultiplier);
-                break;
-        }
-
     }
 }

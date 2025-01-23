@@ -64,7 +64,7 @@ public class PlayerCombat : MonoBehaviour
 
     private void Shoot()
     {
-        if (!SanityEffectHandler.IsPlayerInUnderworld)
+        if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
             return;
 
         switch (currentMode)

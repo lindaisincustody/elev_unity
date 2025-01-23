@@ -13,7 +13,8 @@ public class EnemyHealth : Health
     [SerializeField] private float flashDuration = 1f;
 
     public bool Immune { get; set; }
-    public Action OnDamage; 
+    public Action OnDamage;
+    public Action OnDeath;
 
     private Vector3 initialScale;
     private Vector3 initialPosition;
@@ -77,6 +78,7 @@ public class EnemyHealth : Health
         animator.Play(EnemyAnimator.AnimationType.Die);
         yield return new WaitForSeconds(2f);
         gameObject.SetActive(false);
+        OnDeath?.Invoke();
     }
 
     protected override void UpdateHealthBar()

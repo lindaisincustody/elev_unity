@@ -21,19 +21,6 @@ public class DialogueData : ScriptableObject
     public CharacterData[] textList;
     public Sprite mainCharacterImage;
     public Sprite otherCharacterImage;
-    public bool activateFight;
-
-    [Range(1, 2)]
-    public float strengthGameCoinsMultiplier = 1;
-
-    [Range(1, 2)]
-    public float neutralityGameCoinsMultiplier = 1;
-
-    [Range(1, 2)]
-    public float intelligenceGameCoinsMultiplier = 1;
-
-    [Range(1, 2)]
-    public float coordinationGameCoinsMultiplier = 1;
 }
 
 [System.Serializable]
@@ -110,16 +97,6 @@ public class DialogueDataEditor : Editor
             }
 
             EditorGUILayout.Space();
-            EditorGUILayout.LabelField("Initiate a fight after dialogue", EditorStyles.boldLabel);
-
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("activateFight"));
-            if (dialogueData.activateFight)
-            {
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("strengthGameCoinsMultiplier"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("neutralityGameCoinsMultiplier"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("intelligenceGameCoinsMultiplier"));
-                EditorGUILayout.PropertyField(serializedObject.FindProperty("coordinationGameCoinsMultiplier"));
-            }
         }
 
         else if (dialogueData.dialogueType == DialogueType.SelfDialogue)

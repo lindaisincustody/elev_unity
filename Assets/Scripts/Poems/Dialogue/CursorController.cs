@@ -13,10 +13,8 @@ public class CursorController : MonoBehaviour
     [SerializeField] RectTransform rightCursorHolder;
     [SerializeField] Image leftCursorFiller;
     [SerializeField] Image rightCursorFiller;
-    [SerializeField] AttributeParticles particleManager;
     [SerializeField] SpriteAdjuster spriteMarker;
-    [Space]
-    public bool issMinigameCursor = false;
+
     private UIElement[] UIElements;
     private UIElement activeUI;
     private Action onSubmitAction;
@@ -92,8 +90,6 @@ public class CursorController : MonoBehaviour
         }
         SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
-        if (issMinigameCursor)
-            UpdateFillerColor();
     }
     private void NavigateRight()
     {
@@ -111,8 +107,6 @@ public class CursorController : MonoBehaviour
         }
         SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
-        if (issMinigameCursor)
-            UpdateFillerColor();
     }
     private void NavigateUp()
     {
@@ -130,8 +124,6 @@ public class CursorController : MonoBehaviour
         }
         SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
-        if (issMinigameCursor)
-            UpdateFillerColor();
     }
     private void NavigateDown()
     {
@@ -149,8 +141,6 @@ public class CursorController : MonoBehaviour
         }
         SoundManager.PlaySound2D(SoundManager.Sound.Navigate);
         UpdateCursorSpacing();
-        if (issMinigameCursor)
-            UpdateFillerColor();
     }
 
     private void UpdateCursorSpacing()
@@ -190,8 +180,6 @@ public class CursorController : MonoBehaviour
         cursor.position = activeUI.rect.position;
 
         UpdateCursorSpacing();
-        if (issMinigameCursor)
-            UpdateFillerColor();
     }
 
     public void DeactivateCursor()
@@ -199,45 +187,6 @@ public class CursorController : MonoBehaviour
         activeUI = null;
         isCursorAcitve = false;
         cursor.gameObject.SetActive(false);
-        if (issMinigameCursor)
-            ResetHighlights();
-    }
-
-    private void ResetHighlights()
-    {
-        spriteMarker.ResetScales();
-    }
-
-    public void UpdateFillerColor()
-    {
-        if (activeUI.row == 1 && activeUI.col == 1)
-        {
-            leftCursorFiller.color = Color.red;
-            rightCursorFiller.color = Color.red;
-            particleManager.ActivatePSS(Attribute.Strength);
-            spriteMarker.markAttribute(Attribute.Strength);
-        }
-        else if (activeUI.row == 1 && activeUI.col == 2)
-        {
-            leftCursorFiller.color = Color.green;
-            rightCursorFiller.color = Color.green;
-            particleManager.ActivatePSS(Attribute.Coordination);
-            spriteMarker.markAttribute(Attribute.Coordination);
-        }
-        else if (activeUI.row == 2 && activeUI.col == 1)
-        {
-            leftCursorFiller.color = Color.blue;
-            rightCursorFiller.color = Color.blue;
-            particleManager.ActivatePSS(Attribute.Intelligence);
-            spriteMarker.markAttribute(Attribute.Intelligence);
-        }
-        else if (activeUI.row == 2 && activeUI.col == 2)
-        {
-            leftCursorFiller.color = Color.grey;
-            rightCursorFiller.color = Color.grey;
-            particleManager.ActivatePSS(Attribute.Neutrality);
-            spriteMarker.markAttribute(Attribute.Neutrality);
-        }
     }
 }
 
