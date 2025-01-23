@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Bomb bomb;
     [SerializeField] GameObject chinchillaPrefab;
     [SerializeField] Camera mainCamera;
-    [SerializeField] Text combatModeText;
+    [SerializeField] TextMeshProUGUI combatModeText;
 
     private int poolSize = 10;
     private List<Bullet> bulletPool = new List<Bullet>();
