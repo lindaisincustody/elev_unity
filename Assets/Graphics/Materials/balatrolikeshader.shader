@@ -11,9 +11,11 @@ Shader "Custom/BalatroBackground"
 
     SubShader
     {
-        Tags { "Queue"="Background" }
+        Tags { "Queue" = "Geometry-100" "RenderType" = "Opaque"}
         Pass
         {
+            ZWrite Off    
+            ZTest Always  
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
