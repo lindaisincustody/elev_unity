@@ -14,6 +14,17 @@ public class GlyphBook : MonoBehaviour
     [SerializeField] private EnglishText englishTextPrefab;
     [SerializeField] private Transform glyphPanel;
     [SerializeField] private GameObject glyphBook;
+    [SerializeField] private TMP_Text poemText;
+
+    private List<string> poemWords = new List<string>
+    {
+        "The shadows fade,", "the light unfolds,",
+        "A journey's end,", "a story told.",
+        "Through night and day,", "we seek our way,",
+        "With every step,", "the price we pay."
+    };
+
+    private int currentWordIndex = 0;
 
     private float bookScaleTime = 0.6f;
 
@@ -40,12 +51,10 @@ public class GlyphBook : MonoBehaviour
     {
         if (keyValuePairs.TryGetValue(enemy, out GlyphText glyphText))
         {
-            // The key exists, and glyphText contains the associated value
             Debug.Log("Found GlyphText: " + glyphText);
         }
         else
         {
-            // The key does not exist
             Debug.LogError("Enemy not found in dictionary.");
             return;
         }
@@ -73,8 +82,17 @@ public class GlyphBook : MonoBehaviour
         {
             glyph.Text.DOColor(Color.red, 2f);
             Destroy(newGlpyh.gameObject);
+            UnlockPoem();
+        });
+    }
+
+    private void UnlockPoem()
+    {
+        if (currentWordIndex < poemWords.Count)
+        {
+            poemText.text += " " + poemWords[currentWordIndex];
+            currentWordIndex += 1;
         }
-        );
     }
 
     public void TranslateGlyphs()

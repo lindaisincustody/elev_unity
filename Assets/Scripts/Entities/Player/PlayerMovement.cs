@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public float baseMoveSpeed = 4f;     // Original move speed
+    public float baseMoveSpeed = 5.5f;
     public float dashSpeed = 5f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 1f;
@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour
         if (isAttacking)
         {
             // movement = Vector2.zero;
-            baseMoveSpeed = 2f;
+            baseMoveSpeed = 2.75f;
             StopMovementSound();
             animator.SetFloat("Horizontal", 0);
             animator.SetFloat("Vertical", 0);
@@ -67,7 +67,7 @@ public class PlayerMovement : MonoBehaviour
         else
         {
 
-            baseMoveSpeed = 4f;
+            baseMoveSpeed = 5.5f;
         }
 
         if (!_canMove)
