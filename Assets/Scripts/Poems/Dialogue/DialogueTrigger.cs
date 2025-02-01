@@ -14,7 +14,7 @@ public class DialogueTrigger : Interactable
     [SerializeField] private SpriteRenderer targetRenderer;
     [SerializeField] private bool isDoorInteraction;
     [SerializeField] private bool isInteractionCircle;
-    [SerializeField] private ShopItem itemToAdd;
+    [SerializeField] private Item itemToAdd;
     [SerializeField] public UnityEvent OnComplete;
     private bool itemAdded = false;
 
@@ -75,7 +75,7 @@ public class DialogueTrigger : Interactable
     {
         if (itemAdded || itemToAdd == null) return;
 
-        ItemsInventory.Instance.AddItem(itemToAdd);
+        Player.instance.ItemsInventory.AddItem(itemToAdd);
         itemAdded = true;
     }
 

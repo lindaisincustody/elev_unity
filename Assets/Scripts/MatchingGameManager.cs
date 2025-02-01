@@ -34,7 +34,6 @@ public class GameController : MonoBehaviour
     {
         dataManager = DataManager.Instance;
 
-        ActualGameLevel = dataManager.GetLevel(Attribute.Intelligence);
         currentLevel = ActualGameLevel;
         difficultyLevel = ActualGameLevel;
         GenerateLevel();
@@ -217,7 +216,6 @@ public class GameController : MonoBehaviour
             if (wonLevels - lostLevels >= currentLevel / 3)
             {
                 ActualGameLevel++;
-                dataManager.AddLevel(Attribute.Intelligence);
                 Debug.Log("You won!");
                 SceneManager.LoadScene(DataManager.Instance.GetLastScene());
             }

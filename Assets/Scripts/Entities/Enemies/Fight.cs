@@ -5,6 +5,7 @@ using UnityEngine;
 public class Fight : MonoBehaviour
 {
     [SerializeField] private List<SpawnEnemy> enemySpawners;
+    [SerializeField] private Item reward;
 
     private List<Enemy> enemies = new();
 
@@ -63,6 +64,7 @@ public class Fight : MonoBehaviour
     {
         GlyphBook.instance.TranslateGlyphs();
         SanityBar.instance.SanityToMax();
+        Player.instance.ItemsInventory.AddItem(reward);
     }
 
     private void OnDestroy()

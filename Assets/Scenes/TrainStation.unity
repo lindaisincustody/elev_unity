@@ -1310,15 +1310,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
-  isPopup: 0
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &54159284
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11314,15 +11317,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 2d41ab88a4ae19c4899481ba172afd0c, type: 2}
-  isPopup: 0
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &832870073
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -11766,15 +11772,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
-  isPopup: 0
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   targetRenderer: {fileID: 857580308}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &857580311
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -16423,15 +16432,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: f7e6f62559b85224e868f72a8d480ad2, type: 2}
-  isPopup: 1
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &1096744857
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -18579,7 +18591,7 @@ Transform:
   m_GameObject: {fileID: 1274674168}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 40.29, y: 3.437, z: -0.15292883}
+  m_LocalPosition: {x: 12.38, y: 3.437, z: -0.15292883}
   m_LocalScale: {x: 1.6949, y: 1.5303301, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -18694,15 +18706,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: e8b21748992dd1f4b9feb426d72fb770, type: 2}
-  isPopup: 1
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   targetRenderer: {fileID: 1274674172}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 11400000, guid: 282aca5affcc8154e9fb2737252cdded, type: 2}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1276167721
 GameObject:
   m_ObjectHideFlags: 0
@@ -19085,17 +19100,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.7325808, y: 0.4586044}
   m_EdgeRadius: 0
---- !u!114 &1309009183 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1912533170821455443, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
-  m_PrefabInstance: {fileID: 5591660499357508618}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1309702525
 GameObject:
   m_ObjectHideFlags: 0
@@ -20760,6 +20764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f408cc482261b4c8945e304dd211a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <sanityEffectHandler>k__BackingField: {fileID: 0}
   mask: {fileID: 1545619711}
   fill: {fileID: 1211166332}
   color: {r: 0.05490196, g: 0.6, b: 1, a: 0}
@@ -21008,15 +21013,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
-  isPopup: 0
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   targetRenderer: {fileID: 1481364076}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1488742852
 GameObject:
   m_ObjectHideFlags: 0
@@ -23938,7 +23946,7 @@ PrefabInstance:
     - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: combatModeText
       value: 
-      objectReference: {fileID: 1309009183}
+      objectReference: {fileID: 0}
     - target: {fileID: 5376793493941146557, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: chinchillaPrefab
       value: 
@@ -26171,15 +26179,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7ed3a3bea6102246b794cbd855cff23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  director: {fileID: 0}
   dialogueController: {fileID: 966221406}
   dialogueData: {fileID: 11400000, guid: 20463b9af396170499d87fa9fefd9019, type: 2}
-  isPopup: 0
+  director: {fileID: 0}
+  instant: 0
   newMaterial: {fileID: 0}
   targetRenderer: {fileID: 0}
   isDoorInteraction: 0
   isInteractionCircle: 0
   itemToAdd: {fileID: 0}
+  OnComplete:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!61 &1965678121
 BoxCollider2D:
   m_ObjectHideFlags: 0

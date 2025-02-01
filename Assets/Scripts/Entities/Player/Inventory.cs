@@ -6,14 +6,6 @@ public class Inventory
 {
     private Gold playerGold = new Gold();
 
-    public void SetUpData(PlayerData playerData)
-    {
-        playerGold.AddMultiplier(Attribute.Strength, playerData.heroStrength);
-        playerGold.AddMultiplier(Attribute.Coordination, playerData.heroCoordination);
-        playerGold.AddMultiplier(Attribute.Intelligence, playerData.heroIntelligence);
-        playerGold.AddMultiplier(Attribute.Neutrality, playerData.heroNeutrality);
-    }
-
     public void AddGoldMultiplier(Attribute attribute, float multiplier)
     {
         playerGold.AddMultiplier(attribute, multiplier);

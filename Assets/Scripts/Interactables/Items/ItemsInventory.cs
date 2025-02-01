@@ -6,7 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class InventoryData
 {
-    public List<ShopItem> items = new List<ShopItem>();
+    public List<Item> items = new List<Item>();
 }
 
 public class ItemsInventory : MonoBehaviour
@@ -14,40 +14,15 @@ public class ItemsInventory : MonoBehaviour
     public InventoryData inventoryData = new InventoryData();
 
     private SavingWrapper savingWrapper;
-    private static ItemsInventory _instance;
-    public static ItemsInventory Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindObjectOfType<ItemsInventory>();
 
-                if (_instance == null)
-                {
-                    GameObject singletonObject = new GameObject("ItemsInventory");
-                    _instance = singletonObject.AddComponent<ItemsInventory>();
-                }
-            }
-            return _instance;
-        }
-    }
 
     private void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        _instance = this;
         savingWrapper = SavingWrapper.Instance;
         inventoryData = savingWrapper.LoadInventory();
-
     }
 
-    public void AddItem(ShopItem newItem)
+    public void AddItem(Item newItem)
     {
         inventoryData.items.Add(newItem);
         savingWrapper.SaveInventory(inventoryData);
@@ -59,7 +34,7 @@ public class ItemsInventory : MonoBehaviour
         savingWrapper.SaveInventory(inventoryData);
     }
 
-    public void RemoveItem(ShopItem itemToRemove)
+    public void RemoveItem(Item itemToRemove)
     {
         // Check if the item exists in the inventory
         if (inventoryData.items.Contains(itemToRemove))
@@ -73,7 +48,7 @@ public class ItemsInventory : MonoBehaviour
         }
     }
 
-    public List<ShopItem> GetAllItems()
+    public List<Item> GetAllItems()
     {
         return inventoryData.items;
     }

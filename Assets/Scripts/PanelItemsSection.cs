@@ -14,7 +14,7 @@ public class PanelItemsSection : MonoBehaviour
     public GameObject itemPrefab;
     public TextMeshProUGUI descriptionText;
     [Header("Items")]
-    public List<ShopItem> shopItems = new List<ShopItem>();
+    public List<Item> shopItems = new List<Item>();
     private List<GameObject> instantiatedItems = new List<GameObject>();
     private int selectedIndex = 0;
 
@@ -29,8 +29,8 @@ public class PanelItemsSection : MonoBehaviour
     {
         player = Player.instance;
         playerInput = player.GetInputManager;
-        playerInput.OnNavigate += OnNavigate;
-        playerInput.OnSubmit += Buy;
+        //playerInput.OnNavigate += OnNavigate;
+       // playerInput.OnSubmit += Buy;
 
         PopulatePanel();
         UpdateDescription(selectedIndex); // Update description at start
@@ -39,8 +39,8 @@ public class PanelItemsSection : MonoBehaviour
 
     private void OnDestroy()
     {
-        playerInput.OnNavigate -= OnNavigate;
-        playerInput.OnSubmit -= Buy;
+       // playerInput.OnNavigate -= OnNavigate;
+       // playerInput.OnSubmit -= Buy;
     }
 
     private void OnNavigate(Vector2 value)
@@ -89,7 +89,7 @@ public class PanelItemsSection : MonoBehaviour
             var itemDetails = itemInstance.GetComponent<ItemDetails>();
             if (itemDetails != null)
             {
-                itemDetails.UpdateUI(itemData.cost.ToString(), itemData.name, itemData.sprite);
+                //itemDetails.UpdateUI(itemData.cost.ToString(), itemData.name, itemData.sprite);
             }
         }
     }
@@ -104,8 +104,8 @@ public class PanelItemsSection : MonoBehaviour
         //if (player.GetGold() < selectedItem.cost)
         //    return;
 
-        ItemsInventory.Instance.AddItem(selectedItem);
-        player.AddGold(-selectedItem.cost);
+        Player.instance.ItemsInventory.AddItem(selectedItem);
+        //player.AddGold(-selectedItem.cost);
         shopUI.RefreshShopUI();
     }
     
@@ -141,6 +141,9 @@ public class PanelItemsSection : MonoBehaviour
     }
     private void UpdateDescription(int index)
     {
+        if (shopItems.Count == 0)
+            return;
+
         descriptionText.text = shopItems[index].description; // Set the description text for the currently selected item
     }
 }

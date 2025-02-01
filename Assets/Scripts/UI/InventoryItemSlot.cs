@@ -7,18 +7,18 @@ public class InventoryItemSlot : MonoBehaviour
 {
     public Image image;
     public Sprite pass_parts_3;
-    private ShopItem currentItem; // Store the current item
+    private Item currentItem; // Store the current item
 
     public bool isEquiped;
 
-    public void Equip(ShopItem item)
+    public void Equip(Item item)
     {
         currentItem = item;
         image.sprite = item.sprite;
         isEquiped = true;
     }
 
-    public ShopItem GetItem()
+    public Item GetItem()
     {
         return isEquiped ? currentItem : null; 
     }

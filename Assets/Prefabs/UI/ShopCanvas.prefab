@@ -1282,9 +1282,7 @@ MonoBehaviour:
   scrollRect: {fileID: 1024314268646521695}
   itemPrefab: {fileID: 5335188156515930346, guid: 417c8867590f53f4e9c845106fb8d7cd, type: 3}
   descriptionText: {fileID: 5273013022883873218}
-  shopItems:
-  - {fileID: 11400000, guid: 36c08ec73bd588543af5c873c0c6dbdd, type: 2}
-  - {fileID: 11400000, guid: 36c08ec73bd588543af5c873c0c6dbdd, type: 2}
+  shopItems: []
 --- !u!1 &6493088471134849043
 GameObject:
   m_ObjectHideFlags: 0

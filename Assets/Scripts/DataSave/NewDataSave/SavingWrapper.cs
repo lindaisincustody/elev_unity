@@ -11,6 +11,7 @@ public class SavingWrapper : MonoBehaviour
 
     private string inventorySaveFileName = "inventory.json";
     private string playerDataSaveFileName = "playerData.json";
+    private string abilitiesSaveFileName = "abilities.json";
 
     public static SavingWrapper Instance
     {
@@ -24,6 +25,46 @@ public class SavingWrapper : MonoBehaviour
             }
             return instance;
         }
+    }
+
+    public void SavePlayerAbilities(List<Ability> abilities)
+    {
+        PlayerAbilitiesData data = new PlayerAbilitiesData();
+        foreach (var ability in abilities)
+        {
+            data.abilityIds.Add(ability.abilityId);
+        }
+
+        string json = JsonConvert.SerializeObject(data);
+        File.WriteAllText(Path.Combine(Application.persistentDataPath, abilitiesSaveFileName), json);
+    }
+
+    public List<Ability> LoadPlayerAbilities()
+    {
+        Ability[] allAbilities = Resources.LoadAll<Ability>("Abilities");
+        string path = Path.Combine(Application.persistentDataPath, abilitiesSaveFileName);
+        List<Ability> loadedAbilities = new List<Ability>();
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            PlayerAbilitiesData data = JsonConvert.DeserializeObject<PlayerAbilitiesData>(json);
+
+            foreach (var id in data.abilityIds)
+            {
+                Ability ability = System.Array.Find(allAbilities, a => a.abilityId == id);
+                if (ability != null)
+                {
+                    loadedAbilities.Add(ability);
+                }
+                else
+                {
+                    Debug.LogWarning("Ability with ID " + id + " not found in Resources.");
+                }
+            }
+        }
+
+        return loadedAbilities;
     }
 
     public void SaveInventory(InventoryData inventoryData)
@@ -44,7 +85,7 @@ public class SavingWrapper : MonoBehaviour
 
     public InventoryData LoadInventory()
     {
-        ShopItem[] shopItems = Resources.LoadAll<ShopItem>("Items");
+        Item[] shopItems = Resources.LoadAll<Item>("Items");
 
         string path = Path.Combine(Application.persistentDataPath, inventorySaveFileName);
         if (File.Exists(path))
@@ -56,7 +97,7 @@ public class SavingWrapper : MonoBehaviour
             foreach (var itemId in itemIdList)
             {
                 // Find the ShopItem with the corresponding itemId
-                ShopItem item = Array.Find(shopItems, x => x.itemId == itemId);
+                Item item = Array.Find(shopItems, x => x.itemId == itemId);
                 if (item != null)
                 {
                     inventoryData.items.Add(item);
@@ -90,16 +131,6 @@ public class SavingWrapper : MonoBehaviour
         }
 
         return new PlayerData {
-            heroStrength = 1,
-            heroNeutrality = 1,
-            heroIntelligence = 1,
-            heroCoordination = 1,
-            
-            StrengthLevel = 1,
-            NeutralityLevel = 1,
-            IntelligenceLevel = 1,
-            CoordinationLevel = 1,
-
             gold = 0
         };
     }

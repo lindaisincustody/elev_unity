@@ -11,15 +11,15 @@ public class Player : MonoBehaviour
     [SerializeField] public SpriteRenderer spriteRenderer;
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
-    [SerializeField] private GameObject poemAvailable; // Add this line
+    [SerializeField] private GameObject poemAvailable;
     [SerializeField] private WordData[] wordsData;
     [field: SerializeField] public PlayerHealth PlayerHealth { get; private set; }
-
+    [field: SerializeField] public PlayerAbilities PlayerAbilities{ get; private set; }
+    [field: SerializeField] public ItemsInventory ItemsInventory{ get; private set; }
+    
 
     private DataManager dataManager;
     public PlayerData playerData;
-    private TrainMovement trainMovement;
-
 
     public static Player instance { get; set; }
     public PlayerMovement GetPlayerMovement => playerMovement;
@@ -44,8 +44,6 @@ public class Player : MonoBehaviour
         instance = this;
 
         dataManager = DataManager.Instance;
-
-        trainMovement = GetComponent<TrainMovement>();
     }
 
     private void Start()
@@ -62,7 +60,6 @@ public class Player : MonoBehaviour
 
     private void SetUpPlayerData()
     {
-        _inventory.SetUpData(playerData);
         _inventory.AddGold(playerData.gold);
 
         Vector3? savedPosition = GetSavedScenePosition();
@@ -129,10 +126,6 @@ public class Player : MonoBehaviour
     {
         _inventory.AddGoldMultiplier(attribute, multiplier);
 
-        playerData.heroStrength = _inventory.GetGoldMultiplier(Attribute.Strength);
-        playerData.heroCoordination = _inventory.GetGoldMultiplier(Attribute.Coordination);
-        playerData.heroIntelligence = _inventory.GetGoldMultiplier(Attribute.Intelligence);
-        playerData.heroNeutrality = _inventory.GetGoldMultiplier(Attribute.Neutrality);
         dataManager.SavePlayerData(playerData);
     }
 
@@ -198,16 +191,6 @@ public class PlayerData
     public int maxExperience = 300;
     public int currentLevel = 0;
     public int poemsUsed = 0;
-
-    public float heroStrength;
-    public float heroCoordination;
-    public float heroIntelligence;
-    public float heroNeutrality;
-
-    public int StrengthLevel;
-    public int CoordinationLevel;
-    public int IntelligenceLevel;
-    public int NeutralityLevel;
 
     public List<ScenePosition> scenePositions = new List<ScenePosition>();
     public bool tutorialComplete = false;

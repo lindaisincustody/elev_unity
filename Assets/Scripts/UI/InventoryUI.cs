@@ -19,15 +19,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] TextMeshProUGUI intelligenceLevel;
     [SerializeField] TextMeshProUGUI coordinationLevel;
     [SerializeField] TextMeshProUGUI neutralityLevel;
-    [Header("Gold Multipliers References")]
-    [SerializeField] TextMeshProUGUI strengthGoldMulti;
-    [SerializeField] TextMeshProUGUI intelligenceGoldMulti;
-    [SerializeField] TextMeshProUGUI coordinationGoldMulti;
-    [SerializeField] TextMeshProUGUI neutralityGoldMulti;
-    [SerializeField] Image strengthSlider;
-    [SerializeField] Image intelligenceSlider;
-    [SerializeField] Image cooridnationSlider;
-    [SerializeField] Image neutralitySlider;
+
     [Header("Items")]
     [SerializeField] InventoryItemSlot[] itemSlots;
 
@@ -38,19 +30,13 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI effectDurationText;  // For displaying the duration of the effect
 
     Player player;
+    ItemsInventory itemsInventory;
     DataManager dataManager;
     InputManager playerInput;
     PlayerMovement playerMovement;
 
     private bool isInventoryOpen = false;
     private bool canOpenInventory = true;
-    private float multiplierRectWidth = 0;
-    private float multiplierRectHeight = 0;
-
-    float heroStrength;
-    float heroCoordination;
-    float heroIntelligence;
-    float heroNeutrality;
 
     private int selectedIndex = 0;
     private int numberOfColumns = 4;
@@ -67,8 +53,6 @@ public class InventoryUI : MonoBehaviour
         {
             Instance = this;
         }
-        multiplierRectWidth = strengthSlider.rectTransform.rect.width * 4;
-        multiplierRectHeight = strengthSlider.rectTransform.rect.height;
     }
 
     private void Start()
@@ -77,18 +61,11 @@ public class InventoryUI : MonoBehaviour
         dataManager = DataManager.Instance;
         playerInput = player.GetInputManager;
         playerMovement = player.GetPlayerMovement;
+        itemsInventory = player.ItemsInventory;
 
         playerInput.OnNavigate += OnNavigate;
         playerInput.OnSubmit += UseItem;
         playerInput.OnInventory += OpenInventory;
-
-        float pilltimeleft = dataManager.GetPlayerData().pillTimeLeft;
-
-        if (pilltimeleft > 0)
-        {
-            itemIcon.gameObject.SetActive(true);
-            StartCoroutine(ApplyTrippyEffects(pilltimeleft));
-        }
     }
 
     private void OnDestroy()
@@ -125,15 +102,13 @@ public class InventoryUI : MonoBehaviour
     private void RefreshUI()
     {
         UpdateGoldText();
-        UpdateLevels();
-        UpdateGoldMultipliers();
         PopulateItems();
         HighlightItem(0);
     }
 
     public void PopulateItems()
     {
-        var allItems = ItemsInventory.Instance.GetAllItems();
+        var allItems = itemsInventory.GetAllItems();
         int slotIndex = 0;
         foreach (var item in allItems)
         {
@@ -156,116 +131,33 @@ public class InventoryUI : MonoBehaviour
         if (!isInventoryOpen)
             return;
 
-        ShopItem item = itemSlots[selectedIndex].GetItem(); // Retrieve the item from the selected slot
+        Item item = itemSlots[selectedIndex].GetItem(); // Retrieve the item from the selected slot
         if (item == null)
         {
             Debug.Log("No item in the selected slot.");
             return;
         }
 
-        itemIcon.sprite = item.sprite;  // Assuming each ShopItem has a Sprite property 'Icon'
-        itemIcon.gameObject.SetActive(true);  // Ensure the icon is visible
-        effectDurationText.gameObject.SetActive(true);
-
-        ItemsInventory.Instance.RemoveItem(item); // Remove the item from the inventory
+        Player.instance.ItemsInventory.RemoveItem(item); // Remove the item from the inventory
 
         itemSlots[selectedIndex].Clear(); // Clear the slot after removing the item
-        if (ItemsInventory.Instance.GetAllItems().Count > 0)
+        if (itemsInventory.GetAllItems().Count > 0)
         {
-            selectedIndex = Mathf.Min(selectedIndex, ItemsInventory.Instance.GetAllItems().Count - 1);
+            selectedIndex = Mathf.Min(selectedIndex, itemsInventory.GetAllItems().Count - 1);
             HighlightItem(selectedIndex);
         }
         else
         {
             //inventoryPanel.SetActive(false); 
         }
-        StartCoroutine(ApplyTrippyEffects(60));
-    }
 
-    private IEnumerator ApplyTrippyEffects(float duration)
-    {
-  // Total duration of the effect
-        float elapsed = 0f;
-
-        ChromaticAberration chromaticAberration = null;
-        LensDistortion lensDistortion = null;
-
-        if (postProcessingVolume.profile.TryGet(out chromaticAberration) &&
-            postProcessingVolume.profile.TryGet(out lensDistortion))
-        {
-            float maxChromaticIntensity = 1f; // Maximum intensity for Chromatic Aberration
-            float minLensDistortion = -1f; // Minimum intensity for Lens Distortion
-            float maxLensDistortion = 1f; // Maximum intensity for Lens Distortion
-            float frequencyMultiplier = 5f; // Oscillation frequency
-
-            while (elapsed < duration)
-            {
-                float remainingTime = duration - elapsed;
-                effectDurationText.text = $"Effect Duration: {remainingTime.ToString("0.0")}s";  // Update the duration text
-                savedDuration = remainingTime;
-                float sinusoidalFactor = Mathf.Sin(2 * Mathf.PI * frequencyMultiplier * elapsed / duration);
-                chromaticAberration.intensity.value = (sinusoidalFactor + 1f) / 2 * maxChromaticIntensity;
-                lensDistortion.intensity.value = sinusoidalFactor * (maxLensDistortion - minLensDistortion) / 2 + (maxLensDistortion + minLensDistortion) / 2;
-
-                elapsed += Time.deltaTime;
-                yield return null;
-            }
-
-            // Reset effects and UI
-            chromaticAberration.intensity.value = 0f;
-            lensDistortion.intensity.value = 0f;
-            effectDurationText.text = "Effect Duration: 0.0s";
-            itemIcon.gameObject.SetActive(false);
-            effectDurationText.gameObject.SetActive(false);// Hide the item icon
-        }
+        player.PlayerAbilities.Add(item.ability);
     }
 
 
     private void UpdateGoldText()
     {
         gold.text = player.GetGold().ToString();
-    }
-
-    private void UpdateLevels()
-    {
-        strengthLevel.text = dataManager.GetLevel(Attribute.Strength).ToString();
-        intelligenceLevel.text = dataManager.GetLevel(Attribute.Intelligence).ToString();
-        coordinationLevel.text = dataManager.GetLevel(Attribute.Coordination).ToString();
-        neutralityLevel.text = dataManager.GetLevel(Attribute.Neutrality).ToString();
-    }
-
-    private void UpdateGoldMultipliers()
-    {
-        strengthGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Strength));
-        intelligenceGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Intelligence));
-        coordinationGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Coordination));
-        neutralityGoldMulti.text = MultiplierFormatter(player.GetGoldMultiplier(Attribute.Neutrality));
-
-        heroStrength = player.GetGoldMultiplier(Attribute.Strength);
-        heroCoordination = player.GetGoldMultiplier(Attribute.Coordination);
-        heroIntelligence = player.GetGoldMultiplier(Attribute.Intelligence);
-        heroNeutrality = player.GetGoldMultiplier(Attribute.Neutrality);
-
-        strengthSlider.rectTransform.sizeDelta = new Vector2(heroStrength / TotalMultiplier() * multiplierRectWidth, multiplierRectHeight);
-        cooridnationSlider.rectTransform.sizeDelta = new Vector2(heroCoordination / TotalMultiplier() * multiplierRectWidth, multiplierRectHeight);
-        intelligenceSlider.rectTransform.sizeDelta = new Vector2(heroIntelligence / TotalMultiplier() * multiplierRectWidth, multiplierRectHeight);
-        neutralitySlider.rectTransform.sizeDelta = new Vector2(heroNeutrality / TotalMultiplier() * multiplierRectWidth, multiplierRectHeight);
-
-
-        strengthGoldMulti.rectTransform.sizeDelta = new Vector2(heroStrength / TotalMultiplier() * multiplierRectWidth, 9);
-        intelligenceGoldMulti.rectTransform.sizeDelta = new Vector2(heroCoordination / TotalMultiplier() * multiplierRectWidth, 9);
-        coordinationGoldMulti.rectTransform.sizeDelta = new Vector2(heroIntelligence / TotalMultiplier() * multiplierRectWidth, 9);
-        neutralityGoldMulti.rectTransform.sizeDelta = new Vector2(heroNeutrality / TotalMultiplier() * multiplierRectWidth, 9);
-    }
-
-    private float TotalMultiplier()
-    {
-        return heroStrength + heroCoordination + heroIntelligence + heroNeutrality;
-    }
-
-    private string MultiplierFormatter(float multiplier)
-    {
-        return multiplier.ToString("0.00") + " x";
     }
 
     private void HighlightItem(int index)
@@ -285,7 +177,7 @@ public class InventoryUI : MonoBehaviour
         if (!isInventoryOpen) return;
 
         int prevIndex = selectedIndex;
-        int totalItems = ItemsInventory.Instance.GetAllItems().Count; // Assuming you only want to count filled slots.
+        int totalItems = itemsInventory.GetAllItems().Count; // Assuming you only want to count filled slots.
 
         if (direction.y > 0) // Up
         {

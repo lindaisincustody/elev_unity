@@ -2394,6 +2394,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &210703198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 210703199}
+  - component: {fileID: 210703200}
+  m_Layer: 0
+  m_Name: ItemGiver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &210703199
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210703198}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 524360157}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &210703200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 210703198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38a23b7510a4ad540ae0ed64befafd72, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  item: {fileID: 11400000, guid: 902c531810180b54591e5b250107f176, type: 2}
 --- !u!1 &261597894
 GameObject:
   m_ObjectHideFlags: 0
@@ -3667,6 +3712,7 @@ Transform:
   - {fileID: 962992741}
   - {fileID: 8786573037894268315}
   - {fileID: 453196205}
+  - {fileID: 210703199}
   m_Father: {fileID: 107420924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &539283750
@@ -21194,7 +21240,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1341328895702752002, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
       propertyPath: shopItems.Array.size
-      value: 7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1341328895702752002, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
       propertyPath: shopItems.Array.data[2]
@@ -27286,6 +27332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpawners:
   - {fileID: 1313087635}
+  reward: {fileID: 11400000, guid: 902c531810180b54591e5b250107f176, type: 2}
 --- !u!61 &3499863675423591428
 BoxCollider2D:
   m_ObjectHideFlags: 0
