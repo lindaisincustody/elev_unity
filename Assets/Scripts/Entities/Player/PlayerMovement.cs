@@ -1,14 +1,17 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    private int dashCount = 0;
+    public int maxDashCount = 1;
     public float baseMoveSpeed = 5.5f;
     public float dashSpeed = 5f;
     public float dashDuration = 0.2f;
-    public float dashCooldown = 1f;
+    public float dashCooldown = 2f;
     private bool isDashing = false;
-    private bool canDash = true;
+    public bool canDash = true;
 
     public Rigidbody2D rb;
     public Animator animator;
@@ -30,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     public float stepInterval = 0.435f;
     public bool isInteracting = false;
     public bool isAttacking = false;
+
+    public Action OnDash;
 
     private void Awake()
     {
@@ -115,8 +120,11 @@ public class PlayerMovement : MonoBehaviour
 
     private IEnumerator Dash()
     {
+        OnDash?.Invoke();
+
         isDashing = true;
         canDash = false;
+        dashCount++;
 
         StopMovementSound();
 
@@ -158,8 +166,16 @@ public class PlayerMovement : MonoBehaviour
             StartMovementSound();
         }
 
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
+        if (dashCount < maxDashCount)
+        {
+            canDash = true;
+        }
+        else
+        {
+            yield return new WaitForSeconds(dashCooldown);
+            dashCount = 0; // Reset for next dashes
+            canDash = true;
+        }
     }
 
     private void HandleDash()

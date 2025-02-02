@@ -5,21 +5,21 @@ using UnityEngine;
 public class AbilityHolder : MonoBehaviour
 {
     public Ability ability;
-    float cooldownTime;
-    float activeTime;
+    protected float cooldownTime;
+    protected float activeTime;
 
-    enum AbilityState
+    protected enum AbilityState
     {
         ready,
         active,
         cooldown
     }
 
-    AbilityState state = AbilityState.ready;
+    protected AbilityState state = AbilityState.ready;
 
     public KeyCode key = KeyCode.U;
 
-    private void Update()
+    protected virtual void Update()
     {
         switch (state)
         {

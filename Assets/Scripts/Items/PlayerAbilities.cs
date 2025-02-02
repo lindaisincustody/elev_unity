@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [System.Serializable]
@@ -18,13 +19,16 @@ public class PlayerAbilities : MonoBehaviour
         savingWrapper = SavingWrapper.Instance;
         LoadAbilities();
         Init();
+        RemoveAll();
     }
 
     public void Init()
     {
         foreach (Ability ability in Abilities)
         {
-            Debug.Log(ability.name);
+            AbilityHolder abilityHolder = Player.instance.gameObject.AddComponent<AbilityHolder>();
+            abilityHolder.ability = ability;
+            ability.Start();
         }
     }
 
@@ -33,8 +37,10 @@ public class PlayerAbilities : MonoBehaviour
         if (!Abilities.Contains(ability))
         {
             Abilities.Add(ability);
+            AbilityHolder abilityHolder = Player.instance.gameObject.AddComponent<AbilityHolder>();
+            abilityHolder.ability = ability;
+            ability.Start();
             SaveAbilities();
-            Init();
         }
     }
 
@@ -42,9 +48,17 @@ public class PlayerAbilities : MonoBehaviour
     {
         if (Abilities.Contains(ability))
         {
+            ability.Destroy();
             Abilities.Remove(ability);
             SaveAbilities();
-            Init();
+        }
+    }
+
+    public void RemoveAll()
+    {
+        foreach (Ability ability in Abilities.ToList())
+        {
+            Remove(ability);    
         }
     }
 
