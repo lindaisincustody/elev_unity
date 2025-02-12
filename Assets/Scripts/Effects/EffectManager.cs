@@ -32,14 +32,6 @@ public class EffectManager
     private GameObject LoadFromResources(string path)
     {
         GameObject prefab = Resources.Load<GameObject>(path); // Loads the prefab from Resources folder
-        if (prefab != null)
-        {
-            Debug.Log("Successfully loaded and retrieved the StunEffect prefab.");
-        }
-        else
-        {
-            Debug.Log("Failed to load the StunEffect prefab.");
-        }
         return prefab;
     }
 }

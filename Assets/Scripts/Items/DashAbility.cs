@@ -7,7 +7,6 @@ public class DashAbility : Ability
 {
     public override void Start()
     {
-        Debug.Log("Dash start");
         Player.instance.PlayerMovement.maxDashCount = 2;
     }
 

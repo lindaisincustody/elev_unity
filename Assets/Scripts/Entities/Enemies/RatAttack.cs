@@ -76,8 +76,6 @@ public class RatAttack : EnemyAttack
             effect.transform.localScale = scale;
         }
 
-        Debug.Log(effect.transform.localScale);
-
         StartCoroutine(ActivateSwipe(effect, swipe, EffectType.WhiteSlash));
     }
 

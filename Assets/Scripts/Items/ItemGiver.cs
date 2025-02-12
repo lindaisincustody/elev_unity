@@ -1,19 +1,22 @@
+using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ItemGiver : MonoBehaviour
 {
-    [SerializeField] private Item item;
+    [SerializeField] private Item dashItem;
+    [SerializeField] private Item trapItem;
 
-    private void Update()
+    [Button]
+    public void GiveDash()
     {
-        if (Input.GetKeyDown(KeyCode.L))
-            GiveItem();
+        Player.instance.ItemsInventory.AddItem(dashItem);
     }
 
-    public void GiveItem()
+    [Button]
+    public void GiveTrap()
     {
-        Player.instance.ItemsInventory.AddItem(item);
+        Player.instance.ItemsInventory.AddItem(trapItem);
     }
 }

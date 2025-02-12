@@ -34,6 +34,9 @@ public class EnemyMovement : Component
     public Vector2 maxBound { get; set; }
     public float passedTime { get; set; }
 
+    private bool isFrozen = false;
+    private List<string> freezeReqeusts = new();
+
     private Body bodyHandler;
     private AvoidBehaviour enemyBehavior;
     private Vector2 velocity = Vector2.zero;
@@ -48,6 +51,26 @@ public class EnemyMovement : Component
 
         SanityBar.instance.OnSanityChange += SanityChange;
         SanityChange(0);
+    }
+
+    public void Freeze(string requesterId)
+    {
+        if (freezeReqeusts.Contains(requesterId))
+            return;
+
+        isFrozen = true;
+        freezeReqeusts.Add(requesterId);
+    }
+
+    public void Unfreeze(string requesterId)
+    {
+        if (!freezeReqeusts.Contains(requesterId))
+            return;
+
+        freezeReqeusts.Remove(requesterId);
+
+        if (freezeReqeusts.Count == 0)
+            isFrozen = false;
     }
 
     private void SanityChange(int amount)
@@ -70,6 +93,12 @@ public class EnemyMovement : Component
 
     public void Move()
     {
+        if (isFrozen)
+        {
+            rb.velocity = Vector2.zero;
+            return;
+        }
+
         if (target.HasValue)
         {
             MoveTowardsTarget();
@@ -122,7 +151,8 @@ public class EnemyMovement : Component
 
         Vector2 direction = (targetPosition - rb.position).normalized;
 
-        rb.velocity = direction * dashSpeed;
+        if (!isFrozen)
+            rb.velocity = direction * dashSpeed;
 
         StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); // Adjust time as needed
     }

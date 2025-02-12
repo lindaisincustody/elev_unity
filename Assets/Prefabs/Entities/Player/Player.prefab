@@ -182,10 +182,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78bc07dd70983d43bac902a2faa12ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxDashCount: 1
   baseMoveSpeed: 4
   dashSpeed: 5
   dashDuration: 0.2
   dashCooldown: 1
+  canDash: 1
   rb: {fileID: 6418275811729181238}
   animator: {fileID: 6330455195613800542}
   moveSound: {fileID: 6117977592564839130}
@@ -256,6 +258,7 @@ MonoBehaviour:
   <PlayerAbilities>k__BackingField: {fileID: 10761879722717105}
   <ItemsInventory>k__BackingField: {fileID: 9182382378761414154}
   <PlayerMovement>k__BackingField: {fileID: 7905350812563266831}
+  <PlayerCombat>k__BackingField: {fileID: 5376793493941146557}
 --- !u!114 &5376793493941146557
 MonoBehaviour:
   m_ObjectHideFlags: 0

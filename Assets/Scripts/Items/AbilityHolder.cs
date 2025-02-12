@@ -19,6 +19,11 @@ public class AbilityHolder : MonoBehaviour
 
     public KeyCode key = KeyCode.U;
 
+    private void Start()
+    {
+        
+    }
+
     protected virtual void Update()
     {
         switch (state)

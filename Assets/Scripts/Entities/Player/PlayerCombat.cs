@@ -58,6 +58,28 @@ public class PlayerCombat : MonoBehaviour
         UpdateCombatModeUI();
     }
 
+    public Enemy GetNearestEnemy()
+    {
+        Enemy nearestEnemy = null;
+        float shortestDistance = float.MaxValue;
+        Vector3 currentPosition = transform.position;
+
+        foreach (Enemy enemy in EnemyManager.Instance.GetAllEnemies())
+        {
+            if (enemy == null) continue;
+
+            float distance = Vector3.Distance(currentPosition, enemy.transform.position);
+
+            if (distance < shortestDistance)
+            {
+                shortestDistance = distance;
+                nearestEnemy = enemy;
+            }
+        }
+
+        return nearestEnemy;
+    }
+
     private void Update()
     {
         HandleModeSwitching();

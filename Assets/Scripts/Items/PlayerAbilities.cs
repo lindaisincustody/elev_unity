@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,12 +15,14 @@ public class PlayerAbilities : MonoBehaviour
     public List<Ability> Abilities = new();
     private SavingWrapper savingWrapper;
 
+    public Action<Ability> OnAbilityAdded;
+    public Action<Ability> OnAbilityRemoved;
+
     private void Start()
     {
         savingWrapper = SavingWrapper.Instance;
         LoadAbilities();
         Init();
-        RemoveAll();
     }
 
     public void Init()
@@ -28,6 +31,8 @@ public class PlayerAbilities : MonoBehaviour
         {
             AbilityHolder abilityHolder = Player.instance.gameObject.AddComponent<AbilityHolder>();
             abilityHolder.ability = ability;
+            abilityHolder.key = ability.KeyCode;
+            OnAbilityAdded?.Invoke(ability);
             ability.Start();
         }
     }
@@ -39,7 +44,9 @@ public class PlayerAbilities : MonoBehaviour
             Abilities.Add(ability);
             AbilityHolder abilityHolder = Player.instance.gameObject.AddComponent<AbilityHolder>();
             abilityHolder.ability = ability;
+            abilityHolder.key = ability.KeyCode;
             ability.Start();
+            OnAbilityAdded?.Invoke(ability);
             SaveAbilities();
         }
     }
@@ -50,6 +57,7 @@ public class PlayerAbilities : MonoBehaviour
         {
             ability.Destroy();
             Abilities.Remove(ability);
+            OnAbilityRemoved?.Invoke(ability);
             SaveAbilities();
         }
     }
