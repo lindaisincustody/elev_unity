@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
+using System.Linq;
 
 public class GlyphBook : MonoBehaviour
 {
@@ -43,7 +44,9 @@ public class GlyphBook : MonoBehaviour
     public void AddEnemy(Enemy enemy)
     {
         GlyphText newGlyphs = Instantiate(glyphPrefab, glyphPanel);
-        newGlyphs.SetText(string.Join("", enemy.activeSymbols));
+
+        newGlyphs.SetText(string.Join("", enemy.activeSymbols.Select(g => g.Glyph)));
+
         keyValuePairs[enemy] = newGlyphs;
     }
 

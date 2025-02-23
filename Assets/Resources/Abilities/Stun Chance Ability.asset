@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff909fcc9baf9344b3e022966ece5e4, type: 3}
+  m_Name: Stun Chance Ability
+  m_EditorClassIdentifier: 
+  KeyCode: 0
+  Type: 1
+  icon: {fileID: 21300000, guid: e77f12091e7a5e5408aaa13e33b70e9d, type: 3}
+  abilityId: StunChanceAbility
+  name: Stun Chance Ability
+  cooldownTime: 0
+  activeTime: 0
+  stunGlyphChance: 0.1

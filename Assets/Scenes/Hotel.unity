@@ -2440,6 +2440,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dashItem: {fileID: 11400000, guid: 902c531810180b54591e5b250107f176, type: 2}
   trapItem: {fileID: 11400000, guid: 6666197bf45ec3c479c59f0f5e478b71, type: 2}
+  stunChanceItem: {fileID: 11400000, guid: afef3b8ff5c6d404a874fd5cec450c82, type: 2}
 --- !u!1 &261597894
 GameObject:
   m_ObjectHideFlags: 0

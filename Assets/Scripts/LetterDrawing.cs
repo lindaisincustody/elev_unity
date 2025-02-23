@@ -247,9 +247,8 @@ public class LetterDrawing : MonoBehaviour
         Tensor output = worker.PeekOutput();
 
         prediction.SetPrediction(output, _labels);
-        string predictedSymbol = prediction.predictedLabel;
 
-        MatchSymbolWithPoem(predictedSymbol);
+        MatchSymbolWithPoem(prediction.predictedLabel);
 
         output.Dispose();
         capturedTexture.Apply();
@@ -326,11 +325,11 @@ public class LetterDrawing : MonoBehaviour
 
     private void TriggerHomingBullet(string predictedSymbol)
     {
-        string predictedUnicodeSymbol = latexToUnicode.ContainsKey(predictedSymbol) ? latexToUnicode[predictedSymbol] : predictedSymbol;
+        string predictedUnicodeSymbol = new(latexToUnicode.ContainsKey(predictedSymbol) ? latexToUnicode[predictedSymbol] : predictedSymbol);
 
         foreach (var enemy in FindObjectsOfType<Enemy>())
         {
-            if (enemy.activeSymbols.Contains(predictedUnicodeSymbol))
+            if (enemy.activeSymbols.Any(g => g.Glyph == predictedUnicodeSymbol))
             {
                 enemy.CheckSymbolMatch(predictedUnicodeSymbol);
 

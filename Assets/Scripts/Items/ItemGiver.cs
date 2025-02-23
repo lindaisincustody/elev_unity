@@ -7,6 +7,7 @@ public class ItemGiver : MonoBehaviour
 {
     [SerializeField] private Item dashItem;
     [SerializeField] private Item trapItem;
+    [SerializeField] private Item stunChanceItem;
 
     [Button]
     public void GiveDash()
@@ -18,5 +19,11 @@ public class ItemGiver : MonoBehaviour
     public void GiveTrap()
     {
         Player.instance.ItemsInventory.AddItem(trapItem);
+    }
+
+    [Button]
+    public void GiveStunChance()
+    {
+        Player.instance.ItemsInventory.AddItem(stunChanceItem);
     }
 }

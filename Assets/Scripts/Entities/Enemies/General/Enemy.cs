@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -19,7 +20,8 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private GameObject symbolTextEnemy;
     private List<TMP_Text> displayedSymbols = new List<TMP_Text>();
-    public HashSet<string> activeSymbols = new HashSet<string>();
+    public HashSet<EnemyGlyph> activeSymbols = new HashSet<EnemyGlyph>();
+
     private EnemyHealth enemyHealth;
 
 
@@ -76,14 +78,14 @@ public class Enemy : MonoBehaviour
         {
             component.Init(this);
         }
+
+        SanityBar.instance.sanityEffectHandler.OnWorldChange += SanityChange;
     }
 
     void Start()
     {
-        SanityBar.instance.OnSanityChange += SanityChange;
-        SanityChange(0);
+        SanityChange();
         SetBounds();
-        GenerateRandomSymbols();
 
         enemyHealth = GetComponent<EnemyHealth>();
         enemyHealth.OnDeath += OnEnemyDeath;
@@ -108,19 +110,28 @@ public class Enemy : MonoBehaviour
             TMP_Text symbolText = symbolObject.GetComponent<TMP_Text>();
 
             string randomSymbolKey = filteredLabels[UnityEngine.Random.Range(0, filteredLabels.Count)];
-            string randomSymbol = latexToUnicode.ContainsKey(randomSymbolKey) ? latexToUnicode[randomSymbolKey] : randomSymbolKey;
-            symbolText.text = randomSymbol;
+            EnemyGlyph randomSymbol = new(latexToUnicode.ContainsKey(randomSymbolKey) ? latexToUnicode[randomSymbolKey] : randomSymbolKey);
+            if (UnityEngine.Random.value <= Player.instance.SpecialSymbolChance)
+            {
+                SetSymbolSpecial(randomSymbol, symbolText);
+            }
+            symbolText.text = randomSymbol.Glyph;
             displayedSymbols.Add(symbolText);
             activeSymbols.Add(randomSymbol);
         }
     }
 
+    private void SetSymbolSpecial(EnemyGlyph glyph, TMP_Text glyphText)
+    {
+        glyph.SetSpecial(() => Get<Stun>().Execute());
+        glyphText.color = Color.white;
+    }
+
 
     public void CheckSymbolMatch(string drawnSymbol)
     {
-        if (activeSymbols.Contains(drawnSymbol))
+        if (activeSymbols.Any(g => g.Glyph == drawnSymbol))
         {
-
             var matchedSymbols = displayedSymbols.FindAll(symbol => symbol.text == drawnSymbol);
 
             if (matchedSymbols.Count > 0)
@@ -133,10 +144,23 @@ public class Enemy : MonoBehaviour
                     Destroy(matchedSymbol.gameObject);   
                 }
 
-
                 enemyHealth.StartCoroutine(enemyHealth.FlashWhite());
-                activeSymbols.Remove(drawnSymbol);
 
+                List<EnemyGlyph> matchedGlyphs = new List<EnemyGlyph>();
+
+                foreach (var glyph in activeSymbols)
+                {
+                    if (glyph.Glyph == drawnSymbol)
+                    {
+                        glyph.OnDrawn();
+                        matchedGlyphs.Add(glyph);
+                    }
+                }
+
+                foreach (var glyph in matchedGlyphs)
+                {
+                    activeSymbols.Remove(glyph);
+                }
 
                 if (activeSymbols.Count == 0)
                 {
@@ -157,6 +181,18 @@ public class Enemy : MonoBehaviour
             Debug.Log($"Symbol {drawnSymbol} does not match any active symbols.");
         }
     }
+
+    private void ClearGeneratedSymbols()
+    {
+        foreach (var symbol in displayedSymbols)
+        {
+            Destroy(symbol.gameObject);
+        }
+        displayedSymbols.Clear();
+
+        activeSymbols.Clear();
+    }
+
 
     public T Get<T>() where T : Component
     {
@@ -185,12 +221,18 @@ public class Enemy : MonoBehaviour
         Get<EnemyMovement>().maxBound = maxBound;
     }
 
-    private void SanityChange(int amount)
+    private void SanityChange()
     {
         if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        {
+            GenerateRandomSymbols();
             ShowEnemy();
+        }
         else
+        {
+            ClearGeneratedSymbols();
             ShowSparkle();
+        }
     }
 
     private void ShowEnemy()
@@ -212,7 +254,7 @@ public class Enemy : MonoBehaviour
 
     void OnDestroy()
     {
-        SanityBar.instance.OnSanityChange -= SanityChange;
+        SanityBar.instance.sanityEffectHandler.OnWorldChange -= SanityChange;
         enemyHealth.OnDeath -= OnEnemyDeath;
     }
 }
