@@ -122,6 +122,7 @@ public class GlyphBook : MonoBehaviour
                 if (completedFades >= glyphCount)
                 {
                     InterprateText();
+
                 }
 
                 Destroy(glyphText.gameObject);
@@ -134,7 +135,16 @@ public class GlyphBook : MonoBehaviour
     private void InterprateText()
     {
         EnglishText newGlyphText = Instantiate(englishTextPrefab, glyphPanel);
-        newGlyphText.WriteText("This a test text. All glyphs have faded out. Now interpreting the text..", () => HideBook());
+        newGlyphText.WriteText("This is a test text. All glyphs have faded out. Now interpreting the text...", () =>
+        {
+            HideBook();
+
+            AbilitySelectionUI abilityUI = FindObjectOfType<AbilitySelectionUI>();
+            if (abilityUI != null)
+            {
+                abilityUI.Show();
+            }
+        });
     }
 
     private void HideBook()

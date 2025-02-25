@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 public class LetterDrawing : MonoBehaviour
 {
-    [SerializeField] private LineRenderer lineRenderer;         
+    [SerializeField] private LineRenderer lineRenderer;
     [SerializeField] private LineRenderer secondaryLineRenderer;
     [SerializeField] private NNModel _model;
     [SerializeField] private RawImage renderTextureDisplay;
@@ -17,10 +17,15 @@ public class LetterDrawing : MonoBehaviour
     [SerializeField] private TextMesh textMesh;
     [SerializeField] private GameObject heartParticlePrefab;
 
-    [SerializeField] private TextMeshProUGUI poemTextDisplay; 
-    [SerializeField, TextArea] private string poem = "Your poem text goes here."; 
-    private int currentLetterIndex = 0; 
+    [SerializeField] private TextMeshProUGUI poemTextDisplay;
+    [SerializeField, TextArea] private string poem = "Your poem text goes here.";
+    private int currentLetterIndex = 0;
     [SerializeField] private TextMeshProUGUI currentLetterText;
+
+    [SerializeField] private Material groundMaterial;
+    [SerializeField] private Material trippyTransparentMaterial;
+
+    private GameObject activeWall = null;
 
     private bool isComplete = false;
 
@@ -30,56 +35,53 @@ public class LetterDrawing : MonoBehaviour
     private Coroutine heartStreamCoroutine;
 
 
-    private readonly string[] _labels = {
-    "_Capricorn",
-    "_Heart",
-    "_Leo",
-    "_Moon",
-    "_Rightarrow",
-    "_bowtie",
-    "_clubsuit",
-    "_descnode",
-    "_diagup",
-    "_diamond",
-    "_downarrow",
-    "_infty",
-    "_ocircle",
-    "_oplus",
-    "_spadesuit",
-    "_square",
-    "_star",
-    "_textgamma",
-    "_textmusicalnote",
-    "_varphi"
-};
+    private readonly string[] _labels =
+    {
+        "_Capricorn",
+        "_Heart",
+        "_Leo",
+        "_Moon",
+        "_Rightarrow",
+        "_bowtie",
+        "_clubsuit",
+        "_descnode",
+        "_diagup",
+        "_diamond",
+        "_downarrow",
+        "_infty",
+        "_ocircle",
+        "_oplus",
+        "_spadesuit",
+        "_square",
+        "_star",
+        "_textgamma",
+        "_textmusicalnote",
+        "_varphi"
+    };
 
     private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
-{
-    { "_Capricorn", "♑" },
-    { "_Heart", "♥" },
-    { "_Leo", "♌" },
-    { "_Moon", "☾" },
-    { "_Rightarrow", "⇒" },
-    { "_bowtie", "⧓" },
-    { "_clubsuit", "♣" },
-    { "_descnode", "⤵" },
-    { "_diagup", "/" },
-    { "_diamond", "♦" },
-    { "_downarrow", "↓" },
-    { "_infty", "∞" },
-    { "_ocircle", "⦾" },
-    { "_oplus", "⊕" },
-    { "_spadesuit", "♠" },
-    { "_square", "■" },
-    { "_star", "★" },
-    { "_textgamma", "γ" },
-    { "_textmusicalnote", "♪" },
-    { "_varphi", "φ" }
-};
-
-
-
-
+    {
+        { "_Capricorn", "♑" },
+        { "_Heart", "♥" },
+        { "_Leo", "♌" },
+        { "_Moon", "☾" },
+        { "_Rightarrow", "⇒" },
+        { "_bowtie", "⧓" },
+        { "_clubsuit", "♣" },
+        { "_descnode", "⤵" },
+        { "_diagup", "/" },
+        { "_diamond", "♦" },
+        { "_downarrow", "↓" },
+        { "_infty", "∞" },
+        { "_ocircle", "⦾" },
+        { "_oplus", "⊕" },
+        { "_spadesuit", "♠" },
+        { "_square", "■" },
+        { "_star", "★" },
+        { "_textgamma", "γ" },
+        { "_textmusicalnote", "♪" },
+        { "_varphi", "φ" }
+    };
 
     [Serializable]
     public struct Prediction
@@ -91,7 +93,9 @@ public class LetterDrawing : MonoBehaviour
         {
             predicted = t.AsFloats();
             int predictedIndex = Array.IndexOf(predicted, predicted.Max());
-            predictedLabel = (predictedIndex >= 0 && predictedIndex < labels.Length) ? labels[predictedIndex] : "Unknown";
+            predictedLabel = (predictedIndex >= 0 && predictedIndex < labels.Length)
+                ? labels[predictedIndex]
+                : "Unknown";
             Debug.Log($"Predicted Symbol: {predictedLabel}");
         }
     }
@@ -122,6 +126,11 @@ public class LetterDrawing : MonoBehaviour
         {
             renderTextureDisplay.texture = renderTexture;
         }
+
+        if (groundMaterial != null)
+        {
+            groundMaterial.mainTextureScale = new Vector2(10.0f, 0.5f);
+        }
     }
 
     void Update()
@@ -136,7 +145,7 @@ public class LetterDrawing : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(1))
         {
-            EndDrawing();
+            //EndDrawing();
             CenterDrawingInTexture();
             PredictSymbol();
         }
@@ -154,7 +163,8 @@ public class LetterDrawing : MonoBehaviour
         renderCamera.targetTexture = renderTexture;
 
         renderCamera.orthographicSize = Camera.main.orthographicSize * 0.7f;
-        renderCamera.transform.position = new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
+        renderCamera.transform.position =
+            new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
     }
 
     private void InitializeModel()
@@ -169,6 +179,8 @@ public class LetterDrawing : MonoBehaviour
         if (secondaryLineRenderer != null)
         {
             secondaryLineRenderer.positionCount = 0;
+            // Reset the secondary line renderer material back to the trippy transparent material.
+            secondaryLineRenderer.material = trippyTransparentMaterial;
         }
     }
 
@@ -222,14 +234,14 @@ public class LetterDrawing : MonoBehaviour
         renderCamera.orthographicSize = maxDrawingSize / 2f;
 
 
-        float baseWidth = 0.1f; 
-        float zoomLevel = renderCamera.orthographicSize; 
+        float baseWidth = 0.1f;
+        float zoomLevel = renderCamera.orthographicSize;
         float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f);
         lineRenderer.widthMultiplier = baseWidth * widthMultiplier;
 
         if (secondaryLineRenderer != null)
         {
-            secondaryLineRenderer.widthMultiplier = lineRenderer.widthMultiplier * 0.8f; 
+            secondaryLineRenderer.widthMultiplier = lineRenderer.widthMultiplier * 0.8f;
         }
 
         renderCamera.Render();
@@ -260,29 +272,49 @@ public class LetterDrawing : MonoBehaviour
 
     private void MatchSymbolWithPoem(string predictedSymbol)
     {
-        string currentPoemSymbol = poem[currentLetterIndex].ToString();
-        if (!isComplete && predictedSymbol == currentPoemSymbol)
-        {
-            currentLetterIndex++;
-            UpdatePoemDisplay();
+        string predictedUnicodeSymbol = new(latexToUnicode.ContainsKey(predictedSymbol)
+            ? latexToUnicode[predictedSymbol]
+            : predictedSymbol);
 
-            if (currentLetterIndex >= poem.Length)
+        foreach (var enemy in FindObjectsOfType<Enemy>())
+        {
+            if (enemy.activeSymbols.Any(g => g.Glyph == predictedUnicodeSymbol))
             {
-                isComplete = true;
-                Debug.Log("Poem completed!");
+                enemy.CheckSymbolMatch(predictedUnicodeSymbol);
+
+                if (predictedSymbol == "_Heart")
+                {
+                    // Trigger heart animation towards this enemy.
+                    // TriggerHeartAnimation(enemy.transform.position);
+                }
+
+                if (predictedSymbol == "_square")
+                {
+                    PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+                    WallAbility wallAbility = playerAbilities?.Abilities.Find(a => a is WallAbility) as WallAbility;
+
+                    if (wallAbility != null)
+                    {
+                        Vector2[] points = GetDrawnPoints();
+                        if (points != null)
+                        {
+                            wallAbility.SpawnWall(points, this, secondaryLineRenderer, groundMaterial,
+                                trippyTransparentMaterial);
+                        }
+                    }
+                    else
+                    {
+                        Debug.Log("Player does not have the Wall ability.");
+                    }
+                }
             }
         }
-        else
-        {
-            Debug.Log($"Incorrect symbol. Expected: {currentPoemSymbol}, Predicted: {predictedSymbol}");
-        }
-
-        TriggerHomingBullet(predictedSymbol);
     }
 
     private void UpdatePoemDisplay()
     {
-        while (currentLetterIndex < poem.Length && (poem[currentLetterIndex] == ' ' || !char.IsLetter(poem[currentLetterIndex])))
+        while (currentLetterIndex < poem.Length &&
+               (poem[currentLetterIndex] == ' ' || !char.IsLetter(poem[currentLetterIndex])))
         {
             currentLetterIndex++;
         }
@@ -298,8 +330,12 @@ public class LetterDrawing : MonoBehaviour
         }
 
         string before = poem.Substring(0, currentLetterIndex);
-        string highlighted = currentLetterIndex < poem.Length ? $"<color=#000000><b>{poem[currentLetterIndex]}</b></color>" : "";
-        string after = currentLetterIndex + 1 < poem.Length ? $"<color=#00000080>{poem.Substring(currentLetterIndex + 1)}</color>" : "";
+        string highlighted = currentLetterIndex < poem.Length
+            ? $"<color=#000000><b>{poem[currentLetterIndex]}</b></color>"
+            : "";
+        string after = currentLetterIndex + 1 < poem.Length
+            ? $"<color=#00000080>{poem.Substring(currentLetterIndex + 1)}</color>"
+            : "";
 
         poemTextDisplay.text = before + highlighted + after;
     }
@@ -313,6 +349,7 @@ public class LetterDrawing : MonoBehaviour
             pixels[i].g = (byte)(255 - pixels[i].g);
             pixels[i].b = (byte)(255 - pixels[i].b);
         }
+
         texture.SetPixels32(pixels);
         texture.Apply();
     }
@@ -322,26 +359,6 @@ public class LetterDrawing : MonoBehaviour
         renderTexture?.Release();
         worker?.Dispose();
     }
-
-    private void TriggerHomingBullet(string predictedSymbol)
-    {
-        string predictedUnicodeSymbol = new(latexToUnicode.ContainsKey(predictedSymbol) ? latexToUnicode[predictedSymbol] : predictedSymbol);
-
-        foreach (var enemy in FindObjectsOfType<Enemy>())
-        {
-            if (enemy.activeSymbols.Any(g => g.Glyph == predictedUnicodeSymbol))
-            {
-                enemy.CheckSymbolMatch(predictedUnicodeSymbol);
-
-                if (predictedSymbol == "_Heart")
-                {
-                    // Trigger heart animation towards this enemy
-                    //TriggerHeartAnimation(enemy.transform.position);
-                }
-            }
-        }
-    }
-
 
     private void TriggerHeartAnimation(Vector3 targetPosition)
     {
@@ -369,10 +386,38 @@ public class LetterDrawing : MonoBehaviour
             if (particle != null)
             {
                 var particleMover = particle.AddComponent<ParticleMover>();
-                particleMover.Initialize(targetPosition, 10f); 
+                particleMover.Initialize(targetPosition, 10f);
             }
         }
+
         secondaryLineRenderer.positionCount = 0;
     }
 
+    private Vector2[] GetDrawnPoints()
+    {
+        int pointCount = lineRenderer.positionCount;
+        if (pointCount < 3)
+        {
+            Debug.LogWarning("Not enough points drawn to form a wall.");
+            return null;
+        }
+
+        Vector2[] points = new Vector2[pointCount];
+        for (int i = 0; i < pointCount; i++)
+        {
+            Vector3 pos = lineRenderer.GetPosition(i);
+            points[i] = new Vector2(pos.x, pos.y);
+        }
+
+        // Close the shape if not already closed.
+        if (points[0] != points[pointCount - 1])
+        {
+            Vector2[] closedPoints = new Vector2[pointCount + 1];
+            System.Array.Copy(points, closedPoints, pointCount);
+            closedPoints[pointCount] = points[0];
+            points = closedPoints;
+        }
+
+        return points;
+    }
 }

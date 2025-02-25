@@ -164,9 +164,7 @@ public class Enemy : MonoBehaviour
 
                 if (activeSymbols.Count == 0)
                 {
-                    Debug.Log("All symbols destroyed. Stun enemy.");
-
-                    Get<Stun>().Execute();
+                    Debug.Log("All symbols destroyed.");
                     Get<EnemyVisuals>().DeactivateShield();
                     Get<EnemyHealth>().ActivateHealthBar();
                 }

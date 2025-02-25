@@ -23,6 +23,7 @@ public class PlayerAbilities : MonoBehaviour
         savingWrapper = SavingWrapper.Instance;
         LoadAbilities();
         Init();
+        // RemoveAll();
     }
 
     public void Init()
@@ -66,7 +67,7 @@ public class PlayerAbilities : MonoBehaviour
     {
         foreach (Ability ability in Abilities.ToList())
         {
-            Remove(ability);    
+            Remove(ability);
         }
     }
 

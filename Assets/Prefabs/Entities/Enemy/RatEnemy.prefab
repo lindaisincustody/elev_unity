@@ -880,6 +880,7 @@ GameObject:
   - component: {fileID: 6574206921253460702}
   - component: {fileID: 3384679448394384858}
   - component: {fileID: 7812484598037352108}
+  - component: {fileID: 1356284750688808381}
   m_Layer: 18
   m_Name: RatEnemy
   m_TagString: Untagged
@@ -1087,7 +1088,7 @@ CircleCollider2D:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -1125,6 +1126,41 @@ MonoBehaviour:
   valueToChange: _Intensity
   activeValue: 0.027
   inactiveValue: 0
+--- !u!58 &1356284750688808381
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8405266591562419230}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0.51}
+  serializedVersion: 2
+  m_Radius: 0.67
 --- !u!1001 &8480833152004699805
 PrefabInstance:
   m_ObjectHideFlags: 0
