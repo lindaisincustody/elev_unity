@@ -42,11 +42,11 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorShift: 0.184
-    - _Curvature: 0.005
-    - _Distortion: 0.002
+    - _Curvature: 0
+    - _Distortion: 0.001
     - _EnableExternalAlpha: 0
     - _NoiseIntensity: 0
-    - _ScanlineIntensity: 0.002
+    - _ScanlineIntensity: 0
     - _Speed: 0.78
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}

@@ -1,56 +1,77 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WallAbility", menuName = "Custom/Ability/WallAbility")]
 public class WallAbility : Ability
 {
-    private void OnEnable()
-    {
-        description = "Summon a wall by drawing a square.";
-    }
-
-    public void SpawnWall(Vector2[] points, MonoBehaviour runner,
+    public GameObject SpawnWall(Vector2[] points, MonoBehaviour runner,
         LineRenderer secondaryLineRenderer,
         Material groundMaterial, Material trippyTransparentMaterial)
     {
-        GameObject wall = new GameObject("Wall");
-        wall.transform.position = Vector3.zero;
-
-
-        PolygonCollider2D polyCollider = wall.AddComponent<PolygonCollider2D>();
-        polyCollider.points = points;
-
-
         Vector2 min = points[0];
         Vector2 max = points[0];
-        for (int i = 1; i < points.Length; i++)
+        foreach (Vector2 p in points)
         {
-            min = Vector2.Min(min, points[i]);
-            max = Vector2.Max(max, points[i]);
+            min = Vector2.Min(min, p);
+            max = Vector2.Max(max, p);
         }
 
         Vector2 center = (min + max) / 2f;
         Vector2 size = max - min;
 
-        BoxCollider2D boxCollider = wall.AddComponent<BoxCollider2D>();
-        boxCollider.offset = center;
-        boxCollider.size = size;
+        GameObject wall = new GameObject("Wall");
+        wall.transform.position = new Vector3(center.x, center.y, 0);
 
+        float wallThickness = 0.2f;
+
+        CreateWallEdge(wall.transform, new Vector2(size.x, wallThickness),
+            new Vector2(0, size.y / 2f - wallThickness / 2f), groundMaterial, "TopEdge");
+        CreateWallEdge(wall.transform, new Vector2(size.x, wallThickness),
+            new Vector2(0, -(size.y / 2f - wallThickness / 2f)), groundMaterial, "BottomEdge");
+        CreateWallEdge(wall.transform, new Vector2(wallThickness, size.y),
+            new Vector2(-(size.x / 2f - wallThickness / 2f), 0), groundMaterial, "LeftEdge");
+        CreateWallEdge(wall.transform, new Vector2(wallThickness, size.y),
+            new Vector2(size.x / 2f - wallThickness / 2f, 0), groundMaterial, "RightEdge");
         Rigidbody2D rb = wall.AddComponent<Rigidbody2D>();
         rb.bodyType = RigidbodyType2D.Static;
 
-        Debug.Log("Wall spawned using drawn square!");
-        if (secondaryLineRenderer != null && groundMaterial != null)
-        {
-            secondaryLineRenderer.material = groundMaterial;
-        }
+        Debug.Log("Wall spawned as a square border with visible edges!");
 
-        runner.StartCoroutine(DestroyWallAfterTime(wall, activeTime, secondaryLineRenderer, trippyTransparentMaterial));
+        runner.StartCoroutine(DestroyWallAfterTime(wall, activeTime, secondaryLineRenderer, trippyTransparentMaterial,
+            null));
+
+        return wall;
+    }
+
+    private void CreateWallEdge(Transform parent, Vector2 edgeSize, Vector2 localPosition, Material baseMaterial,
+        string name)
+    {
+        GameObject edge = new GameObject(name);
+        edge.transform.SetParent(parent);
+        edge.transform.localPosition = localPosition;
+        edge.layer = LayerMask.NameToLayer("BoxLayer");
+        BoxCollider2D collider = edge.AddComponent<BoxCollider2D>();
+        collider.size = edgeSize;
+
+        SpriteRenderer sr = edge.AddComponent<SpriteRenderer>();
+        Material edgeMat = new Material(baseMaterial);
+        sr.material = edgeMat;
+        Texture2D tex = new Texture2D(1, 1);
+        tex.SetPixel(0, 0, Color.red);
+        tex.Apply();
+        edgeMat.mainTexture = tex;
+        sr.sortingLayerName = "Frontground";
+        sr.sortingOrder = 0;
+        sr.drawMode = SpriteDrawMode.Sliced;
+        sr.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height),
+            new Vector2(0.5f, 0.5f), 100f);
+        sr.size = edgeSize;
     }
 
     private IEnumerator DestroyWallAfterTime(GameObject wall, float delay,
         LineRenderer secondaryLineRenderer,
-        Material trippyTransparentMaterial)
+        Material trippyTransparentMaterial, Action onWallDestroyed)
     {
         yield return new WaitForSeconds(delay);
         if (wall != null)
@@ -63,6 +84,8 @@ public class WallAbility : Ability
         {
             secondaryLineRenderer.material = trippyTransparentMaterial;
         }
+
+        onWallDestroyed?.Invoke();
     }
 
     public override void Activate()

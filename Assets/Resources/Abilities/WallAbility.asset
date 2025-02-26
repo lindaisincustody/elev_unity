@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeyCode: 0
   Type: 0
-  icon: {fileID: 21300000, guid: f6e549c689be4f04c9555ea215dc75c3, type: 3}
+  icon: {fileID: 21300000, guid: a0b6426e869daac40ab135afd79826ad, type: 3}
   abilityId: WallAbility
   name: Wall Ability
-  cooldownTime: 0
+  cooldownTime: 3
   activeTime: 5
+  description: Summon a wall by drawing a square.

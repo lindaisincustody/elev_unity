@@ -145,7 +145,7 @@ public class LetterDrawing : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(1))
         {
-            //EndDrawing();
+            EndDrawing();
             CenterDrawingInTexture();
             PredictSymbol();
         }
@@ -179,10 +179,9 @@ public class LetterDrawing : MonoBehaviour
         if (secondaryLineRenderer != null)
         {
             secondaryLineRenderer.positionCount = 0;
-            // Reset the secondary line renderer material back to the trippy transparent material.
-            secondaryLineRenderer.material = trippyTransparentMaterial;
         }
     }
+
 
     private void DebugInputTexture(Texture2D texture)
     {
@@ -272,44 +271,46 @@ public class LetterDrawing : MonoBehaviour
 
     private void MatchSymbolWithPoem(string predictedSymbol)
     {
-        string predictedUnicodeSymbol = new(latexToUnicode.ContainsKey(predictedSymbol)
-            ? latexToUnicode[predictedSymbol]
-            : predictedSymbol);
+        string predictedLabel = prediction.predictedLabel;
+        Debug.Log($"Predicted Symbol: {predictedLabel}");
+
 
         foreach (var enemy in FindObjectsOfType<Enemy>())
         {
-            if (enemy.activeSymbols.Any(g => g.Glyph == predictedUnicodeSymbol))
+            if (enemy.activeSymbols.Any(g =>
+                    g.Glyph == (latexToUnicode.ContainsKey(predictedSymbol)
+                        ? latexToUnicode[predictedSymbol]
+                        : predictedSymbol)))
             {
-                enemy.CheckSymbolMatch(predictedUnicodeSymbol);
+                enemy.CheckSymbolMatch((latexToUnicode.ContainsKey(predictedSymbol)
+                    ? latexToUnicode[predictedSymbol]
+                    : predictedSymbol));
+            }
+        }
 
-                if (predictedSymbol == "_Heart")
+
+        if (predictedLabel == "_square")
+        {
+            PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+            WallAbility wallAbility = playerAbilities?.Abilities.Find(a => a is WallAbility) as WallAbility;
+            if (wallAbility != null)
+            {
+                wallAbility.Activate();
+
+                Vector2[] points = GetDrawnPoints();
+                if (points != null)
                 {
-                    // Trigger heart animation towards this enemy.
-                    // TriggerHeartAnimation(enemy.transform.position);
+                    wallAbility.SpawnWall(points, this, secondaryLineRenderer, groundMaterial,
+                        trippyTransparentMaterial);
                 }
-
-                if (predictedSymbol == "_square")
-                {
-                    PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
-                    WallAbility wallAbility = playerAbilities?.Abilities.Find(a => a is WallAbility) as WallAbility;
-
-                    if (wallAbility != null)
-                    {
-                        Vector2[] points = GetDrawnPoints();
-                        if (points != null)
-                        {
-                            wallAbility.SpawnWall(points, this, secondaryLineRenderer, groundMaterial,
-                                trippyTransparentMaterial);
-                        }
-                    }
-                    else
-                    {
-                        Debug.Log("Player does not have the Wall ability.");
-                    }
-                }
+            }
+            else
+            {
+                Debug.Log("Player does not have the Wall ability.");
             }
         }
     }
+
 
     private void UpdatePoemDisplay()
     {

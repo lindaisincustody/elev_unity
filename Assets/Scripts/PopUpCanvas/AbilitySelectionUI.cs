@@ -28,13 +28,16 @@ public class AbilitySelectionUI : MonoBehaviour
 
     private void PopulateAbilityButtons()
     {
-        // Clear previous buttons
         foreach (Transform child in buttonContainer)
         {
             Destroy(child.gameObject);
         }
 
-        List<Ability> filteredAbilities = availableAbilities;
+        PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+
+        List<Ability> filteredAbilities =
+            availableAbilities.FindAll(ability => !playerAbilities.Abilities.Contains(ability));
+
         int countToShow = Mathf.Min(3, filteredAbilities.Count);
         List<Ability> abilitiesToDisplay = filteredAbilities
             .OrderBy(a => UnityEngine.Random.value)
@@ -43,26 +46,23 @@ public class AbilitySelectionUI : MonoBehaviour
 
         foreach (Ability ability in abilitiesToDisplay)
         {
-            // Instantiate the button
             GameObject btnObj = Instantiate(abilityButtonPrefab, buttonContainer);
 
-            // Set button text (ability name)
             TMP_Text btnText = btnObj.transform.Find("AbilityNameText").GetComponent<TMP_Text>();
-            if (btnText != null) btnText.text = ability.name;
+            if (btnText != null)
+                btnText.text = ability.name;
 
-            // Set description text
             TMP_Text descriptionText = btnObj.transform.Find("DescriptionText").GetComponent<TMP_Text>();
-            if (descriptionText != null) descriptionText.text = ability.description;
+            if (descriptionText != null)
+                descriptionText.text = ability.description;
 
-            // Set ability icon
             Image abilityIcon = btnObj.transform.Find("AbilityIcon").GetComponent<Image>();
             if (abilityIcon != null)
             {
-                abilityIcon.sprite = ability.icon; // Assign the ability's icon sprite
-                abilityIcon.enabled = (ability.icon != null); // Hide icon if no sprite is assigned
+                abilityIcon.sprite = ability.icon;
+                abilityIcon.enabled = (ability.icon != null);
             }
 
-            // Set button behavior
             Button button = btnObj.GetComponent<Button>();
             button.onClick.AddListener(() => OnAbilitySelected(ability));
         }

@@ -23,7 +23,6 @@ public class PlayerAbilities : MonoBehaviour
         savingWrapper = SavingWrapper.Instance;
         LoadAbilities();
         Init();
-        // RemoveAll();
     }
 
     public void Init()

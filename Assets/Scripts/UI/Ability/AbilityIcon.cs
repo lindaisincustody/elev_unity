@@ -26,7 +26,7 @@ public class AbilityIcon : MonoBehaviour
         abilityIcon.sprite = ability.icon;
 
         if (ability.Type == AbilityType.Passive)
-            background.color = Color.grey;
+            background.color = Color.black;
 
         ability.OnActivate += ShowwActive;
         ability.OnCooldown += ShowwCooldown;
@@ -41,10 +41,8 @@ public class AbilityIcon : MonoBehaviour
 
         cooldownImage.DOFillAmount(0f, cooldownTime).SetEase(Ease.Linear);
 
-        DOVirtual.Int((int)cooldownTime, 0, cooldownTime, value =>
-        {
-            timerText.text = (value + 1) + "s";
-        }).OnComplete(() => timerText.enabled = false);
+        DOVirtual.Int((int)cooldownTime, 0, cooldownTime, value => { timerText.text = (value + 1) + "s"; })
+            .OnComplete(() => timerText.enabled = false);
     }
 
     private void ShowwActive()
@@ -56,10 +54,8 @@ public class AbilityIcon : MonoBehaviour
 
         activeImage.DOFillAmount(0f, cooldownTime).SetEase(Ease.Linear);
 
-        DOVirtual.Int((int)cooldownTime, 0, cooldownTime, value =>
-        {
-            timerText.text = (value + 1) + "s";
-        }).OnComplete(() => timerText.enabled = false);
+        DOVirtual.Int((int)cooldownTime, 0, cooldownTime, value => { timerText.text = (value + 1) + "s"; })
+            .OnComplete(() => timerText.enabled = false);
     }
 
     private void OnDestroy()
