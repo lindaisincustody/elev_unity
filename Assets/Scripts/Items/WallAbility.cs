@@ -4,6 +4,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WallAbility", menuName = "Custom/Ability/WallAbility")]
 public class WallAbility : Ability
 {
+    private void OnEnable()
+    {
+        description = "Summon a wall by drawing a square.";
+    }
+
     public void SpawnWall(Vector2[] points, MonoBehaviour runner,
         LineRenderer secondaryLineRenderer,
         Material groundMaterial, Material trippyTransparentMaterial)

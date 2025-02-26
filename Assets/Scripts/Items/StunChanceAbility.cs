@@ -7,6 +7,11 @@ public class StunChanceAbility : Ability
 {
     [SerializeField] private float stunGlyphChance = 0.1f;
 
+    private void OnEnable()
+    {
+        description = "+10% chance to stun an enemy with any glyph drawn ";
+    }
+
     public override void Start()
     {
         Player.instance.SpecialSymbolChance += stunGlyphChance;

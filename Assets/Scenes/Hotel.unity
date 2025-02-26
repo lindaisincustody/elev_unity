@@ -15919,6 +15919,10 @@ PrefabInstance:
       value: AbilityPopUpCanvas
       objectReference: {fileID: 0}
     - target: {fileID: 6787149911093303862, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
+      propertyPath: abilityDescriptionText
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 6787149911093303862, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
       propertyPath: availableAbilities.Array.size
       value: 4
       objectReference: {fileID: 0}

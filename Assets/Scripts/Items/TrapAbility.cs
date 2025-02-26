@@ -9,6 +9,11 @@ public class TrapAbility : Ability
 
     private GameObject trap;
 
+    private void OnEnable()
+    {
+        description = "Trap enemy in a box";
+    }
+
     public override void Activate()
     {
         base.Activate();

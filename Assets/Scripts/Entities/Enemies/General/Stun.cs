@@ -11,6 +11,7 @@ public class Stun : Component
 
     private Brain brain;
 
+
     private void Awake()
     {
         brain = GetComponent<Brain>();
@@ -24,7 +25,7 @@ public class Stun : Component
     }
 
     private IEnumerator DisableEnemy(float time)
-    {        
+    {
         var effect = EffectSystem.GetEffect(EffectType.Stun);
         effect.transform.position = stunParticlePosition.position;
 
