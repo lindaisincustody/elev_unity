@@ -58,7 +58,6 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-
         if (isAttacking)
         {
             // movement = Vector2.zero;
@@ -71,7 +70,6 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-
             baseMoveSpeed = 5.5f;
         }
 
@@ -180,6 +178,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleDash()
     {
+        if (SanityBar.instance == null || !SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        {
+            return;
+        }
+
         if (canDash && !isDashing && !isAttacking)
         {
             if (movement != Vector2.zero)
@@ -188,6 +191,7 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
+
 
     private void StartMovementSound()
     {

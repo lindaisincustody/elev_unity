@@ -2,13 +2,13 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
-using UnityEngine.Experimental.Rendering.Universal; // Needed for Light2D
+using UnityEngine.Experimental.Rendering.Universal;
 using System;
 
 public class SanityEffectHandler : MonoBehaviour
 {
-    public Volume globalVolume;  // The post-processing volume
-    public Light2D sanityLight;  // Reference to the 2D light component
+    public Volume globalVolume;
+    public Light2D sanityLight;
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
     private ColorAdjustments colorAdjustments;
@@ -19,15 +19,16 @@ public class SanityEffectHandler : MonoBehaviour
     public Animator PlayerAnimator;
     private DepthOfField depthOfField;
     private float timeElapsed;
-    public Material rippleMaterial;  // Reference to the ripple material
+    public Material rippleMaterial;
 
     private bool _isPlayerInUnderworld;
+
     public bool IsPlayerInUnderworld
     {
         get => _isPlayerInUnderworld;
         private set
         {
-            if (_isPlayerInUnderworld != value) // Only trigger if value changes
+            if (_isPlayerInUnderworld != value)
             {
                 _isPlayerInUnderworld = value;
                 OnWorldChange?.Invoke();
@@ -38,7 +39,7 @@ public class SanityEffectHandler : MonoBehaviour
     public Action OnWorldChange { get; set; }
 
     private bool isRippleActive = false;
-    private bool isAnimating = false; // Keep track of animation state
+    private bool isAnimating = false;
 
     private void Awake()
     {
@@ -52,13 +53,15 @@ public class SanityEffectHandler : MonoBehaviour
     {
         LoadVolumeComponents();
         ResetEffects();
-        IsPlayerInUnderworld = false; // Ensure it starts as false
+
+        IsPlayerInUnderworld = false;
         PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
+
+        StartCoroutine(AnimateRealWorldEffects());
     }
 
     private void Update()
     {
-        // Check if the "1" key is pressed
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             IncreaseSanityBy50();
@@ -75,65 +78,118 @@ public class SanityEffectHandler : MonoBehaviour
 
     private void OnSanityChange(int amount)
     {
-        int currentSanity = Mathf.Max(SanityBar.instance.currentSanity, 0);  // Clamp sanity at 0
+        int currentSanity = Mathf.Max(SanityBar.instance.currentSanity, 0);
 
         if (sanityLight == null) return;
 
         if (currentSanity <= 50 && !isRippleActive && !isAnimating)
         {
-            sanityLight.color = new Color32(0x00, 0xE7, 0xFF, 0xFF);  // Blue light
+            sanityLight.color = new Color32(0x00, 0xE7, 0xFF, 0xFF);
             sanityLight.intensity = 2f;
-            IsPlayerInUnderworld = true; // Set the player to be in the underworld
+            IsPlayerInUnderworld = true;
             PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", true);
             isAnimating = true;
             StartCoroutine(AnimateSchizophrenicEffects());
         }
         else if (currentSanity > 50)
         {
-            sanityLight.color = new Color32(0xF8, 0xC4, 0x64, 0xFF);  // Yellow light
+            sanityLight.color = new Color32(0xF8, 0xC4, 0x64, 0xFF);
             sanityLight.intensity = 1f;
-            IsPlayerInUnderworld = false; // Player exits the underworld
+            IsPlayerInUnderworld = false;
             PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
-            StopAllCoroutines();  // Stop the animation if sanity goes back up
-            ResetEffects();
             isAnimating = false;
+            StartCoroutine(AnimateRealWorldEffects());
         }
+    }
+
+    private void SetRealWorldEffects()
+    {
+        if (chromaticAberration != null)
+            chromaticAberration.intensity.value = 0.3f;
+
+        if (filmGrain != null)
+            filmGrain.intensity.value = 0.5f;
+
+        if (motionBlur != null)
+            motionBlur.intensity.value = 0.3f;
+
+        if (depthOfField != null)
+            depthOfField.focusDistance.value = 5f;
     }
 
     private void IncreaseSanityBy50()
     {
         if (SanityBar.instance != null)
         {
-            SanityBar.instance.AddSanity(50); // Increase sanity by 50
+            SanityBar.instance.AddSanity(50);
         }
     }
 
     private IEnumerator AnimateSchizophrenicEffects()
     {
-        timeElapsed = 0;  // Reset timeElapsed when animation starts
+        timeElapsed = 0;
 
-        while (SanityBar.instance.currentSanity <= 50)  // Keep animating as long as sanity is 50 or less
+        while (SanityBar.instance.currentSanity <= 50)
         {
             timeElapsed += Time.deltaTime;
 
             // Animate the effects
-            AnimateEffect(vignette, v => v.intensity.value = Mathf.Lerp(0.6f, 0.9f, (Mathf.Sin(timeElapsed * 2f) + 1f) / 2f));
-            AnimateEffect(chromaticAberration, c => c.intensity.value = Mathf.Lerp(0.7f, 1.0f, Mathf.PerlinNoise(timeElapsed, 0.0f)));
+            AnimateEffect(vignette,
+                v => v.intensity.value = Mathf.Lerp(0.6f, 0.9f, (Mathf.Sin(timeElapsed * 2f) + 1f) / 2f));
+            AnimateEffect(chromaticAberration,
+                c => c.intensity.value = Mathf.Lerp(0.7f, 1.0f, Mathf.PerlinNoise(timeElapsed, 0.0f)));
             AnimateEffect(colorAdjustments, c =>
             {
                 c.saturation.value = Mathf.Lerp(-100f, -50f, (Mathf.Sin(timeElapsed * 1.5f) + 1f) / 2f);
                 c.hueShift.value = Mathf.Lerp(-20f, -10f, Mathf.PerlinNoise(0.0f, timeElapsed));
-                c.colorFilter.value = Color.Lerp(new Color(0.5f, 0f, 0f), Color.red, Mathf.PerlinNoise(timeElapsed * 0.5f, timeElapsed * 0.5f));
+                c.colorFilter.value = Color.Lerp(new Color(0.5f, 0f, 0f), Color.red,
+                    Mathf.PerlinNoise(timeElapsed * 0.5f, timeElapsed * 0.5f));
             });
-            AnimateEffect(filmGrain, f => f.intensity.value = Mathf.Lerp(0.4f, 1.0f, Mathf.PerlinNoise(timeElapsed * 0.5f, 0.0f)));
+            AnimateEffect(filmGrain,
+                f => f.intensity.value = Mathf.Lerp(0.4f, 1.0f, Mathf.PerlinNoise(timeElapsed * 0.5f, 0.0f)));
 
-            AnimateEffect(motionBlur, m => m.intensity.value = Mathf.Lerp(0.5f, 1.0f, Mathf.PerlinNoise(timeElapsed * 1f, 0.0f)));
-            AnimateEffect(depthOfField, d => d.focusDistance.value = Mathf.Lerp(10f, 0.1f, Mathf.Sin(timeElapsed * 0.5f)));
+            AnimateEffect(motionBlur,
+                m => m.intensity.value = Mathf.Lerp(0.5f, 1.0f, Mathf.PerlinNoise(timeElapsed * 1f, 0.0f)));
+            AnimateEffect(depthOfField,
+                d => d.focusDistance.value = Mathf.Lerp(10f, 0.1f, Mathf.Sin(timeElapsed * 0.5f)));
 
-            yield return null;  // Wait for the next frame
+            yield return null;
         }
 
-        isAnimating = false; // Stop the animation when sanity is increased again
+        isAnimating = false;
+    }
+
+    private IEnumerator AnimateRealWorldEffects()
+    {
+        timeElapsed = 0;
+
+        while (SanityBar.instance.currentSanity > 50)
+        {
+            timeElapsed += Time.deltaTime;
+
+            AnimateEffect(vignette,
+                v => v.intensity.value = Mathf.Lerp(0f, 0f, Mathf.PerlinNoise(timeElapsed, 0.0f)));
+            AnimateEffect(chromaticAberration,
+                c => c.intensity.value = Mathf.Lerp(0.9f, 1.0f, Mathf.PerlinNoise(timeElapsed, 0.0f)));
+            AnimateEffect(colorAdjustments, c =>
+            {
+                c.saturation.value = Mathf.Lerp(0, 0, (Mathf.Sin(timeElapsed * 0)));
+                c.hueShift.value = Mathf.Lerp(0f, 0f, Mathf.PerlinNoise(0.0f, timeElapsed));
+                c.colorFilter.value = Color.Lerp(new Color(0f, 0f, 0f), Color.white,
+                    Mathf.PerlinNoise(timeElapsed * 0f, timeElapsed * 0f));
+            });
+            AnimateEffect(filmGrain,
+                f => f.intensity.value = Mathf.Lerp(0.1f, 1.0f, Mathf.PerlinNoise(timeElapsed * 0.5f, 0.0f)));
+
+            AnimateEffect(motionBlur,
+                m => m.intensity.value = Mathf.Lerp(0.9f, 1.0f, Mathf.PerlinNoise(timeElapsed * 1f, 0.0f)));
+            AnimateEffect(depthOfField,
+                d => d.focusDistance.value = Mathf.Lerp(10f, 5f, Mathf.Sin(timeElapsed * 0.5f)));
+
+            yield return null;
+        }
+
+        isAnimating = false;
     }
 
     private void ResetEffects()
