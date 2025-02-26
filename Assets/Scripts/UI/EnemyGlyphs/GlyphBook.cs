@@ -14,6 +14,7 @@ public class GlyphBook : MonoBehaviour
     [SerializeField] private GlyphText glyphPrefab;
     [SerializeField] private EnglishText englishTextPrefab;
     [SerializeField] private Transform glyphPanel;
+    [SerializeField] private Transform CompleteTextPanel;
     [SerializeField] private GameObject glyphBook;
     [SerializeField] private TMP_Text poemText;
 
@@ -101,28 +102,26 @@ public class GlyphBook : MonoBehaviour
     public void TranslateGlyphs()
     {
         List<string> allGlyphs = new List<string>();
-        int glyphCount = keyValuePairs.Count; // Total glyphs that need to fade out
-        int completedFades = 0; // Track completed fade-outs
+        int glyphCount = keyValuePairs.Count;
+        int completedFades = 0;
 
         foreach (var entry in keyValuePairs)
         {
             GlyphText glyphText = entry.Value;
             if (glyphText != null)
             {
-                foreach (var pair in glyphText.activeGlyphs) // Accessing stored glyphs
+                foreach (var pair in glyphText.activeGlyphs)
                 {
-                    allGlyphs.Add(pair.Value); // Collect the text representation
+                    allGlyphs.Add(pair.Value);
                 }
             }
 
-            // Fade out each glyph and check if all are done
             glyphText.FadeOutText(() =>
             {
                 completedFades++;
                 if (completedFades >= glyphCount)
                 {
                     InterprateText();
-
                 }
 
                 Destroy(glyphText.gameObject);
@@ -134,8 +133,8 @@ public class GlyphBook : MonoBehaviour
 
     private void InterprateText()
     {
-        EnglishText newGlyphText = Instantiate(englishTextPrefab, glyphPanel);
-        newGlyphText.WriteText("This is a test text. All glyphs have faded out. Now interpreting the text...", () =>
+        EnglishText newGlyphText = Instantiate(englishTextPrefab, CompleteTextPanel);
+        newGlyphText.WriteText("Poem Complete", () =>
         {
             HideBook();
 
@@ -149,6 +148,7 @@ public class GlyphBook : MonoBehaviour
 
     private void HideBook()
     {
-        glyphBook.transform.DOScale(Vector3.zero, bookScaleTime).OnComplete(() => glyphBook.SetActive(false)).SetDelay(2f);
+        glyphBook.transform.DOScale(Vector3.zero, bookScaleTime).OnComplete(() => glyphBook.SetActive(false))
+            .SetDelay(2f);
     }
 }

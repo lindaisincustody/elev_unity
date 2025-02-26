@@ -18,7 +18,6 @@ public class AbilitySelectionUI : MonoBehaviour
 
     public void Show()
     {
-        // Pause the game
         Time.timeScale = 0f;
         abilitySelectionPanel.SetActive(true);
         PopulateAbilityButtons();
@@ -32,10 +31,8 @@ public class AbilitySelectionUI : MonoBehaviour
             Destroy(child.gameObject);
         }
 
-        // Filter out abilities the player already has if needed...
-        List<Ability> filteredAbilities = availableAbilities; // (Your filtering logic)
+        List<Ability> filteredAbilities = availableAbilities;
 
-        // Limit to three random abilities.
         int countToShow = Mathf.Min(3, filteredAbilities.Count);
         List<Ability> abilitiesToDisplay = filteredAbilities
             .OrderBy(a => UnityEngine.Random.value)
@@ -60,7 +57,6 @@ public class AbilitySelectionUI : MonoBehaviour
             playerAbilities.Add(ability);
         }
 
-        // Close UI and resume the game.
         abilitySelectionPanel.SetActive(false);
         Time.timeScale = 1f;
     }
