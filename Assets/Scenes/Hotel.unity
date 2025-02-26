@@ -2559,6 +2559,37 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &328906015 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7574927325954668685, guid: cb2cc14511a8b5f4d8af92233400d522, type: 3}
+  m_PrefabInstance: {fileID: 1648642000}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &328906022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328906015}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 18
+    m_Bottom: 0
+  m_ChildAlignment: 2
+  m_Spacing: -8.35
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &344273426
 GameObject:
   m_ObjectHideFlags: 0
@@ -15771,6 +15802,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1103402424119569106, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2567969994060594961, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -21770,10 +21805,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: AbilityCanvas
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 565660552847206298, guid: cb2cc14511a8b5f4d8af92233400d522, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7574927325954668685, guid: cb2cc14511a8b5f4d8af92233400d522, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 328906022}
   m_SourcePrefab: {fileID: 100100000, guid: cb2cc14511a8b5f4d8af92233400d522, type: 3}
 --- !u!1 &1681774843
 GameObject:
