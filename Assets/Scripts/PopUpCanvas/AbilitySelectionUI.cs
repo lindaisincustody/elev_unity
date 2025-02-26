@@ -21,10 +21,20 @@ public class AbilitySelectionUI : MonoBehaviour
 
     public void Show()
     {
+        PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+        List<Ability> filteredAbilities =
+            availableAbilities.FindAll(ability => !playerAbilities.Abilities.Contains(ability));
+
+        if (filteredAbilities.Count == 0)
+        {
+            return;
+        }
+
         Time.timeScale = 0f;
         abilitySelectionPanel.SetActive(true);
         PopulateAbilityButtons();
     }
+
 
     private void PopulateAbilityButtons()
     {

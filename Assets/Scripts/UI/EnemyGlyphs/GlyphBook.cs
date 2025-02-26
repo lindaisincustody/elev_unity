@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
-using System.Linq;
+using UnityEngine.Tilemaps;
 
 public class GlyphBook : MonoBehaviour
 {
@@ -18,6 +19,13 @@ public class GlyphBook : MonoBehaviour
     [SerializeField] private GameObject glyphBook;
     [SerializeField] private TMP_Text poemText;
 
+    [SerializeField] private Tilemap wallTilemap;
+    [SerializeField] private List<Vector3Int> wallTilePositionsToRemove;
+
+    [SerializeField] private GameObject teleporterPrefab;
+    [SerializeField] private Transform teleporterSpawnPoint;
+
+
     private List<string> poemWords = new List<string>
     {
         "The shadows fade,", "the light unfolds,",
@@ -27,7 +35,6 @@ public class GlyphBook : MonoBehaviour
     };
 
     private int currentWordIndex = 0;
-
     private float bookScaleTime = 0.6f;
 
     private void Awake()
@@ -45,9 +52,7 @@ public class GlyphBook : MonoBehaviour
     public void AddEnemy(Enemy enemy)
     {
         GlyphText newGlyphs = Instantiate(glyphPrefab, glyphPanel);
-
         newGlyphs.SetText(string.Join("", enemy.activeSymbols.Select(g => g.Glyph)));
-
         keyValuePairs[enemy] = newGlyphs;
     }
 
@@ -66,28 +71,27 @@ public class GlyphBook : MonoBehaviour
         Glyph glyph = glyphText.GetGlyph(enemyGlyph.text);
         Glyph newGlyphText = Instantiate(glyphText.glyphText, glyph.transform);
         Vector3 screenPosition = Camera.main.WorldToScreenPoint(enemyGlyph.transform.position);
-
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             glyph.transform.GetComponent<RectTransform>(),
             screenPosition,
             glyph.transform.GetComponentInParent<Canvas>().worldCamera,
             out Vector2 localPoint
         );
-
         newGlyphText.GetComponent<RectTransform>().anchoredPosition = localPoint;
-
         newGlyphText.Text.text = enemyGlyph.text;
         MoveToBook(newGlyphText, glyph);
     }
 
     private void MoveToBook(Glyph newGlpyh, Glyph glyph)
     {
-        newGlpyh.transform.DOMove(glyph.transform.position, 3).SetEase(Ease.InSine).SetSpeedBased(true).OnComplete(() =>
-        {
-            glyph.Text.DOColor(Color.red, 2f);
-            Destroy(newGlpyh.gameObject);
-            UnlockPoem();
-        });
+        newGlpyh.transform.DOMove(glyph.transform.position, 3).SetEase(Ease.InSine)
+            .SetSpeedBased(true)
+            .OnComplete(() =>
+            {
+                glyph.Text.DOColor(Color.red, 2f);
+                Destroy(newGlpyh.gameObject);
+                UnlockPoem();
+            });
     }
 
     private void UnlockPoem()
@@ -137,6 +141,22 @@ public class GlyphBook : MonoBehaviour
         newGlyphText.WriteText("Poem Complete", () =>
         {
             HideBook();
+            RemoveWallTiles();
+
+            if (teleporterPrefab != null)
+            {
+                Quaternion teleporterRotation = Quaternion.Euler(0, 0, -180);
+
+                if (teleporterSpawnPoint != null)
+                {
+                    Instantiate(teleporterPrefab, teleporterSpawnPoint.position, teleporterRotation);
+                }
+                else
+                {
+                    Instantiate(teleporterPrefab, Vector3.zero, teleporterRotation);
+                }
+            }
+
 
             AbilitySelectionUI abilityUI = FindObjectOfType<AbilitySelectionUI>();
             if (abilityUI != null)
@@ -146,9 +166,30 @@ public class GlyphBook : MonoBehaviour
         });
     }
 
+
+    private void RemoveWallTiles()
+    {
+        if (wallTilemap == null)
+        {
+            Debug.LogWarning("Wall Tilemap is not assigned!");
+            return;
+        }
+
+        foreach (Vector3Int pos in wallTilePositionsToRemove)
+        {
+            wallTilemap.SetTile(pos, null);
+        }
+    }
+
     private void HideBook()
     {
-        glyphBook.transform.DOScale(Vector3.zero, bookScaleTime).OnComplete(() => glyphBook.SetActive(false))
+        glyphBook.transform.DOScale(Vector3.zero, bookScaleTime)
+            .OnComplete(() => glyphBook.SetActive(false))
             .SetDelay(2f);
+    }
+
+    public void ActivateBookForTesting()
+    {
+        ActivateBook();
     }
 }
