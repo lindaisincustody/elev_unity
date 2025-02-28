@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: PsychMaterialBG
-  m_Shader: {fileID: 4800000, guid: bdf3fcadd10b64348b2f38401bdc438c, type: 3}
+  m_Name: ArrowTrail
+  m_Shader: {fileID: 4800000, guid: 7ea20dd26e1e502418006c8c22b3bd9d, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,7 +28,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f1a3d2b2796b28641a7b74f8a242f5ec, type: 3}
+        m_Texture: {fileID: 2800000, guid: 72e47387450438641a4f518987f8f600, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
@@ -41,13 +41,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _BrightnessFactor: 0.5
-    - _DistortionStrength: 0.1
     - _EnableExternalAlpha: 0
-    - _Speed: 0.1
-    - _TimeMultiplier: 5
+    - _NoiseIntensity: 0.2
+    - _TimeFactor: 1
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
+    - _TintColor: {r: 1, g: 1, b: 1, a: 0.27058825}
   m_BuildTextureStacks: []

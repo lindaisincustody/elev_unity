@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public class LetterDrawing : MonoBehaviour
 {
     [SerializeField] private LineRenderer lineRenderer;
-    [SerializeField] private LineRenderer secondaryLineRenderer;
+    [SerializeField] public LineRenderer secondaryLineRenderer;
     [SerializeField] private NNModel _model;
     [SerializeField] private RawImage renderTextureDisplay;
     [SerializeField] private bool invert = true;
@@ -22,8 +22,8 @@ public class LetterDrawing : MonoBehaviour
     private int currentLetterIndex = 0;
     [SerializeField] private TextMeshProUGUI currentLetterText;
 
-    [SerializeField] private Material groundMaterial;
-    [SerializeField] private Material trippyTransparentMaterial;
+    [SerializeField] public Material groundMaterial;
+    [SerializeField] public Material trippyTransparentMaterial;
 
     private GameObject activeWall = null;
 
@@ -289,26 +289,7 @@ public class LetterDrawing : MonoBehaviour
         }
 
 
-        if (predictedLabel == "_square")
-        {
-            PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
-            WallAbility wallAbility = playerAbilities?.Abilities.Find(a => a is WallAbility) as WallAbility;
-            if (wallAbility != null)
-            {
-                wallAbility.Activate();
-
-                Vector2[] points = GetDrawnPoints();
-                if (points != null)
-                {
-                    wallAbility.SpawnWall(points, this, secondaryLineRenderer, groundMaterial,
-                        trippyTransparentMaterial);
-                }
-            }
-            else
-            {
-                Debug.Log("Player does not have the Wall ability.");
-            }
-        }
+        AbilityActionRegistry.Instance.ExecuteAction(predictedLabel);
     }
 
 
@@ -394,7 +375,7 @@ public class LetterDrawing : MonoBehaviour
         secondaryLineRenderer.positionCount = 0;
     }
 
-    private Vector2[] GetDrawnPoints()
+    public Vector2[] GetDrawnPoints()
     {
         int pointCount = lineRenderer.positionCount;
         if (pointCount < 3)
