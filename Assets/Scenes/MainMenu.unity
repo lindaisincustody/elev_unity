@@ -2154,8 +2154,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281739045
-  m_fontColor: {r: 0.14509805, g: 0.15294118, b: 0.21176472, a: 1}
+    rgba: 4288848546
+  m_fontColor: {r: 0.63529414, g: 0.63529414, b: 0.63529414, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2363,8 +2363,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281739045
-  m_fontColor: {r: 0.14509805, g: 0.15294118, b: 0.21176472, a: 1}
+    rgba: 4288782753
+  m_fontColor: {r: 0.6320754, g: 0.6320754, b: 0.6320754, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3234,8 +3234,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4281739045
-  m_fontColor: {r: 0.14509805, g: 0.15294118, b: 0.21176472, a: 1}
+    rgba: 4293519849
+  m_fontColor: {r: 0.9150943, g: 0.9150943, b: 0.9150943, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3557,9 +3557,7 @@ MonoBehaviour:
   rightCursorHolder: {fileID: 1938876144}
   leftCursorFiller: {fileID: 0}
   rightCursorFiller: {fileID: 0}
-  particleManager: {fileID: 0}
   spriteMarker: {fileID: 0}
-  issMinigameCursor: 0
 --- !u!114 &1780435457
 MonoBehaviour:
   m_ObjectHideFlags: 0
