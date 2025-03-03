@@ -22,18 +22,6 @@ public class GlyphBook : MonoBehaviour
     [SerializeField] private Tilemap wallTilemap;
     [SerializeField] private List<Vector3Int> wallTilePositionsToRemove;
 
-    [SerializeField] private GameObject teleporterPrefab;
-    [SerializeField] private Transform teleporterSpawnPoint;
-
-
-    private List<string> poemWords = new List<string>
-    {
-        "The shadows fade,", "the light unfolds,",
-        "A journey's end,", "a story told.",
-        "Through night and day,", "we seek our way,",
-        "With every step,", "the price we pay."
-    };
-
     private int currentWordIndex = 0;
     private float bookScaleTime = 0.6f;
 
@@ -90,18 +78,9 @@ public class GlyphBook : MonoBehaviour
             {
                 glyph.Text.DOColor(Color.red, 2f);
                 Destroy(newGlpyh.gameObject);
-                UnlockPoem();
             });
     }
 
-    private void UnlockPoem()
-    {
-        if (currentWordIndex < poemWords.Count)
-        {
-            poemText.text += " " + poemWords[currentWordIndex];
-            currentWordIndex += 1;
-        }
-    }
 
     public void TranslateGlyphs()
     {
@@ -142,21 +121,6 @@ public class GlyphBook : MonoBehaviour
         {
             HideBook();
             RemoveWallTiles();
-
-            if (teleporterPrefab != null)
-            {
-                Quaternion teleporterRotation = Quaternion.Euler(0, 0, -180);
-
-                if (teleporterSpawnPoint != null)
-                {
-                    Instantiate(teleporterPrefab, teleporterSpawnPoint.position, teleporterRotation);
-                }
-                else
-                {
-                    Instantiate(teleporterPrefab, Vector3.zero, teleporterRotation);
-                }
-            }
-
 
             AbilitySelectionUI abilityUI = FindObjectOfType<AbilitySelectionUI>();
             if (abilityUI != null)

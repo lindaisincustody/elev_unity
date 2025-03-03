@@ -5,73 +5,52 @@ using UnityEngine;
 public class Fight : MonoBehaviour
 {
     [SerializeField] private List<SpawnEnemy> enemySpawners;
-    [SerializeField] private Item reward;
+    [SerializeField] private FightInteractable interactable;
+    [SerializeField] private Teleporter teleporter;
+    [SerializeField] private bool startSetup;
 
-    private List<Enemy> enemies = new();
-
-    // With more rooms, have this as method instead of Awake
-    // Then when entering a room, activat this (have a bool)
-    private void Awake()
-    {
-        foreach (SpawnEnemy spawner in enemySpawners)
-        {
-            spawner.OnSpawn += RegisterEnemy;
-        }
-    }
+    private bool isFightComplete;
 
     private void Start()
     {
-        SanityBar.instance.sanityEffectHandler.OnWorldChange += SetUpGlyphs;
+        interactable.OnTriggerEnter += SetupFight;
+        if (startSetup)
+            SetupFight();
     }
 
-    private void Update()
+    private void SetupFight()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-            foreach (Enemy enemy in enemies)
+        List<Enemy> enemies = new();
+
+        if (isFightComplete)
+            foreach (SpawnEnemy spawner in enemySpawners)
             {
-                enemy.Get<EnemyHealth>().TakeDamage(999999);
+                spawner.ResetSpawner();
             }
+
+        if (isFightComplete)
+            isFightComplete = false;
+
+        foreach (SpawnEnemy spawner in enemySpawners)
+	    {
+            foreach (Enemy enemy in spawner.Enemies)
+            {
+                enemies.Add(enemy);
+            }
+	    }
+
+        FightManager.Instance.SetUpFight(this, enemies);
     }
 
-    public void SetUpGlyphs()
+    public void CompleteFight()
     {
-        if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
-            return;
-
-        GlyphBook.instance.ActivateBook();
-        foreach (Enemy enemy in enemies)
-        {
-            GlyphBook.instance.AddEnemy(enemy);
-        }
-    }
-
-    private void RegisterEnemy(Enemy enemy)
-    {
-        enemies.Add(enemy);
-        enemy.OnDeath += OnEnemyDeath;
-    }
-
-    private void OnEnemyDeath(Enemy enemy)
-    {
-        enemy.OnDeath -= OnEnemyDeath;
-        enemies.Remove(enemy);
-
-        if (enemies.Count == 0)
-            CompleteFight();
-    }
-
-    private void CompleteFight()
-    {
-        GlyphBook.instance.TranslateGlyphs();
-        SanityBar.instance.SanityToMax();
-        Player.instance.ItemsInventory.AddItem(reward);
+        teleporter.Unlocked = true;
+        teleporter.gameObject.SetActive(true);
+        isFightComplete = true;
     }
 
     private void OnDestroy()
     {
-        foreach (SpawnEnemy spawner in enemySpawners)
-        {
-            spawner.OnSpawn -= RegisterEnemy;
-        }
+        interactable.OnTriggerEnter -= SetupFight;
     }
 }

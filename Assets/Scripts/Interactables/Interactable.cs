@@ -7,10 +7,11 @@ public abstract class Interactable : MonoBehaviour
     protected Player player;
     protected bool playerIsInTrigger = false;
 
-    private void Start()
+    protected virtual void Start()
     {
         player = Player.instance;
         player.GetInputManager.OnInteract += HandleInteract;
+        Debug.Log(transform.name);
     }
 
     protected virtual void HandleInteract() {

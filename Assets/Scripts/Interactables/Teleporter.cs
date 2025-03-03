@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Teleporter : Interactable
 {
+    [SerializeField] private UnityEvent OnTeleport;
+    [SerializeField] public bool Unlocked = true;
     [SerializeField] public Teleport teleport;
     [Header("Scene To Load")]
     [SerializeField] Scene sceneName;
@@ -12,10 +15,19 @@ public class Teleporter : Interactable
     [SerializeField] float scene_X;
     [SerializeField] float scene_Y;
 
+    protected override void Start()
+    {
+        base.Start();
+        if (!Unlocked)
+            gameObject.SetActive(false);
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
+            if (player == null)
+                player = Player.instance;
             playerIsInTrigger = true;
             player.ShowInteractUI(true);
         }
@@ -36,7 +48,10 @@ public class Teleporter : Interactable
         {
             base.HandleInteract();
             if (teleport == Teleport.SameScene)
+            {
                 StartCoroutine(SceneController.instance.LoadInScene(scene_X, scene_Y));
+                OnTeleport?.Invoke();
+            }
             else if (teleport == Teleport.NewScene)
                 StartCoroutine(SceneController.instance.LoadScene(GetSceneName()));
         }

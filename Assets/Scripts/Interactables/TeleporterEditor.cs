@@ -13,7 +13,9 @@ public class TeleporterEditor : Editor
 
         // Display the Teleport field
         EditorGUILayout.PropertyField(serializedObject.FindProperty("teleport"));
-
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("Unlocked"));
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("OnTeleport"));
+        
         Teleporter teleporter = (Teleporter)target;
 
         // Check the value of the teleport enum

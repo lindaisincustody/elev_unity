@@ -24,7 +24,6 @@ public class Enemy : MonoBehaviour
 
     private EnemyHealth enemyHealth;
 
-
     private readonly string[] _labels = {
         "_Capricorn",
         "_Heart",
@@ -86,6 +85,7 @@ public class Enemy : MonoBehaviour
     {
         SanityChange();
         SetBounds();
+        GenerateRandomSymbols();
 
         enemyHealth = GetComponent<EnemyHealth>();
         enemyHealth.OnDeath += OnEnemyDeath;
@@ -93,6 +93,9 @@ public class Enemy : MonoBehaviour
 
     private void GenerateRandomSymbols()
     {
+        if (activeSymbols.Count > 0)
+            return;
+
         float symbolSpacing = 1f;
 
         var filteredLabels = new List<string>(_labels);

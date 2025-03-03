@@ -181,8 +181,6 @@ public class SanityEffectHandler : MonoBehaviour
             AnimateEffect(filmGrain,
                 f => f.intensity.value = Mathf.Lerp(0.1f, 1.0f, Mathf.PerlinNoise(timeElapsed * 0.5f, 0.0f)));
 
-            AnimateEffect(motionBlur,
-                m => m.intensity.value = Mathf.Lerp(0.9f, 1.0f, Mathf.PerlinNoise(timeElapsed * 1f, 0.0f)));
             AnimateEffect(depthOfField,
                 d => d.focusDistance.value = Mathf.Lerp(10f, 5f, Mathf.Sin(timeElapsed * 0.5f)));
 

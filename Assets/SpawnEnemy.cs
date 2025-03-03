@@ -14,9 +14,22 @@ public class SpawnEnemy : MonoBehaviour
     [SerializeField] private Transform maxBound;
 
     public Action<Enemy> OnSpawn { get; set; }
+    public List<Enemy> Enemies = new();
 
-    void Start()
+    void Awake()
     {
+        SpawnEnemies();
+    }
+
+    public void ResetSpawner()
+    {
+        foreach (Enemy enemy in Enemies)
+        {
+            if (enemy != null)
+                Destroy(enemy);
+        }
+
+        Enemies.Clear();
         SpawnEnemies();
     }
 
@@ -30,6 +43,7 @@ public class SpawnEnemy : MonoBehaviour
             newEnemy.maxBound = maxBound.position;
 
             OnSpawn?.Invoke(newEnemy);
+            Enemies.Add(newEnemy);
             EnemyManager.Instance.RegisterEnemy(newEnemy);
         }
     }
