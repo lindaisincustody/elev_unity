@@ -39,7 +39,6 @@ public class FightManager : MonoBehaviour
     {
         _activeFight = fight;
         enemies = newEnemeies;
-        Debug.Log(newEnemeies.Count);
         foreach (Enemy enemy in enemies.ToArray())
         {
             RegisterEnemy(enemy);

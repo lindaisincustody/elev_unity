@@ -5,18 +5,21 @@ using UnityEngine;
 
 public class SpawnEnemy : MonoBehaviour
 {
+    [Header("Enemy")]
     public Enemy enemyPrefab;
 
-    [SerializeField] private List<Transform> spawnPoint;
+    [Space, SerializeField] private List<Transform> spawnPoint;
 
     [Header("Bounds")]
     [SerializeField] private Transform minBound;
     [SerializeField] private Transform maxBound;
 
     public Action<Enemy> OnSpawn { get; set; }
-    public List<Enemy> Enemies = new();
+    [HideInInspector] public List<Enemy> Enemies = new();
 
-    void Awake()
+    public Action OnSpawned { get; set; }
+
+    void Start()
     {
         SpawnEnemies();
     }
@@ -46,5 +49,7 @@ public class SpawnEnemy : MonoBehaviour
             Enemies.Add(newEnemy);
             EnemyManager.Instance.RegisterEnemy(newEnemy);
         }
+
+        OnSpawned?.Invoke();
     }
 }

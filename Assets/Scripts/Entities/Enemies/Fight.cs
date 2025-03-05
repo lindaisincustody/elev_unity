@@ -10,10 +10,31 @@ public class Fight : MonoBehaviour
     [SerializeField] private bool startSetup;
 
     private bool isFightComplete;
+    private int spawnersCompleted;
 
     private void Start()
     {
         interactable.OnTriggerEnter += SetupFight;
+
+        foreach (SpawnEnemy spawner in enemySpawners)
+        {
+            spawner.OnSpawned += HandleSpawnerCompleted;
+        }
+    }
+
+    private void HandleSpawnerCompleted()
+    {
+        spawnersCompleted++;
+
+        if (spawnersCompleted >= enemySpawners.Count)
+        {
+            spawnersCompleted = 0; 
+            OnEnemiesSpawned();
+        }
+    }
+
+    private void OnEnemiesSpawned()
+    {
         if (startSetup)
             SetupFight();
     }
@@ -44,13 +65,22 @@ public class Fight : MonoBehaviour
 
     public void CompleteFight()
     {
-        teleporter.Unlocked = true;
-        teleporter.gameObject.SetActive(true);
+        if (teleporter)
+        {
+            teleporter.Unlocked = true;
+            teleporter.gameObject.SetActive(true);
+        }
+
         isFightComplete = true;
     }
 
     private void OnDestroy()
     {
         interactable.OnTriggerEnter -= SetupFight;
+
+        foreach (SpawnEnemy spawner in enemySpawners)
+        {
+            spawner.OnSpawned -= HandleSpawnerCompleted;
+        }
     }
 }
