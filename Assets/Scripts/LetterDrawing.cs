@@ -259,11 +259,23 @@ public class LetterDrawing : MonoBehaviour
 
         prediction.SetPrediction(output, _labels);
 
+        float confidence = prediction.predicted.Max();
+        float threshold = 0.91f;
+
+        if (confidence < threshold)
+        {
+            Debug.Log("Low confidence drawing, ignoring input.");
+            output.Dispose();
+            capturedTexture.Apply();
+            DebugInputTexture(capturedTexture);
+            Destroy(capturedTexture);
+            return;
+        }
+
         MatchSymbolWithPoem(prediction.predictedLabel);
 
         output.Dispose();
         capturedTexture.Apply();
-
         DebugInputTexture(capturedTexture);
         Destroy(capturedTexture);
     }
