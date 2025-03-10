@@ -1,86 +1,83 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Fight : MonoBehaviour
 {
-    [SerializeField] private List<SpawnEnemy> enemySpawners;
-    [SerializeField] private FightInteractable interactable;
+    [SerializeField] private string fightID;
+    [SerializeField] private List<EnemySpawner> enemySpawners;
+    [Header("Fight Win Unlock")]
     [SerializeField] private Teleporter teleporter;
-    [SerializeField] private bool startSetup;
 
+    private List<Enemy> enemies = new List<Enemy>();
     private bool isFightComplete;
-    private int spawnersCompleted;
+
+    private string defaultFightId = "Reception_Fight";
 
     private void Start()
     {
-        interactable.OnTriggerEnter += SetupFight;
-
-        foreach (SpawnEnemy spawner in enemySpawners)
+        PlayerData playerData = SavingWrapper.Instance.LoadPlayerData();
+        string lastFightId;
+        if (string.IsNullOrEmpty(playerData.lastFightID))
         {
-            spawner.OnSpawned += HandleSpawnerCompleted;
+            lastFightId = defaultFightId;
+        }
+        else
+        {
+            lastFightId = defaultFightId;
+        }
+
+        if (lastFightId == fightID)
+        {
+            StartFight();
         }
     }
 
-    private void HandleSpawnerCompleted()
+    public void StartFight()
     {
-        spawnersCompleted++;
-
-        if (spawnersCompleted >= enemySpawners.Count)
+        if (isFightComplete)
         {
-            spawnersCompleted = 0; 
-            OnEnemiesSpawned();
-        }
-    }
-
-    private void OnEnemiesSpawned()
-    {
-        if (startSetup)
-            SetupFight();
-    }
-
-    private void SetupFight()
-    {
-        List<Enemy> enemies = new();
-
-        if (isFightComplete)
-            foreach (SpawnEnemy spawner in enemySpawners)
-            {
-                spawner.ResetSpawner();
-            }
-
-        if (isFightComplete)
             isFightComplete = false;
 
-        foreach (SpawnEnemy spawner in enemySpawners)
-	    {
-            foreach (Enemy enemy in spawner.Enemies)
+            for (int i = 0; i < enemies.Count; i++)
             {
-                enemies.Add(enemy);
+                if (enemies[i] != null)
+                {
+                    Destroy(enemies[i].gameObject);
+                }
             }
-	    }
+            enemies.Clear();
+
+            if (teleporter != null)
+            {
+                teleporter.Unlocked = false;
+                teleporter.gameObject.SetActive(false);
+            }
+        }
+
+        enemies.Clear();
+        foreach (var spawner in enemySpawners)
+        {
+            List<Enemy> spawned = spawner.SpawnEnemies();
+            enemies.AddRange(spawned);
+        }
 
         FightManager.Instance.SetUpFight(this, enemies);
+
+        Player.instance.playerData.lastFightID = fightID;
     }
 
     public void CompleteFight()
     {
-        if (teleporter)
+        if (teleporter != null)
         {
             teleporter.Unlocked = true;
             teleporter.gameObject.SetActive(true);
         }
-
         isFightComplete = true;
     }
 
-    private void OnDestroy()
+    public bool IsFightComplete()
     {
-        interactable.OnTriggerEnter -= SetupFight;
-
-        foreach (SpawnEnemy spawner in enemySpawners)
-        {
-            spawner.OnSpawned -= HandleSpawnerCompleted;
-        }
+        return isFightComplete;
     }
 }

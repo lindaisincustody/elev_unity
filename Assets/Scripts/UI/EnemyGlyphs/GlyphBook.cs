@@ -150,6 +150,8 @@ public class GlyphBook : MonoBehaviour
         glyphBook.transform.DOScale(Vector3.zero, bookScaleTime)
             .OnComplete(() => glyphBook.SetActive(false))
             .SetDelay(2f);
+
+        keyValuePairs.Clear();
     }
 
     public void ActivateBookForTesting()

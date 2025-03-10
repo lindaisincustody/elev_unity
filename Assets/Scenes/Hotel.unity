@@ -3574,11 +3574,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28087feba21c52845af97f6a281f9ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fightID: Elevator_fight
   enemySpawners:
   - {fileID: 1886276224}
-  interactable: {fileID: 54930514}
   teleporter: {fileID: 0}
-  startSetup: 0
 --- !u!61 &54930513
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3636,6 +3635,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c850526914c9c24ca46d81e0697c5b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fight: {fileID: 54930512}
 --- !u!1 &89707528
 GameObject:
   m_ObjectHideFlags: 0
@@ -4013,7 +4013,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: Unlocked
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: OnTeleport.m_PersistentCalls.m_Calls.Array.size
@@ -4026,18 +4026,18 @@ PrefabInstance:
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: OnTeleport.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1886276224}
+      objectReference: {fileID: 54930514}
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: OnTeleport.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: OnTeleport.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ResetSpawner
+      value: SetupFight
       objectReference: {fileID: 0}
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: OnTeleport.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: SpawnEnemy, Assembly-CSharp
+      value: FightInteractable, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 254923287689671592, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
       propertyPath: OnTeleport.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
@@ -9605,6 +9605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1c850526914c9c24ca46d81e0697c5b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fight: {fileID: 754932148}
 --- !u!114 &754932148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9617,11 +9618,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28087feba21c52845af97f6a281f9ea0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fightID: Reception_Fight
   enemySpawners:
   - {fileID: 1313087635}
-  interactable: {fileID: 754932147}
   teleporter: {fileID: 233003123}
-  startSetup: 1
 --- !u!1 &765375181
 GameObject:
   m_ObjectHideFlags: 0
@@ -36962,7 +36962,7 @@ PrefabInstance:
     - target: {fileID: 4639523295586963794, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: enemyPrefab
       value: 
-      objectReference: {fileID: 1186790290414908665, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
+      objectReference: {fileID: 1144383819427577279, guid: 4effd607676b2ee4e9a7b30019e99b3f, type: 3}
     - target: {fileID: 4639523295586963794, guid: 22a2692dfe62e4a4ba5ee28369c16638, type: 3}
       propertyPath: spawnPoint.Array.size
       value: 2
