@@ -19,19 +19,19 @@ public class ElevatorManager : MonoBehaviour
     [SerializeField] private SpriteRenderer fadeOut;
 
     [Header("NPC Passenger UI")] [SerializeField]
-    private GameObject npcUIPanel; // Panel that displays NPC info
+    private GameObject npcUIPanel;
 
-    [SerializeField] private TextMeshProUGUI npcNameText; // NPC name
-    [SerializeField] private Image npcSpriteImage; // NPC sprite
-    [SerializeField] private TextMeshProUGUI npcRequestText; // Greeting / Request text
+    [SerializeField] private TextMeshProUGUI npcNameText;
+    [SerializeField] private Image npcSpriteImage;
+    [SerializeField] private TextMeshProUGUI npcRequestText;
 
-    [Header("NPC Data")] [SerializeField] private NPCData[] npcDataList; // Array of NPC ScriptableObjects
+    [Header("NPC Data")] [SerializeField] private NPCData[] npcDataList;
 
-    [Header("Settings")] [SerializeField] int totalFloors = 6; // Total floors in the elevator
+    [Header("Settings")] [SerializeField] int totalFloors = 6;
 
     private int currentFloor = 0;
     private bool[] floorsCompleted;
-    private NPCData currentNPC; // The NPC currently in the elevator
+    private NPCData currentNPC;
 
     void Start()
     {
@@ -39,10 +39,6 @@ public class ElevatorManager : MonoBehaviour
         //SpawnNPCPassenger();
     }
 
-    /// <summary>
-    /// Chooses a new NPC from the npcDataList and shows the NPC UI.
-    /// Overrides its requestedFloor to a random value between 1 and totalFloors that is not the current floor.
-    /// </summary>
     public void SpawnNPCPassenger()
     {
         if (npcDataList == null || npcDataList.Length == 0)
@@ -51,14 +47,11 @@ public class ElevatorManager : MonoBehaviour
             return;
         }
 
-        // Choose one NPC at random and instantiate it so we can modify its requestedFloor.
         int index = Random.Range(0, npcDataList.Length);
         currentNPC = Instantiate(npcDataList[index]);
 
-        // Get the current elevator floor from ElevatorLevels.
         int currentElevatorFloor = levels.GetCurrentLevel();
 
-        // Choose a random requested floor between 1 and totalFloors that is not equal to currentElevatorFloor.
         int randomFloor = Random.Range(1, totalFloors + 1);
         while (randomFloor == currentElevatorFloor)
         {
@@ -68,18 +61,16 @@ public class ElevatorManager : MonoBehaviour
         currentNPC.requestedFloor = randomFloor;
         levels.SetTargetLevel(currentNPC.requestedFloor);
 
-        // Update UI with NPC info.
         if (npcNameText != null)
             npcNameText.text = currentNPC.npcName;
         if (npcSpriteImage != null)
             npcSpriteImage.sprite = currentNPC.npcSprite;
 
-        // **Ensure that the NPC panel and text object are active before starting the coroutine.**
         if (npcUIPanel != null)
             npcUIPanel.SetActive(true);
         if (npcRequestText != null)
         {
-            npcRequestText.gameObject.SetActive(true); // Activate the text object
+            npcRequestText.gameObject.SetActive(true);
             string message = currentNPC.greetingText + "\n(Take me to floor " + currentNPC.requestedFloor + "!)";
             NPCTypewriterWithSound typewriter = npcRequestText.GetComponent<NPCTypewriterWithSound>();
             if (typewriter != null)
@@ -93,32 +84,18 @@ public class ElevatorManager : MonoBehaviour
         }
     }
 
-
-    /// <summary>
-    /// Called when the elevator arrow reaches a floor.
-    /// Only triggers the mini-game if the reached floor matches the NPC's requested floor.
-    /// </summary>
     public void StartMiniGameForFloor(int floor)
     {
-        // Only trigger if the reached floor matches the NPC's request.
         if (currentNPC == null || floor != currentNPC.requestedFloor)
             return;
 
-        // Remove the check for floorsCompleted so that every NPC request triggers the mini-game.
-        // if (floorsCompleted[floor - 1])
-        // {
-        //     leverMover.UnlockLever();
-        //     return;
-        // }
 
-        // Lock the lever while the mini-game is active.
         leverMover.LockLever();
         StartCoroutine(ActivateMiniGame(floor));
     }
 
     private IEnumerator ActivateMiniGame(int floor)
     {
-        // Fade in overlay.
         fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
         fadeOut.gameObject.SetActive(true);
 
@@ -137,7 +114,7 @@ public class ElevatorManager : MonoBehaviour
 
         movingCircle.SetActive(true);
         circle.SetActive(true);
-        // Start the mini-game (assumed to be handled by your HollowCircleManager).
+
         circleManager.ActivateGame(3, () => MiniGameComplete(floor));
         yield return new WaitForSeconds(0.5f);
         circleMovement.isActive = true;
@@ -170,17 +147,13 @@ public class ElevatorManager : MonoBehaviour
         fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
         fadeOut.gameObject.SetActive(false);
 
-        // Mark the floor as served (if you still want to record this; if not, you can remove this line).
         floorsCompleted[floor - 1] = true;
 
-        // Decrease sanity.
         SanityBar.instance.DecreaseSanityBy50();
 
         if (CameraElevatorShake.instance != null)
             CameraElevatorShake.instance.shakeIntensity = 0f;
 
-        // Optionally, display thank-you text before hiding the UI.
-        // Optionally, display thank-you text before hiding the UI.
         if (npcRequestText != null)
         {
             NPCTypewriterWithSound typewriter = npcRequestText.GetComponent<NPCTypewriterWithSound>();
@@ -195,15 +168,12 @@ public class ElevatorManager : MonoBehaviour
         }
 
 
-        // Hide NPC UI after a short delay.
         yield return new WaitForSeconds(1f);
         if (npcUIPanel != null)
             npcUIPanel.SetActive(false);
 
-        // Unlock the lever.
         leverMover.UnlockLever();
 
-        // Spawn next NPC passenger.
         SpawnNPCPassenger();
     }
 

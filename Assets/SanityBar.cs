@@ -40,7 +40,7 @@ public class SanityBar : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0)) // Listen for number 0 key press
+        if (Input.GetKeyDown(KeyCode.Alpha0))
         {
             DecreaseSanityBy50();
         }
@@ -82,7 +82,7 @@ public class SanityBar : MonoBehaviour
         if (currentSanity < 0)
             currentSanity = 0;
 
-        OnSanityChange?.Invoke(-50); // Invoke with negative amount to indicate decrease
+        OnSanityChange?.Invoke(-50);
         UpdateSanityUI();
     }
 

@@ -5,11 +5,11 @@ public class LeverMover : MonoBehaviour
 {
     [Header("Lever")] [SerializeField] Transform lever;
     [SerializeField] AnimationCurve leverAnimationCurve;
-    [SerializeField] float resetSpeed = 5f; // Speed to reset lever smoothly
-    [SerializeField] float rotationSensitivity = 0.2f; // How sensitive the lever is to mouse drag
-    [SerializeField] float minRotation = -45f; // Full left (down)
-    [SerializeField] float maxRotation = 45f; // Full right (up)
-    [SerializeField] float activationThreshold = 30f; // Angle threshold (not used here but kept for reference)
+    [SerializeField] float resetSpeed = 5f;
+    [SerializeField] float rotationSensitivity = 0.2f;
+    [SerializeField] float minRotation = -45f;
+    [SerializeField] float maxRotation = 45f;
+    [SerializeField] float activationThreshold = 30f;
 
     [Header("Dependencies")] [SerializeField]
     ElevatorManager elevatorManager;
@@ -17,13 +17,12 @@ public class LeverMover : MonoBehaviour
     [SerializeField] ElevatorLevels elevatorLevels;
 
     private bool isDragging = false;
-    private float currentRotation = 0f; // Lever angle (positive for right, negative for left)
+    private float currentRotation = 0f;
     private Vector3 lastMousePosition;
-    private bool canRotate = true; // if false, lever input is ignored
+    private bool canRotate = true;
 
     void Start()
     {
-        // Start at neutral (0°)
         currentRotation = 0f;
         lever.rotation = Quaternion.Euler(0, 0, -currentRotation);
     }
@@ -31,7 +30,7 @@ public class LeverMover : MonoBehaviour
     void Update()
     {
         if (!canRotate)
-            return; // Do not allow rotation if locked
+            return;
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -41,7 +40,6 @@ public class LeverMover : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
-            // When the player stops dragging, reset the lever to 0° and stop camera shake.
             StartCoroutine(ResetLever());
             if (CameraElevatorShake.instance != null)
                 CameraElevatorShake.instance.shakeIntensity = 0f;
@@ -50,11 +48,9 @@ public class LeverMover : MonoBehaviour
         if (isDragging)
         {
             RotateLeverWithMouse();
-            // Calculate a normalized input value (between -1 and +1) based on currentRotation:
             float normalizedInput = currentRotation / maxRotation;
             elevatorLevels.UpdateArrowMovement(normalizedInput);
 
-            // Set the camera shake intensity based on how far the lever is rotated.
             if (CameraElevatorShake.instance != null)
                 CameraElevatorShake.instance.shakeIntensity =
                     Mathf.Abs(currentRotation / maxRotation) * 0.05f;
@@ -65,17 +61,15 @@ public class LeverMover : MonoBehaviour
     {
         Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
         lastMousePosition = Input.mousePosition;
-        // Positive mouseDelta.x increases currentRotation:
         float rotationAmount = mouseDelta.x * rotationSensitivity;
         currentRotation = Mathf.Clamp(currentRotation + rotationAmount, minRotation, maxRotation);
-        // Invert for visual display so that turning right shows right rotation:
         lever.rotation = Quaternion.Euler(0, 0, -currentRotation);
     }
 
     private IEnumerator ResetLever()
     {
         Quaternion startRotation = lever.rotation;
-        Quaternion target = Quaternion.Euler(0, 0, 0f); // Neutral (0°)
+        Quaternion target = Quaternion.Euler(0, 0, 0f);
         float t = 0f;
         while (t < 1f)
         {
@@ -89,7 +83,6 @@ public class LeverMover : MonoBehaviour
         currentRotation = 0f;
     }
 
-    // Call this when a mini-game is triggered so the player cannot rotate the lever.
     public void LockLever()
     {
         canRotate = false;
@@ -99,7 +92,6 @@ public class LeverMover : MonoBehaviour
             CameraElevatorShake.instance.shakeIntensity = 0f;
     }
 
-    // Call this when the mini-game finishes so rotation is allowed again.
     public void UnlockLever()
     {
         canRotate = true;

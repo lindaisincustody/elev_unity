@@ -5,14 +5,14 @@ using UnityEngine;
 public class HollowCircleManager : MonoBehaviour
 {
     public GameObject hollowCirclePrefab;
-    public PolygonCollider2D baseRingCollider; // Reference to the ring collider.
+    public PolygonCollider2D baseRingCollider;
 
     private int circlesToSpawn = 1;
     private int circlesHit = 0;
     private int levelsToBeat = 3;
     private int levelsBeat = 0;
     private List<GameObject> activeCircles = new List<GameObject>();
-    private float minDistanceBetweenCircles = 1.5f; // Adjusted for better spacing
+    private float minDistanceBetweenCircles = 1.5f;
     private Animator animator;
     private System.Action Complete;
 
@@ -70,18 +70,17 @@ public class HollowCircleManager : MonoBehaviour
             return;
         }
 
+        Vector2 ringCenter = baseRingCollider.transform.TransformPoint(baseRingCollider.offset);
+        Vector2 firstPoint = baseRingCollider.points[0] + baseRingCollider.offset;
+        Vector2 worldFirstPoint = baseRingCollider.transform.TransformPoint(firstPoint);
+        float ringRadius = Vector2.Distance(ringCenter, worldFirstPoint);
+
         for (int i = 0; i < numberOfCircles; i++)
         {
-            Vector3 spawnPosition = GetRandomPointOnRing();
-            int attempts = 0;
-
-            while (IsTooCloseToExistingCircles(spawnPosition) && attempts < 10)
-            {
-                spawnPosition = GetRandomPointOnRing();
-                attempts++;
-            }
-
-            GameObject circle = Instantiate(hollowCirclePrefab, spawnPosition, Quaternion.identity);
+            float angle = (2 * Mathf.PI / numberOfCircles) * i;
+            Vector2 spawnPosition = ringCenter + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * ringRadius;
+            GameObject circle = Instantiate(hollowCirclePrefab, new Vector3(spawnPosition.x, spawnPosition.y, 0f),
+                Quaternion.identity);
             HollowCircle circleScript = circle.GetComponent<HollowCircle>();
 
             if (circleScript != null)
@@ -90,24 +89,6 @@ public class HollowCircleManager : MonoBehaviour
                 activeCircles.Add(circle);
             }
         }
-    }
-
-    Vector3 GetRandomPointOnRing()
-    {
-        if (baseRingCollider == null || baseRingCollider.pathCount == 0)
-        {
-            Debug.LogError("BaseRingCollider has no defined paths!");
-            return Vector3.zero;
-        }
-
-        // Get the points of the collider path
-        Vector2[] pathPoints = baseRingCollider.points;
-        int randomIndex = Random.Range(0, pathPoints.Length);
-
-        // Transform local collider point to world space
-        Vector2 worldPosition = baseRingCollider.transform.TransformPoint(pathPoints[randomIndex]);
-
-        return new Vector3(worldPosition.x, worldPosition.y, 0f);
     }
 
     bool IsTooCloseToExistingCircles(Vector3 position)

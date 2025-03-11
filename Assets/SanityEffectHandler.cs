@@ -192,7 +192,6 @@ public class SanityEffectHandler : MonoBehaviour
 
     private void ResetEffects()
     {
-        // Use the helper function to reset effects
         ResetEffect(vignette, v => v.intensity.value = 0.1f);
         ResetEffect(chromaticAberration, c => c.intensity.value = 0f);
         ResetEffect(colorAdjustments, c =>

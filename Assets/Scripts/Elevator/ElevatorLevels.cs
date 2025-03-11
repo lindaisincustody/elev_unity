@@ -7,13 +7,12 @@ public class ElevatorLevels : MonoBehaviour
     [SerializeField] private Transform arrow;
     [SerializeField] Color highlightedLevelColor;
     [SerializeField] Color currentLevelColor;
-    [SerializeField] ElevatorManager elevatorManager; // Reference to ElevatorManager
+    [SerializeField] ElevatorManager elevatorManager;
 
-    public float arrowSpeed = 1f; // Units per second for arrow movement
-    private int currentLevel = 1; // Starting at floor 1
-    private int targetLevel = 1; // Will be set dynamically (highlighted requested floor)
+    public float arrowSpeed = 1f;
+    private int currentLevel = 1;
+    private int targetLevel = 1;
 
-    // Call this to update the target floor (the requested floor)
     public void SetTargetLevel(int level)
     {
         if (level < 1 || level > levels.Length) return;
@@ -63,16 +62,13 @@ public class ElevatorLevels : MonoBehaviour
 
     public void HighlightCurrentLevel()
     {
-        // Reset all levels to white.
         foreach (var item in levels)
         {
             item.color = Color.white;
         }
 
-        // Highlight the target (requested) floor.
         if (targetLevel - 1 < levels.Length)
             levels[targetLevel - 1].color = highlightedLevelColor;
-        // Color the current floor.
         if (currentLevel - 1 < levels.Length)
             levels[currentLevel - 1].color = currentLevelColor;
     }
@@ -80,10 +76,6 @@ public class ElevatorLevels : MonoBehaviour
     public int GetCurrentLevel() => currentLevel;
     public int GetTargetLevel() => targetLevel;
 
-    // This method is called every frame while the lever is being dragged.
-    // normalizedInput should be in the range [-1, 1]:
-    // +1 means lever is at +45° (full right -> elevator up),
-    // -1 means lever is at -45° (full left -> elevator down).
     public void UpdateArrowMovement(float normalizedInput)
     {
         float delta = arrowSpeed * normalizedInput * Time.deltaTime;
@@ -94,7 +86,6 @@ public class ElevatorLevels : MonoBehaviour
         newX = Mathf.Clamp(newX, minX, maxX);
         arrow.position = new Vector3(newX, arrow.position.y, arrow.position.z);
 
-        // Check if the arrow is close enough to any level's position.
         float threshold = 0.05f;
         for (int i = 0; i < levels.Length; i++)
         {
@@ -105,7 +96,6 @@ public class ElevatorLevels : MonoBehaviour
                 {
                     currentLevel = reachedFloor;
                     GoTo(currentLevel);
-                    // Trigger the mini game for the reached floor.
                     elevatorManager.StartMiniGameForFloor(currentLevel);
                 }
             }
