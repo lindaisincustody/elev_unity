@@ -174,7 +174,7 @@ GameObject:
   - component: {fileID: 5468036142099492940}
   - component: {fileID: 8711681221161778507}
   - component: {fileID: 3013501357702502671}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sensor
   m_TagString: BatEnemy
   m_Icon: {fileID: 0}
@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 7812484598037352108}
   - component: {fileID: 1356284750688808381}
   m_Layer: 18
-  m_Name: RatEnemy
+  m_Name: Enemy_Slasher
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

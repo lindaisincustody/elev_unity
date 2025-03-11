@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +6,7 @@ public class FightManager : MonoBehaviour
     public static FightManager Instance { get; private set; }
 
     private Fight _activeFight;
-    private List<Enemy> enemies = new();
+    private List<Enemy> _activeEnemies = new List<Enemy>();
 
     private void Awake()
     {
@@ -23,66 +22,93 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
+        // Example: hooking up a "world change" event
         SanityBar.instance.sanityEffectHandler.OnWorldChange += SetUpGlyphs;
     }
-
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
-            foreach (Enemy enemy in enemies)
+        {
+            foreach (Enemy enemy in _activeEnemies)
             {
                 enemy.Get<EnemyHealth>().TakeDamage(999999);
             }
+        }
     }
 
-    public void SetUpFight(Fight fight, List<Enemy> newEnemeies)
+
+    /// <summary>
+    /// Registers a new fight. Kills off previous fight’s enemies if there was an active fight.
+    /// </summary>
+    public void SetUpFight(Fight newFight, List<Enemy> newEnemies)
     {
-        _activeFight = fight;
-        enemies = newEnemeies;
-        Debug.Log(newEnemeies.Count);
-        foreach (Enemy enemy in enemies.ToArray())
+        // If there's an existing fight, kill all existing enemies
+        if (_activeFight != null && _activeFight != newFight)
         {
-            RegisterEnemy(enemy);
+            foreach (Enemy oldEnemy in _activeEnemies)
+            {
+                if (oldEnemy != null && oldEnemy.Get<EnemyHealth>().IsAlive)
+                {
+                    oldEnemy.Get<EnemyHealth>().TakeDamage(9999999);
+                }
+            }
         }
 
-        SetUpGlyphs();
-    }
+        // Set the new fight as active
+        _activeFight = newFight;
+        _activeEnemies = newEnemies;
 
-    private void RegisterEnemy(Enemy enemy)
-    {
-        enemy.OnDeath += OnEnemyDeath;
+        // Register each enemy death callback
+        foreach (Enemy enemy in _activeEnemies)
+        {
+            enemy.OnDeath += OnEnemyDeath;
+        }
+
+        // Update glyphs if needed
+        SetUpGlyphs();
     }
 
     private void OnEnemyDeath(Enemy enemy)
     {
         enemy.OnDeath -= OnEnemyDeath;
-        enemies.Remove(enemy);
-        if (enemies.Count == 0)
+        _activeEnemies.Remove(enemy);
+
+        // If no enemies remain, the fight is over
+        if (_activeEnemies.Count == 0)
+        {
             CompleteFight();
+        }
     }
 
+    /// <summary>
+    /// Called once the current fight’s enemies have all died.
+    /// </summary>
+    private void CompleteFight()
+    {
+        GlyphBook.instance.TranslateGlyphs();
+        SanityBar.instance.SanityToMax();
 
+        // Let the Fight script do any final unlocking or effects
+        _activeFight.CompleteFight();
+    }
+
+    /// <summary>
+    /// Called when the underworld is toggled; if in underworld, show glyphs for active enemies.
+    /// </summary>
     public void SetUpGlyphs()
     {
-        if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
-            return;
+        if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld) return;
 
         GlyphBook.instance.ActivateBook();
-        foreach (Enemy enemy in enemies)
+        foreach (Enemy enemy in _activeEnemies)
         {
             GlyphBook.instance.AddEnemy(enemy);
         }
     }
 
-    private void CompleteFight()
-    {
-        GlyphBook.instance.TranslateGlyphs();
-        SanityBar.instance.SanityToMax();
-        _activeFight.CompleteFight();
-    }
-
     private void OnDestroy()
     {
+        // Example unsubscribing from the "world change" event
         SanityBar.instance.sanityEffectHandler.OnWorldChange -= SetUpGlyphs;
     }
 }

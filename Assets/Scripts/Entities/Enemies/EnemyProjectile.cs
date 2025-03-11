@@ -33,6 +33,9 @@ public class EnemyProjectile : MonoBehaviour
         if (collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
             return;
 
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Sensor"))
+            return;
+
         Destroy(gameObject);
     }
 }

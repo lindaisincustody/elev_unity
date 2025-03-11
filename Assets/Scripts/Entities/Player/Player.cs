@@ -187,6 +187,7 @@ public class Player : MonoBehaviour
 public class PlayerData
 {
     public string lastScene;
+    public string lastFightID;
 
     public int gold;
 

@@ -11,7 +11,6 @@ public abstract class Interactable : MonoBehaviour
     {
         player = Player.instance;
         player.GetInputManager.OnInteract += HandleInteract;
-        Debug.Log(transform.name);
     }
 
     protected virtual void HandleInteract() {

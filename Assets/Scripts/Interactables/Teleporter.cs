@@ -23,6 +23,21 @@ public class Teleporter : Interactable
         base.Start();
         if (!Unlocked)
             gameObject.SetActive(false);
+
+        SanityBar.instance.sanityEffectHandler.OnWorldChange += ChangeTeleportState;
+    }
+
+    private void ChangeTeleportState()
+    {
+        if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        {
+            gameObject.SetActive(false);
+        }
+        else
+        {
+            if (Unlocked)
+                gameObject.SetActive(true);
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -81,6 +96,11 @@ public class Teleporter : Interactable
             default:
                 return ""; // Default return, you can handle this case as needed.
         }
+    }
+
+    private void OnDestroy()
+    {
+        SanityBar.instance.sanityEffectHandler.OnWorldChange -= ChangeTeleportState;
     }
 }
 

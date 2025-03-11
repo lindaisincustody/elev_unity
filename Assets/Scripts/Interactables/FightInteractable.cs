@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class FightInteractable : MonoBehaviour
 {
+    [SerializeField] private Fight fight;
+
     public System.Action OnTriggerEnter;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -16,7 +18,7 @@ public class FightInteractable : MonoBehaviour
 
     public void SetupFight()
     {
-        OnTriggerEnter?.Invoke();
+        fight.StartFight();
     }
 
     private void OnTriggerExit2D(Collider2D collision)

@@ -12,6 +12,7 @@ public class EnemyHealth : Health
     [SerializeField] private EnemyAnimator animator;
     [SerializeField] private float flashDuration = 1f;
 
+    public bool IsAlive => currentHealth > 0;
     public bool Immune { get; set; }
     public Action OnDamage;
     public Action OnDeath;
