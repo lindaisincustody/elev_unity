@@ -10,6 +10,7 @@ public class SanityBar : MonoBehaviour
     public static SanityBar instance;
 
     public delegate void SanityChangeHandler(int amount);
+
     public event SanityChangeHandler OnSanityChange;
 
     public Image mask;
@@ -39,7 +40,7 @@ public class SanityBar : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Alpha0))  // Listen for number 0 key press
+        if (Input.GetKeyDown(KeyCode.Alpha0)) // Listen for number 0 key press
         {
             DecreaseSanityBy50();
         }
@@ -57,7 +58,8 @@ public class SanityBar : MonoBehaviour
 
     public void SanityToMin()
     {
-        DOVirtual.Int(currentSanity, 0, 150, (val) => {
+        DOVirtual.Int(currentSanity, 0, 150, (val) =>
+        {
             currentSanity = val;
             OnSanityChange?.Invoke(currentSanity);
             UpdateSanityUI();
@@ -66,20 +68,21 @@ public class SanityBar : MonoBehaviour
 
     public void SanityToMax()
     {
-        DOVirtual.Int(currentSanity, maxSanity, 150, (val) => {
+        DOVirtual.Int(currentSanity, maxSanity, 150, (val) =>
+        {
             currentSanity = val;
             OnSanityChange?.Invoke(currentSanity);
             UpdateSanityUI();
         }).SetSpeedBased(true);
     }
 
-    private void DecreaseSanityBy50()
+    public void DecreaseSanityBy50()
     {
         currentSanity -= 50;
         if (currentSanity < 0)
             currentSanity = 0;
 
-        OnSanityChange?.Invoke(-50);  // Invoke with negative amount to indicate decrease
+        OnSanityChange?.Invoke(-50); // Invoke with negative amount to indicate decrease
         UpdateSanityUI();
     }
 

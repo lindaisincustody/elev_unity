@@ -19,7 +19,7 @@ public class LeverMover : MonoBehaviour
     private bool isDragging = false;
     private float currentRotation = 0f; // Lever angle (positive for right, negative for left)
     private Vector3 lastMousePosition;
-    private bool canRotate = true; // NEW: if false, lever input is ignored
+    private bool canRotate = true; // if false, lever input is ignored
 
     void Start()
     {
@@ -41,8 +41,10 @@ public class LeverMover : MonoBehaviour
         else if (Input.GetMouseButtonUp(0))
         {
             isDragging = false;
-            // When the player stops dragging, reset the lever to 0°
+            // When the player stops dragging, reset the lever to 0° and stop camera shake.
             StartCoroutine(ResetLever());
+            if (CameraElevatorShake.instance != null)
+                CameraElevatorShake.instance.shakeIntensity = 0f;
         }
 
         if (isDragging)
@@ -51,6 +53,11 @@ public class LeverMover : MonoBehaviour
             // Calculate a normalized input value (between -1 and +1) based on currentRotation:
             float normalizedInput = currentRotation / maxRotation;
             elevatorLevels.UpdateArrowMovement(normalizedInput);
+
+            // Set the camera shake intensity based on how far the lever is rotated.
+            if (CameraElevatorShake.instance != null)
+                CameraElevatorShake.instance.shakeIntensity =
+                    Mathf.Abs(currentRotation / maxRotation) * 0.05f;
         }
     }
 
@@ -88,6 +95,8 @@ public class LeverMover : MonoBehaviour
         canRotate = false;
         isDragging = false;
         StartCoroutine(ResetLever());
+        if (CameraElevatorShake.instance != null)
+            CameraElevatorShake.instance.shakeIntensity = 0f;
     }
 
     // Call this when the mini-game finishes so rotation is allowed again.

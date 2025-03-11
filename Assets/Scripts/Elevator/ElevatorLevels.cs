@@ -11,11 +11,19 @@ public class ElevatorLevels : MonoBehaviour
 
     public float arrowSpeed = 1f; // Units per second for arrow movement
     private int currentLevel = 1; // Starting at floor 1
-    private int targetLevel = 3;
+    private int targetLevel = 1; // Will be set dynamically (highlighted requested floor)
+
+    // Call this to update the target floor (the requested floor)
+    public void SetTargetLevel(int level)
+    {
+        if (level < 1 || level > levels.Length) return;
+        targetLevel = level;
+        HighlightCurrentLevel();
+    }
 
     public void GoUp()
     {
-        if (currentLevel >= targetLevel) return;
+        if (currentLevel >= levels.Length) return;
         currentLevel++;
         StartCoroutine(MoveArrow(levels[currentLevel - 1].transform.position));
     }
@@ -29,7 +37,7 @@ public class ElevatorLevels : MonoBehaviour
 
     public void GoTo(int level)
     {
-        if (level < 1 || level > targetLevel) return;
+        if (level < 1 || level > levels.Length) return;
         currentLevel = level;
         StartCoroutine(MoveArrow(levels[level - 1].transform.position));
     }
@@ -55,13 +63,18 @@ public class ElevatorLevels : MonoBehaviour
 
     public void HighlightCurrentLevel()
     {
+        // Reset all levels to white.
         foreach (var item in levels)
         {
             item.color = Color.white;
         }
 
-        levels[targetLevel - 1].color = highlightedLevelColor;
-        levels[currentLevel - 1].color = currentLevelColor;
+        // Highlight the target (requested) floor.
+        if (targetLevel - 1 < levels.Length)
+            levels[targetLevel - 1].color = highlightedLevelColor;
+        // Color the current floor.
+        if (currentLevel - 1 < levels.Length)
+            levels[currentLevel - 1].color = currentLevelColor;
     }
 
     public int GetCurrentLevel() => currentLevel;
@@ -73,18 +86,16 @@ public class ElevatorLevels : MonoBehaviour
     // -1 means lever is at -45° (full left -> elevator down).
     public void UpdateArrowMovement(float normalizedInput)
     {
-        // Calculate how much to move the arrow this frame:
         float delta = arrowSpeed * normalizedInput * Time.deltaTime;
         float newX = arrow.position.x + delta;
 
-        // Clamp arrow position between first and last level positions.
         float minX = levels[0].transform.position.x;
         float maxX = levels[levels.Length - 1].transform.position.x;
         newX = Mathf.Clamp(newX, minX, maxX);
         arrow.position = new Vector3(newX, arrow.position.y, arrow.position.z);
 
         // Check if the arrow is close enough to any level's position.
-        float threshold = 0.05f; // Adjust as needed.
+        float threshold = 0.05f;
         for (int i = 0; i < levels.Length; i++)
         {
             if (Mathf.Abs(newX - levels[i].transform.position.x) < threshold)
