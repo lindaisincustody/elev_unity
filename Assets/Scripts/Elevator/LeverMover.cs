@@ -1,113 +1,98 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LeverMover : MonoBehaviour
 {
-    [Header("Lever")]
-    [SerializeField] Transform lever;
-    [SerializeField] HandMover hand;
-    [SerializeField] Transform handle;
+    [Header("Lever")] [SerializeField] Transform lever;
     [SerializeField] AnimationCurve leverAnimationCurve;
-    [SerializeField] float rotationSpeed = 0.5f;
-    private float maxRotation = -45f;
+    [SerializeField] float resetSpeed = 5f; // Speed to reset lever smoothly
+    [SerializeField] float rotationSensitivity = 0.2f; // How sensitive the lever is to mouse drag
+    [SerializeField] float minRotation = -45f; // Full left (down)
+    [SerializeField] float maxRotation = 45f; // Full right (up)
+    [SerializeField] float activationThreshold = 30f; // Angle threshold (not used here but kept for reference)
 
-    [Header("Shifter")]
-    [SerializeField] Transform shifter;
-    [SerializeField] AnimationCurve animationCurve;
-    [SerializeField] float pullSpeed = 0.5f;
-    [SerializeField] float yPos = -1;
+    [Header("Dependencies")] [SerializeField]
+    ElevatorManager elevatorManager;
 
-    private System.Action shift;
+    [SerializeField] ElevatorLevels elevatorLevels;
 
-    public void ShiftLeft(System.Action onShift)
+    private bool isDragging = false;
+    private float currentRotation = 0f; // Lever angle (positive for right, negative for left)
+    private Vector3 lastMousePosition;
+    private bool canRotate = true; // NEW: if false, lever input is ignored
+
+    void Start()
     {
-        shift = onShift;
-        hand.MoveHand(handle, () => StartCoroutine(RotateLever(-maxRotation, ResetHand)));
+        // Start at neutral (0°)
+        currentRotation = 0f;
+        lever.rotation = Quaternion.Euler(0, 0, -currentRotation);
     }
 
-    public void ShiftRight(System.Action onShift)
+    void Update()
     {
-        shift = onShift;
-        hand.MoveHand(handle, () => StartCoroutine(RotateLever(maxRotation, ShiftBack)));
-    }
+        if (!canRotate)
+            return; // Do not allow rotation if locked
 
-    private void ShiftBack()
-    {
-        shift?.Invoke();
-        StartCoroutine(RotateLever(0, ResetHand));
-    }
-
-    public void PullLever()
-    {
-        hand.MoveHand(shifter, () => StartCoroutine(ShiftLever(yPos, animationCurve, ResetHand)));
-    }
-
-    public void ResetLever()
-    {
-        hand.MoveHand(handle, () => StartCoroutine(RotateLever(0f, ResetHand)));
-    }
-
-    IEnumerator ShiftLever(float targetPosition, AnimationCurve curve, System.Action OnComplete)
-    {
-        Vector3 startPosition = shifter.position;
-        Vector3 target = new Vector3(startPosition.x, targetPosition, startPosition.z);
-
-        float t = 0;
-        while (t < 1)
+        if (Input.GetMouseButtonDown(0))
         {
-            t += Time.deltaTime * pullSpeed;
-            float curveValue = curve.Evaluate(t);
-            shifter.position = Vector3.Lerp(startPosition, target, curveValue);
-            yield return null;
+            isDragging = true;
+            lastMousePosition = Input.mousePosition;
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            isDragging = false;
+            // When the player stops dragging, reset the lever to 0°
+            StartCoroutine(ResetLever());
         }
 
-        // Ensure the object reaches the target position precisely
-        shifter.position = target;
-
-        // Reverse motion
-        Vector3 reverseStartPosition = target;
-        Vector3 reverseTargetPosition = startPosition;
-
-        t = 0;
-        while (t < 1)
+        if (isDragging)
         {
-            t += Time.deltaTime * pullSpeed;
-            float curveValue = curve.Evaluate(t);
-            shifter.position = Vector3.Lerp(reverseStartPosition, reverseTargetPosition, curveValue);
-            yield return null;
+            RotateLeverWithMouse();
+            // Calculate a normalized input value (between -1 and +1) based on currentRotation:
+            float normalizedInput = currentRotation / maxRotation;
+            elevatorLevels.UpdateArrowMovement(normalizedInput);
         }
-
-        // Ensure the object reaches the start position precisely
-        shifter.position = startPosition;
-
-        // Call the onComplete action
-        OnComplete?.Invoke();
     }
 
-    IEnumerator RotateLever(float targetRotation, System.Action OnComplete)
+    private void RotateLeverWithMouse()
+    {
+        Vector3 mouseDelta = Input.mousePosition - lastMousePosition;
+        lastMousePosition = Input.mousePosition;
+        // Positive mouseDelta.x increases currentRotation:
+        float rotationAmount = mouseDelta.x * rotationSensitivity;
+        currentRotation = Mathf.Clamp(currentRotation + rotationAmount, minRotation, maxRotation);
+        // Invert for visual display so that turning right shows right rotation:
+        lever.rotation = Quaternion.Euler(0, 0, -currentRotation);
+    }
+
+    private IEnumerator ResetLever()
     {
         Quaternion startRotation = lever.rotation;
-        Quaternion target = Quaternion.Euler(0, 0, targetRotation);
-
-        float t = 0;
-        while (t < 1)
+        Quaternion target = Quaternion.Euler(0, 0, 0f); // Neutral (0°)
+        float t = 0f;
+        while (t < 1f)
         {
-            t += Time.deltaTime * rotationSpeed;
+            t += Time.deltaTime * resetSpeed;
             float curveValue = leverAnimationCurve.Evaluate(t);
             lever.rotation = Quaternion.Lerp(startRotation, target, curveValue);
             yield return null;
         }
 
-        // Ensure the object reaches the target rotation precisely
         lever.rotation = target;
-
-        // Call the onComplete action
-        OnComplete?.Invoke();
+        currentRotation = 0f;
     }
 
-    private void ResetHand()
+    // Call this when a mini-game is triggered so the player cannot rotate the lever.
+    public void LockLever()
     {
-        hand.MoveHandBack();
+        canRotate = false;
+        isDragging = false;
+        StartCoroutine(ResetLever());
+    }
+
+    // Call this when the mini-game finishes so rotation is allowed again.
+    public void UnlockLever()
+    {
+        canRotate = true;
     }
 }

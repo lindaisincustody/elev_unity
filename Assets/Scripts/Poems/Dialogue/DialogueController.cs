@@ -7,11 +7,12 @@ using System;
 
 public class DialogueController : MonoBehaviour
 {
-    [Header("DialogueBox References")]
-    [SerializeField] GameObject CanvasBG;
+    [Header("DialogueBox References")] [SerializeField]
+    GameObject CanvasBG;
+
     [SerializeField] GameObject DialogueObj;
     [SerializeField] GameObject NarratorObj;
-    [SerializeField] TextMeshProUGUI dialogueText;    
+    [SerializeField] TextMeshProUGUI dialogueText;
     [SerializeField] TextMeshProUGUI narratorText;
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Image characterImage;
@@ -45,7 +46,8 @@ public class DialogueController : MonoBehaviour
         playerInput.OnInteract += NextAction;
         playerInput.OnUICancel += ExitDialogue;
 
-        dialogueUI = new DialogueUI(DialogueObj, NarratorObj, dialogueText, nameText, characterImage, characterImageHolder);
+        dialogueUI = new DialogueUI(DialogueObj, NarratorObj, dialogueText, nameText, characterImage,
+            characterImageHolder);
     }
 
     private void OnDestroy()
@@ -73,6 +75,7 @@ public class DialogueController : MonoBehaviour
         {
             ActivateNarrator(newDialogueData);
         }
+
         ShowNextDialogueLine();
     }
 
@@ -85,6 +88,7 @@ public class DialogueController : MonoBehaviour
     private void ActivateDialogue(DialogueData newDialogueData)
     {
         CanvasBG.SetActive(true);
+        characterImageHolder.SetActive(true);
         playerMovement.SetMovement(false);
         dialogueUI.ActivateDialogueBox(newDialogueData);
     }
@@ -92,6 +96,7 @@ public class DialogueController : MonoBehaviour
     private void ActivateSelfDialogue(DialogueData newDialogueData)
     {
         CanvasBG.SetActive(true);
+        characterImageHolder.SetActive(true);
         playerMovement.SetMovement(false);
         dialogueUI.ActivateDialogueBox(newDialogueData);
     }
@@ -119,6 +124,7 @@ public class DialogueController : MonoBehaviour
                         StopCoroutine(dialogueCoroutine);
                         narratorText.text = fullText;
                     }
+
                     dialogueCoroutine = null;
                 }
                 else
@@ -128,6 +134,7 @@ public class DialogueController : MonoBehaviour
                         StopCoroutine(dialogueCoroutine); // Stop the currently running coroutine
                         dialogueText.text = fullText; // Immediately display the full text
                     }
+
                     dialogueCoroutine = null; // Reset coroutine variable
                 }
             }
@@ -244,7 +251,7 @@ public class DialogueController : MonoBehaviour
         if (currentTrigger != null)
         {
             currentTrigger.ChangeMaterial();
-            
+
             currentTrigger = null; // Reset the trigger reference after use
         }
     }

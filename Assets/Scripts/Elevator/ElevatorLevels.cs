@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class ElevatorLevels : MonoBehaviour
@@ -8,35 +7,31 @@ public class ElevatorLevels : MonoBehaviour
     [SerializeField] private Transform arrow;
     [SerializeField] Color highlightedLevelColor;
     [SerializeField] Color currentLevelColor;
+    [SerializeField] ElevatorManager elevatorManager; // Reference to ElevatorManager
 
-    private float arrowSpeed = 1f;
-    private int currentLevel = 1;
+    public float arrowSpeed = 1f; // Units per second for arrow movement
+    private int currentLevel = 1; // Starting at floor 1
     private int targetLevel = 3;
-
-    public void GoDown()
-    {
-        if (currentLevel - 1 < 0)
-            return;
-
-        currentLevel--;
-        StartCoroutine(MoveArrow(levels[currentLevel - 1].transform.position));
-    }
 
     public void GoUp()
     {
-        if (currentLevel + 1 > levels.Length - 1)
-            return;
-
+        if (currentLevel >= targetLevel) return;
         currentLevel++;
+        StartCoroutine(MoveArrow(levels[currentLevel - 1].transform.position));
+    }
+
+    public void GoDown()
+    {
+        if (currentLevel <= 1) return;
+        currentLevel--;
         StartCoroutine(MoveArrow(levels[currentLevel - 1].transform.position));
     }
 
     public void GoTo(int level)
     {
-        if (level > levels.Length - 1 || level < 0)
-            return;
-
-        StartCoroutine(MoveArrow(levels[level].transform.position));
+        if (level < 1 || level > targetLevel) return;
+        currentLevel = level;
+        StartCoroutine(MoveArrow(levels[level - 1].transform.position));
     }
 
     private IEnumerator MoveArrow(Vector3 moveTo)
@@ -44,8 +39,7 @@ public class ElevatorLevels : MonoBehaviour
         float startX = arrow.position.x;
         float distance = Mathf.Abs(moveTo.x - startX);
         float totalTime = distance / arrowSpeed;
-        float elapsedTime = 0;
-
+        float elapsedTime = 0f;
         while (elapsedTime < totalTime)
         {
             float t = elapsedTime / totalTime;
@@ -66,18 +60,44 @@ public class ElevatorLevels : MonoBehaviour
             item.color = Color.white;
         }
 
-        // minus one, because levels start from 1
         levels[targetLevel - 1].color = highlightedLevelColor;
         levels[currentLevel - 1].color = currentLevelColor;
     }
 
-    public int GetCurrentLevel()
-    {
-        return currentLevel;
-    }    
+    public int GetCurrentLevel() => currentLevel;
+    public int GetTargetLevel() => targetLevel;
 
-    public int GetTargetLevel()
+    // This method is called every frame while the lever is being dragged.
+    // normalizedInput should be in the range [-1, 1]:
+    // +1 means lever is at +45° (full right -> elevator up),
+    // -1 means lever is at -45° (full left -> elevator down).
+    public void UpdateArrowMovement(float normalizedInput)
     {
-        return targetLevel;
+        // Calculate how much to move the arrow this frame:
+        float delta = arrowSpeed * normalizedInput * Time.deltaTime;
+        float newX = arrow.position.x + delta;
+
+        // Clamp arrow position between first and last level positions.
+        float minX = levels[0].transform.position.x;
+        float maxX = levels[levels.Length - 1].transform.position.x;
+        newX = Mathf.Clamp(newX, minX, maxX);
+        arrow.position = new Vector3(newX, arrow.position.y, arrow.position.z);
+
+        // Check if the arrow is close enough to any level's position.
+        float threshold = 0.05f; // Adjust as needed.
+        for (int i = 0; i < levels.Length; i++)
+        {
+            if (Mathf.Abs(newX - levels[i].transform.position.x) < threshold)
+            {
+                int reachedFloor = i + 1;
+                if (reachedFloor != currentLevel)
+                {
+                    currentLevel = reachedFloor;
+                    GoTo(currentLevel);
+                    // Trigger the mini game for the reached floor.
+                    elevatorManager.StartMiniGameForFloor(currentLevel);
+                }
+            }
+        }
     }
 }

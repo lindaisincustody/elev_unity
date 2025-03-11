@@ -17,7 +17,7 @@ public class Constants
         public const string CoordinationGameScene = "MazeGame";
         public const string MainScene = "City";
         public const string TrainStation = "TrainStation";
-        public const string HotelScene = "HotelScene";
+        public const string HotelScene = "Hotel";
         public const string MainMenu = "MainMenu";
     }
 }

@@ -5,88 +5,77 @@ using TMPro;
 
 public class ElevatorManager : MonoBehaviour
 {
-    [Header("Dependencies")]
-    [SerializeField] CircleMovement circleMovement;
+    [Header("Dependencies")] [SerializeField]
+    CircleMovement circleMovement;
+
     [SerializeField] HollowCircleManager circleManager;
     [SerializeField] LeverMover leverMover;
     [SerializeField] ElevatorLevels levels;
-    [SerializeField] HandMover handMover;
 
-    [Header("References")]
-    [SerializeField] GameObject movingCircle;
+    [Header("References")] [SerializeField]
+    GameObject movingCircle;
+
     [SerializeField] GameObject circle;
     [SerializeField] SpriteRenderer fadeOut;
 
-    [Header("Circle Game Levels To Beat")]
-    [SerializeField] int layers = 3;
+    [Header("Circle Game Levels To Beat")] [SerializeField]
+    int totalFloors = 3;
 
-    [Space(20)]
-    [Header("End Screen")]
-    [SerializeField] Animator endAnimator;
-    [SerializeField] TextMeshProUGUI thanksText;
+    private int currentFloor = 0;
+    private bool[] floorsCompleted;
 
-    private bool gameComplete = false;
- 
     void Start()
     {
-        handMover.SetActionOnHandReset(StartCircleGame);
-        StartCircleGame();
+        floorsCompleted = new bool[totalFloors];
     }
 
-    private void StartCircleGame()
+    public void StartMiniGameForFloor(int floor)
     {
-        if (gameComplete)
+        if (floorsCompleted[floor - 1])
         {
-            StartCoroutine(Done());
+            // Already completed, so no need to lock.
             return;
         }
 
-        levels.HighlightCurrentLevel();
-        // If level is done, finish
-        if (levels.GetCurrentLevel() == levels.GetTargetLevel())
-        {
-            gameComplete = true;
-            leverMover.PullLever();
-        }
-        else
-        {
-            StartCoroutine(ActivateMiniGame());
-        }
+        // Lock the lever to prevent further rotation while the mini-game is active.
+        leverMover.LockLever();
+        StartCoroutine(ActivateMiniGame(floor));
     }
 
-    private IEnumerator Done()
+
+    private IEnumerator ActivateMiniGame(int floor)
     {
-        yield return new WaitForSeconds(0.5f);
-        endAnimator.SetTrigger("End");
+        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
+        fadeOut.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(2f);
-        thanksText.alpha = 0f;
-
-        // Turn on the text
-        thanksText.gameObject.SetActive(true);
         float fadeDuration = 0.5f;
         float elapsedTime = 0f;
-        // Fade in
-        elapsedTime = 0f;
 
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(0f, 1f, elapsedTime / fadeDuration);
-            thanksText.alpha = alpha;
+            float alpha = Mathf.Lerp(0f, 0.95f, elapsedTime / fadeDuration);
+            fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, alpha);
             yield return null;
         }
 
-        // Ensure the text reaches fully visible
-        thanksText.alpha = 1f;
+        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0.95f);
+        yield return new WaitForSeconds(1f);
+
+        movingCircle.SetActive(true);
+        circle.SetActive(true);
+        circleManager.ActivateGame(3, () => MiniGameComplete(floor));
+        yield return new WaitForSeconds(0.5f);
+
+        circleMovement.isActive = true;
     }
 
-    private void GameComplete()
+    private void MiniGameComplete(int floor)
     {
-        StartCoroutine(DeactivateMiniGame());
+        StartCoroutine(DeactivateMiniGame(floor));
     }
 
-    private IEnumerator DeactivateMiniGame()
+    private IEnumerator DeactivateMiniGame(int floor)
     {
         circleMovement.isActive = false;
         yield return new WaitForSeconds(1f);
@@ -105,41 +94,19 @@ public class ElevatorManager : MonoBehaviour
             fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, alpha);
             yield return null;
         }
-        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
 
+        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
         fadeOut.gameObject.SetActive(false);
-        leverMover.ShiftRight(LevelGoUp);
+
+        floorsCompleted[floor - 1] = true;
+
+        // Unlock the lever now that the mini-game is complete.
+        leverMover.UnlockLever();
     }
 
-    private IEnumerator ActivateMiniGame()
+
+    public bool IsFloorUnlocked(int floor)
     {
-        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
-        fadeOut.gameObject.SetActive(true);
-
-        // Fade in the SpriteRenderer
-        float fadeDuration = 0.5f;
-        float elapsedTime = 0f;
-
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(0f, 0.95f, elapsedTime / fadeDuration);
-            fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, alpha);
-            yield return null;
-        }
-
-        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0.95f);
-
-        yield return new WaitForSeconds(1f);
-        movingCircle.SetActive(true);
-        circle.SetActive(true);
-        circleManager.ActivateGame(layers, GameComplete);
-        yield return new WaitForSeconds(0.5f);
-        circleMovement.isActive = true;
-    }
-
-    private void LevelGoUp()
-    {
-        levels.GoUp();
+        return floorsCompleted[floor - 1]; // Floors are 1-based
     }
 }

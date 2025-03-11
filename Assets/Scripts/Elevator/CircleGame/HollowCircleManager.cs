@@ -5,30 +5,29 @@ using UnityEngine;
 public class HollowCircleManager : MonoBehaviour
 {
     public GameObject hollowCirclePrefab;
+    public PolygonCollider2D baseRingCollider; // Reference to the ring collider.
 
     private int circlesToSpawn = 1;
     private int circlesHit = 0;
     private int levelsToBeat = 3;
     private int levelsBeat = 0;
     private List<GameObject> activeCircles = new List<GameObject>();
-    private float minDistanceBetweenCircles = 5.0f; 
+    private float minDistanceBetweenCircles = 1.5f; // Adjusted for better spacing
     private Animator animator;
-
     private System.Action Complete;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-
         animator.enabled = false;
     }
 
-    public void ActivateGame(int levels, System.Action onCompelete)
+    public void ActivateGame(int levels, System.Action onComplete)
     {
         circlesToSpawn = 1;
         circlesHit = 0;
         levelsBeat = 0;
-        Complete = onCompelete;
+        Complete = onComplete;
         levelsToBeat = levels;
         SpawnHollowCircles(circlesToSpawn);
     }
@@ -37,10 +36,8 @@ public class HollowCircleManager : MonoBehaviour
     {
         if (activeCircles.Contains(hollowCircle))
         {
-            int index = activeCircles.IndexOf(hollowCircle);
-            activeCircles.RemoveAt(index);
+            activeCircles.Remove(hollowCircle);
             Destroy(hollowCircle);
-
             circlesHit++;
 
             if (circlesHit == circlesToSpawn)
@@ -55,22 +52,33 @@ public class HollowCircleManager : MonoBehaviour
         circlesHit = 0;
         circlesToSpawn++;
         levelsBeat++;
-        if (levelsToBeat == levelsBeat)
+        if (levelsBeat == levelsToBeat)
+        {
             Complete?.Invoke();
+        }
         else
+        {
             SpawnHollowCircles(circlesToSpawn);
+        }
     }
 
     void SpawnHollowCircles(int numberOfCircles)
     {
+        if (baseRingCollider == null)
+        {
+            Debug.LogError("BaseRingCollider is not assigned!");
+            return;
+        }
+
         for (int i = 0; i < numberOfCircles; i++)
         {
-            Vector3 spawnPosition = GetRandomSpawnPosition();
-            for (int j = 0; j < 5; j++)
+            Vector3 spawnPosition = GetRandomPointOnRing();
+            int attempts = 0;
+
+            while (IsTooCloseToExistingCircles(spawnPosition) && attempts < 10)
             {
-                if (IsTooCloseToExistingCircles(spawnPosition))
-                    spawnPosition = GetRandomSpawnPosition();
-                else break;
+                spawnPosition = GetRandomPointOnRing();
+                attempts++;
             }
 
             GameObject circle = Instantiate(hollowCirclePrefab, spawnPosition, Quaternion.identity);
@@ -78,19 +86,28 @@ public class HollowCircleManager : MonoBehaviour
 
             if (circleScript != null)
             {
-                circleScript.Initialize(this); 
+                circleScript.Initialize(this);
                 activeCircles.Add(circle);
             }
         }
     }
 
-    Vector3 GetRandomSpawnPosition()
+    Vector3 GetRandomPointOnRing()
     {
-        float angle = Random.Range(0f, 360f); // Generate a random angle between 0 and 360 degrees.
-        float radius = 5f; 
+        if (baseRingCollider == null || baseRingCollider.pathCount == 0)
+        {
+            Debug.LogError("BaseRingCollider has no defined paths!");
+            return Vector3.zero;
+        }
 
-        Vector3 position = Quaternion.Euler(0, 0, angle) * Vector3.up * radius;
-        return position;
+        // Get the points of the collider path
+        Vector2[] pathPoints = baseRingCollider.points;
+        int randomIndex = Random.Range(0, pathPoints.Length);
+
+        // Transform local collider point to world space
+        Vector2 worldPosition = baseRingCollider.transform.TransformPoint(pathPoints[randomIndex]);
+
+        return new Vector3(worldPosition.x, worldPosition.y, 0f);
     }
 
     bool IsTooCloseToExistingCircles(Vector3 position)
@@ -102,6 +119,7 @@ public class HollowCircleManager : MonoBehaviour
                 return true;
             }
         }
+
         return false;
     }
 
@@ -127,5 +145,4 @@ public class HollowCircleManager : MonoBehaviour
         animator.enabled = true;
         animator.SetTrigger("Ring_tw");
     }
-
 }

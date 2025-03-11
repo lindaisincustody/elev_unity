@@ -9,10 +9,13 @@ public class Teleporter : Interactable
     [SerializeField] private UnityEvent OnTeleport;
     [SerializeField] public bool Unlocked = true;
     [SerializeField] public Teleport teleport;
-    [Header("Scene To Load")]
-    [SerializeField] Scene sceneName;
-    [Header("Position To Move")]
-    [SerializeField] float scene_X;
+
+    [Header("Scene To Load")] [SerializeField]
+    Scene sceneName;
+
+    [Header("Position To Move")] [SerializeField]
+    float scene_X;
+
     [SerializeField] float scene_Y;
 
     protected override void Start()
@@ -97,6 +100,3 @@ public enum Scene
     Station,
     Hotel
 }
-
-
-
