@@ -23,7 +23,7 @@ public class Fight : MonoBehaviour
         }
         else
         {
-            lastFightId = defaultFightId;
+            lastFightId = playerData.lastFightID;
         }
 
         if (lastFightId == fightID)
