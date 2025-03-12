@@ -44,6 +44,11 @@ public class SanityBar : MonoBehaviour
         {
             DecreaseSanityBy50();
         }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            AddSanity(50);
+        }
     }
 
     public void AddSanity(int amount)

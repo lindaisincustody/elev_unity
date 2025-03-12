@@ -89,7 +89,6 @@ public class ElevatorManager : MonoBehaviour
         if (currentNPC == null || floor != currentNPC.requestedFloor)
             return;
 
-
         leverMover.LockLever();
         StartCoroutine(ActivateMiniGame(floor));
     }
@@ -151,6 +150,12 @@ public class ElevatorManager : MonoBehaviour
 
         SanityBar.instance.DecreaseSanityBy50();
 
+        if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        {
+            EndGame();
+            yield break;
+        }
+
         if (CameraElevatorShake.instance != null)
             CameraElevatorShake.instance.shakeIntensity = 0f;
 
@@ -167,14 +172,50 @@ public class ElevatorManager : MonoBehaviour
             }
         }
 
-
         yield return new WaitForSeconds(1f);
         if (npcUIPanel != null)
             npcUIPanel.SetActive(false);
 
+
         leverMover.UnlockLever();
 
         SpawnNPCPassenger();
+    }
+
+    private void EndGame()
+    {
+        Debug.Log("Game Over: Player is in the underworld. Ending game and respawning...");
+
+        GameObject player = GameObject.FindWithTag("Player");
+        if (player != null)
+        {
+            player.transform.position = new Vector2(31.97f, 49.23f);
+        }
+        else
+        {
+            Debug.LogWarning("Player object not found!");
+        }
+
+        if (npcUIPanel != null)
+            npcUIPanel.SetActive(false);
+
+        if (leverMover != null)
+            leverMover.enabled = false;
+
+        if (levels != null)
+            levels.enabled = false;
+
+        if (movingCircle != null)
+            movingCircle.SetActive(false);
+        if (circle != null)
+            circle.SetActive(false);
+        if (fadeOut != null)
+            fadeOut.gameObject.SetActive(false);
+
+        if (CameraElevatorShake.instance != null)
+            CameraElevatorShake.instance.shakeIntensity = 0f;
+
+        this.enabled = false;
     }
 
     public bool IsFloorUnlocked(int floor)

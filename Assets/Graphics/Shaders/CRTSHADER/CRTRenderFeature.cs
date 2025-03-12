@@ -51,11 +51,6 @@ public class CRTRenderFeature : ScriptableRendererFeature
             return;
         }
 
-        if (SanityBar.instance.sanityEffectHandler != null &&
-            SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
-        {
-            return;
-        }
 
         renderer.EnqueuePass(m_CRTPass);
     }
