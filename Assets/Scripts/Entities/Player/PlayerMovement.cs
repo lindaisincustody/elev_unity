@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -60,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (isAttacking)
         {
-            // movement = Vector2.zero;
             baseMoveSpeed = 2.75f;
             StopMovementSound();
             animator.SetFloat("Horizontal", 0);
@@ -70,8 +70,18 @@ public class PlayerMovement : MonoBehaviour
         }
         else
         {
-            baseMoveSpeed = 5.5f;
+            string sceneName = SceneManager.GetActiveScene().name;
+
+            if (sceneName == Constants.SceneNames.MainScene || sceneName == Constants.SceneNames.TrainStation)
+            {
+                baseMoveSpeed = 3.5f;
+            }
+            else
+            {
+                baseMoveSpeed = 5.5f;
+            }
         }
+
 
         if (!_canMove)
         {

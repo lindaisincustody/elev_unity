@@ -1,15 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InventoryItemSlot : MonoBehaviour
 {
     public Image image;
     public Sprite pass_parts_3;
-    private Item currentItem; // Store the current item
-
+    private Item currentItem;
     public bool isEquiped;
+
+    public int slotIndex;
 
     public void Equip(Item item)
     {
@@ -20,12 +20,13 @@ public class InventoryItemSlot : MonoBehaviour
 
     public Item GetItem()
     {
-        return isEquiped ? currentItem : null; 
+        return isEquiped ? currentItem : null;
     }
+
     public void Clear()
     {
-        currentItem = null; // Clear the stored item
-        image.sprite = pass_parts_3; // Remove the sprite
+        currentItem = null;
+        image.sprite = pass_parts_3;
         isEquiped = false;
     }
 

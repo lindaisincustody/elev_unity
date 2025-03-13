@@ -333,15 +333,6 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Poem"",
-                    ""type"": ""Button"",
-                    ""id"": ""ee2537fc-9f1d-4094-b0b3-aad8740d2ab5"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -611,6 +602,17 @@ namespace UnityEngine.InputSystem
                 },
                 {
                     ""name"": """",
+                    ""id"": ""00e68df7-d963-4aac-940d-89385e7b5811"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Navigate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
@@ -639,17 +641,6 @@ namespace UnityEngine.InputSystem
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Inventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""9b5b31c0-ddb2-428d-8bc6-1819d418623c"",
-                    ""path"": ""<Keyboard>/e"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Poem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -734,7 +725,6 @@ namespace UnityEngine.InputSystem
             m_UI_Submit = m_UI.FindAction("Submit", throwIfNotFound: true);
             m_UI_Cancel = m_UI.FindAction("Cancel", throwIfNotFound: true);
             m_UI_Inventory = m_UI.FindAction("Inventory", throwIfNotFound: true);
-            m_UI_Poem = m_UI.FindAction("Poem", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -894,7 +884,6 @@ namespace UnityEngine.InputSystem
         private readonly InputAction m_UI_Submit;
         private readonly InputAction m_UI_Cancel;
         private readonly InputAction m_UI_Inventory;
-        private readonly InputAction m_UI_Poem;
         public struct UIActions
         {
             private @Controls m_Wrapper;
@@ -903,7 +892,6 @@ namespace UnityEngine.InputSystem
             public InputAction @Submit => m_Wrapper.m_UI_Submit;
             public InputAction @Cancel => m_Wrapper.m_UI_Cancel;
             public InputAction @Inventory => m_Wrapper.m_UI_Inventory;
-            public InputAction @Poem => m_Wrapper.m_UI_Poem;
             public InputActionMap Get() { return m_Wrapper.m_UI; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -925,9 +913,6 @@ namespace UnityEngine.InputSystem
                 @Inventory.started += instance.OnInventory;
                 @Inventory.performed += instance.OnInventory;
                 @Inventory.canceled += instance.OnInventory;
-                @Poem.started += instance.OnPoem;
-                @Poem.performed += instance.OnPoem;
-                @Poem.canceled += instance.OnPoem;
             }
 
             private void UnregisterCallbacks(IUIActions instance)
@@ -944,9 +929,6 @@ namespace UnityEngine.InputSystem
                 @Inventory.started -= instance.OnInventory;
                 @Inventory.performed -= instance.OnInventory;
                 @Inventory.canceled -= instance.OnInventory;
-                @Poem.started -= instance.OnPoem;
-                @Poem.performed -= instance.OnPoem;
-                @Poem.canceled -= instance.OnPoem;
             }
 
             public void RemoveCallbacks(IUIActions instance)
@@ -1025,7 +1007,6 @@ namespace UnityEngine.InputSystem
             void OnSubmit(InputAction.CallbackContext context);
             void OnCancel(InputAction.CallbackContext context);
             void OnInventory(InputAction.CallbackContext context);
-            void OnPoem(InputAction.CallbackContext context);
         }
     }
 }

@@ -7,15 +7,17 @@ using UnityEngine.InputSystem;
 public class InputManager : MonoBehaviour
 {
     // Player
-    public event Action OnInteract    = delegate { };
-    public event Action OnCancel      = delegate { };
-    public event Action OnJump        = delegate { };
-    public event Action OnFire        = delegate { };
-    public event Action OnNext        = delegate { };
-    public event Action OnShoot       = delegate { };
-    public event Action OnDash        = delegate { };
+    public event Action OnInteract = delegate { };
+    public event Action OnCancel = delegate { };
+    public event Action OnJump = delegate { };
+    public event Action OnFire = delegate { };
+    public event Action OnNext = delegate { };
+    public event Action OnShoot = delegate { };
+
+    public event Action OnDash = delegate { };
+
     // UI
-    public event Action<Vector2> OnNavigate    = delegate { };
+    public event Action<Vector2> OnNavigate = delegate { };
     public event Action OnSubmit = delegate { };
     public event Action OnUICancel = delegate { };
     public event Action OnInventory = delegate { };
@@ -45,8 +47,6 @@ public class InputManager : MonoBehaviour
         inputActions.UI.Submit.started += Sumbit;
         inputActions.UI.Cancel.started += UICancel;
         inputActions.UI.Inventory.started += UIInventory;
-        inputActions.UI.Poem.started += UIPoem;
-
     }
 
     private void OnDisable()
@@ -118,7 +118,7 @@ public class InputManager : MonoBehaviour
             OnNext();
         }
     }
-    
+
     private void Shoot(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -140,14 +140,6 @@ public class InputManager : MonoBehaviour
         if (context.started)
         {
             OnInventory();
-        }
-    }
-
-    private void UIPoem(InputAction.CallbackContext context)
-    {
-        if (context.started)
-        {
-            OnPoem();
         }
     }
 }

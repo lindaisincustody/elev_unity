@@ -309,15 +309,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "Poem",
-                    "type": "Button",
-                    "id": "ee2537fc-9f1d-4094-b0b3-aad8740d2ab5",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -587,6 +578,17 @@
                 },
                 {
                     "name": "",
+                    "id": "00e68df7-d963-4aac-940d-89385e7b5811",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Navigate",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "9e92bb26-7e3b-4ec4-b06b-3c8f8e498ddc",
                     "path": "<Keyboard>/space",
                     "interactions": "",
@@ -615,17 +617,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Inventory",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "9b5b31c0-ddb2-428d-8bc6-1819d418623c",
-                    "path": "<Keyboard>/e",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Poem",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

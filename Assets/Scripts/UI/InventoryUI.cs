@@ -10,24 +10,27 @@ public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance { get; private set; }
 
-    [Header("Self References")]
-    [SerializeField] GameObject inventoryPanel;
+    [Header("Self References")] [SerializeField]
+    GameObject inventoryPanel;
+
     [SerializeField] GameObject inventoryBG;
     [SerializeField] TextMeshProUGUI gold;
-    [Header("Level References")]
-    [SerializeField] TextMeshProUGUI strengthLevel;
+
+    [Header("Level References")] [SerializeField]
+    TextMeshProUGUI strengthLevel;
+
     [SerializeField] TextMeshProUGUI intelligenceLevel;
     [SerializeField] TextMeshProUGUI coordinationLevel;
     [SerializeField] TextMeshProUGUI neutralityLevel;
 
-    [Header("Items")]
-    [SerializeField] InventoryItemSlot[] itemSlots;
+    [Header("Items")] [SerializeField] InventoryItemSlot[] itemSlots;
 
     [SerializeField] private Volume postProcessingVolume;
 
-    [Header("Effect Display")]
-    [SerializeField] private Image itemIcon;  // For displaying the item icon
-    [SerializeField] private TextMeshProUGUI effectDurationText;  // For displaying the duration of the effect
+    [Header("Effect Display")] [SerializeField]
+    private Image itemIcon; // For displaying the item icon
+
+    [SerializeField] private TextMeshProUGUI effectDurationText; // For displaying the duration of the effect
 
     Player player;
     ItemsInventory itemsInventory;
@@ -89,9 +92,10 @@ public class InventoryUI : MonoBehaviour
         inventoryPanel.SetActive(isInventoryOpen);
         inventoryBG.SetActive(isInventoryOpen);
         playerMovement.SetMovement(!isInventoryOpen);
-        if(isInventoryOpen)
-        HighlightItem(selectedIndex);
-        else RemoveHighlight(selectedIndex);
+        if (isInventoryOpen)
+            HighlightItem(selectedIndex);
+        else
+            RemoveHighlight(selectedIndex);
     }
 
     public void CanOpenInventory(bool canOpen)
@@ -117,30 +121,32 @@ public class InventoryUI : MonoBehaviour
                 Debug.LogError("Too many items, not enough slots to display");
                 break;
             }
+
             itemSlots[slotIndex].Equip(item);
-            if (slotIndex == selectedIndex) // Highlight the selected index item
+            if (slotIndex == selectedIndex)
             {
                 HighlightItem(slotIndex);
             }
+
             slotIndex++;
         }
     }
 
-    private void UseItem()
+    public void UseItem()
     {
         if (!isInventoryOpen)
             return;
 
-        Item item = itemSlots[selectedIndex].GetItem(); // Retrieve the item from the selected slot
+        Item item = itemSlots[selectedIndex].GetItem();
         if (item == null)
         {
             Debug.Log("No item in the selected slot.");
             return;
         }
 
-        Player.instance.ItemsInventory.RemoveItem(item); // Remove the item from the inventory
+        Player.instance.ItemsInventory.RemoveItem(item);
 
-        itemSlots[selectedIndex].Clear(); // Clear the slot after removing the item
+        itemSlots[selectedIndex].Clear();
         if (itemsInventory.GetAllItems().Count > 0)
         {
             selectedIndex = Mathf.Min(selectedIndex, itemsInventory.GetAllItems().Count - 1);
@@ -148,71 +154,46 @@ public class InventoryUI : MonoBehaviour
         }
         else
         {
-            //inventoryPanel.SetActive(false); 
         }
 
         player.PlayerAbilities.Add(item.ability);
     }
-
 
     private void UpdateGoldText()
     {
         gold.text = player.GetGold().ToString();
     }
 
-    private void HighlightItem(int index)
+    public void HighlightItem(int index)
     {
         if (index >= 0 && index < itemSlots.Length)
-            itemSlots[index].GetComponent<Image>().color = Color.blue; // Example color
+            itemSlots[index].GetComponent<Image>().color = Color.blue;
     }
 
     private void RemoveHighlight(int index)
     {
         if (index >= 0 && index < itemSlots.Length)
-            itemSlots[index].GetComponent<Image>().color = Color.white; // Default color
+            itemSlots[index].GetComponent<Image>().color = Color.white;
     }
 
-    private void OnNavigate(Vector2 direction)
+    private void OnNavigate(Vector2 mousePosition)
     {
         if (!isInventoryOpen) return;
 
-        int prevIndex = selectedIndex;
-        int totalItems = itemsInventory.GetAllItems().Count; // Assuming you only want to count filled slots.
+        for (int i = 0; i < itemSlots.Length; i++)
+        {
+            RectTransform slotRect = itemSlots[i].GetComponent<RectTransform>();
+            if (RectTransformUtility.RectangleContainsScreenPoint(slotRect, mousePosition))
+            {
+                if (selectedIndex != i)
+                {
+                    RemoveHighlight(selectedIndex);
+                    selectedIndex = i;
+                    HighlightItem(selectedIndex);
+                }
 
-        if (direction.y > 0) // Up
-        {
-            if (selectedIndex >= numberOfColumns) // Move up a row
-                selectedIndex -= numberOfColumns;
-            else
-                selectedIndex = ((totalItems - 1) / numberOfColumns) * numberOfColumns + (selectedIndex % numberOfColumns); // Wrap to the bottom
-        }
-        else if (direction.y < 0) // Down
-        {
-            if (selectedIndex + numberOfColumns < totalItems) // Move down a row
-                selectedIndex += numberOfColumns;
-            else
-                selectedIndex = selectedIndex % numberOfColumns; // Wrap to the top
-        }
-
-        if (direction.x > 0) // Right
-        {
-            selectedIndex++;
-            if (selectedIndex >= totalItems) // Wrap to the first item
-                selectedIndex = 0;
-        }
-        else if (direction.x < 0) // Left
-        {
-            if (selectedIndex == 0) // Wrap to the last item
-                selectedIndex = totalItems - 1;
-            else
-                selectedIndex--;
-        }
-
-        if (prevIndex != selectedIndex)
-        {
-            RemoveHighlight(prevIndex);
-            HighlightItem(selectedIndex);
+                return;
+            }
         }
     }
-
 }
