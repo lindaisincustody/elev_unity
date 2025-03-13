@@ -18,11 +18,12 @@ public class Enemy : MonoBehaviour
 
     public Action<Enemy> OnDeath { get; set; }
 
-    [SerializeField] private GameObject symbolTextEnemy;
+    [SerializeField] private EnemyLetter letterPrefab;
     private List<TMP_Text> displayedSymbols = new List<TMP_Text>();
     public HashSet<EnemyGlyph> activeSymbols = new HashSet<EnemyGlyph>();
 
     private EnemyHealth enemyHealth;
+    private List<EnemyLetter> enemyLetters = new();
 
     private readonly string[] _labels = {
         "_Capricorn",
@@ -86,8 +87,9 @@ public class Enemy : MonoBehaviour
         SanityChange();
         SetBounds();
         GenerateRandomSymbols();
+        HideGlyphs();
 
-        enemyHealth = GetComponent<EnemyHealth>();
+        enemyHealth = Get<EnemyHealth>();
         enemyHealth.OnDeath += OnEnemyDeath;
     }
 
@@ -108,18 +110,17 @@ public class Enemy : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             Vector3 symbolPosition = transform.position + new Vector3(i * symbolSpacing - 1, 4, 0);
-            GameObject symbolObject = Instantiate(symbolTextEnemy, symbolPosition, Quaternion.identity, transform);
-
-            TMP_Text symbolText = symbolObject.GetComponent<TMP_Text>();
-
+            EnemyLetter symbolObject = Instantiate(letterPrefab, symbolPosition, Quaternion.identity, transform);
+            enemyLetters.Add(symbolObject);
             string randomSymbolKey = filteredLabels[UnityEngine.Random.Range(0, filteredLabels.Count)];
             EnemyGlyph randomSymbol = new(latexToUnicode.ContainsKey(randomSymbolKey) ? latexToUnicode[randomSymbolKey] : randomSymbolKey);
             if (UnityEngine.Random.value <= Player.instance.SpecialSymbolChance)
             {
-                SetSymbolSpecial(randomSymbol, symbolText);
+                SetSymbolSpecial(randomSymbol, symbolObject.Letter);
             }
-            symbolText.text = randomSymbol.Glyph;
-            displayedSymbols.Add(symbolText);
+
+            symbolObject.Letter.text = randomSymbol.Glyph;
+            displayedSymbols.Add(symbolObject.Letter);
             activeSymbols.Add(randomSymbol);
         }
     }
@@ -183,17 +184,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private void ClearGeneratedSymbols()
-    {
-        foreach (var symbol in displayedSymbols)
-        {
-            Destroy(symbol.gameObject);
-        }
-        displayedSymbols.Clear();
-
-        activeSymbols.Clear();
-    }
-
 
     public T Get<T>() where T : Component
     {
@@ -226,12 +216,12 @@ public class Enemy : MonoBehaviour
     {
         if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
         {
-            GenerateRandomSymbols();
+            ShowGlyphs();
             ShowEnemy();
         }
         else
         {
-            ClearGeneratedSymbols();
+            HideGlyphs();
             ShowSparkle();
         }
     }
@@ -246,6 +236,22 @@ public class Enemy : MonoBehaviour
     {
         underworldBody.SetActive(false);
         overworldBody.SetActive(true);
+    }
+
+    private void ShowGlyphs()
+    {
+        foreach (EnemyLetter letter in enemyLetters)
+        {
+            letter.Show();
+        }
+    }
+
+    private void HideGlyphs()
+    {
+        foreach (EnemyLetter letter in enemyLetters)
+        {
+            letter.Hide();
+        }
     }
 
     private void OnEnemyDeath()
