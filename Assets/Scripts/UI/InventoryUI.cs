@@ -28,9 +28,9 @@ public class InventoryUI : MonoBehaviour
     [SerializeField] private Volume postProcessingVolume;
 
     [Header("Effect Display")] [SerializeField]
-    private Image itemIcon; // For displaying the item icon
+    private Image itemIcon;
 
-    [SerializeField] private TextMeshProUGUI effectDurationText; // For displaying the duration of the effect
+    [SerializeField] private TextMeshProUGUI effectDurationText;
 
     Player player;
     ItemsInventory itemsInventory;

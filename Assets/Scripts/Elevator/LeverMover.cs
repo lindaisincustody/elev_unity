@@ -43,6 +43,8 @@ public class LeverMover : MonoBehaviour
             StartCoroutine(ResetLever());
             if (CameraElevatorShake.instance != null)
                 CameraElevatorShake.instance.shakeIntensity = 0f;
+
+            SoundManager.StopLoopedSoundAndFadeOut(SoundManager.Sound.Elevator);
         }
 
         if (isDragging)
@@ -51,9 +53,26 @@ public class LeverMover : MonoBehaviour
             float normalizedInput = currentRotation / maxRotation;
             elevatorLevels.UpdateArrowMovement(normalizedInput);
 
-            if (CameraElevatorShake.instance != null)
+            if (CameraElevatorShake.instance != null && canRotate)
                 CameraElevatorShake.instance.shakeIntensity =
                     Mathf.Abs(currentRotation / maxRotation) * 0.05f;
+
+            if (Mathf.Abs(currentRotation) > 0f && canRotate)
+            {
+                // Start playing the Elevator sound if it isn’t already playing.
+                SoundManager.PlayLoopedSound(SoundManager.Sound.Elevator);
+
+                // Map the lever's absolute rotation to a pitch value.
+                // For instance, when currentRotation is 0, pitch might be 0.5 (slower)
+                // and when fully rotated (maxRotation), pitch is 1 (normal speed).
+                float pitch = Mathf.Lerp(0.5f, 1f, Mathf.Abs(currentRotation) / maxRotation);
+                SoundManager.UpdateLoopedSoundPitch(SoundManager.Sound.Elevator, pitch);
+            }
+            else
+            {
+                // If the lever goes back to 0, stop the sound.
+                SoundManager.StopLoopedSoundAndFadeOut(SoundManager.Sound.Elevator);
+            }
         }
     }
 

@@ -95,6 +95,7 @@ public class ElevatorLevels : MonoBehaviour
                 if (reachedFloor != currentLevel)
                 {
                     currentLevel = reachedFloor;
+
                     GoTo(currentLevel);
                     elevatorManager.StartMiniGameForFloor(currentLevel);
                 }

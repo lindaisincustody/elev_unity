@@ -33,8 +33,6 @@ public class WallAbility : Ability
             new Vector2(-(size.x / 2f - wallThickness / 2f), 0), groundMaterial, "LeftEdge");
         CreateWallEdge(wall.transform, new Vector2(wallThickness, size.y),
             new Vector2(size.x / 2f - wallThickness / 2f, 0), groundMaterial, "RightEdge");
-        Rigidbody2D rb = wall.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Static;
 
         Debug.Log("Wall spawned as a square border with visible edges!");
 
@@ -52,6 +50,8 @@ public class WallAbility : Ability
         edge.transform.localPosition = localPosition;
         edge.layer = LayerMask.NameToLayer("BoxLayer");
         BoxCollider2D collider = edge.AddComponent<BoxCollider2D>();
+        Rigidbody2D rb = edge.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
         collider.size = edgeSize;
 
         SpriteRenderer sr = edge.AddComponent<SpriteRenderer>();

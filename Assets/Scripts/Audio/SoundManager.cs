@@ -17,7 +17,8 @@ public static class SoundManager
         Pulsating_1,
         Pulsating_2,
         ShopBackground,
-        Cut
+        Cut,
+        Elevator
     }
 
     private static Dictionary<Sound, float> soundTimerDictionary;
@@ -69,9 +70,45 @@ public static class SoundManager
         {
             AudioSource audioSource = loopedSounds[sound];
             audioSource.Stop();
-            Object.Destroy(audioSource.gameObject);  // Optionally, you can destroy the GameObject
+            Object.Destroy(audioSource.gameObject);
             loopedSounds.Remove(sound);
         }
+    }
+
+    public static void StopLoopedSoundAndFadeOut(Sound sound, float fadeDuration = 0.5f)
+    {
+        if (loopedSounds.ContainsKey(sound))
+        {
+            AudioSource audioSource = loopedSounds[sound];
+
+
+            SoundManagerHelper helper = audioHolder.GetComponent<SoundManagerHelper>();
+            if (helper == null)
+            {
+                helper = audioHolder.AddComponent<SoundManagerHelper>();
+            }
+
+            // Start the fade-out coroutine.
+            helper.StartCoroutine(FadeOutAndStop(audioSource, fadeDuration));
+            loopedSounds.Remove(sound);
+        }
+    }
+
+    private static IEnumerator FadeOutAndStop(AudioSource audioSource, float fadeDuration)
+    {
+        float startVolume = audioSource.volume;
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(startVolume, 0, elapsed / fadeDuration);
+            yield return null;
+        }
+
+        audioSource.volume = 0;
+        audioSource.Stop();
+        Object.Destroy(audioSource.gameObject);
     }
 
     // 3D Sounds
@@ -92,12 +129,12 @@ public static class SoundManager
         Object.Destroy(soundGameObject, audioSource.clip.length);
     }
 
-    public static void PlaySound3D(Sound sound, Transform parent, bool looped = false, float volume = 1, float dopplerEffect = 1, float spread = 0, float minDist = 1, float maxDist = 500)
+    public static void PlaySound3D(Sound sound, Transform parent, bool looped = false, float volume = 1,
+        float dopplerEffect = 1, float spread = 0, float minDist = 1, float maxDist = 500)
     {
         GameObject soundGameObject = new GameObject("Sound");
         soundGameObject.transform.parent = parent;
         soundGameObject.transform.localPosition = Vector3.zero;
-        //Time.timeScale = 0f;
         AudioSource audioSource = soundGameObject.AddComponent<AudioSource>();
         audioSource.spatialBlend = 1;
         audioSource.loop = looped;
@@ -128,6 +165,7 @@ public static class SoundManager
                 return;
             }
         }
+
         ambientSoundGameObject = new GameObject("AmbientSounds");
         ambientSoundGameObject.transform.parent = audioHolder.transform;
         audioSource = ambientSoundGameObject.AddComponent<AudioSource>();
@@ -144,17 +182,16 @@ public static class SoundManager
         if (oneShotGameObject == null)
         {
             oneShotGameObject = new GameObject("One Shot Sound");
-            if (oneShotGameObject == null)
-                return;
             oneShotGameObject.transform.parent = audioHolder.transform;
             oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
         }
-        oneShotAudioSource.volume = volume;
 
+        oneShotAudioSource.volume = volume;
         oneShotAudioSource.PlayOneShot(GetAudioClip(sound));
     }
 
-    public static void PlaySound2DRandomChanges(Sound sound, float rndMinVol, float rndMaxVol, float rndMinPitch, float rndMaxPitch)
+    public static void PlaySound2DRandomChanges(Sound sound, float rndMinVol, float rndMaxVol, float rndMinPitch,
+        float rndMaxPitch)
     {
         if (!CanPlaySound(sound))
             return;
@@ -164,9 +201,9 @@ public static class SoundManager
             oneShotGameObject.transform.parent = audioHolder.transform;
             oneShotAudioSource = oneShotGameObject.AddComponent<AudioSource>();
         }
+
         oneShotAudioSource.volume = Random.Range(rndMinVol, rndMaxVol);
         oneShotAudioSource.pitch = Random.Range(rndMinPitch, rndMaxPitch);
-
         oneShotAudioSource.PlayOneShot(GetAudioClip(sound));
     }
 
@@ -187,15 +224,13 @@ public static class SoundManager
                         soundTimerDictionary[sound] = Time.time;
                         return true;
                     }
-                else
-                    return false;
+                    else
+                        return false;
                 }
                 else
                 {
-
                     return true;
                 }
-                break;
         }
     }
 
@@ -210,4 +245,17 @@ public static class SoundManager
         Debug.LogError("Add " + sound + " sound to the Sounds Scriptable Object");
         return null;
     }
+
+    public static void UpdateLoopedSoundPitch(Sound sound, float pitch)
+    {
+        if (loopedSounds.ContainsKey(sound))
+        {
+            loopedSounds[sound].pitch = pitch;
+        }
+    }
+}
+
+// Helper MonoBehaviour to run coroutines from the SoundManager.
+public class SoundManagerHelper : MonoBehaviour
+{
 }
