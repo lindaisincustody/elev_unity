@@ -28,6 +28,10 @@ public class Player : MonoBehaviour
     public PlayerMovement GetPlayerMovement => playerMovement;
     public InputManager GetInputManager => inputManager;
 
+    public bool InDangerZone;
+    public bool InSafeZone;
+
+
     private Inventory _inventory = new Inventory();
 
     private void OnEnable()
