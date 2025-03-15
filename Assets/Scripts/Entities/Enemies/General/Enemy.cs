@@ -8,69 +8,22 @@ public class Enemy : MonoBehaviour
 {
     [SerializeField] private GameObject underworldBody;
     [SerializeField] private GameObject overworldBody;
+    [SerializeField] private EnemyLetter letterPrefab;
 
     [SerializeField] private List<Component> components;
 
     private Dictionary<System.Type, Component> componentCache = new Dictionary<System.Type, Component>();
+
+    public HashSet<EnemyGlyph> activeSymbols = new HashSet<EnemyGlyph>();
 
     public Vector2 minBound { get; set; }
     public Vector2 maxBound { get; set; }
 
     public Action<Enemy> OnDeath { get; set; }
 
-    [SerializeField] private EnemyLetter letterPrefab;
     private List<TMP_Text> displayedSymbols = new List<TMP_Text>();
-    public HashSet<EnemyGlyph> activeSymbols = new HashSet<EnemyGlyph>();
 
-    private EnemyHealth enemyHealth;
     private List<EnemyLetter> enemyLetters = new();
-
-    private readonly string[] _labels = {
-        "_Capricorn",
-        "_Heart",
-        "_Leo",
-        "_Moon",
-        "_Rightarrow",
-        "_bowtie",
-        "_clubsuit",
-        "_descnode",
-        "_diagup",
-        "_diamond",
-        "_downarrow",
-        "_infty",
-        "_ocircle",
-        "_oplus",
-        "_spadesuit",
-        "_square",
-        "_star",
-        "_textgamma",
-        "_textmusicalnote",
-        "_varphi"
-    };
-
-    private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
-{
-    { "_Capricorn", "♑" }, 
-    { "_Heart", "♥" },
-    { "_Leo", "♌" }, 
-    { "_Moon", "☾" }, 
-    { "_Rightarrow", "⇒" },
-    { "_bowtie", "⧓" },
-    { "_clubsuit", "♣" }, 
-    { "_descnode", "⤵" },
-    { "_diagup", "/" }, 
-    { "_diamond", "♦" }, 
-    { "_downarrow", "↓" }, 
-    { "_infty", "∞" },
-    { "_ocircle", "⦾" },
-    { "_oplus", "⊕" },
-    { "_spadesuit", "♠" }, 
-    { "_square", "■" }, 
-    { "_star", "★" }, 
-    { "_textgamma", "γ" }, 
-    { "_textmusicalnote", "♪" },
-    { "_varphi", "φ" }
-};
 
     private void Awake()
     {
@@ -86,14 +39,12 @@ public class Enemy : MonoBehaviour
     {
         SanityChange();
         SetBounds();
-        GenerateRandomSymbols();
         HideGlyphs();
 
-        enemyHealth = Get<EnemyHealth>();
-        enemyHealth.OnDeath += OnEnemyDeath;
+        Get<EnemyHealth>().OnDeath += OnEnemyDeath;
     }
 
-    private void GenerateRandomSymbols()
+    public void GenerateRandomSymbols(string[] _labels)
     {
         if (activeSymbols.Count > 0)
             return;
@@ -101,11 +52,6 @@ public class Enemy : MonoBehaviour
         float symbolSpacing = 1f;
 
         var filteredLabels = new List<string>(_labels);
-        filteredLabels.Remove("_descnode");
-        filteredLabels.Remove("_textmusicalnote");
-        filteredLabels.Remove("_oplus");
-        filteredLabels.Remove("_infty");
-        filteredLabels.Remove("_ocircle");
 
         for (int i = 0; i < 3; i++)
         {
@@ -113,7 +59,7 @@ public class Enemy : MonoBehaviour
             EnemyLetter symbolObject = Instantiate(letterPrefab, symbolPosition, Quaternion.identity, transform);
             enemyLetters.Add(symbolObject);
             string randomSymbolKey = filteredLabels[UnityEngine.Random.Range(0, filteredLabels.Count)];
-            EnemyGlyph randomSymbol = new(latexToUnicode.ContainsKey(randomSymbolKey) ? latexToUnicode[randomSymbolKey] : randomSymbolKey);
+            EnemyGlyph randomSymbol = new(Glyphs.LatexToUnicode.ContainsKey(randomSymbolKey) ? Glyphs.LatexToUnicode[randomSymbolKey] : randomSymbolKey);
             if (UnityEngine.Random.value <= Player.instance.SpecialSymbolChance)
             {
                 SetSymbolSpecial(randomSymbol, symbolObject.Letter);
@@ -148,7 +94,7 @@ public class Enemy : MonoBehaviour
                     Destroy(matchedSymbol.gameObject);   
                 }
 
-                enemyHealth.StartCoroutine(enemyHealth.FlashWhite());
+                Get<EnemyHealth>().StartCoroutine(Get<EnemyHealth>().FlashWhite());
 
                 List<EnemyGlyph> matchedGlyphs = new List<EnemyGlyph>();
 
@@ -262,6 +208,6 @@ public class Enemy : MonoBehaviour
     void OnDestroy()
     {
         SanityBar.instance.sanityEffectHandler.OnWorldChange -= SanityChange;
-        enemyHealth.OnDeath -= OnEnemyDeath;
+        Get<EnemyHealth>().OnDeath -= OnEnemyDeath;
     }
 }

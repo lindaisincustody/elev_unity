@@ -11,6 +11,7 @@ public class EnemySpawner : MonoBehaviour
     [Header("Bounds")]
     [SerializeField] private Transform minBound;
     [SerializeField] private Transform maxBound;
+    [SerializeField] private EnemyGlyphSO enemyGlyphSO;
 
     public List<Enemy> SpawnEnemies()
     {
@@ -22,6 +23,7 @@ public class EnemySpawner : MonoBehaviour
             newEnemy.name = enemyPrefab.name + "_" + i;
             newEnemy.minBound = minBound.position;
             newEnemy.maxBound = maxBound.position;
+            newEnemy.GenerateRandomSymbols(enemyGlyphSO.Labels);
 
             EnemyManager.Instance.RegisterEnemy(newEnemy);
 

@@ -22,9 +22,9 @@ public class FightManager : MonoBehaviour
 
     private void Start()
     {
-        // Example: hooking up a "world change" event
         SanityBar.instance.sanityEffectHandler.OnWorldChange += SetUpGlyphs;
     }
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.G))
@@ -37,12 +37,8 @@ public class FightManager : MonoBehaviour
     }
 
 
-    /// <summary>
-    /// Registers a new fight. Kills off previous fight’s enemies if there was an active fight.
-    /// </summary>
     public void SetUpFight(Fight newFight, List<Enemy> newEnemies)
     {
-        // If there's an existing fight, kill all existing enemies
         if (_activeFight != null && _activeFight != newFight)
         {
             foreach (Enemy oldEnemy in _activeEnemies)
@@ -54,17 +50,14 @@ public class FightManager : MonoBehaviour
             }
         }
 
-        // Set the new fight as active
         _activeFight = newFight;
         _activeEnemies = newEnemies;
 
-        // Register each enemy death callback
         foreach (Enemy enemy in _activeEnemies)
         {
             enemy.OnDeath += OnEnemyDeath;
         }
 
-        // Update glyphs if needed
         SetUpGlyphs();
     }
 
@@ -73,28 +66,20 @@ public class FightManager : MonoBehaviour
         enemy.OnDeath -= OnEnemyDeath;
         _activeEnemies.Remove(enemy);
 
-        // If no enemies remain, the fight is over
         if (_activeEnemies.Count == 0)
         {
             CompleteFight();
         }
     }
 
-    /// <summary>
-    /// Called once the current fight’s enemies have all died.
-    /// </summary>
     private void CompleteFight()
     {
         GlyphBook.instance.TranslateGlyphs();
         SanityBar.instance.SanityToMax();
 
-        // Let the Fight script do any final unlocking or effects
         _activeFight.CompleteFight();
     }
 
-    /// <summary>
-    /// Called when the underworld is toggled; if in underworld, show glyphs for active enemies.
-    /// </summary>
     public void SetUpGlyphs()
     {
         if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld) return;
@@ -108,7 +93,6 @@ public class FightManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        // Example unsubscribing from the "world change" event
         SanityBar.instance.sanityEffectHandler.OnWorldChange -= SetUpGlyphs;
     }
 }
