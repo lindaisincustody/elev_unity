@@ -1,6 +1,5 @@
 using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 public class EnemyVisuals : Component
@@ -14,16 +13,19 @@ public class EnemyVisuals : Component
     [SerializeField] private float activeValue;
     [SerializeField] private float inactiveValue;
 
-     private float duration = 0.5f;
-
+    private float duration = 0.5f;
     private Tween shieldTween;
-
     private Material shieldMatInstance;
+    private DissolveEffect dissolveEffect;
 
     private void Awake()
     {
         shieldMatInstance = new Material(shieldMat);
         shader.material = shieldMatInstance;
+
+        dissolveEffect = new DissolveEffect(body.material, Enemy.Get<EnemyHealth>().DeathDuration);
+
+        Enemy.Get<EnemyHealth>().OnLethal += Vanish;
     }
 
     private void Start()
@@ -46,5 +48,20 @@ public class EnemyVisuals : Component
     {
         shieldTween?.Kill();
         shieldTween = shieldMatInstance.DOFloat(inactiveValue, valueToChange, duration);
+    }
+
+    public void Vanish()
+    {
+        dissolveEffect.Vanish();
+    }
+
+    public void Appear()
+    {
+        dissolveEffect.Appear();
+    }
+
+    private void OnDestroy()
+    {
+        Enemy.Get<EnemyHealth>().OnLethal -= Vanish;
     }
 }

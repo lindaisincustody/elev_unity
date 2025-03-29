@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 0d99937bd77c95d469537b2607f8c4c1, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -41,11 +41,38 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DissolveAmount: 0
+    - _DissolveScale: 48
+    - _DissolveScale1: 30
+    - _DissolveScale3: 30
+    - _DissolveScale90: 30
     - _FlashIntensity: 0
-    - _Thickness: 0.134
+    - _OutlineThickness: 0.007
+    - _OutlineThickness_1: 0.1
+    - _OutlineThickness_2: 0.1
+    - _OutlineThickness_3: 0.1
+    - _SpiralStrength: 3.3
+    - _SpiralStrength_: 5
+    - _SpiralStrength_1: 5
+    - _SpiralStrength_2: 5
+    - _SpiralStrength_3: 5
+    - _SpiralStrength_4: 5
+    - _SpiralStrength_5: 5
+    - _SpiralStrength_6: 5
+    - _SpiralStrength_7: 5
+    - _SpiralStrength_8: 5
+    - _Thickness: 0.044
+    - _VerticalDissolve: 0
+    - _VerticalDissolve_: 0.5
+    - _VerticalDissolve_1: 0.5
     m_Colors:
-    - _Color: {r: 0.7882353, g: 0.20921806, b: 0, a: 1}
+    - _Color: {r: 1.9766748, g: 0.5246607, b: 0, a: 1}
     - _FlashColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 4.8582397, g: 1.5863993, b: 0, a: 0}
+    - _OutlineColor1: {r: 1, g: 0, b: 0, a: 0}
+    - _OutlineColor_1: {r: 1, g: 0, b: 0, a: 0}
+    - _OutlineColor_2: {r: 1, g: 0, b: 0, a: 0}
+    - _OutlineColornew: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6237148384183149611
 MonoBehaviour:

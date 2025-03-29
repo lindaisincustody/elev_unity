@@ -57,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e60e146cc707804ba1808d23bd32e28, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -574,7 +574,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1395525773853516595
 Transform:
   m_ObjectHideFlags: 0
@@ -649,7 +649,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e60e146cc707804ba1808d23bd32e28, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -775,6 +775,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   underworldBody: {fileID: 7458510192768412762}
   overworldBody: {fileID: 1490766261496143763}
+  letterPrefab: {fileID: 5980091876520292928, guid: d5e95126634f4f4448a58e75c87fbb4b, type: 3}
   components:
   - {fileID: 5580081335637333945}
   - {fileID: 4345423784217660443}
@@ -783,7 +784,6 @@ MonoBehaviour:
   - {fileID: 6574206921253460702}
   - {fileID: 1408901347221157211}
   - {fileID: 7812484598037352108}
-  letterPrefab: {fileID: 5980091876520292928, guid: d5e95126634f4f4448a58e75c87fbb4b, type: 3}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,6 +955,7 @@ MonoBehaviour:
   valueToChange: _Intensity
   activeValue: 0.027
   inactiveValue: 0
+  dissolveTime: 1
 --- !u!58 &1356284750688808381
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1127,7 +1128,7 @@ PrefabInstance:
     - target: {fileID: 6750562016530469358, guid: 9cec064c0ce8a704f9479f6537b5850e, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 0e60e146cc707804ba1808d23bd32e28, type: 2}
+      objectReference: {fileID: 2100000, guid: 46c8b1ff73332874584fa5a5b3916f0e, type: 2}
     - target: {fileID: 8012430985559645782, guid: 9cec064c0ce8a704f9479f6537b5850e, type: 3}
       propertyPath: m_LocalScale.x
       value: 3

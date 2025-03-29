@@ -12,10 +12,12 @@ public class EnemyHealth : Health
     [SerializeField] private EnemyAnimator animator;
     [SerializeField] private float flashDuration = 1f;
 
+    public float DeathDuration => 2f;
     public bool IsAlive => currentHealth > 0;
     public bool Immune { get; set; }
     public Action OnDamage;
     public Action OnDeath;
+    public Action OnLethal;
 
     private Vector3 initialScale;
     private Vector3 initialPosition;
@@ -76,8 +78,9 @@ public class EnemyHealth : Health
     public IEnumerator Die()
     {
         isDead = true;
+        OnLethal?.Invoke();
         animator.Play(EnemyAnimator.AnimationType.Die);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(DeathDuration);
         gameObject.SetActive(false);
         OnDeath?.Invoke();
     }
