@@ -49,17 +49,20 @@ public class Enemy : MonoBehaviour
         if (activeSymbols.Count > 0)
             return;
 
+        List<string> filteredLabels = new List<string>(_labels);
+
         float symbolSpacing = 1f;
+        int symbolCount = filteredLabels.Count;
+        float totalWidth = (symbolCount - 1) * symbolSpacing;
+        float startX = -totalWidth / 2f;
 
-        var filteredLabels = new List<string>(_labels);
-
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < symbolCount; i++)
         {
-            Vector3 symbolPosition = transform.position + new Vector3(i * symbolSpacing - 1, 4, 0);
+            Vector3 symbolPosition = transform.position + new Vector3(startX + i * symbolSpacing, 4, 0);
             EnemyLetter symbolObject = Instantiate(letterPrefab, symbolPosition, Quaternion.identity, transform);
             enemyLetters.Add(symbolObject);
-            string randomSymbolKey = filteredLabels[UnityEngine.Random.Range(0, filteredLabels.Count)];
-            EnemyGlyph randomSymbol = new(Glyphs.LatexToUnicode.ContainsKey(randomSymbolKey) ? Glyphs.LatexToUnicode[randomSymbolKey] : randomSymbolKey);
+
+            EnemyGlyph randomSymbol = new(Glyphs.LatexToUnicode.ContainsKey(filteredLabels[i]) ? Glyphs.LatexToUnicode[filteredLabels[i]] : filteredLabels[i]);
             if (UnityEngine.Random.value <= Player.instance.SpecialSymbolChance)
             {
                 SetSymbolSpecial(randomSymbol, symbolObject.Letter);
@@ -69,6 +72,7 @@ public class Enemy : MonoBehaviour
             displayedSymbols.Add(symbolObject.Letter);
             activeSymbols.Add(randomSymbol);
         }
+
     }
 
     private void SetSymbolSpecial(EnemyGlyph glyph, TMP_Text glyphText)
