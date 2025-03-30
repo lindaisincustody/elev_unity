@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [field: SerializeField] public ItemsInventory ItemsInventory{ get; private set; }
     [field: SerializeField] public PlayerMovement PlayerMovement{ get; private set; }
     [field: SerializeField] public PlayerCombat PlayerCombat{ get; private set; }
+    [field: SerializeField] public LetterDrawing LetterDrawing{ get; private set; }
 
     public float SpecialSymbolChance { get; set; }
 

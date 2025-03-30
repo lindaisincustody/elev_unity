@@ -29,6 +29,7 @@ public class TeleporterEditor : Editor
             // Otherwise, display scene_X and scene_Y fields
             EditorGUILayout.PropertyField(serializedObject.FindProperty("scene_X"));
             EditorGUILayout.PropertyField(serializedObject.FindProperty("scene_Y"));
+            EditorGUILayout.PropertyField(serializedObject.FindProperty("position"));
         }
 
         // Apply any changes made in the GUI to the serialized object

@@ -17,6 +17,7 @@ public class Teleporter : Interactable
     float scene_X;
 
     [SerializeField] float scene_Y;
+    [SerializeField] Transform position;
 
     protected override void Start()
     {
@@ -67,7 +68,10 @@ public class Teleporter : Interactable
             base.HandleInteract();
             if (teleport == Teleport.SameScene)
             {
-                StartCoroutine(SceneController.instance.LoadInScene(scene_X, scene_Y));
+                if (position != null)
+                    StartCoroutine(SceneController.instance.LoadInScene(position.position.x, position.position.y));
+                else
+                    StartCoroutine(SceneController.instance.LoadInScene(scene_X, scene_Y));
                 OnTeleport?.Invoke();
             }
             else if (teleport == Teleport.NewScene)

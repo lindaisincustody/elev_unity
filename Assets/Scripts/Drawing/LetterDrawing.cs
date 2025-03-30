@@ -9,6 +9,7 @@ public class LetterDrawing : MonoBehaviour
 {
     public enum DrawingMode { Predicting, PaintingPath }
     public DrawingMode drawingMode = DrawingMode.PaintingPath;
+    private DrawingMode previousMode;
 
     private IDrawingState currentState;
 
@@ -37,6 +38,7 @@ public class LetterDrawing : MonoBehaviour
         predictingDrawingState = new PredictingDrawingState(this);
         paintingPathDrawingState = new PaintingPathDrawingState();
 
+        previousMode = drawingMode;
         ChangeState();
     }
 
@@ -123,5 +125,18 @@ public class LetterDrawing : MonoBehaviour
             points = closedPoints;
         }
         return points;
+    }
+
+    public void ChangeState(DrawingMode newMode)
+    {
+        previousMode = drawingMode;
+        drawingMode = newMode;
+        ChangeState();
+    }
+
+    public void RevertToPreviousState()
+    {
+        drawingMode = previousMode;
+        ChangeState();
     }
 }
