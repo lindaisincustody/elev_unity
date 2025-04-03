@@ -12,11 +12,12 @@ public class HealthBar : MonoBehaviour
     private Player player;
     private PlayerHealth playerHealth;
 
+    // TODO: Health Bar should be used for both enemy and player
     private void Start()
     {
         player = Player.instance;
-        playerHealth = player.PlayerHealth;
-        player.PlayerHealth.OnDamage += UpdateHealthBar;
+        playerHealth = player.Get<PlayerHealth>();
+        playerHealth.OnDamage += UpdateHealthBar;
 
         UpdateHealthBar();
     }
@@ -32,6 +33,6 @@ public class HealthBar : MonoBehaviour
 
     private void OnDestroy()
     {
-        player.PlayerHealth.OnDamage -= UpdateHealthBar;
+        playerHealth.OnDamage -= UpdateHealthBar;
     }
 }

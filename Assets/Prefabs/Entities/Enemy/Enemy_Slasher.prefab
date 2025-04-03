@@ -710,6 +710,7 @@ GameObject:
   - component: {fileID: 3384679448394384858}
   - component: {fileID: 7812484598037352108}
   - component: {fileID: 1356284750688808381}
+  - component: {fileID: 2057614468803811981}
   m_Layer: 18
   m_Name: Enemy_Slasher
   m_TagString: Untagged
@@ -773,9 +774,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c813cd3d7040e48b17a9f4ab3bd4c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  underworldBody: {fileID: 7458510192768412762}
-  overworldBody: {fileID: 1490766261496143763}
-  letterPrefab: {fileID: 5980091876520292928, guid: d5e95126634f4f4448a58e75c87fbb4b, type: 3}
   components:
   - {fileID: 5580081335637333945}
   - {fileID: 4345423784217660443}
@@ -784,6 +782,10 @@ MonoBehaviour:
   - {fileID: 6574206921253460702}
   - {fileID: 1408901347221157211}
   - {fileID: 7812484598037352108}
+  - {fileID: 2057614468803811981}
+  underworldBody: {fileID: 7458510192768412762}
+  overworldBody: {fileID: 1490766261496143763}
+  letterPrefab: {fileID: 5980091876520292928, guid: d5e95126634f4f4448a58e75c87fbb4b, type: 3}
 --- !u!114 &833904136497670767
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -955,7 +957,6 @@ MonoBehaviour:
   valueToChange: _Intensity
   activeValue: 0.027
   inactiveValue: 0
-  dissolveTime: 1
 --- !u!58 &1356284750688808381
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -991,6 +992,18 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0.51}
   serializedVersion: 2
   m_Radius: 0.67
+--- !u!114 &2057614468803811981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8405266591562419230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f27bc6f0c70d4264b9f7bb775a50b7a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &895162494980676077
 PrefabInstance:
   m_ObjectHideFlags: 0

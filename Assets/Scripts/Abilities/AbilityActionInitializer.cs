@@ -35,7 +35,7 @@ public class AbilityActionsInitializer : MonoBehaviour
             if (arrowAbility != null)
             {
                 arrowAbility.Activate();
-                Enemy targetEnemy = Player.instance.PlayerCombat.GetNearestEnemy();
+                Enemy targetEnemy = Player.instance.Get<PlayerCombat>().GetNearestEnemy();
                 if (targetEnemy != null)
                 {
                     arrowAbility.SpawnArrowEffect(letterDrawing, targetEnemy.transform);

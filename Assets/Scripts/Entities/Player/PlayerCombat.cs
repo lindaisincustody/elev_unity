@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
-public class PlayerCombat : MonoBehaviour
+public class PlayerCombat : Component
 {
     [SerializeField] private Camera mainCamera;
     [SerializeField] private TextMeshProUGUI combatModeText;

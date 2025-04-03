@@ -23,9 +23,9 @@ public class EnemyVisuals : Component
         shieldMatInstance = new Material(shieldMat);
         shader.material = shieldMatInstance;
 
-        dissolveEffect = new DissolveEffect(body.material, Enemy.Get<EnemyHealth>().DeathDuration);
+        dissolveEffect = new DissolveEffect(body.material, Entity.Get<EnemyHealth>().DeathDuration);
 
-        Enemy.Get<EnemyHealth>().OnLethal += Vanish;
+        Entity.Get<EnemyHealth>().OnLethal += Vanish;
     }
 
     private void Start()
@@ -62,6 +62,6 @@ public class EnemyVisuals : Component
 
     private void OnDestroy()
     {
-        Enemy.Get<EnemyHealth>().OnLethal -= Vanish;
+        Entity.Get<EnemyHealth>().OnLethal -= Vanish;
     }
 }

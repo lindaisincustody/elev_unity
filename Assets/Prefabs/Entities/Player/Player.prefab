@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 9182382378761414154}
   - component: {fileID: 4811051021864669420}
   - component: {fileID: 2997224443469270906}
+  - component: {fileID: 7374925929689665054}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -248,6 +249,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5beb78b4967497b45ac1f663e6d993bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  components:
+  - {fileID: 5376793493941146557}
+  - {fileID: 8454522013865968226}
+  - {fileID: 10761879722717105}
+  - {fileID: 7905350812563266831}
+  - {fileID: 9182382378761414154}
+  - {fileID: 4811051021864669420}
+  - {fileID: 7374925929689665054}
   InteractableUI: {fileID: 8420326837088205274}
   spriteRenderer: {fileID: 2226871447008519275}
   playerMovement: {fileID: 7905350812563266831}
@@ -258,12 +267,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
   - {fileID: 11400000, guid: ff08f7d0b0c6c2046909fde5f131fcfe, type: 2}
   - {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
-  <PlayerHealth>k__BackingField: {fileID: 8454522013865968226}
-  <PlayerAbilities>k__BackingField: {fileID: 10761879722717105}
-  <ItemsInventory>k__BackingField: {fileID: 9182382378761414154}
-  <PlayerMovement>k__BackingField: {fileID: 7905350812563266831}
-  <PlayerCombat>k__BackingField: {fileID: 5376793493941146557}
-  <LetterDrawing>k__BackingField: {fileID: 4811051021864669420}
   InDangerZone: 0
   InSafeZone: 0
 --- !u!114 &5376793493941146557
@@ -457,6 +460,18 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &7374925929689665054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f27bc6f0c70d4264b9f7bb775a50b7a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2979690153079024394
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class InventoryData
     public List<Item> items = new List<Item>();
 }
 
-public class ItemsInventory : MonoBehaviour
+public class ItemsInventory : Component
 {
     public InventoryData inventoryData = new InventoryData();
 

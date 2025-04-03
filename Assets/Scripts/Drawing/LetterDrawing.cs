@@ -5,9 +5,9 @@ using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LetterDrawing : MonoBehaviour
+public class LetterDrawing : Component
 {
-    public enum DrawingMode { Predicting, PaintingPath }
+    public enum DrawingMode { Predicting, PaintingPath, PaintingFire }
     public DrawingMode drawingMode = DrawingMode.PaintingPath;
     private DrawingMode previousMode;
 
@@ -32,11 +32,13 @@ public class LetterDrawing : MonoBehaviour
 
     private PaintingPathDrawingState paintingPathDrawingState;
     private PredictingDrawingState predictingDrawingState;
+    private PaintingFireDrawingState paintingFireDrawingState;
 
     void Start()
     {
         predictingDrawingState = new PredictingDrawingState(this);
         paintingPathDrawingState = new PaintingPathDrawingState();
+        paintingFireDrawingState = new PaintingFireDrawingState();
 
         previousMode = drawingMode;
         ChangeState();
@@ -51,6 +53,9 @@ public class LetterDrawing : MonoBehaviour
                 break;
             case DrawingMode.PaintingPath:
                 currentState = paintingPathDrawingState;
+                break;
+            case DrawingMode.PaintingFire:
+                currentState = paintingFireDrawingState;
                 break;
             default:
                 currentState = predictingDrawingState;

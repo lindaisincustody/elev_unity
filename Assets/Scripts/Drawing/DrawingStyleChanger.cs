@@ -10,8 +10,7 @@ public class DrawingStyleChanger : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            LetterDrawing letterDrawing = Player.instance.LetterDrawing;
-            letterDrawing.ChangeState(drawingStyle);
+            collision.GetComponent<Entity>().Get<LetterDrawing>().ChangeState(drawingStyle);
         }
     }
 
@@ -19,8 +18,7 @@ public class DrawingStyleChanger : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            LetterDrawing letterDrawing = Player.instance.LetterDrawing;
-            letterDrawing.RevertToPreviousState();
+            collision.GetComponent<Entity>().Get<LetterDrawing>().RevertToPreviousState();
         }
     }
 }

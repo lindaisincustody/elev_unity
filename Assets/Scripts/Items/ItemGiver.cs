@@ -12,18 +12,18 @@ public class ItemGiver : MonoBehaviour
     [Button]
     public void GiveDash()
     {
-        Player.instance.ItemsInventory.AddItem(dashItem);
+        Player.instance.Get<ItemsInventory>().AddItem(dashItem);
     }
 
     [Button]
     public void GiveTrap()
     {
-        Player.instance.ItemsInventory.AddItem(trapItem);
+        Player.instance.Get<ItemsInventory>().AddItem(trapItem);
     }
 
     [Button]
     public void GiveStunChance()
     {
-        Player.instance.ItemsInventory.AddItem(stunChanceItem);
+        Player.instance.Get<ItemsInventory>().AddItem(stunChanceItem);
     }
 }

@@ -42,7 +42,7 @@ public class DialogueController : MonoBehaviour
     {
         player = Player.instance;
         playerInput = player.GetInputManager;
-        playerMovement = player.GetPlayerMovement;
+        playerMovement = player.Get<PlayerMovement>();
         playerInput.OnInteract += NextAction;
         playerInput.OnUICancel += ExitDialogue;
 

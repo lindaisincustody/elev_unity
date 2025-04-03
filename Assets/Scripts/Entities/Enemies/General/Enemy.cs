@@ -4,15 +4,11 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : Entity
 {
     [SerializeField] private GameObject underworldBody;
     [SerializeField] private GameObject overworldBody;
     [SerializeField] private EnemyLetter letterPrefab;
-
-    [SerializeField] private List<Component> components;
-
-    private Dictionary<System.Type, Component> componentCache = new Dictionary<System.Type, Component>();
 
     public HashSet<EnemyGlyph> activeSymbols = new HashSet<EnemyGlyph>();
 
@@ -134,27 +130,6 @@ public class Enemy : MonoBehaviour
         }
     }
 
-
-    public T Get<T>() where T : Component
-    {
-        var type = typeof(T);
-
-        if (componentCache.TryGetValue(type, out Component cachedComponent))
-        {
-            return cachedComponent as T;
-        }
-
-        foreach (var item in components)
-        {
-            if (item is T)
-            {
-                componentCache[type] = item;
-                return item as T;
-            }
-        }
-
-        return null;
-    }
 
     private void SetBounds()
     {

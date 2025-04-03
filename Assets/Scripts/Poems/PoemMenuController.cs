@@ -46,7 +46,7 @@ public class PoemMenuController : MonoBehaviour
 
         player = Player.instance;
         playerInput = player.GetInputManager;
-        playerMovement = player.GetPlayerMovement;
+        playerMovement = player.Get<PlayerMovement>();
 
         playerInput.OnInteract += OpenNextPage;
     }

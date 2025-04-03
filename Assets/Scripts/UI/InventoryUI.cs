@@ -63,8 +63,8 @@ public class InventoryUI : MonoBehaviour
         player = Player.instance;
         dataManager = DataManager.Instance;
         playerInput = player.GetInputManager;
-        playerMovement = player.GetPlayerMovement;
-        itemsInventory = player.ItemsInventory;
+        playerMovement = player.Get<PlayerMovement>();
+        itemsInventory = player.Get<ItemsInventory>();
 
         playerInput.OnNavigate += OnNavigate;
         playerInput.OnSubmit += UseItem;
@@ -144,7 +144,7 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        Player.instance.ItemsInventory.RemoveItem(item);
+        Player.instance.Get<ItemsInventory>().RemoveItem(item);
 
         itemSlots[selectedIndex].Clear();
         if (itemsInventory.GetAllItems().Count > 0)
@@ -156,7 +156,7 @@ public class InventoryUI : MonoBehaviour
         {
         }
 
-        player.PlayerAbilities.Add(item.ability);
+        player.Get<PlayerAbilities>().Add(item.ability);
     }
 
     private void UpdateGoldText()

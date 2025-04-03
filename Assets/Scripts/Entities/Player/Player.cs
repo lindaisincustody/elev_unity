@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Player : MonoBehaviour
+public class Player : Entity
 {
     [SerializeField] GameObject InteractableUI;
     [Header("Self-Referneces")]
@@ -13,12 +13,6 @@ public class Player : MonoBehaviour
     [SerializeField] InputManager inputManager;
     [SerializeField] private GameObject poemAvailable;
     [SerializeField] private WordData[] wordsData;
-    [field: SerializeField] public PlayerHealth PlayerHealth { get; private set; }
-    [field: SerializeField] public PlayerAbilities PlayerAbilities{ get; private set; }
-    [field: SerializeField] public ItemsInventory ItemsInventory{ get; private set; }
-    [field: SerializeField] public PlayerMovement PlayerMovement{ get; private set; }
-    [field: SerializeField] public PlayerCombat PlayerCombat{ get; private set; }
-    [field: SerializeField] public LetterDrawing LetterDrawing{ get; private set; }
 
     public float SpecialSymbolChance { get; set; }
 
@@ -26,7 +20,6 @@ public class Player : MonoBehaviour
     public PlayerData playerData;
 
     public static Player instance { get; set; }
-    public PlayerMovement GetPlayerMovement => playerMovement;
     public InputManager GetInputManager => inputManager;
 
     public bool InDangerZone;

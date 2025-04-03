@@ -17,7 +17,7 @@ public class TrapAbility : Ability
     public override void Activate()
     {
         base.Activate();
-        Enemy nearestEnemy = Player.instance.PlayerCombat.GetNearestEnemy();
+        Enemy nearestEnemy = Player.instance.Get<PlayerCombat>().GetNearestEnemy();
 
         if (nearestEnemy != null && trapPrefab != null)
         {

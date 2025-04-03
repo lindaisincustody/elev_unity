@@ -12,11 +12,11 @@ public class DashAbility : Ability
 
     public override void Start()
     {
-        Player.instance.PlayerMovement.maxDashCount = 2;
+        Player.instance.Get<PlayerMovement>().maxDashCount = 2;
     }
 
     public override void Destroy()
     {
-        Player.instance.PlayerMovement.maxDashCount = 1;
+        Player.instance.Get<PlayerMovement>().maxDashCount = 1;
     }
 }

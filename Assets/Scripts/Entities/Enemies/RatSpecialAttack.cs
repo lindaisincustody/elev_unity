@@ -13,8 +13,8 @@ public class RatSpecialAttack : Component
 
     private void Start()
     {
-        ratAttack = Enemy.Get<RatAttack>();
-        enemyMovement = Enemy.Get<EnemyMovement>();
+        ratAttack = Entity.Get<RatAttack>();
+        enemyMovement = Entity.Get<EnemyMovement>();
     }
 
     public void Execute(Context context, System.Action OnEnd)

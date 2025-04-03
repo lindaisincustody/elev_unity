@@ -10,8 +10,8 @@ public class AbilityCanvas : MonoBehaviour
     private Dictionary<Ability, AbilityIcon> abilityIcons = new();
 
     private void Start()
-    {
-        playerAbilities = Player.instance.PlayerAbilities;
+    {   
+        playerAbilities = Player.instance.Get<PlayerAbilities>();
 
         playerAbilities.OnAbilityAdded += OnAbilityAdded;
         playerAbilities.OnAbilityRemoved += OnAbilityRemoved;

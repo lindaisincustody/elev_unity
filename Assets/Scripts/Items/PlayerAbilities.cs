@@ -10,7 +10,7 @@ public class PlayerAbilitiesData
     public List<string> abilityIds = new List<string>();
 }
 
-public class PlayerAbilities : MonoBehaviour
+public class PlayerAbilities : Component
 {
     public List<Ability> Abilities = new();
     private SavingWrapper savingWrapper;

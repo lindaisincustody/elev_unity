@@ -75,7 +75,7 @@ public class DialogueTrigger : Interactable
     {
         if (itemAdded || itemToAdd == null) return;
 
-        Player.instance.ItemsInventory.AddItem(itemToAdd);
+        Player.instance.Get<ItemsInventory>().AddItem(itemToAdd);
         itemAdded = true;
     }
 

@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class Component : MonoBehaviour
 {
-    protected Enemy Enemy;
+    protected Entity Entity;
 
-    public void Init(Enemy enemy)
+    public void Init(Entity entity)
     {
-        Enemy = enemy;
+        Entity = entity;
     }
 }

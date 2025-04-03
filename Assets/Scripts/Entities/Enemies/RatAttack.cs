@@ -18,7 +18,7 @@ public class RatAttack : EnemyAttack
 
     private void Start()
     {
-        movement = Enemy.Get<EnemyMovement>();
+        movement = Entity.Get<EnemyMovement>();
     }
 
     public override void Attack(Context context, AttackRequest attackRequest)
