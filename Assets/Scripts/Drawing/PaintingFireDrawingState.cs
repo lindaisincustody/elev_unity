@@ -4,7 +4,18 @@ using UnityEngine;
 
 public class PaintingFireDrawingState : IDrawingState
 {
-    private GameObject lastPathColliderObj;
+    private float _duration;
+    private int _damage;
+    private float _interval;
+    private Material _material;
+
+    public void Setup(float duration, float interval, int damage, Material material)
+    {
+        _duration = duration;
+        _interval = interval;
+        _damage = damage;
+        _material = material;
+    }
 
     public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
     {
@@ -12,61 +23,78 @@ public class PaintingFireDrawingState : IDrawingState
         if (pointCount < 2)
             return;
 
-        Vector2[] pts = new Vector2[pointCount];
+        // 1) sample the center line
+        Vector3[] centerPts3D = new Vector3[pointCount];
+        Vector2[] centerPts2D = new Vector2[pointCount];
         for (int i = 0; i < pointCount; i++)
         {
-            Vector3 pos = mainLineRenderer.GetPosition(i);
-            pts[i] = new Vector2(pos.x, pos.y);
+            Vector3 wpos = mainLineRenderer.GetPosition(i);
+            centerPts3D[i] = wpos;
+            centerPts2D[i] = new Vector2(wpos.x, wpos.y);
         }
 
-        float thickness = 0.5f;
-        float halfThickness = thickness / 2f;
+        // 2) compute the thick corridor polygon as before
+        float corridorWidth = 0.5f;
+        float halfW = corridorWidth * 0.5f;
 
-        List<Vector2> leftSide = new List<Vector2>();
-        List<Vector2> rightSide = new List<Vector2>();
+        var leftSide = new List<Vector2>();
+        var rightSide = new List<Vector2>();
 
-        for (int i = 0; i < pts.Length; i++)
+        for (int i = 0; i < centerPts2D.Length; i++)
         {
             Vector2 normal;
-
             if (i == 0)
             {
-                Vector2 dir = (pts[i + 1] - pts[i]).normalized;
+                Vector2 dir = (centerPts2D[i + 1] - centerPts2D[i]).normalized;
                 normal = new Vector2(-dir.y, dir.x);
             }
-            else if (i == pts.Length - 1)
+            else if (i == centerPts2D.Length - 1)
             {
-                Vector2 dir = (pts[i] - pts[i - 1]).normalized;
+                Vector2 dir = (centerPts2D[i] - centerPts2D[i - 1]).normalized;
                 normal = new Vector2(-dir.y, dir.x);
             }
             else
             {
-                Vector2 dir1 = (pts[i] - pts[i - 1]).normalized;
-                Vector2 dir2 = (pts[i + 1] - pts[i]).normalized;
-                Vector2 normal1 = new Vector2(-dir1.y, dir1.x);
-                Vector2 normal2 = new Vector2(-dir2.y, dir2.x);
-                normal = (normal1 + normal2).normalized;
+                Vector2 d1 = (centerPts2D[i] - centerPts2D[i - 1]).normalized;
+                Vector2 d2 = (centerPts2D[i + 1] - centerPts2D[i]).normalized;
+                Vector2 n1 = new Vector2(-d1.y, d1.x);
+                Vector2 n2 = new Vector2(-d2.y, d2.x);
+                normal = (n1 + n2).normalized;
             }
-
-            leftSide.Add(pts[i] + normal * halfThickness);
-            rightSide.Add(pts[i] - normal * halfThickness);
+            leftSide.Add(centerPts2D[i] + normal * halfW);
+            rightSide.Add(centerPts2D[i] - normal * halfW);
         }
 
-        List<Vector2> polygonPoints = new List<Vector2>(leftSide);
+        var polygonPoints = new List<Vector2>(leftSide);
         rightSide.Reverse();
         polygonPoints.AddRange(rightSide);
 
-        if (lastPathColliderObj != null)
-            GameObject.Destroy(lastPathColliderObj);
-
+        // 3) build the collider object
         GameObject pathColliderObj = new GameObject("PathCollider");
-        pathColliderObj.AddComponent<DrawnFireTrigger>();
         pathColliderObj.transform.position = Vector3.zero;
 
-        PolygonCollider2D polygonCollider = pathColliderObj.AddComponent<PolygonCollider2D>();
-        polygonCollider.isTrigger = true;
-        polygonCollider.points = polygonPoints.ToArray();   
+        var fireTrigger = pathColliderObj.AddComponent<DrawnFireTrigger>();
+        fireTrigger.duration = _duration;
+        fireTrigger.damageInterval = _interval;
+        fireTrigger.damage = _damage;
 
-        lastPathColliderObj = pathColliderObj;
+        var polyCol = pathColliderObj.AddComponent<PolygonCollider2D>();
+        polyCol.isTrigger = true;
+        polyCol.points = polygonPoints.ToArray();
+
+        // 4) add a brand-new LineRenderer **for the center line only**
+        var lr = pathColliderObj.AddComponent<LineRenderer>();
+        lr.useWorldSpace = true;
+        lr.positionCount = centerPts3D.Length;
+        lr.loop = false;               // open line in the middle
+        lr.startWidth = corridorWidth;       // full width so its half reaches to the side
+        lr.endWidth = corridorWidth;
+        lr.material = _material;
+        // lr.alignment    = LineAlignment.View; // optional
+
+        for (int i = 0; i < centerPts3D.Length; i++)
+        {
+            lr.SetPosition(i, centerPts3D[i]);
+        }
     }
 }

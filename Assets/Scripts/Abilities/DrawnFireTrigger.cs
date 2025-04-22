@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DrawnFireTrigger : MonoBehaviour
 {
-    private int damage = 2;
-    private float damageInterval = 0.5f;
+    public float duration { get; set; } = 5f;
+    public int damage { get; set; } = 1;
+    public float damageInterval { get; set; } = 0.5f;
 
     private Dictionary<Entity, DamageOvertimeEffect> activeEffects = new();
 
@@ -35,4 +36,15 @@ public class DrawnFireTrigger : MonoBehaviour
             }
         }
     }
+
+    private void Start()
+    {
+        StartCoroutine(LifeCycle());
+    }
+
+    private IEnumerator LifeCycle()
+    {
+        yield return new WaitForSeconds(duration);
+        Destroy(gameObject);
+    }    
 }

@@ -27,8 +27,7 @@ public class LetterDrawing : Component
     [SerializeField] public TextMeshProUGUI poemTextDisplay;
     [SerializeField, TextArea] public string poem = "Your poem text goes here.";
 
-    [Header("Path creating")]
-
+    private Action OnDraw;
 
     private PaintingPathDrawingState paintingPathDrawingState;
     private PredictingDrawingState predictingDrawingState;
@@ -76,6 +75,7 @@ public class LetterDrawing : Component
         else if (Input.GetMouseButtonUp(1))
         {
             currentState.ProcessDrawing(lineRenderer, secondaryLineRenderer);
+            OnDraw?.Invoke();
         }
     }
 
@@ -132,6 +132,14 @@ public class LetterDrawing : Component
         return points;
     }
 
+    public void ActivateFireState(float duration, float damageInterval, int damage, Material material)
+    {
+        drawingMode = DrawingMode.PaintingFire;
+        OnDraw = RevertToPreviousState;
+        paintingFireDrawingState.Setup(duration, damageInterval, damage, material);
+        ChangeState();
+    }
+
     public void ChangeState(DrawingMode newMode)
     {
         previousMode = drawingMode;
@@ -141,6 +149,7 @@ public class LetterDrawing : Component
 
     public void RevertToPreviousState()
     {
+        OnDraw = null;
         drawingMode = previousMode;
         ChangeState();
     }
