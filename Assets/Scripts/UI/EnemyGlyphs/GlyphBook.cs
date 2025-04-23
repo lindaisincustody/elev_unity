@@ -30,8 +30,19 @@ public class GlyphBook : MonoBehaviour
         instance = this;
     }
 
+    public void ClearCompleteText()
+    {
+        foreach (Transform child in CompleteTextPanel)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
     public void ActivateBook()
     {
+        // Clear any old "Poem Complete" text
+        ClearCompleteText();
+
         glyphBook.transform.localScale = Vector3.zero;
         glyphBook.SetActive(true);
         glyphBook.transform.DOScale(Vector3.one, bookScaleTime).SetEase(Ease.OutBack);
