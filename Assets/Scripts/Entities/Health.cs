@@ -10,7 +10,7 @@ public class Health : Component
     public bool isDead { get; set; }
     public System.Action OnDamage { get; set; }
 
-    public void TakeDamage(int amount)
+    public virtual void TakeDamage(int amount)
     {
         if (isDead) return;
         currentHealth -= amount;

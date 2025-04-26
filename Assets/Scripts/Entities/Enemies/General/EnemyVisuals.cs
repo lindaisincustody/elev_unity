@@ -1,3 +1,4 @@
+using System.Collections;
 using DG.Tweening;
 using NaughtyAttributes;
 using UnityEngine;
@@ -12,19 +13,29 @@ public class EnemyVisuals : Component
     [SerializeField] private string valueToChange;
     [SerializeField] private float activeValue;
     [SerializeField] private float inactiveValue;
+    [SerializeField] private float flashDuration = 1f;
 
     private float duration = 0.5f;
+
     private Tween shieldTween;
+    private Tween flashTween;
+
     private Material shieldMatInstance;
+    private Material bodyMatInstance;
+
     private DissolveEffect dissolveEffect;
 
     private void Awake()
     {
         shieldMatInstance = new Material(shieldMat);
+        bodyMatInstance = new Material(body.material);
+
         shader.material = shieldMatInstance;
+        body.material = bodyMatInstance;
 
-        dissolveEffect = new DissolveEffect(body.material, Entity.Get<EnemyHealth>().DeathDuration);
+        dissolveEffect = new DissolveEffect(bodyMatInstance, Entity.Get<EnemyHealth>().DeathDuration);
 
+        Entity.Get<EnemyHealth>().OnDamage += Flash;
         Entity.Get<EnemyHealth>().OnLethal += Vanish;
     }
 
@@ -55,6 +66,17 @@ public class EnemyVisuals : Component
         dissolveEffect.Vanish();
     }
 
+    private void Flash()
+    {
+        flashTween?.Kill();
+
+        bodyMatInstance.SetFloat("_FlashIntensity", 4f);
+
+        flashTween = bodyMatInstance
+        .DOFloat(0f, "_FlashIntensity", 0.2f)
+        .SetEase(Ease.Linear);
+    }
+
     public void Appear()
     {
         dissolveEffect.Appear();
@@ -63,5 +85,6 @@ public class EnemyVisuals : Component
     private void OnDestroy()
     {
         Entity.Get<EnemyHealth>().OnLethal -= Vanish;
+        Entity.Get<EnemyHealth>().OnDamage -= Flash;
     }
 }

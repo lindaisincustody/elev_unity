@@ -9,6 +9,8 @@ public class FireAbility : Ability
     [SerializeField] private float duration;
     [SerializeField] private float damageInterval;
     [SerializeField] private int damage;
+    [SerializeField] private int maxDistance;
+    [SerializeField] private LayerMask layerMask;
     [SerializeField] private Material material;
 
     public override void Activate()
@@ -16,6 +18,6 @@ public class FireAbility : Ability
         base.Activate();
         LetterDrawing letterDrawing= Player.instance.Get<LetterDrawing>();
 
-        letterDrawing.ActivateFireState(duration, damageInterval, damage, material);
+        letterDrawing.ActivateFireState(duration, damageInterval, damage, maxDistance, layerMask, material);
     }
 }

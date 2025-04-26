@@ -94,8 +94,6 @@ public class Enemy : Entity
                     Destroy(matchedSymbol.gameObject);   
                 }
 
-                Get<EnemyHealth>().StartCoroutine(Get<EnemyHealth>().FlashWhite());
-
                 List<EnemyGlyph> matchedGlyphs = new List<EnemyGlyph>();
 
                 foreach (var glyph in activeSymbols)

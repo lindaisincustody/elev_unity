@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DrawnFireTrigger : MonoBehaviour
 {
+    public LayerMask LayerMask { get; set; }
     public float duration { get; set; } = 5f;
     public int damage { get; set; } = 1;
     public float damageInterval { get; set; } = 0.5f;
@@ -12,8 +13,7 @@ public class DrawnFireTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (((1 << collision.gameObject.layer) & LayerMask.value) != 0 && collision.isTrigger)
         {
             Entity entity = collision.GetComponent<Entity>();
             DamageOvertimeEffect effect = new DamageOvertimeEffect(entity, damage, damageInterval);
@@ -25,8 +25,7 @@ public class DrawnFireTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player") ||
-            collision.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+        if (((1 << collision.gameObject.layer) & LayerMask.value) != 0 && collision.isTrigger)
         {
             Entity entity = collision.GetComponent<Entity>();
             if (activeEffects.TryGetValue(entity, out DamageOvertimeEffect effect))

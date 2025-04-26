@@ -129,6 +129,9 @@ public class PanelItemsSection : MonoBehaviour
 
     private void HighlightItem(int index)
     {
+        if (instantiatedItems.Count - 1 < index)
+            return;
+
         instantiatedItems[index].GetComponentInChildren<Image>().color = new Color(0, 0, 1, 0.2f);
 
     }
