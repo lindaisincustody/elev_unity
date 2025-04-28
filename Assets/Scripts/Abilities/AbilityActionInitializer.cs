@@ -46,7 +46,23 @@ public class AbilityActionsInitializer : MonoBehaviour
                 Debug.Log("Player does not have the Arrow ability.");
             }
         };
+
+        System.Action heartActiob = () =>
+        {
+            PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+            HealAbility heakAbility = playerAbilities?.Abilities.Find(a => a is HealAbility) as HealAbility;
+            if (heakAbility != null)
+            {
+                heakAbility.Activate();
+            }
+            else
+            {
+                Debug.Log("Player does not have the Arrow ability.");
+            }
+        };
+
         AbilityActionRegistry.Instance.RegisterAction("_Rightarrow", arrowAction);
         AbilityActionRegistry.Instance.RegisterAction("_downarrow", arrowAction);
+        AbilityActionRegistry.Instance.RegisterAction("_Heart", heartActiob);
     }
 }

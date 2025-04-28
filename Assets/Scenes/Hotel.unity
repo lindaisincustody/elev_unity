@@ -42502,7 +42502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6787149911093303862, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
       propertyPath: availableAbilities.Array.size
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 6787149911093303862, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
       propertyPath: availableAbilities.Array.data[3]
@@ -42516,6 +42516,10 @@ PrefabInstance:
       propertyPath: availableAbilities.Array.data[5]
       value: 
       objectReference: {fileID: 11400000, guid: 4b50004abff0ac94493dce8f32ff86e7, type: 2}
+    - target: {fileID: 6787149911093303862, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
+      propertyPath: availableAbilities.Array.data[6]
+      value: 
+      objectReference: {fileID: 11400000, guid: 539f22fb45e336d4186774fbd7165326, type: 2}
     - target: {fileID: 7717546630029486182, guid: a55aebbb848107040b0335d72416c3aa, type: 3}
       propertyPath: m_fontSize
       value: 114.3

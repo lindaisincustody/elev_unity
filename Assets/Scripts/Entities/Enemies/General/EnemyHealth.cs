@@ -51,7 +51,7 @@ public class EnemyHealth : Health
         OnDamage?.Invoke();
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
-        UpdateHealthBar();
+        UpdateHealthBar(FlashType.None);
 
         if (currentHealth == 0 && !isDead)
             StartCoroutine(Die());
@@ -74,7 +74,7 @@ public class EnemyHealth : Health
         OnDeath?.Invoke();
     }
 
-    protected override void UpdateHealthBar()
+    protected override void UpdateHealthBar(FlashType flashType)
     {
         float healthPercentage = currentHealth / maxHealth;
 

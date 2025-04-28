@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Rendering;
 
 public class PlayerHealth : Health
 {
@@ -25,17 +26,18 @@ public class PlayerHealth : Health
         Debug.Log("You died");
     }
 
-    protected override void UpdateHealthBar()
+    protected override void UpdateHealthBar(FlashType flashType)
     {
         float healthPercentage = currentHealth / maxHealth;
         OnDamage?.Invoke();
-        Flash();
+        Flash(flashType);
     }
 
-    private void Flash()
+    private void Flash(FlashType flashType)
     {
         flashTween?.Kill();
         spriteRenderer.color = Color.white;
-        flashTween = spriteRenderer.DOColor(Color.red, 0.1f).SetLoops(2, LoopType.Yoyo);
+        Color color = flashType == FlashType.Damage ? Color.red : Color.green;
+        flashTween = spriteRenderer.DOColor(color, 0.1f).SetLoops(2, LoopType.Yoyo);
     }
 }
