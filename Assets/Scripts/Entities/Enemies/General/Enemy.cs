@@ -69,6 +69,7 @@ public class Enemy : Entity
             activeSymbols.Add(randomSymbol);
         }
 
+        Get<EnemyHealth>().Immune = true;
     }
 
     private void SetSymbolSpecial(EnemyGlyph glyph, TMP_Text glyphText)
@@ -115,6 +116,7 @@ public class Enemy : Entity
                     Debug.Log("All symbols destroyed.");
                     Get<EnemyVisuals>().DeactivateShield();
                     Get<EnemyHealth>().ActivateHealthBar();
+                    Get<EnemyHealth>().Immune = false;
                 }
             }
             else

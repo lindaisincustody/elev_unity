@@ -36,6 +36,7 @@ public class PlayerMovement : Component
     public bool isAttacking = false;
 
     public Action OnDash;
+    public Action OnDashEnd;
 
     private void Awake()
     {
@@ -164,6 +165,7 @@ public class PlayerMovement : Component
         }
 
         isDashing = false;
+        OnDashEnd?.Invoke();
         animator.ResetTrigger("DashRight");
         animator.ResetTrigger("DashLeft");
         animator.ResetTrigger("DashBack");
