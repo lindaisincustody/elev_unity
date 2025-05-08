@@ -41,11 +41,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DissolveAmount: 0.5
+    - _DissolveScale: 30
     - _FlashIntensity: 0
+    - _OutlineThickness: 0.1
+    - _SpiralStrength: 5
     - _Thickness: 0.055
+    - _VerticalDissolve: 0.41
     m_Colors:
     - _Color: {r: 19.332022, g: 0, b: 23.67611, a: 0.972549}
     - _FlashColor: {r: 1, g: 1, b: 1, a: 1}
+    - _OutlineColor: {r: 1, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6237148384183149611
 MonoBehaviour:
