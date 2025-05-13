@@ -74,6 +74,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1768737373042410718}
   - component: {fileID: 4639523295586963794}
+  - component: {fileID: 1809069391542120967}
   m_Layer: 0
   m_Name: EnemySpawner
   m_TagString: Untagged
@@ -118,6 +119,21 @@ MonoBehaviour:
   minBound: {fileID: 596539546512051079}
   maxBound: {fileID: 8850700966980162224}
   enemyGlyphSO: {fileID: 11400000, guid: 7dff1747499ea1d44a6989d4bbaa4c4e, type: 2}
+  itemDropper: {fileID: 1809069391542120967}
+--- !u!114 &1809069391542120967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5004025273945126502}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f5380460c4a6040a8426fc01c701b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pickUp: {fileID: 5503730345851712752, guid: 38e21fa95abeb5a409d5f3854d5922d6, type: 3}
+  item: {fileID: 11400000, guid: 63cc6f0532762924daef64cddcd911e3, type: 2}
 --- !u!1 &6305041955423313884
 GameObject:
   m_ObjectHideFlags: 0

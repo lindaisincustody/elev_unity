@@ -17,4 +17,10 @@ public abstract class Interactable : MonoBehaviour
         playerIsInTrigger = false;
         player.ShowInteractUI(false);
     }
+
+    protected void OnDestroy()
+    {
+        player = Player.instance;
+        player.GetInputManager.OnInteract -= HandleInteract;
+    }
 }

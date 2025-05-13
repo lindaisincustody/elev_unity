@@ -152,11 +152,8 @@ public class InventoryUI : MonoBehaviour
             selectedIndex = Mathf.Min(selectedIndex, itemsInventory.GetAllItems().Count - 1);
             HighlightItem(selectedIndex);
         }
-        else
-        {
-        }
 
-        player.Get<PlayerAbilities>().Add(item.ability);
+        item.Use();
     }
 
     private void UpdateGoldText()

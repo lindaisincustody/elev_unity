@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[CreateAssetMenu(fileName = "newItem", menuName = "Custom/Item")]
+[CreateAssetMenu(fileName = "newItem", menuName = "Custom/Items/Item")]
 public class Item : ScriptableObject
 {
     public string itemId;
@@ -11,5 +11,5 @@ public class Item : ScriptableObject
     [TextArea]
     public string description;
     public Sprite sprite;
-    public Ability ability;
+    public virtual void Use() { }
 }

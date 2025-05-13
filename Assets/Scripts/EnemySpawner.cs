@@ -12,6 +12,7 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Transform minBound;
     [SerializeField] private Transform maxBound;
     [SerializeField] private EnemyGlyphSO enemyGlyphSO;
+    [SerializeField] private ItemDropper itemDropper;
 
     public List<Enemy> SpawnEnemies()
     {
@@ -26,10 +27,18 @@ public class EnemySpawner : MonoBehaviour
             newEnemy.GenerateRandomSymbols(enemyGlyphSO.Labels);
 
             EnemyManager.Instance.RegisterEnemy(newEnemy);
+            newEnemy.OnDeath += OnDeath;
 
             spawnedEnemies.Add(newEnemy);
         }
 
         return spawnedEnemies;
+    }
+
+    private void OnDeath(Enemy enemy)
+    {
+        enemy.OnDeath -= OnDeath;
+        if (itemDropper)
+            itemDropper.Drop(enemy.transform.position);
     }
 }
