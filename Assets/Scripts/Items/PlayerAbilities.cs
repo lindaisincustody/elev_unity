@@ -18,15 +18,15 @@ public class PlayerAbilities : Component
     public Action<Ability> OnAbilityAdded;
     public Action<Ability> OnAbilityRemoved;
 
-    private void Start()
+    private void Awake()
     {
         savingWrapper = SavingWrapper.Instance;
-        LoadAbilities();
-        Init();
     }
 
     public void Init()
     {
+        LoadAbilities();
+
         foreach (Ability ability in Abilities)
         {
             AbilityHolder abilityHolder = Player.instance.gameObject.AddComponent<AbilityHolder>();

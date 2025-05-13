@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class FightManager : MonoBehaviour
@@ -32,6 +33,17 @@ public class FightManager : MonoBehaviour
             foreach (Enemy enemy in _activeEnemies)
             {
                 enemy.Get<EnemyHealth>().TakeDamage(999999);
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            foreach (Enemy enemy in _activeEnemies)
+            {
+                foreach (EnemyGlyph symbol in enemy.activeSymbols.ToList())
+                {
+                    enemy.CheckSymbolMatch(symbol.Glyph);
+                }
             }
         }
     }

@@ -10,12 +10,12 @@ public class Health : Component
     public bool isDead { get; set; }
     public System.Action OnDamage { get; set; }
 
-    public void TakeDamage(int amount)
+    public virtual void TakeDamage(int amount)
     {
         if (isDead) return;
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
-        UpdateHealthBar();
+        UpdateHealthBar(FlashType.Damage);
         if (currentHealth == 0)
         {
             isDead = true;
@@ -23,7 +23,22 @@ public class Health : Component
         }
     }
 
-    protected virtual void UpdateHealthBar() { }
+    public virtual void Heal(int amount)
+    {
+        if (isDead) return;
+        currentHealth += amount;
+        currentHealth = Mathf.Min(currentHealth, maxHealth);
+        UpdateHealthBar(FlashType.Heal);
+    }
+
+    protected virtual void UpdateHealthBar(FlashType flashType) { }
 
     protected virtual void Die() { }
+}
+
+public enum FlashType
+{
+    Damage,
+    Heal,
+    None
 }

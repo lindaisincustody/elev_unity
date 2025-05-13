@@ -8,13 +8,15 @@ public class PaintingFireDrawingState : IDrawingState
     private int _damage;
     private float _interval;
     private Material _material;
+    private LayerMask _layerMask;
 
-    public void Setup(float duration, float interval, int damage, Material material)
+    public void Setup(float duration, float interval, int damage, LayerMask layerMask, Material material)
     {
         _duration = duration;
         _interval = interval;
         _damage = damage;
         _material = material;
+        _layerMask = layerMask;
     }
 
     public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
@@ -77,6 +79,7 @@ public class PaintingFireDrawingState : IDrawingState
         fireTrigger.duration = _duration;
         fireTrigger.damageInterval = _interval;
         fireTrigger.damage = _damage;
+        fireTrigger.LayerMask = _layerMask;
 
         var polyCol = pathColliderObj.AddComponent<PolygonCollider2D>();
         polyCol.isTrigger = true;

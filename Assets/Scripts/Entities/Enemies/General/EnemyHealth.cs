@@ -10,27 +10,21 @@ public class EnemyHealth : Health
     [SerializeField] private Transform healthBarBackground;
     [SerializeField] private SpriteRenderer body;
     [SerializeField] private EnemyAnimator animator;
-    [SerializeField] private float flashDuration = 1f;
 
     public float DeathDuration => 2f;
     public bool IsAlive => currentHealth > 0;
     public bool Immune { get; set; }
-    public Action OnDamage;
     public Action OnDeath;
     public Action OnLethal;
 
     private Vector3 initialScale;
     private Vector3 initialPosition;
-    private Color originalColor;
-    private Material enemyMaterial;
 
     private void Awake()
     {
         currentHealth = maxHealth;
         initialScale = healthBarTransform.localScale;
         initialPosition = healthBarTransform.localPosition;
-        originalColor = body.color; // Store the original color
-        enemyMaterial = body.material;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -46,26 +40,21 @@ public class EnemyHealth : Health
         healthBar.SetActive(true);
     }
 
-    public void TakeDamage(int amount)
+    public override void TakeDamage(int amount)
     {
+        if (isDead)
+            return;
+
         if (Immune)
             return;
 
         OnDamage?.Invoke();
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
-        UpdateHealthBar();
-        StartCoroutine(FlashWhite());
+        UpdateHealthBar(FlashType.None);
 
         if (currentHealth == 0 && !isDead)
             StartCoroutine(Die());
-    }
-
-    public IEnumerator FlashWhite()
-    {
-        enemyMaterial.SetFloat("_FlashIntensity", 4f);
-        yield return new WaitForSeconds(flashDuration);
-        enemyMaterial.SetFloat("_FlashIntensity", 0f);
     }
 
     public void SetAlpha(float value)
@@ -85,7 +74,7 @@ public class EnemyHealth : Health
         OnDeath?.Invoke();
     }
 
-    protected override void UpdateHealthBar()
+    protected override void UpdateHealthBar(FlashType flashType)
     {
         float healthPercentage = currentHealth / maxHealth;
 

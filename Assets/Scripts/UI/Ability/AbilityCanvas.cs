@@ -15,6 +15,7 @@ public class AbilityCanvas : MonoBehaviour
 
         playerAbilities.OnAbilityAdded += OnAbilityAdded;
         playerAbilities.OnAbilityRemoved += OnAbilityRemoved;
+        playerAbilities.Init();
     }
 
     private void OnAbilityAdded(Ability ability)

@@ -42,8 +42,14 @@ public class EnemyMovement : Component
     private Vector2 velocity = Vector2.zero;
     private float speed;
 
+    private float originalDaySpeed;
+    private float originalNightSpeed;
+
     private void Start()
     {
+        originalDaySpeed = daySpeed;
+        originalNightSpeed = nightSpeed;
+
         bodyHandler = new(body);
         enemyBehavior = new (rb, minBound, maxBound);
         spawnPos = transform.position;
@@ -51,6 +57,7 @@ public class EnemyMovement : Component
 
         SanityBar.instance.OnSanityChange += SanityChange;
         SanityChange(0);
+
     }
 
     public void Freeze(string requesterId)
@@ -154,7 +161,7 @@ public class EnemyMovement : Component
         if (!isFrozen)
             rb.velocity = direction * dashSpeed;
 
-        StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); // Adjust time as needed
+        StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); 
     }
 
     public void Stop()
@@ -169,8 +176,22 @@ public class EnemyMovement : Component
         OnEnd?.Invoke();
     }
 
-    private void OnDestroy()
+    public void ApplySlow(float factor, float duration)
     {
-        SanityBar.instance.OnSanityChange -= SanityChange;
+        factor = Mathf.Clamp01(factor);
+
+        float prevSpeed = speed;
+
+        speed = prevSpeed * factor;
+
+        StartCoroutine(SlowRoutine(prevSpeed, duration));
     }
+
+    private IEnumerator SlowRoutine(float originalSpeed, float duration)
+    {
+        yield return new WaitForSeconds(duration);
+
+        speed = originalSpeed;
+    }
+
 }

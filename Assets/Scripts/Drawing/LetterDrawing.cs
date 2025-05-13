@@ -27,6 +27,11 @@ public class LetterDrawing : Component
     [SerializeField] public TextMeshProUGUI poemTextDisplay;
     [SerializeField, TextArea] public string poem = "Your poem text goes here.";
 
+    private float maxDrawDistance = int.MaxValue;
+    private float currentDrawDistance = 0f;
+
+    private bool reachedMaxDistance = false;
+
     private Action OnDraw;
 
     private PaintingPathDrawingState paintingPathDrawingState;
@@ -84,26 +89,44 @@ public class LetterDrawing : Component
         lineRenderer.positionCount = 0;
         if (secondaryLineRenderer != null)
             secondaryLineRenderer.positionCount = 0;
+
+        currentDrawDistance = 0f;                // ← reset
+        reachedMaxDistance = false;
     }
 
     private void AddPoint()
     {
+        if (reachedMaxDistance) return;
+
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mousePosition.z = 0;
 
+        Vector3 newPos = mousePosition;
         if (lineRenderer.positionCount > 0)
         {
             Vector3 lastPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
-            mousePosition = Vector3.Lerp(lastPosition, mousePosition, 0.5f);
+            newPos = Vector3.Lerp(lastPosition, mousePosition, 0.5f);
+
+            float segLen = Vector3.Distance(lastPosition, newPos);
+
+            if (maxDrawDistance > 0f && currentDrawDistance + segLen > maxDrawDistance)
+            {
+                float allowed = maxDrawDistance - currentDrawDistance;
+                Vector3 dir = (newPos - lastPosition).normalized;
+                newPos = lastPosition + dir * allowed;
+                reachedMaxDistance = true;
+            }
+
+            currentDrawDistance += Vector3.Distance(lastPosition, newPos);
         }
 
         lineRenderer.positionCount++;
-        lineRenderer.SetPosition(lineRenderer.positionCount - 1, mousePosition);
+        lineRenderer.SetPosition(lineRenderer.positionCount - 1, newPos);
 
         if (secondaryLineRenderer != null)
         {
             secondaryLineRenderer.positionCount++;
-            secondaryLineRenderer.SetPosition(secondaryLineRenderer.positionCount - 1, mousePosition);
+            secondaryLineRenderer.SetPosition(secondaryLineRenderer.positionCount - 1, newPos);
         }
     }
 
@@ -132,11 +155,12 @@ public class LetterDrawing : Component
         return points;
     }
 
-    public void ActivateFireState(float duration, float damageInterval, int damage, Material material)
+    public void ActivateFireState(float duration, float damageInterval, int damage, float maxDist, LayerMask layerMask, Material material)
     {
         drawingMode = DrawingMode.PaintingFire;
         OnDraw = RevertToPreviousState;
-        paintingFireDrawingState.Setup(duration, damageInterval, damage, material);
+        maxDrawDistance = maxDist;
+        paintingFireDrawingState.Setup(duration, damageInterval, damage, layerMask, material);
         ChangeState();
     }
 
@@ -151,6 +175,7 @@ public class LetterDrawing : Component
     {
         OnDraw = null;
         drawingMode = previousMode;
+        maxDrawDistance = int.MaxValue;
         ChangeState();
     }
 }

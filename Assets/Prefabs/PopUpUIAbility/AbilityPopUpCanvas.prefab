@@ -329,10 +329,17 @@ MonoBehaviour:
   abilitySelectionPanel: {fileID: 166825493164208020}
   buttonContainer: {fileID: 5055252946493531290}
   abilityButtonPrefab: {fileID: 2575501448325818060, guid: 494c4757e20e5554d82fc2e18b287f27, type: 3}
+  abilityDescriptionText: {fileID: 0}
   availableAbilities:
   - {fileID: 11400000, guid: 465f7d1a709f28547bd00def7eb549d9, type: 2}
   - {fileID: 11400000, guid: 250cb0cc3ea9c664f97672521890130c, type: 2}
   - {fileID: 11400000, guid: f76d87a23dec410409855689d5b05386, type: 2}
+  - {fileID: 11400000, guid: 0d55884870d15d3458efa3227a9680d4, type: 2}
+  - {fileID: 11400000, guid: 390c543bdb4081e42861cec96f730ab5, type: 2}
+  - {fileID: 11400000, guid: 4b50004abff0ac94493dce8f32ff86e7, type: 2}
+  - {fileID: 11400000, guid: 539f22fb45e336d4186774fbd7165326, type: 2}
+  - {fileID: 11400000, guid: 50d75e30da5bd8c49a60fdb5c79df2ba, type: 2}
+  - {fileID: 11400000, guid: 6c56418196a04ea4f815662f53747772, type: 2}
 --- !u!1 &8613757881261245133
 GameObject:
   m_ObjectHideFlags: 0
