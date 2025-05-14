@@ -106,6 +106,20 @@ public class PredictingDrawingState : IDrawingState
         {
             letterDrawing.groundMaterial.mainTextureScale = new Vector2(10.0f, 0.5f);
         }
+
+        var sec = letterDrawing.secondaryLineRenderer;
+        Gradient initG = new Gradient();
+        initG.SetKeys(
+          new[] {
+        new GradientColorKey( trippyMaterialSecondary.GetColor("_Color"), 0f ),
+        new GradientColorKey( trippyMaterialSecondary.GetColor("_Color"), 1f )
+          },
+          new[] {
+        new GradientAlphaKey(1f, 0f),
+        new GradientAlphaKey(1f, 1f)
+          }
+        );
+        sec.colorGradient = initG;
     }
 
     private void InitializeCamera()
@@ -180,6 +194,7 @@ public class PredictingDrawingState : IDrawingState
         if (confidence < threshold)
         {
             Debug.Log("Low confidence drawing, ignoring input.");
+            TriggerMissSparkle(secondaryLineRenderer);
             output.Dispose();
             capturedTexture.Apply();
             DebugInputTexture(capturedTexture);
@@ -188,7 +203,7 @@ public class PredictingDrawingState : IDrawingState
         }
 
         MatchSymbolWithPoem(prediction.predictedLabel);
-        TriggerFeedback(secondaryLineRenderer);
+        TriggerCorrectSparkle(secondaryLineRenderer);
 
         output.Dispose();
         capturedTexture.Apply();
@@ -284,6 +299,8 @@ public class PredictingDrawingState : IDrawingState
             sparkleInstance.transform.position = pts[pts.Length - 1];
             sparkleInstance.Play();
             letterDrawing.StartCoroutine(StopSparkle());
+            int thisVersion = letterDrawing.drawVersion;
+            letterDrawing.StartCoroutine(ClearLinesAfter(1f, thisVersion));
             AnimateSparkleAlong(secondaryLR);
         }
 
@@ -292,7 +309,7 @@ public class PredictingDrawingState : IDrawingState
             letterDrawing.StopCoroutine(feedbackRoutine);
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
 
-        letterDrawing.StartCoroutine(ClearLinesAfter(1f));
+        
     }
 
     private IEnumerator StopSparkle()
@@ -306,15 +323,16 @@ public class PredictingDrawingState : IDrawingState
         var mat = letterDrawing.secondaryLineRenderer.material;
         var originalColor = mat.GetColor("_Color");
         var originalWidth = letterDrawing.secondaryLineRenderer.widthMultiplier;
-        float elapsed = 0f;
-        float total = letterDrawing.flashDuration;
+        float elapsed = 0f, total = letterDrawing.flashDuration;
 
         while (elapsed < total)
         {
             float norm = elapsed / total;
-            float pulse = Mathf.Sin(norm * Mathf.PI); // 0→1→0
+            float pulse = Mathf.Sin(norm * Mathf.PI);
             mat.SetColor("_Color", Color.Lerp(originalColor, Color.white, pulse));
-            letterDrawing.secondaryLineRenderer.widthMultiplier = originalWidth * (1 + (letterDrawing.scalePop - 1) * pulse);
+            letterDrawing.secondaryLineRenderer.widthMultiplier =
+                originalWidth * (1 + (letterDrawing.scalePop - 1) * pulse);
+
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -324,7 +342,6 @@ public class PredictingDrawingState : IDrawingState
     }
     private void AnimateSparkleAlong(LineRenderer lr)
     {
-        // grab world-space positions
         var pts = new Vector3[lr.positionCount];
         lr.GetPositions(pts);
         letterDrawing.StartCoroutine(MoveSparkle(pts, letterDrawing.sparkleDuration));
@@ -332,10 +349,8 @@ public class PredictingDrawingState : IDrawingState
 
     private IEnumerator MoveSparkle(Vector3[] pts, float duration)
     {
-        // start particle
         sparkleInstance.Play();
 
-        // compute total path length
         float totalLen = 0f;
         for (int i = 1; i < pts.Length; i++)
             totalLen += Vector3.Distance(pts[i - 1], pts[i]);
@@ -344,9 +359,7 @@ public class PredictingDrawingState : IDrawingState
         while (elapsed < duration)
         {
             float t = elapsed / duration;
-            // find distance along path
             float dist = t * totalLen;
-            // walk segments to place the sparkle
             float acc = 0f;
             Vector3 pos = pts[0];
             for (int i = 1; i < pts.Length; i++)
@@ -369,11 +382,107 @@ public class PredictingDrawingState : IDrawingState
         sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
-    private IEnumerator ClearLinesAfter(float delay)
+    private IEnumerator ClearLinesAfter(float delay, int versionAtTrigger)
     {
         yield return new WaitForSeconds(delay);
+        if (letterDrawing.drawVersion != versionAtTrigger)
+            yield break;
+
         letterDrawing.lineRenderer.positionCount = 0;
         if (letterDrawing.secondaryLineRenderer != null)
             letterDrawing.secondaryLineRenderer.positionCount = 0;
     }
+
+    private void TriggerCorrectSparkle(LineRenderer lr)
+    {
+        if (sparkleInstance == null) return;
+
+        // color the particles
+        var mainModule = sparkleInstance.main;
+        mainModule.startColor = letterDrawing.correctSparkleColor;
+
+        // animate sparkle along
+        AnimateSparkleAlong(lr);
+
+        // flash & pop
+        if (feedbackRoutine != null)
+            letterDrawing.StopCoroutine(feedbackRoutine);
+        feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
+
+        // pulse the line gradient
+        letterDrawing.StartCoroutine(PulseLineAlong(lr, letterDrawing.sparkleDuration));
+
+        // clear that version after a second
+        int v = letterDrawing.drawVersion;
+        letterDrawing.StartCoroutine(ClearLinesAfter(1f, v));
+    }
+
+    private void TriggerMissSparkle(LineRenderer lr)
+    {
+        if (sparkleInstance == null) return;
+
+        var mainModule = sparkleInstance.main;
+        mainModule.startColor = letterDrawing.missSparkleColor;
+
+        AnimateSparkleAlong(lr);
+
+   
+
+        int v = letterDrawing.drawVersion;
+        letterDrawing.StartCoroutine(ClearLinesAfter(1f, v));
+    }
+
+    private IEnumerator PulseLineAlong(LineRenderer lr, float duration)
+    {
+        Gradient orig = lr.colorGradient;
+        float elapsed = 0f;
+        float band = 0.1f;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            float half = band * 0.5f;
+            float a = Mathf.Clamp01(t - half);
+            float b = Mathf.Clamp01(t + half);
+
+            // build 5-key gradient
+            var cks = new List<GradientColorKey>();
+            var aks = new List<GradientAlphaKey>();
+
+            // before band
+            Color c0 = orig.Evaluate(a);
+            cks.Add(new GradientColorKey(c0, 0f));
+            aks.Add(new GradientAlphaKey(c0.a, 0f));
+
+            // start band
+            c0 = orig.Evaluate(a);
+            cks.Add(new GradientColorKey(c0, a));
+            aks.Add(new GradientAlphaKey(c0.a, a));
+
+            // mid band white
+            cks.Add(new GradientColorKey(Color.white, t));
+            aks.Add(new GradientAlphaKey(1f, t));
+
+            // end band back to original
+            c0 = orig.Evaluate(b);
+            cks.Add(new GradientColorKey(c0, b));
+            aks.Add(new GradientAlphaKey(c0.a, b));
+
+            // after band
+            c0 = orig.Evaluate(1f);
+            cks.Add(new GradientColorKey(c0, 1f));
+            aks.Add(new GradientAlphaKey(c0.a, 1f));
+
+            var g = new Gradient();
+            g.SetKeys(cks.ToArray(), aks.ToArray());
+            lr.colorGradient = g;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        // restore
+        lr.colorGradient = orig;
+    }
+
 }

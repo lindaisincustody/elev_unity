@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7384def4a01a5384ca1b9b62cd58a4e0, type: 3}
   m_Color: {r: 0.08176094, g: 1, b: 0.09547354, a: 0.6431373}
   m_FlipX: 0
   m_FlipY: 0
@@ -122,7 +122,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
+    oldSize: {x: 1.0833334, y: 0.5833333}
     newSize: {x: 1, y: 1}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -143,3 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c880a275e3eb19247b22da0d552a8ee0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followTarget: {fileID: 0}
+  followOffset: {x: 0, y: -1, z: 0}
+  frequency: 5
+  dampingRatio: 1
+  chainRenderer: {fileID: 7496336467584829003, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
+  chainSegments: 20
+  sagAmplitude: 0.5

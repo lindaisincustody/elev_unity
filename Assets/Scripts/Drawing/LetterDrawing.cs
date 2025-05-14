@@ -35,11 +35,17 @@ public class LetterDrawing : Component
     public float flashDuration = 0.4f;
     [Tooltip("Temporary scale multiplier on correct draw")]
     public float scalePop = 1.3f;
+    [Tooltip("Color when you hit the right symbol")]
+    public Color correctSparkleColor = Color.white;
+    [Tooltip("Color when prediction fails")]
+    public Color missSparkleColor = Color.red;
 
     private float maxDrawDistance = int.MaxValue;
     private float currentDrawDistance = 0f;
 
     private bool reachedMaxDistance = false;
+
+    [HideInInspector] public int drawVersion = 0;
 
     private Action OnDraw;
 
@@ -95,6 +101,7 @@ public class LetterDrawing : Component
 
     private void StartDrawing()
     {
+        drawVersion++;
         lineRenderer.positionCount = 0;
         if (secondaryLineRenderer != null)
             secondaryLineRenderer.positionCount = 0;
