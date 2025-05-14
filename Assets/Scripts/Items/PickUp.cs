@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class PickUp : MonoBehaviour
@@ -23,5 +24,10 @@ public class PickUp : MonoBehaviour
 
         Player.instance.Get<ItemsInventory>().AddItem(_item);
         Destroy(gameObject);
+    }
+
+    private void OnDestroy()
+    {
+        transform.DOKill();
     }
 }

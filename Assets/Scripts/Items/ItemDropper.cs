@@ -15,7 +15,7 @@ public class ItemDropper : MonoBehaviour
 
         newPickup.transform.localScale = Vector3.zero;
 
-        newPickup.transform.DOScale(Vector3.one, _duration / 5f).SetEase(Ease.InSine);
+        newPickup.transform.DOScale(Vector3.one, _duration / 2f);
         newPickup.transform.DOJump(position, 2, 1, _duration);
     }
 }

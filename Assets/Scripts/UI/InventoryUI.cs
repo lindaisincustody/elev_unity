@@ -1,56 +1,51 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
 
 public class InventoryUI : MonoBehaviour
 {
     public static InventoryUI Instance { get; private set; }
 
-    [Header("Self References")] [SerializeField]
-    GameObject inventoryPanel;
+    [SerializeField]
+    private GameObject inventoryPanel;
 
-    [SerializeField] GameObject inventoryBG;
-    [SerializeField] TextMeshProUGUI gold;
+    [SerializeField]
+    private GameObject inventoryBG;
 
-    [Header("Level References")] [SerializeField]
-    TextMeshProUGUI strengthLevel;
+    [SerializeField]
+    private TextMeshProUGUI gold;
 
-    [SerializeField] TextMeshProUGUI intelligenceLevel;
-    [SerializeField] TextMeshProUGUI coordinationLevel;
-    [SerializeField] TextMeshProUGUI neutralityLevel;
+    [SerializeField]
+    private InventoryItemSlot[] itemSlots;
 
-    [Header("Items")] [SerializeField] InventoryItemSlot[] itemSlots;
+    [SerializeField]
+    private UnityEngine.Rendering.Volume postProcessingVolume;
 
-    [SerializeField] private Volume postProcessingVolume;
-
-    [Header("Effect Display")] [SerializeField]
+    [SerializeField]
     private Image itemIcon;
 
-    [SerializeField] private TextMeshProUGUI effectDurationText;
+    [SerializeField]
+    private TextMeshProUGUI effectDurationText;
 
-    Player player;
-    ItemsInventory itemsInventory;
-    DataManager dataManager;
-    InputManager playerInput;
-    PlayerMovement playerMovement;
+    private Player player;
+    private ItemsInventory itemsInventory;
+    private DataManager dataManager;
+    private InputManager playerInput;
+    private PlayerMovement playerMovement;
 
     private bool isInventoryOpen = false;
     private bool canOpenInventory = true;
 
     private int selectedIndex = 0;
-    private int numberOfColumns = 4;
-
-    public float savedDuration = 0;
+    private const int numberOfColumns = 4;
 
     private void Awake()
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this.gameObject);
+            Destroy(gameObject);
         }
         else
         {
@@ -66,36 +61,61 @@ public class InventoryUI : MonoBehaviour
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();
 
-        playerInput.OnNavigate += OnNavigate;
-        playerInput.OnSubmit += UseItem;
-        playerInput.OnInventory += OpenInventory;
+        playerInput.OnInventory += ToggleInventory;
     }
 
     private void OnDestroy()
     {
-        playerInput.OnNavigate -= OnNavigate;
-        playerInput.OnSubmit -= UseItem;
-        playerInput.OnInventory -= OpenInventory;
+        playerInput.OnInventory -= ToggleInventory;
+
         if (Instance == this)
         {
             Instance = null;
         }
     }
 
-    public void OpenInventory()
+    public void ToggleInventory()
     {
         if (!canOpenInventory)
+        {
             return;
+        }
+
+        if (isInventoryOpen)
+        {
+            CloseInventory();
+        }
+        else
+        {
+            OpenInventory();
+        }
+    }
+
+    public void OpenInventory()
+    {
+        if (isInventoryOpen)
+        {
+            return;
+        }
 
         RefreshUI();
-        isInventoryOpen = !isInventoryOpen;
-        inventoryPanel.SetActive(isInventoryOpen);
-        inventoryBG.SetActive(isInventoryOpen);
-        playerMovement.SetMovement(!isInventoryOpen);
-        if (isInventoryOpen)
-            HighlightItem(selectedIndex);
-        else
-            RemoveHighlight(selectedIndex);
+        isInventoryOpen = true;
+        inventoryPanel.SetActive(true);
+        inventoryBG.SetActive(true);
+        playerMovement.SetMovement(false);
+    }
+
+    public void CloseInventory()
+    {
+        if (!isInventoryOpen)
+        {
+            return;
+        }
+
+        isInventoryOpen = false;
+        inventoryPanel.SetActive(false);
+        inventoryBG.SetActive(false);
+        playerMovement.SetMovement(true);
     }
 
     public void CanOpenInventory(bool canOpen)
@@ -107,90 +127,96 @@ public class InventoryUI : MonoBehaviour
     {
         UpdateGoldText();
         PopulateItems();
-        HighlightItem(0);
+    }
+
+    private class ItemCountPair
+    {
+        public Item Item;
+        public int Count;
     }
 
     public void PopulateItems()
     {
-        var allItems = itemsInventory.GetAllItems();
-        int slotIndex = 0;
-        foreach (var item in allItems)
+        List<Item> allItems = itemsInventory.GetAllItems();
+
+        List<ItemCountPair> groupedItems = allItems
+            .GroupBy(i => i.itemId)
+            .Select(g => new ItemCountPair { Item = g.First(), Count = g.Count() })
+            .ToList();
+
+        for (int i = 0; i < itemSlots.Length; i++)
         {
-            if (itemSlots.Length == slotIndex)
+            itemSlots[i].Clear();
+            itemSlots[i].OnClick = null;
+        }
+
+        int slotIndex = 0;
+
+        foreach (ItemCountPair entry in groupedItems)
+        {
+            if (slotIndex >= itemSlots.Length)
             {
-                Debug.LogError("Too many items, not enough slots to display");
+                Debug.LogError("Too many unique items for available slots!");
                 break;
             }
 
-            itemSlots[slotIndex].Equip(item);
-            if (slotIndex == selectedIndex)
-            {
-                HighlightItem(slotIndex);
-            }
+            InventoryItemSlot slot = itemSlots[slotIndex];
+            slot.Equip(entry.Item, entry.Count);
+            slot.slotIndex = slotIndex;
+            slot.OnClick += UseItem;
 
             slotIndex++;
         }
+
+        if (slotIndex == 0)
+        {
+            selectedIndex = 0;
+        }
     }
 
-    public void UseItem()
+    public void UseItem(int index)
     {
         if (!isInventoryOpen)
-            return;
-
-        Item item = itemSlots[selectedIndex].GetItem();
-        if (item == null)
         {
-            Debug.Log("No item in the selected slot.");
             return;
         }
 
-        Player.instance.Get<ItemsInventory>().RemoveItem(item);
+        Item item = itemSlots[index].GetItem();
 
-        itemSlots[selectedIndex].Clear();
-        if (itemsInventory.GetAllItems().Count > 0)
+        if (item == null || item is AbilityShardItem)
         {
-            selectedIndex = Mathf.Min(selectedIndex, itemsInventory.GetAllItems().Count - 1);
-            HighlightItem(selectedIndex);
+            return;
         }
+
+        int beforeCount = itemsInventory
+            .GetAllItems()
+            .Count(i => i.itemId == item.itemId);
 
         item.Use();
+        itemsInventory.RemoveItem(item);
+
+        if (beforeCount > 1)
+        {
+            itemSlots[index].Equip(item, beforeCount - 1);
+        }
+        else
+        {
+            itemSlots[index].Clear();
+            PopulateItems();
+
+            int groupCount = itemsInventory
+                .GetAllItems()
+                .GroupBy(i => i.itemId)
+                .Count();
+
+            selectedIndex = groupCount > 0
+                ? Mathf.Clamp(selectedIndex, 0, groupCount - 1)
+                : 0;
+        }
     }
 
     private void UpdateGoldText()
     {
         gold.text = player.GetGold().ToString();
-    }
-
-    public void HighlightItem(int index)
-    {
-        if (index >= 0 && index < itemSlots.Length)
-            itemSlots[index].GetComponent<Image>().color = Color.blue;
-    }
-
-    private void RemoveHighlight(int index)
-    {
-        if (index >= 0 && index < itemSlots.Length)
-            itemSlots[index].GetComponent<Image>().color = Color.white;
-    }
-
-    private void OnNavigate(Vector2 mousePosition)
-    {
-        if (!isInventoryOpen) return;
-
-        for (int i = 0; i < itemSlots.Length; i++)
-        {
-            RectTransform slotRect = itemSlots[i].GetComponent<RectTransform>();
-            if (RectTransformUtility.RectangleContainsScreenPoint(slotRect, mousePosition))
-            {
-                if (selectedIndex != i)
-                {
-                    RemoveHighlight(selectedIndex);
-                    selectedIndex = i;
-                    HighlightItem(selectedIndex);
-                }
-
-                return;
-            }
-        }
     }
 }
