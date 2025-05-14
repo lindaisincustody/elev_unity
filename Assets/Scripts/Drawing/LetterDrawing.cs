@@ -27,6 +27,15 @@ public class LetterDrawing : Component
     [SerializeField] public TextMeshProUGUI poemTextDisplay;
     [SerializeField, TextArea] public string poem = "Your poem text goes here.";
 
+    [Header("Feedback FX")]
+    public ParticleSystem sparkleEffectPrefab;
+    [Tooltip("How long particles run before stopping")]
+    public float sparkleDuration = 0.5f;
+    [Tooltip("Coroutine flash + pop duration")]
+    public float flashDuration = 0.4f;
+    [Tooltip("Temporary scale multiplier on correct draw")]
+    public float scalePop = 1.3f;
+
     private float maxDrawDistance = int.MaxValue;
     private float currentDrawDistance = 0f;
 
@@ -144,7 +153,7 @@ public class LetterDrawing : Component
             Vector3 pos = lineRenderer.GetPosition(i);
             points[i] = new Vector2(pos.x, pos.y);
         }
-        // Optionally, close the shape if not already closed.
+        // Close the shape if not already closed.
         if (points[0] != points[pointCount - 1])
         {
             Vector2[] closedPoints = new Vector2[pointCount + 1];

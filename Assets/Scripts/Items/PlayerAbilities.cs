@@ -18,8 +18,14 @@ public class PlayerAbilities : Component
     public Action<Ability> OnAbilityAdded;
     public Action<Ability> OnAbilityRemoved;
 
+
+    public void Start()
+    {
+        //RemoveAll();
+    }
     private void Awake()
     {
+        //RemoveAll();
         savingWrapper = SavingWrapper.Instance;
     }
 

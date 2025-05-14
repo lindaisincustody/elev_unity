@@ -19,6 +19,9 @@ public class PredictingDrawingState : IDrawingState
     private Camera renderCamera;
     private IWorker worker;
 
+    private ParticleSystem sparkleInstance;
+    private Coroutine feedbackRoutine;
+
     private string[] labels = new string[]
     {
         "_Capricorn", "_Heart", "_Leo", "_Moon", "_Rightarrow", "_bowtie",
@@ -77,6 +80,7 @@ public class PredictingDrawingState : IDrawingState
 
         InitializeCamera();
         InitializeModel();
+        InitializeFX();
         UpdatePoemDisplay();
 
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
@@ -184,6 +188,7 @@ public class PredictingDrawingState : IDrawingState
         }
 
         MatchSymbolWithPoem(prediction.predictedLabel);
+        TriggerFeedback(secondaryLineRenderer);
 
         output.Dispose();
         capturedTexture.Apply();
@@ -256,4 +261,119 @@ public class PredictingDrawingState : IDrawingState
         renderCamera.Render();
     }
 
+    private void InitializeFX()
+    {
+        if (letterDrawing.sparkleEffectPrefab != null)
+        {
+            sparkleInstance = GameObject.Instantiate(
+                letterDrawing.sparkleEffectPrefab,
+                Vector3.zero,
+                Quaternion.identity
+            );
+            sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+    }
+
+    private void TriggerFeedback(LineRenderer secondaryLR)
+    {
+        // 1) Sparkles
+        if (sparkleInstance != null)
+        {
+            var pts = new Vector3[secondaryLR.positionCount];
+            secondaryLR.GetPositions(pts);
+            sparkleInstance.transform.position = pts[pts.Length - 1];
+            sparkleInstance.Play();
+            letterDrawing.StartCoroutine(StopSparkle());
+            AnimateSparkleAlong(secondaryLR);
+        }
+
+        // 2) Flash + pop
+        if (feedbackRoutine != null)
+            letterDrawing.StopCoroutine(feedbackRoutine);
+        feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
+
+        letterDrawing.StartCoroutine(ClearLinesAfter(1f));
+    }
+
+    private IEnumerator StopSparkle()
+    {
+        yield return new WaitForSeconds(letterDrawing.sparkleDuration);
+        sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    private IEnumerator FlashPop()
+    {
+        var mat = letterDrawing.secondaryLineRenderer.material;
+        var originalColor = mat.GetColor("_Color");
+        var originalWidth = letterDrawing.secondaryLineRenderer.widthMultiplier;
+        float elapsed = 0f;
+        float total = letterDrawing.flashDuration;
+
+        while (elapsed < total)
+        {
+            float norm = elapsed / total;
+            float pulse = Mathf.Sin(norm * Mathf.PI); // 0→1→0
+            mat.SetColor("_Color", Color.Lerp(originalColor, Color.white, pulse));
+            letterDrawing.secondaryLineRenderer.widthMultiplier = originalWidth * (1 + (letterDrawing.scalePop - 1) * pulse);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        mat.SetColor("_Color", originalColor);
+        letterDrawing.secondaryLineRenderer.widthMultiplier = originalWidth;
+    }
+    private void AnimateSparkleAlong(LineRenderer lr)
+    {
+        // grab world-space positions
+        var pts = new Vector3[lr.positionCount];
+        lr.GetPositions(pts);
+        letterDrawing.StartCoroutine(MoveSparkle(pts, letterDrawing.sparkleDuration));
+    }
+
+    private IEnumerator MoveSparkle(Vector3[] pts, float duration)
+    {
+        // start particle
+        sparkleInstance.Play();
+
+        // compute total path length
+        float totalLen = 0f;
+        for (int i = 1; i < pts.Length; i++)
+            totalLen += Vector3.Distance(pts[i - 1], pts[i]);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            // find distance along path
+            float dist = t * totalLen;
+            // walk segments to place the sparkle
+            float acc = 0f;
+            Vector3 pos = pts[0];
+            for (int i = 1; i < pts.Length; i++)
+            {
+                float seg = Vector3.Distance(pts[i - 1], pts[i]);
+                if (acc + seg >= dist)
+                {
+                    float subT = (dist - acc) / seg;
+                    pos = Vector3.Lerp(pts[i - 1], pts[i], subT);
+                    break;
+                }
+                acc += seg;
+            }
+            sparkleInstance.transform.position = pos;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    private IEnumerator ClearLinesAfter(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        letterDrawing.lineRenderer.positionCount = 0;
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.positionCount = 0;
+    }
 }
