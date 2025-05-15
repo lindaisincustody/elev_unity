@@ -11,7 +11,7 @@ public class HealOvertimeTrigger : MonoBehaviour
 
     [Header("Follow Settings")]
     public Transform followTarget;
-    public Vector3 followOffset = new Vector3(0, -1f, 0);  // ← drop 1 unit below player
+    public Vector3 followOffset = new Vector3(0, -1.25f, 0); 
     public float frequency = 5f;
     [Range(0f, 2f)]
     public float dampingRatio = 1f;

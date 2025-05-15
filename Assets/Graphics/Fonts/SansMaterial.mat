@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CRTEffectMaterial
-  m_Shader: {fileID: 4800000, guid: 833c09e64b2d31946a8f66f4b208f70b, type: 3}
+  m_Name: SansMaterial
+  m_Shader: {fileID: 4800000, guid: e260cfa7296ee7642b167f1eb5be5023, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -28,8 +28,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f1a3d2b2796b28641a7b74f8a242f5ec, type: 3}
-        m_Scale: {x: 1.4516108, y: 1}
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
         m_Texture: {fileID: 0}
@@ -41,13 +41,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ColorShift: 0.184
-    - _Curvature: 0
-    - _Distortion: 0.001
     - _EnableExternalAlpha: 0
-    - _NoiseIntensity: 0
-    - _ScanlineIntensity: 0
-    - _Speed: 0.78
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _Flip: {r: 1, g: 1, b: 1, a: 1}

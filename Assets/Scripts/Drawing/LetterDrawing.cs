@@ -40,6 +40,20 @@ public class LetterDrawing : Component
     [Tooltip("Color when prediction fails")]
     public Color missSparkleColor = Color.red;
 
+    [Header("Symbol Display")]
+    [Tooltip("A TextMeshPro (Mesh) prefab")]
+    public TextMeshPro symbolPrefab;
+    [Tooltip("Multiplier for how large the glyph is relative to your draw bounds")]
+    public float symbolScale = 1f;
+    [Tooltip("How long the glyph stays on-screen")]
+    public float symbolLifetime = 2f;
+    [Tooltip("How much higher than the stroke center to place the glyph")]
+    public float symbolVerticalOffset = 0.5f;
+
+    [Tooltip("How long the stamp animation lasts")]
+    public float symbolStampDuration = 0.5f;
+
+
     private float maxDrawDistance = int.MaxValue;
     private float currentDrawDistance = 0f;
 

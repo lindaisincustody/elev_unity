@@ -58034,9 +58034,17 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: symbolScale
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: lineRenderer
       value: 
       objectReference: {fileID: 297478991}
+    - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: symbolPrefab
+      value: 
+      objectReference: {fileID: 6930059259639808039, guid: 63182828c18f3064a82cbd2635294472, type: 3}
     - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: flashDuration
       value: 1
@@ -58061,6 +58069,10 @@ PrefabInstance:
       propertyPath: renderTextureDisplay
       value: 
       objectReference: {fileID: 1862139849}
+    - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: symbolVerticalOffset
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: correctSparkleColor.b
       value: 1

@@ -22,6 +22,7 @@ public class PredictingDrawingState : IDrawingState
     private ParticleSystem sparkleInstance;
     private Coroutine feedbackRoutine;
 
+
     private string[] labels = new string[]
     {
         "_Capricorn", "_Heart", "_Leo", "_Moon", "_Rightarrow", "_bowtie",
@@ -204,6 +205,7 @@ public class PredictingDrawingState : IDrawingState
 
         MatchSymbolWithPoem(prediction.predictedLabel);
         TriggerCorrectSparkle(secondaryLineRenderer);
+        DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
 
         output.Dispose();
         capturedTexture.Apply();
@@ -276,6 +278,35 @@ public class PredictingDrawingState : IDrawingState
         renderCamera.Render();
     }
 
+    private void DisplaySymbol(string label, LineRenderer lr)
+    {
+
+        string glyph = latexToUnicode.ContainsKey(label) ? latexToUnicode[label] : label;
+
+        var pts = new Vector3[lr.positionCount];
+        lr.GetPositions(pts);
+        var bounds = new Bounds(pts[0], Vector3.zero);
+        for (int i = 1; i < pts.Length; i++)
+            bounds.Encapsulate(pts[i]);
+        Vector3 worldPos = bounds.center + Vector3.up * letterDrawing.symbolVerticalOffset;
+
+        float worldSize = Mathf.Max(bounds.size.x, bounds.size.y) * letterDrawing.symbolScale;
+
+        var tmp = GameObject.Instantiate(letterDrawing.symbolPrefab, worldPos, Quaternion.identity);
+        tmp.text = glyph;
+        tmp.transform.localScale = Vector3.zero;
+
+        tmp.transform.rotation = Camera.main.transform.rotation;
+
+        Vector3 targetScale = Vector3.one * worldSize;
+        var tmpMesh = tmp.GetComponent<TextMeshPro>();
+        letterDrawing.StartCoroutine(
+            ComplexStamp(tmpMesh.transform, tmpMesh, targetScale, letterDrawing.symbolStampDuration)
+        );
+
+        GameObject.Destroy(tmp.gameObject, letterDrawing.symbolLifetime);
+    }
+
     private void InitializeFX()
     {
         if (letterDrawing.sparkleEffectPrefab != null)
@@ -291,7 +322,7 @@ public class PredictingDrawingState : IDrawingState
 
     private void TriggerFeedback(LineRenderer secondaryLR)
     {
-        // 1) Sparkles
+        // sparkles
         if (sparkleInstance != null)
         {
             var pts = new Vector3[secondaryLR.positionCount];
@@ -304,7 +335,7 @@ public class PredictingDrawingState : IDrawingState
             AnimateSparkleAlong(secondaryLR);
         }
 
-        // 2) Flash + pop
+        // flash + pop
         if (feedbackRoutine != null)
             letterDrawing.StopCoroutine(feedbackRoutine);
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
@@ -397,14 +428,12 @@ public class PredictingDrawingState : IDrawingState
     {
         if (sparkleInstance == null) return;
 
-        // color the particles
         var mainModule = sparkleInstance.main;
         mainModule.startColor = letterDrawing.correctSparkleColor;
 
-        // animate sparkle along
         AnimateSparkleAlong(lr);
 
-        // flash & pop
+        // flash and pop
         if (feedbackRoutine != null)
             letterDrawing.StopCoroutine(feedbackRoutine);
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
@@ -412,7 +441,6 @@ public class PredictingDrawingState : IDrawingState
         // pulse the line gradient
         letterDrawing.StartCoroutine(PulseLineAlong(lr, letterDrawing.sparkleDuration));
 
-        // clear that version after a second
         int v = letterDrawing.drawVersion;
         letterDrawing.StartCoroutine(ClearLinesAfter(1f, v));
     }
@@ -445,30 +473,24 @@ public class PredictingDrawingState : IDrawingState
             float a = Mathf.Clamp01(t - half);
             float b = Mathf.Clamp01(t + half);
 
-            // build 5-key gradient
             var cks = new List<GradientColorKey>();
             var aks = new List<GradientAlphaKey>();
 
-            // before band
             Color c0 = orig.Evaluate(a);
             cks.Add(new GradientColorKey(c0, 0f));
             aks.Add(new GradientAlphaKey(c0.a, 0f));
 
-            // start band
             c0 = orig.Evaluate(a);
             cks.Add(new GradientColorKey(c0, a));
             aks.Add(new GradientAlphaKey(c0.a, a));
 
-            // mid band white
             cks.Add(new GradientColorKey(Color.white, t));
             aks.Add(new GradientAlphaKey(1f, t));
 
-            // end band back to original
             c0 = orig.Evaluate(b);
             cks.Add(new GradientColorKey(c0, b));
             aks.Add(new GradientAlphaKey(c0.a, b));
 
-            // after band
             c0 = orig.Evaluate(1f);
             cks.Add(new GradientColorKey(c0, 1f));
             aks.Add(new GradientAlphaKey(c0.a, 1f));
@@ -481,8 +503,48 @@ public class PredictingDrawingState : IDrawingState
             yield return null;
         }
 
-        // restore
         lr.colorGradient = orig;
     }
+
+    private IEnumerator ComplexStamp(Transform sym, TextMeshPro tmp, Vector3 targetScale, float duration)
+    {
+        float BackOut(float t)
+        {
+            const float s = 1.70158f;
+            t = t - 1f;
+            return t * t * ((s + 1f) * t + s) + 1f;
+        }
+
+        float elapsed = 0f;
+        float wobbleFreq = 1f; 
+        float rotAmp = 2.5f; 
+        Color baseColor = tmp.color;
+
+     
+        tmp.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0f);
+        sym.localScale = Vector3.zero;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            
+            float scaleVal = BackOut(t);
+            sym.localScale = Vector3.one * (targetScale.x * scaleVal);
+   
+            float wobble = Mathf.Sin(t * Mathf.PI * wobbleFreq) * (1f - t) * rotAmp;
+            sym.localRotation = Quaternion.Euler(0f, 0f, wobble);
+
+            float a = Mathf.Clamp01(t / 0.3f) * baseColor.a;
+            tmp.color = new Color(baseColor.r, baseColor.g, baseColor.b, a);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sym.localScale = targetScale;
+        sym.localRotation = Quaternion.identity;
+        tmp.color = baseColor;
+    }
+
 
 }
