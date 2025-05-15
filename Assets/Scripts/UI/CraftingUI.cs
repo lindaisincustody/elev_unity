@@ -57,6 +57,11 @@ public class CraftingUI : MonoBehaviour
         {
             Instance = null;
         }
+
+        if (isCraftingOpen)
+        {
+            ReturnCraftItemsToInventory();
+        }
     }
 
     [Button]
@@ -93,6 +98,7 @@ public class CraftingUI : MonoBehaviour
             return;
         }
 
+        ReturnCraftItemsToInventory();
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
         craftingBG.SetActive(false);
@@ -206,5 +212,19 @@ public class CraftingUI : MonoBehaviour
         craftSlots[craftIndex].Clear();
         itemsInventory.AddItem(shard);
         RefreshUI();
+    }
+
+    private void ReturnCraftItemsToInventory()
+    {
+        for (int i = 0; i < craftSlots.Length; i++)
+        {
+            InventoryItemSlot slot = craftSlots[i];
+            AbilityShardItem shard = slot.GetItem() as AbilityShardItem;
+            if (shard != null)
+            {
+                itemsInventory.AddItem(shard);
+                slot.Clear();
+            }
+        }
     }
 }
