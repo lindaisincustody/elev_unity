@@ -546,5 +546,10 @@ public class PredictingDrawingState : IDrawingState
         tmp.color = baseColor;
     }
 
+    public void Dispose()
+    {
+        worker?.Dispose();     // Releases all the ComputeBuffers
+        worker = null;
+    }
 
 }

@@ -208,4 +208,9 @@ public class LetterDrawing : Component
         maxDrawDistance = int.MaxValue;
         ChangeState();
     }
+
+    private void OnDestroy()
+    {
+        predictingDrawingState?.Dispose();
+    }
 }
