@@ -5,6 +5,21 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WallAbility", menuName = "Custom/Ability/WallAbility")]
 public class WallAbility : Ability
 {
+    [Header("Chain Effect")]
+    [Tooltip("Shader to use for the chain effect")]
+    [SerializeField] private Shader chainShader;
+    [Tooltip("Tileable chain-of-0s (or whatever) texture")]
+    [SerializeField] private Texture2D chainTexture;
+    [Tooltip("Tint color for the chain")]
+    [SerializeField] private Color chainTint = Color.cyan;
+    [Tooltip("Scroll direction (UV space)")]
+    [SerializeField] private Vector2 chainScroll = new Vector2(1, 0);
+    [Tooltip("Scroll speed")]
+    [SerializeField] private float chainSpeed = 0.8f;
+    [Tooltip("Wave amplitude")]
+    [SerializeField] private float chainWaveAmp = 0.15f;
+    [Tooltip("Wave frequency")]
+    [SerializeField] private float chainWaveFreq = 8f;
     public GameObject SpawnWall(Vector2[] points, MonoBehaviour runner,
         LineRenderer secondaryLineRenderer,
         Material groundMaterial, Material trippyTransparentMaterial)
@@ -42,32 +57,47 @@ public class WallAbility : Ability
         return wall;
     }
 
-    private void CreateWallEdge(Transform parent, Vector2 edgeSize, Vector2 localPosition, Material baseMaterial,
-        string name)
+    private void CreateWallEdge(Transform parent, Vector2 edgeSize, Vector2 localPosition,
+        Material baseMaterial, string name)
     {
         GameObject edge = new GameObject(name);
         edge.transform.SetParent(parent);
         edge.transform.localPosition = localPosition;
         edge.layer = LayerMask.NameToLayer("BoxLayer");
-        BoxCollider2D collider = edge.AddComponent<BoxCollider2D>();
-        Rigidbody2D rb = edge.AddComponent<Rigidbody2D>();
-        rb.bodyType = RigidbodyType2D.Kinematic;
-        collider.size = edgeSize;
 
-        SpriteRenderer sr = edge.AddComponent<SpriteRenderer>();
-        Material edgeMat = new Material(baseMaterial);
-        sr.material = edgeMat;
-        Texture2D tex = new Texture2D(1, 1);
-        tex.SetPixel(0, 0, Color.red);
-        tex.Apply();
-        edgeMat.mainTexture = tex;
+        // collider + rigidbody
+        var collider = edge.AddComponent<BoxCollider2D>();
+        collider.size = edgeSize;
+        var rb = edge.AddComponent<Rigidbody2D>();
+        rb.bodyType = RigidbodyType2D.Kinematic;
+
+        // sprite renderer
+        var sr = edge.AddComponent<SpriteRenderer>();
+
+        // use your custom chain shader
+        var mat = new Material(chainShader ?? Shader.Find("Custom/TrippyChain"));
+        // assign the texture you drop in inspector
+        mat.SetTexture("_MainTex", chainTexture);
+        mat.SetColor("_Color", chainTint);
+        mat.SetVector("_Scroll", chainScroll);
+        mat.SetFloat("_Speed", chainSpeed);
+        mat.SetFloat("_WaveAmp", chainWaveAmp);
+        mat.SetFloat("_WaveFreq", chainWaveFreq);
+
+        sr.material = mat;
         sr.sortingLayerName = "Frontground";
         sr.sortingOrder = 0;
         sr.drawMode = SpriteDrawMode.Sliced;
-        sr.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height),
-            new Vector2(0.5f, 0.5f), 100f);
+        // make a 1×1 sprite so slicing + tiling works
+        sr.sprite = Sprite.Create(
+            chainTexture,
+            new Rect(0, 0, chainTexture.width, chainTexture.height),
+            new Vector2(0.5f, 0.5f),
+            100f
+        );
         sr.size = edgeSize;
     }
+
 
     private IEnumerator DestroyWallAfterTime(GameObject wall, float delay,
         LineRenderer secondaryLineRenderer,

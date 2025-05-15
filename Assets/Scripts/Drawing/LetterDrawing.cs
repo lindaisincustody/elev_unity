@@ -27,10 +27,39 @@ public class LetterDrawing : Component
     [SerializeField] public TextMeshProUGUI poemTextDisplay;
     [SerializeField, TextArea] public string poem = "Your poem text goes here.";
 
+    [Header("Feedback FX")]
+    public ParticleSystem sparkleEffectPrefab;
+    [Tooltip("How long particles run before stopping")]
+    public float sparkleDuration = 0.5f;
+    [Tooltip("Coroutine flash + pop duration")]
+    public float flashDuration = 0.4f;
+    [Tooltip("Temporary scale multiplier on correct draw")]
+    public float scalePop = 1.3f;
+    [Tooltip("Color when you hit the right symbol")]
+    public Color correctSparkleColor = Color.white;
+    [Tooltip("Color when prediction fails")]
+    public Color missSparkleColor = Color.red;
+
+    [Header("Symbol Display")]
+    [Tooltip("A TextMeshPro (Mesh) prefab")]
+    public TextMeshPro symbolPrefab;
+    [Tooltip("Multiplier for how large the glyph is relative to your draw bounds")]
+    public float symbolScale = 1f;
+    [Tooltip("How long the glyph stays on-screen")]
+    public float symbolLifetime = 2f;
+    [Tooltip("How much higher than the stroke center to place the glyph")]
+    public float symbolVerticalOffset = 0.5f;
+
+    [Tooltip("How long the stamp animation lasts")]
+    public float symbolStampDuration = 0.5f;
+
+
     private float maxDrawDistance = int.MaxValue;
     private float currentDrawDistance = 0f;
 
     private bool reachedMaxDistance = false;
+
+    [HideInInspector] public int drawVersion = 0;
 
     private Action OnDraw;
 
@@ -86,6 +115,7 @@ public class LetterDrawing : Component
 
     private void StartDrawing()
     {
+        drawVersion++;
         lineRenderer.positionCount = 0;
         if (secondaryLineRenderer != null)
             secondaryLineRenderer.positionCount = 0;
@@ -144,7 +174,7 @@ public class LetterDrawing : Component
             Vector3 pos = lineRenderer.GetPosition(i);
             points[i] = new Vector2(pos.x, pos.y);
         }
-        // Optionally, close the shape if not already closed.
+        // Close the shape if not already closed.
         if (points[0] != points[pointCount - 1])
         {
             Vector2[] closedPoints = new Vector2[pointCount + 1];
@@ -177,5 +207,10 @@ public class LetterDrawing : Component
         drawingMode = previousMode;
         maxDrawDistance = int.MaxValue;
         ChangeState();
+    }
+
+    private void OnDestroy()
+    {
+        predictingDrawingState?.Dispose();
     }
 }

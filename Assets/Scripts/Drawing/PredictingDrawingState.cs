@@ -19,6 +19,10 @@ public class PredictingDrawingState : IDrawingState
     private Camera renderCamera;
     private IWorker worker;
 
+    private ParticleSystem sparkleInstance;
+    private Coroutine feedbackRoutine;
+
+
     private string[] labels = new string[]
     {
         "_Capricorn", "_Heart", "_Leo", "_Moon", "_Rightarrow", "_bowtie",
@@ -77,6 +81,7 @@ public class PredictingDrawingState : IDrawingState
 
         InitializeCamera();
         InitializeModel();
+        InitializeFX();
         UpdatePoemDisplay();
 
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
@@ -102,6 +107,20 @@ public class PredictingDrawingState : IDrawingState
         {
             letterDrawing.groundMaterial.mainTextureScale = new Vector2(10.0f, 0.5f);
         }
+
+        var sec = letterDrawing.secondaryLineRenderer;
+        Gradient initG = new Gradient();
+        initG.SetKeys(
+          new[] {
+        new GradientColorKey( trippyMaterialSecondary.GetColor("_Color"), 0f ),
+        new GradientColorKey( trippyMaterialSecondary.GetColor("_Color"), 1f )
+          },
+          new[] {
+        new GradientAlphaKey(1f, 0f),
+        new GradientAlphaKey(1f, 1f)
+          }
+        );
+        sec.colorGradient = initG;
     }
 
     private void InitializeCamera()
@@ -176,6 +195,7 @@ public class PredictingDrawingState : IDrawingState
         if (confidence < threshold)
         {
             Debug.Log("Low confidence drawing, ignoring input.");
+            TriggerMissSparkle(secondaryLineRenderer);
             output.Dispose();
             capturedTexture.Apply();
             DebugInputTexture(capturedTexture);
@@ -184,6 +204,8 @@ public class PredictingDrawingState : IDrawingState
         }
 
         MatchSymbolWithPoem(prediction.predictedLabel);
+        TriggerCorrectSparkle(secondaryLineRenderer);
+        DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
 
         output.Dispose();
         capturedTexture.Apply();
@@ -254,6 +276,280 @@ public class PredictingDrawingState : IDrawingState
         }
 
         renderCamera.Render();
+    }
+
+    private void DisplaySymbol(string label, LineRenderer lr)
+    {
+
+        string glyph = latexToUnicode.ContainsKey(label) ? latexToUnicode[label] : label;
+
+        var pts = new Vector3[lr.positionCount];
+        lr.GetPositions(pts);
+        var bounds = new Bounds(pts[0], Vector3.zero);
+        for (int i = 1; i < pts.Length; i++)
+            bounds.Encapsulate(pts[i]);
+        Vector3 worldPos = bounds.center + Vector3.up * letterDrawing.symbolVerticalOffset;
+
+        float worldSize = Mathf.Max(bounds.size.x, bounds.size.y) * letterDrawing.symbolScale;
+
+        var tmp = GameObject.Instantiate(letterDrawing.symbolPrefab, worldPos, Quaternion.identity);
+        tmp.text = glyph;
+        tmp.transform.localScale = Vector3.zero;
+
+        tmp.transform.rotation = Camera.main.transform.rotation;
+
+        Vector3 targetScale = Vector3.one * worldSize;
+        var tmpMesh = tmp.GetComponent<TextMeshPro>();
+        letterDrawing.StartCoroutine(
+            ComplexStamp(tmpMesh.transform, tmpMesh, targetScale, letterDrawing.symbolStampDuration)
+        );
+
+        GameObject.Destroy(tmp.gameObject, letterDrawing.symbolLifetime);
+    }
+
+    private void InitializeFX()
+    {
+        if (letterDrawing.sparkleEffectPrefab != null)
+        {
+            sparkleInstance = GameObject.Instantiate(
+                letterDrawing.sparkleEffectPrefab,
+                Vector3.zero,
+                Quaternion.identity
+            );
+            sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        }
+    }
+
+    private void TriggerFeedback(LineRenderer secondaryLR)
+    {
+        // sparkles
+        if (sparkleInstance != null)
+        {
+            var pts = new Vector3[secondaryLR.positionCount];
+            secondaryLR.GetPositions(pts);
+            sparkleInstance.transform.position = pts[pts.Length - 1];
+            sparkleInstance.Play();
+            letterDrawing.StartCoroutine(StopSparkle());
+            int thisVersion = letterDrawing.drawVersion;
+            letterDrawing.StartCoroutine(ClearLinesAfter(1f, thisVersion));
+            AnimateSparkleAlong(secondaryLR);
+        }
+
+        // flash + pop
+        if (feedbackRoutine != null)
+            letterDrawing.StopCoroutine(feedbackRoutine);
+        feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
+
+        
+    }
+
+    private IEnumerator StopSparkle()
+    {
+        yield return new WaitForSeconds(letterDrawing.sparkleDuration);
+        sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    private IEnumerator FlashPop()
+    {
+        var mat = letterDrawing.secondaryLineRenderer.material;
+        var originalColor = mat.GetColor("_Color");
+        var originalWidth = letterDrawing.secondaryLineRenderer.widthMultiplier;
+        float elapsed = 0f, total = letterDrawing.flashDuration;
+
+        while (elapsed < total)
+        {
+            float norm = elapsed / total;
+            float pulse = Mathf.Sin(norm * Mathf.PI);
+            mat.SetColor("_Color", Color.Lerp(originalColor, Color.white, pulse));
+            letterDrawing.secondaryLineRenderer.widthMultiplier =
+                originalWidth * (1 + (letterDrawing.scalePop - 1) * pulse);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        mat.SetColor("_Color", originalColor);
+        letterDrawing.secondaryLineRenderer.widthMultiplier = originalWidth;
+    }
+    private void AnimateSparkleAlong(LineRenderer lr)
+    {
+        var pts = new Vector3[lr.positionCount];
+        lr.GetPositions(pts);
+        letterDrawing.StartCoroutine(MoveSparkle(pts, letterDrawing.sparkleDuration));
+    }
+
+    private IEnumerator MoveSparkle(Vector3[] pts, float duration)
+    {
+        sparkleInstance.Play();
+
+        float totalLen = 0f;
+        for (int i = 1; i < pts.Length; i++)
+            totalLen += Vector3.Distance(pts[i - 1], pts[i]);
+
+        float elapsed = 0f;
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            float dist = t * totalLen;
+            float acc = 0f;
+            Vector3 pos = pts[0];
+            for (int i = 1; i < pts.Length; i++)
+            {
+                float seg = Vector3.Distance(pts[i - 1], pts[i]);
+                if (acc + seg >= dist)
+                {
+                    float subT = (dist - acc) / seg;
+                    pos = Vector3.Lerp(pts[i - 1], pts[i], subT);
+                    break;
+                }
+                acc += seg;
+            }
+            sparkleInstance.transform.position = pos;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmitting);
+    }
+
+    private IEnumerator ClearLinesAfter(float delay, int versionAtTrigger)
+    {
+        yield return new WaitForSeconds(delay);
+        if (letterDrawing.drawVersion != versionAtTrigger)
+            yield break;
+
+        letterDrawing.lineRenderer.positionCount = 0;
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.positionCount = 0;
+    }
+
+    private void TriggerCorrectSparkle(LineRenderer lr)
+    {
+        if (sparkleInstance == null) return;
+
+        var mainModule = sparkleInstance.main;
+        mainModule.startColor = letterDrawing.correctSparkleColor;
+
+        AnimateSparkleAlong(lr);
+
+        // flash and pop
+        if (feedbackRoutine != null)
+            letterDrawing.StopCoroutine(feedbackRoutine);
+        feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
+
+        // pulse the line gradient
+        letterDrawing.StartCoroutine(PulseLineAlong(lr, letterDrawing.sparkleDuration));
+
+        int v = letterDrawing.drawVersion;
+        letterDrawing.StartCoroutine(ClearLinesAfter(1f, v));
+    }
+
+    private void TriggerMissSparkle(LineRenderer lr)
+    {
+        if (sparkleInstance == null) return;
+
+        var mainModule = sparkleInstance.main;
+        mainModule.startColor = letterDrawing.missSparkleColor;
+
+        AnimateSparkleAlong(lr);
+
+   
+
+        int v = letterDrawing.drawVersion;
+        letterDrawing.StartCoroutine(ClearLinesAfter(1f, v));
+    }
+
+    private IEnumerator PulseLineAlong(LineRenderer lr, float duration)
+    {
+        Gradient orig = lr.colorGradient;
+        float elapsed = 0f;
+        float band = 0.1f;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            float half = band * 0.5f;
+            float a = Mathf.Clamp01(t - half);
+            float b = Mathf.Clamp01(t + half);
+
+            var cks = new List<GradientColorKey>();
+            var aks = new List<GradientAlphaKey>();
+
+            Color c0 = orig.Evaluate(a);
+            cks.Add(new GradientColorKey(c0, 0f));
+            aks.Add(new GradientAlphaKey(c0.a, 0f));
+
+            c0 = orig.Evaluate(a);
+            cks.Add(new GradientColorKey(c0, a));
+            aks.Add(new GradientAlphaKey(c0.a, a));
+
+            cks.Add(new GradientColorKey(Color.white, t));
+            aks.Add(new GradientAlphaKey(1f, t));
+
+            c0 = orig.Evaluate(b);
+            cks.Add(new GradientColorKey(c0, b));
+            aks.Add(new GradientAlphaKey(c0.a, b));
+
+            c0 = orig.Evaluate(1f);
+            cks.Add(new GradientColorKey(c0, 1f));
+            aks.Add(new GradientAlphaKey(c0.a, 1f));
+
+            var g = new Gradient();
+            g.SetKeys(cks.ToArray(), aks.ToArray());
+            lr.colorGradient = g;
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        lr.colorGradient = orig;
+    }
+
+    private IEnumerator ComplexStamp(Transform sym, TextMeshPro tmp, Vector3 targetScale, float duration)
+    {
+        float BackOut(float t)
+        {
+            const float s = 1.70158f;
+            t = t - 1f;
+            return t * t * ((s + 1f) * t + s) + 1f;
+        }
+
+        float elapsed = 0f;
+        float wobbleFreq = 1f; 
+        float rotAmp = 2.5f; 
+        Color baseColor = tmp.color;
+
+     
+        tmp.color = new Color(baseColor.r, baseColor.g, baseColor.b, 0f);
+        sym.localScale = Vector3.zero;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            
+            float scaleVal = BackOut(t);
+            sym.localScale = Vector3.one * (targetScale.x * scaleVal);
+   
+            float wobble = Mathf.Sin(t * Mathf.PI * wobbleFreq) * (1f - t) * rotAmp;
+            sym.localRotation = Quaternion.Euler(0f, 0f, wobble);
+
+            float a = Mathf.Clamp01(t / 0.3f) * baseColor.a;
+            tmp.color = new Color(baseColor.r, baseColor.g, baseColor.b, a);
+
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        sym.localScale = targetScale;
+        sym.localRotation = Quaternion.identity;
+        tmp.color = baseColor;
+    }
+
+    public void Dispose()
+    {
+        worker?.Dispose();     // Releases all the ComputeBuffers
+        worker = null;
     }
 
 }
