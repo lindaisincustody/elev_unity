@@ -181,7 +181,7 @@ public class InventoryUI : MonoBehaviour
             return;
         }
 
-        Item item = itemSlots[index].GetItem();
+        Item item = itemSlots[index].Item;
 
         if (item == null || item is AbilityShardItem)
         {

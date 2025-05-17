@@ -4,10 +4,15 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using NaughtyAttributes;
+using System;
+using UnityEngine.InputSystem;
 
 public class CraftingUI : MonoBehaviour
 {
     public static CraftingUI Instance { get; private set; }
+
+    [SerializeField]
+    private CraftingRecipes craftingRecipes;
 
     [SerializeField]
     private GameObject craftingPanel;
@@ -25,6 +30,7 @@ public class CraftingUI : MonoBehaviour
     private ItemsInventory itemsInventory;
     private DataManager dataManager;
     private PlayerMovement playerMovement;
+    private InputManager playerInput;
 
     private bool isCraftingOpen = false;
     private const int numberOfColumns = 4;
@@ -49,6 +55,9 @@ public class CraftingUI : MonoBehaviour
         dataManager = DataManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();
+        playerInput = player.GetInputManager;
+
+        playerInput.OnUICancel += ClosePanel;
     }
 
     private void OnDestroy()
@@ -62,6 +71,8 @@ public class CraftingUI : MonoBehaviour
         {
             ReturnCraftItemsToInventory();
         }
+
+        playerInput.OnUICancel -= ClosePanel;
     }
 
     [Button]
@@ -85,6 +96,7 @@ public class CraftingUI : MonoBehaviour
         }
 
         RefreshUI();
+        InventoryUI.Instance.CanOpenInventory(false);
         isCraftingOpen = true;
         craftingPanel.SetActive(true);
         craftingBG.SetActive(true);
@@ -99,10 +111,31 @@ public class CraftingUI : MonoBehaviour
         }
 
         ReturnCraftItemsToInventory();
+        InventoryUI.Instance.CanOpenInventory(true);
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
         craftingBG.SetActive(false);
         playerMovement.SetMovement(true);
+    }
+
+    public void Craft()
+    {
+        Item craftedItem = craftingRecipes.TryToCraft(craftSlots);
+        if (craftedItem == null)
+            return;
+
+        itemsInventory.AddItem(craftedItem);
+        for (int i = 0; i < craftSlots.Length; i++)
+        {
+            InventoryItemSlot slot = craftSlots[i];
+            if (slot.Item != null)
+            {
+                slot.Clear();
+            }
+        }
+
+        RefreshUI();
+        Debug.Log(craftedItem.name);
     }
 
     private void RefreshUI()
@@ -151,7 +184,7 @@ public class CraftingUI : MonoBehaviour
         {
             InventoryItemSlot slot = craftSlots[i];
             slot.OnClick = null;
-            Item current = slot.GetItem();
+            Item current = slot.Item;
             if (current is AbilityShardItem)
             {
                 slot.slotIndex = i;
@@ -162,7 +195,7 @@ public class CraftingUI : MonoBehaviour
 
     private void MoveToCraft(int itemIndex)
     {
-        AbilityShardItem shard = itemSlots[itemIndex].GetItem() as AbilityShardItem;
+        AbilityShardItem shard = itemSlots[itemIndex].Item as AbilityShardItem;
         if (shard == null)
         {
             return;
@@ -171,7 +204,7 @@ public class CraftingUI : MonoBehaviour
         int emptyIndex = -1;
         for (int i = 0; i < craftSlots.Length; i++)
         {
-            if (craftSlots[i].GetItem() == null)
+            if (craftSlots[i].Item == null)
             {
                 emptyIndex = i;
                 break;
@@ -203,7 +236,7 @@ public class CraftingUI : MonoBehaviour
 
     private void MoveToInventory(int craftIndex)
     {
-        AbilityShardItem shard = craftSlots[craftIndex].GetItem() as AbilityShardItem;
+        AbilityShardItem shard = craftSlots[craftIndex].Item as AbilityShardItem;
         if (shard == null)
         {
             return;
@@ -219,7 +252,7 @@ public class CraftingUI : MonoBehaviour
         for (int i = 0; i < craftSlots.Length; i++)
         {
             InventoryItemSlot slot = craftSlots[i];
-            AbilityShardItem shard = slot.GetItem() as AbilityShardItem;
+            AbilityShardItem shard = slot.Item as AbilityShardItem;
             if (shard != null)
             {
                 itemsInventory.AddItem(shard);

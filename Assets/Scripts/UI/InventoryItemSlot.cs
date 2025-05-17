@@ -4,30 +4,22 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 
-public class InventoryItemSlot : MonoBehaviour,
-                                IPointerEnterHandler,
-                                IPointerExitHandler,
-                                IPointerClickHandler
+public class InventoryItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
+    public Item Item;
     public TextMeshProUGUI itemCount;
     public Image border;
     public Image image;
     public Sprite pass_parts_3;
 
-    // this will be set by your UI when you populate
     [HideInInspector] public int slotIndex;
 
-    private Item currentItem;
-    public bool isEquiped;
-
-    // parent UI will subscribe to this
     public Action<int> OnClick;
 
     public void Equip(Item item, int count)
     {
-        currentItem = item;
+        Item = item;
         image.sprite = item.sprite;
-        isEquiped = true;
 
         if (count > 1)
         {
@@ -40,13 +32,10 @@ public class InventoryItemSlot : MonoBehaviour,
         }
     }
 
-    public Item GetItem() => isEquiped ? currentItem : null;
-
     public void Clear()
     {
-        currentItem = null;
+        Item = null;
         image.sprite = pass_parts_3;
-        isEquiped = false;
         itemCount.gameObject.SetActive(false);
     }
 
@@ -55,7 +44,6 @@ public class InventoryItemSlot : MonoBehaviour,
 
     public void OnPointerClick(PointerEventData e)
     {
-        // only fire if there's a subscriber
         OnClick?.Invoke(slotIndex);
     }
 }
