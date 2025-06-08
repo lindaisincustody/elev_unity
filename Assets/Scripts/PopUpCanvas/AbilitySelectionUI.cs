@@ -3,94 +3,138 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine.EventSystems;
+using NaughtyAttributes;
 
 public class AbilitySelectionUI : MonoBehaviour
 {
+    public static AbilitySelectionUI Instance { get; private set; }
+
     [SerializeField] private GameObject abilitySelectionPanel;
     [SerializeField] private Transform buttonContainer;
-    [SerializeField] private GameObject abilityButtonPrefab;
     [SerializeField] private TMP_Text abilityDescriptionText;
+    [SerializeField] private AbilitySelectionButton buttonPrefab;
 
     public List<Ability> availableAbilities;
+
+    private List<AbilityTier> currentTiersToShow;
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+    }
 
     private void Start()
     {
         abilitySelectionPanel.SetActive(false);
     }
 
-    public void Show()
+    [Button]
+    public void Show(List<AbilityTier> abilityTiers)
     {
-        PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
-        List<Ability> filteredAbilities =
-            availableAbilities.FindAll(ability => !playerAbilities.Abilities.Contains(ability));
+        currentTiersToShow = new List<AbilityTier>(abilityTiers);
 
+        List<Ability> filteredAbilities = GetFilteredAbilities();
         if (filteredAbilities.Count == 0)
-        {
             return;
-        }
 
         Time.timeScale = 0f;
         abilitySelectionPanel.SetActive(true);
-        PopulateAbilityButtons();
+        PopulateAbilityButtons(filteredAbilities);
+    }
+
+    public bool CanProvideAbilityForTier(AbilityTier tier)
+    {
+        var playerAbilities = Player.instance.GetComponent<PlayerAbilities>().Abilities;
+        var available = availableAbilities
+                        .Where(a => !playerAbilities.Contains(a))
+                        .Select(a => a.Tier)
+                        .Distinct()
+                        .OrderBy(t => t)
+                        .ToList();
+
+        for (int t = (int)tier; t >= (int)AbilityTier.Tier1; t--)
+            if (available.Contains((AbilityTier)t))
+                return true;
+
+        return false;
     }
 
 
-    private void PopulateAbilityButtons()
+    private List<Ability> GetFilteredAbilities()
+    {
+        var playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+        return availableAbilities
+            .Where(ability => !playerAbilities.Abilities.Contains(ability))
+            .ToList();
+    }
+
+    private void PopulateAbilityButtons(List<Ability> filteredAbilities)
+    {
+        ClearExistingButtons();
+
+        List<Ability> selectedAbilities = new List<Ability>();
+
+        foreach (var requestedTier in currentTiersToShow)
+        {
+            Ability picked = null;
+
+            for (int tierLevel = (int)requestedTier; tierLevel >= (int)AbilityTier.Tier1; tierLevel--)
+            {
+                var options = filteredAbilities
+                    .Where(a => (int)a.Tier == tierLevel)
+                    .OrderBy(_ => Random.value)
+                    .ToList();
+
+                if (options.Count > 0)
+                {
+                    picked = options[0];
+                    break;
+                }
+            }
+
+            if (picked != null)
+            {
+                selectedAbilities.Add(picked);
+                filteredAbilities.Remove(picked);
+            }
+        }
+
+        foreach (var ability in selectedAbilities)
+            CreateAbilityButton(ability);
+    }
+
+    private void ClearExistingButtons()
     {
         foreach (Transform child in buttonContainer)
         {
             Destroy(child.gameObject);
         }
-
-        PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
-
-        List<Ability> filteredAbilities =
-            availableAbilities.FindAll(ability => !playerAbilities.Abilities.Contains(ability));
-
-        int countToShow = Mathf.Min(3, filteredAbilities.Count);
-        List<Ability> abilitiesToDisplay = filteredAbilities
-            .OrderBy(a => UnityEngine.Random.value)
-            .Take(countToShow)
-            .ToList();
-
-        foreach (Ability ability in abilitiesToDisplay)
-        {
-            GameObject btnObj = Instantiate(abilityButtonPrefab, buttonContainer);
-
-            TMP_Text btnText = btnObj.transform.Find("AbilityNameText").GetComponent<TMP_Text>();
-            if (btnText != null)
-                btnText.text = ability.name;
-
-            TMP_Text descriptionText = btnObj.transform.Find("DescriptionText").GetComponent<TMP_Text>();
-            if (descriptionText != null)
-                descriptionText.text = ability.description;
-
-            Image abilityIcon = btnObj.transform.Find("AbilityIcon").GetComponent<Image>();
-            if (abilityIcon != null)
-            {
-                abilityIcon.sprite = ability.icon;
-                abilityIcon.enabled = (ability.icon != null);
-            }
-
-            Button button = btnObj.GetComponent<Button>();
-            button.onClick.AddListener(() => OnAbilitySelected(ability));
-        }
     }
 
-
-    private void UpdateDescription(string description)
+    private void CreateAbilityButton(Ability ability)
     {
-        abilityDescriptionText.text = description;
+        AbilitySelectionButton buttonObj = Instantiate(buttonPrefab, buttonContainer);
+
+        buttonObj.AbilityNameText.text = ability.name;
+        buttonObj.DescriptionText.text = ability.description;
+        buttonObj.TierText.text = ability.Tier.ToString();
+        buttonObj.AbilityIcon.sprite = ability.icon;
+
+        Button button = buttonObj.GetComponent<Button>();
+        button.onClick.AddListener(() => OnAbilitySelected(ability));
     }
 
     private void OnAbilitySelected(Ability ability)
     {
-        PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
-        if (playerAbilities != null)
-        {
-            playerAbilities.Add(ability);
-        }
+        var playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+        playerAbilities?.Add(ability);
 
         abilitySelectionPanel.SetActive(false);
         Time.timeScale = 1f;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using NaughtyAttributes;
 using UnityEngine;
 
 [System.Serializable]
@@ -28,6 +29,7 @@ public class ItemsInventory : Component
         savingWrapper.SaveInventory(inventoryData);
     }
 
+    [Button]
     public void DeleteItems()
     {
         inventoryData.items.Clear();

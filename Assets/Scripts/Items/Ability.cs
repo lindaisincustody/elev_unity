@@ -8,6 +8,7 @@ public class Ability : ScriptableObject
 {
     public KeyCode KeyCode;
     public AbilityType Type;
+    public AbilityTier Tier;
 
     public Action OnActivate;
     public Action OnCooldown;
@@ -48,4 +49,11 @@ public enum AbilityType
 {
     Active,
     Passive
+}
+
+public enum AbilityTier
+{
+    Tier1,
+    Tier2,
+    Tier3
 }

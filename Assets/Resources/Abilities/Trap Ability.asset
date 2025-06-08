@@ -14,9 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeyCode: 117
   Type: 0
+  Tier: 2
   icon: {fileID: 21300000, guid: 0ee139cac91e57049b02e36119f32d1b, type: 3}
   abilityId: TrapAbility
   name: Trap Ability
   cooldownTime: 5
   activeTime: 3
+  description: Trap enemy in a box
   trapPrefab: {fileID: 8246164857124308944, guid: 9cedc3ee6bdde38489932fef40038b88, type: 3}

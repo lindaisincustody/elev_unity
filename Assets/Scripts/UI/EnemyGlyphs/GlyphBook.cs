@@ -132,12 +132,6 @@ public class GlyphBook : MonoBehaviour
         {
             HideBook();
             RemoveWallTiles();
-
-            AbilitySelectionUI abilityUI = FindObjectOfType<AbilitySelectionUI>();
-            if (abilityUI != null)
-            {
-                abilityUI.Show();
-            }
         });
     }
 

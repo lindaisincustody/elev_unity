@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NaughtyAttributes;
 using UnityEngine;
 
 [System.Serializable]
@@ -68,6 +69,7 @@ public class PlayerAbilities : Component
         }
     }
 
+    [Button]
     public void RemoveAll()
     {
         foreach (Ability ability in Abilities.ToList())

@@ -328,8 +328,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   abilitySelectionPanel: {fileID: 166825493164208020}
   buttonContainer: {fileID: 5055252946493531290}
-  abilityButtonPrefab: {fileID: 2575501448325818060, guid: 494c4757e20e5554d82fc2e18b287f27, type: 3}
   abilityDescriptionText: {fileID: 0}
+  buttonPrefab: {fileID: 69057841775539668, guid: 494c4757e20e5554d82fc2e18b287f27, type: 3}
   availableAbilities:
   - {fileID: 11400000, guid: 465f7d1a709f28547bd00def7eb549d9, type: 2}
   - {fileID: 11400000, guid: 250cb0cc3ea9c664f97672521890130c, type: 2}

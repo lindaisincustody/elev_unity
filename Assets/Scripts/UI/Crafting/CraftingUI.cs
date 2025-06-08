@@ -33,9 +33,6 @@ public class CraftingUI : MonoBehaviour
     private InputManager playerInput;
 
     private bool isCraftingOpen = false;
-    private const int numberOfColumns = 4;
-
-    public float savedDuration = 0f;
 
     private void Awake()
     {
@@ -135,7 +132,6 @@ public class CraftingUI : MonoBehaviour
         }
 
         RefreshUI();
-        Debug.Log(craftedItem.name);
     }
 
     private void RefreshUI()
