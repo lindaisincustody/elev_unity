@@ -26,6 +26,9 @@ public class CraftingUI : MonoBehaviour
     [SerializeField]
     private InventoryItemSlot[] craftSlots;
 
+    [SerializeField]
+    private Image craftButton;
+
     private Player player;
     private ItemsInventory itemsInventory;
     private DataManager dataManager;
@@ -108,6 +111,7 @@ public class CraftingUI : MonoBehaviour
         }
 
         ReturnCraftItemsToInventory();
+        UpdateCraftButton();
         InventoryUI.Instance.CanOpenInventory(true);
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
@@ -132,6 +136,7 @@ public class CraftingUI : MonoBehaviour
         }
 
         RefreshUI();
+        UpdateCraftButton();
     }
 
     private void RefreshUI()
@@ -228,6 +233,8 @@ public class CraftingUI : MonoBehaviour
         {
             RefreshUI();
         }
+
+        UpdateCraftButton();
     }
 
     private void MoveToInventory(int craftIndex)
@@ -241,6 +248,7 @@ public class CraftingUI : MonoBehaviour
         craftSlots[craftIndex].Clear();
         itemsInventory.AddItem(shard);
         RefreshUI();
+        UpdateCraftButton();
     }
 
     private void ReturnCraftItemsToInventory()
@@ -255,5 +263,12 @@ public class CraftingUI : MonoBehaviour
                 slot.Clear();
             }
         }
+    }
+
+    private void UpdateCraftButton()
+    {
+        bool canCraft = craftingRecipes.TryToCraft(craftSlots) != null;
+        craftButton.color = canCraft ? Color.green : Color.white;
+        craftButton.raycastTarget = canCraft;
     }
 }
