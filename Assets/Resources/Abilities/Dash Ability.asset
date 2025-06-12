@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeyCode: 0
   Type: 1
-  icon: {fileID: -1491490788, guid: 812d06ce0d71c61448aa0232f5a8f91e, type: 3}
+  Tier: 0
+  icon: {fileID: 21300000, guid: 38ce44fe11aef534e94a7ae127239214, type: 3}
   abilityId: Dash_Id
   name: Dash
   cooldownTime: 3
   activeTime: 1
+  description: Double Dash

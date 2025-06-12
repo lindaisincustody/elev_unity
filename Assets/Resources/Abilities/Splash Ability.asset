@@ -15,11 +15,12 @@ MonoBehaviour:
   KeyCode: 0
   Type: 0
   Tier: 1
-  icon: {fileID: 21300000, guid: c96b78bbb53f1894498fbe124be7ab92, type: 3}
+  icon: {fileID: 21300000, guid: 7253692939315134f94f1f6a9ce4b79f, type: 3}
   abilityId: SplashAbility
   name: Splash Ability
   cooldownTime: 3
   activeTime: 3
+  Glyph: "\u264C"
   description: 'Create a splash '
   bubblePrefab: {fileID: 3190232830204029812, guid: 2d5470c8768e88f459d8d1d1347488be, type: 3}
   splashPrefab: {fileID: 4730124112879207546, guid: d74244df96f517948ad5325b0f43c3f4, type: 3}

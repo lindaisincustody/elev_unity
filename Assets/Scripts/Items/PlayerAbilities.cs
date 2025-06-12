@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,11 +19,28 @@ public class PlayerAbilities : Component
     public Action<Ability> OnAbilityAdded;
     public Action<Ability> OnAbilityRemoved;
 
+    private bool loadFromResources = true;
+    private List<Ability> allAbilities = new();
+
 
     public void Start()
     {
         //RemoveAll();
+        //AddAllAbilities();
     }
+    private void AddAllAbilities()
+    {
+        IEnumerable<Ability> source = loadFromResources
+            ? Resources.LoadAll<Ability>("Abilities")
+            : allAbilities;
+
+        foreach (var ability in source)
+            Add(ability);
+
+        Debug.Log($"Added {source.Count()} abilities.");
+    }
+
+
     private void Awake()
     {
         //RemoveAll();

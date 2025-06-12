@@ -8,6 +8,22 @@ public class AbilityActionsInitializer : MonoBehaviour
 
     private void Start()
     {
+        AbilityActionRegistry.Instance.RegisterAction("_diagup", () =>
+        {
+            var playerAbilities = Player.instance.GetComponent<PlayerAbilities>();
+            var diagup = playerAbilities?.Abilities.Find(a => a is DiagupAbility) as DiagupAbility;
+
+            if (diagup != null)
+            {
+                diagup.Activate();
+                Vector2[] pts = letterDrawing.GetDrawnPoints();
+                if (pts != null && pts.Length > 0)
+                {
+                    diagup.SpawnSlashAt(pts[pts.Length - 1]);
+                }
+            }
+            else Debug.LogWarning("Player does not have the Diagup ability.");
+        });
         AbilityActionRegistry.Instance.RegisterAction("_square", () =>
         {
             PlayerAbilities playerAbilities = Player.instance.GetComponent<PlayerAbilities>();

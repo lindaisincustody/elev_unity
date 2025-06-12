@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,24 +12,50 @@ public class AbilityIcon : MonoBehaviour
     [SerializeField] private Image activeImage;
     [SerializeField] private Image abilityIcon;
     [SerializeField] private Image background;
+    [SerializeField] private Image background_passive;
+    [SerializeField] private Image glyphHolder;
+    [SerializeField] private TextMeshProUGUI glyphText;
 
     private Ability ability;
 
     public void Init(Ability ability)
     {
         this.ability = ability;
+        
+        const float ActiveScale = 0.65f;
+        const float PassiveScale = 0.50f;
+
+        float targetScale = (ability.Type == AbilityType.Passive)
+        ? PassiveScale
+        : ActiveScale;
+
+        GetComponent<RectTransform>().localScale = Vector3.one * targetScale;
 
         timerText.enabled = false;
         cooldownImage.fillAmount = 0f;
         activeImage.fillAmount = 0f;
-
+       
         abilityIcon.sprite = ability.icon;
-
-        if (ability.Type == AbilityType.Passive)
-            background.color = Color.black;
 
         ability.OnActivate += ShowwActive;
         ability.OnCooldown += ShowwCooldown;
+
+        if (ability.Type == AbilityType.Passive)
+        {
+            glyphHolder.gameObject.SetActive(false);
+            background.gameObject.SetActive(false);
+            background_passive.gameObject.SetActive(true);
+            //background.color = Color.black;
+            
+        }
+        else if(ability.Type == AbilityType.Active)
+        {
+            glyphHolder.gameObject.SetActive(true);
+            background.gameObject.SetActive(true);
+            background_passive.gameObject.SetActive(false);
+            glyphText.text = ability.Glyph;
+
+        }
     }
 
     private void ShowwCooldown()

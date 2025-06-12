@@ -548,7 +548,7 @@ public class PredictingDrawingState : IDrawingState
 
     public void Dispose()
     {
-        worker?.Dispose();     // Releases all the ComputeBuffers
+        worker?.Dispose();    
         worker = null;
     }
 

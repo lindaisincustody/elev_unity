@@ -15,11 +15,12 @@ MonoBehaviour:
   KeyCode: 0
   Type: 0
   Tier: 1
-  icon: {fileID: 21300000, guid: edd70f65aac3cde42871c04aa2635472, type: 3}
+  icon: {fileID: 21300000, guid: 485db518ba69e0f4abfd1a7256daa4f0, type: 3}
   abilityId: HealOvertime
   name: Heal Overtime
   cooldownTime: 6
-  activeTime: 0
+  activeTime: 4
+  Glyph: "\u2665"
   description: Heals Player Overtime
   duration: 4
   interval: 0.5

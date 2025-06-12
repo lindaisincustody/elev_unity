@@ -15,10 +15,17 @@ public class HealAbility : Ability
     public override void Activate()
     {
         Debug.Log("Heal activated");
+        OnActivate?.Invoke();
         HealOvertimeTrigger newHealPrefab = Instantiate(healPrefab, Player.instance.transform.position, Quaternion.identity);
         newHealPrefab.duration = duration;
         newHealPrefab.interval = interval;
         newHealPrefab.heal = heal;
         newHealPrefab.LayerMask = layerMask;
+    }
+
+    public override void Destroy()
+    {
+        Debug.Log("Heal ability on cooldown.");
+        OnCooldown?.Invoke();
     }
 }

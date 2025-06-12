@@ -189,7 +189,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3378510354718956615}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -245,10 +245,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1475559328085674459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -150.909, y: 15.456001}
-  m_SizeDelta: {x: 137.178, y: -272.397}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: -70.988, y: -108.18}
+  m_SizeDelta: {x: 244.428, y: 63.423004}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2684348444974454431
 CanvasRenderer:
@@ -510,6 +510,8 @@ MonoBehaviour:
   CompleteTextPanel: {fileID: 6002696549481523972}
   glyphBook: {fileID: 3378510354718956615}
   poemText: {fileID: 936717010696199519}
+  wallTilemap: {fileID: 0}
+  wallTilePositionsToRemove: []
 --- !u!1 &6739959859827153780
 GameObject:
   m_ObjectHideFlags: 0
@@ -685,7 +687,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:

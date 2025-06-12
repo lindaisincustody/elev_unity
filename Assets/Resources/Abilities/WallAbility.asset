@@ -15,11 +15,12 @@ MonoBehaviour:
   KeyCode: 0
   Type: 0
   Tier: 2
-  icon: {fileID: 21300000, guid: a0b6426e869daac40ab135afd79826ad, type: 3}
+  icon: {fileID: 21300000, guid: c29f9e4466bcc7e439f32c275424f54d, type: 3}
   abilityId: WallAbility
   name: Wall Ability
   cooldownTime: 3
   activeTime: 5
+  Glyph: "\u25A0"
   description: Summon a wall by drawing a square.
   chainShader: {fileID: 4800000, guid: a1f41d0677de5dc4ebf7e55c8a9ffc01, type: 3}
   chainTexture: {fileID: 2800000, guid: 76df063c54c47a94d9b5e33af17c40e4, type: 3}

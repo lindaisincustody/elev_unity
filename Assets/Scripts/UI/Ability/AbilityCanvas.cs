@@ -5,6 +5,8 @@ using UnityEngine;
 public class AbilityCanvas : MonoBehaviour
 {
     [SerializeField] private AbilityIcon abilityIconPrefab;
+    [SerializeField] private RectTransform activeAbilitiesContainer;
+    [SerializeField] private RectTransform passiveAbilitiesContainer;
 
     private PlayerAbilities playerAbilities;
     private Dictionary<Ability, AbilityIcon> abilityIcons = new();
@@ -20,14 +22,22 @@ public class AbilityCanvas : MonoBehaviour
 
     private void OnAbilityAdded(Ability ability)
     {
-        AbilityIcon abilityIcon = Instantiate(abilityIconPrefab, transform);
+        var parent = ability.Type == AbilityType.Passive
+           ? passiveAbilitiesContainer
+           : activeAbilitiesContainer;
+
+        AbilityIcon abilityIcon = Instantiate(abilityIconPrefab, parent);
         abilityIcon.Init(ability);
         abilityIcons[ability] = abilityIcon;
     }
 
     private void OnAbilityRemoved(Ability ability)
     {
-
+        if (abilityIcons.TryGetValue(ability, out var icon))
+        {
+            Destroy(icon.gameObject);
+            abilityIcons.Remove(ability);
+        }
     }
 
     private void OnDestroy()

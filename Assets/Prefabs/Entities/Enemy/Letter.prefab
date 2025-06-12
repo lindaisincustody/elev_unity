@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3742781961918418572}
   - component: {fileID: 6930059259639808039}
   - component: {fileID: 5980091876520292928}
+  - component: {fileID: -8827467939119971368}
   m_Layer: 18
   m_Name: Letter
   m_TagString: Untagged
@@ -185,3 +186,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <Letter>k__BackingField: {fileID: 6930059259639808039}
+--- !u!114 &-8827467939119971368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5454184074102035500}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 387a9c73abf85304d916a7e4de8b8437, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  textMesh: {fileID: 0}
+  canvasGroup: {fileID: 0}

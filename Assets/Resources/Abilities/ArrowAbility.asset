@@ -14,10 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeyCode: 0
   Type: 0
-  icon: {fileID: 21300000, guid: bc23863f691391e4abb9ee9078ae33a2, type: 3}
+  Tier: 0
+  icon: {fileID: 21300000, guid: e8c408981cd0e4a4dad2e7de8f92798a, type: 3}
   abilityId: ArrowAbility
   name: Arrow Ability
   cooldownTime: 3
   activeTime: 5
+  Glyph: "\u2193"
   description: Shoot arrows whenever you draw an arrow.
   arrowParticlePrefab: {fileID: 5514396532846754725, guid: 5742463a94589c3419facf4509dacfe7, type: 3}

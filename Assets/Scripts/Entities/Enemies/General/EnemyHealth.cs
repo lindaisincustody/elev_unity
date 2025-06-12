@@ -42,13 +42,14 @@ public class EnemyHealth : Health
 
     public override void TakeDamage(int amount)
     {
-        if (isDead)
-            return;
-
-        if (Immune)
-            return;
+        if (isDead || Immune) return;
 
         OnDamage?.Invoke();
+
+        // Spawn the floating number at the enemy’s head
+        Vector3 spawnPos = transform.position + Vector3.up * 1.5f;
+        //DamageTextSpawner.Instance.SpawnDamageText(amount, spawnPos);
+
         currentHealth -= amount;
         currentHealth = Mathf.Max(currentHealth, 0);
         UpdateHealthBar(FlashType.None);
@@ -56,6 +57,7 @@ public class EnemyHealth : Health
         if (currentHealth == 0 && !isDead)
             StartCoroutine(Die());
     }
+
 
     public void SetAlpha(float value)
     {

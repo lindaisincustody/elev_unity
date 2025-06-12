@@ -831,7 +831,6 @@ MonoBehaviour:
   healthBarBackground: {fileID: 6719587443123937243}
   body: {fileID: 2891074234339272563}
   animator: {fileID: 4345423784217660443}
-  flashDuration: 0.1
 --- !u!114 &4433329208213227517
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -957,6 +956,7 @@ MonoBehaviour:
   valueToChange: _Intensity
   activeValue: 0.027
   inactiveValue: 0
+  flashDuration: 1
 --- !u!58 &1356284750688808381
 CircleCollider2D:
   m_ObjectHideFlags: 0

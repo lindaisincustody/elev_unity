@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   KeyCode: 0
   Type: 1
-  icon: {fileID: 585987202, guid: 7c23d2c5020daed448cd66ca40a620ba, type: 3}
+  Tier: 0
+  icon: {fileID: 21300000, guid: cab1bc20c9c28fd40bd4f388b474c2e7, type: 3}
   abilityId: DashDamage
   name: Dash Damage
   cooldownTime: 0
