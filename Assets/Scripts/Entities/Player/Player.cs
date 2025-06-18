@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class Player : Entity
     [SerializeField] InputManager inputManager;
     [SerializeField] private GameObject poemAvailable;
     [SerializeField] private WordData[] wordsData;
+    [SerializeField] private Collider2D bodyCollider;
 
     public float SpecialSymbolChance { get; set; }
 
@@ -24,6 +26,8 @@ public class Player : Entity
 
     public bool InDangerZone;
     public bool InSafeZone;
+
+    public System.Action<Collider2D> OnGhost;
 
 
     private Inventory _inventory = new Inventory();
@@ -68,6 +72,17 @@ public class Player : Entity
         {
             transform.position = savedPosition.Value;
         }
+    }
+
+    public void ToggleGhostForm()
+    {
+        if (!bodyCollider.enabled)
+        {
+            bodyCollider.enabled = true;
+            return;
+        }
+        bodyCollider.enabled = false;
+        OnGhost?.Invoke(bodyCollider);
     }
 
     public void AddGold(int goldAmount)

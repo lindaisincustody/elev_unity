@@ -273,6 +273,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
   - {fileID: 11400000, guid: ff08f7d0b0c6c2046909fde5f131fcfe, type: 2}
   - {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
+  bodyCollider: {fileID: 6769244744475398257}
   InDangerZone: 0
   InSafeZone: 0
 --- !u!114 &5376793493941146557
@@ -503,6 +504,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   trail: {fileID: 2388857520201769837}
+  playerRenderer: {fileID: 2226871447008519275}
 --- !u!1 &1033117730231277173
 GameObject:
   m_ObjectHideFlags: 0

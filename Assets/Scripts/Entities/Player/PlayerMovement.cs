@@ -76,7 +76,7 @@ public class PlayerMovement : Component
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Mouse1))
+        if (Input.GetKey(KeyCode.Space))
         {
    
             movement = Vector2.zero;

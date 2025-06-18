@@ -9,7 +9,7 @@ public class Sensor : MonoBehaviour
     public float detectionRadius = 10f;
     public List<string> targetTags = new();
 
-    readonly List<Transform> detectedObjects = new(10);
+    [SerializeField] List<Transform> detectedObjects = new(10);
     CapsuleCollider2D collider;
 
     private void Start()
@@ -18,7 +18,7 @@ public class Sensor : MonoBehaviour
         collider.isTrigger = true;
         collider.size = new Vector2(detectionRadius, detectionRadius);
 
-
+        Player.instance.OnGhost += OnTriggerExit2D;
     }
 
     public Transform GetClosestTarget(string tag)
@@ -63,8 +63,14 @@ public class Sensor : MonoBehaviour
         {
             if (other.CompareTag(t))
             {
+                Debug.Log(other.name + " "+ action);
                 action(other.transform);
             }
         }
+    }
+
+    private void OnDestroy()
+    {
+        Player.instance.OnGhost -= OnTriggerExit2D;
     }
 }
