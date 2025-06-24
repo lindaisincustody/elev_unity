@@ -13,15 +13,14 @@ public class PlayerMovement : Component
     public float dashCooldown = 2f;
     private bool isDashing = false;
     public bool canDash = true;
-    [SerializeField] private float stopRadius = 0.2f;
-    [SerializeField] private Transform arrowTransform;
-    private Camera mainCam;
 
     public Rigidbody2D rb;
     public Animator animator;
 
     public AudioSource moveSound;
     private Coroutine stepSoundCoroutine;
+    private Coroutine dashCoroutine;
+    private Coroutine dashWaitCoroutine;
 
     public Vector2 movement;
     public Vector2 lastDirection = Vector2.up;
@@ -41,11 +40,8 @@ public class PlayerMovement : Component
     public Action OnDash;
     public Action OnDashEnd;
 
-    private Vector3 originalArrowOffset;
-
     private void Awake()
     {
-        mainCam = Camera.main;
         playerInput = GetComponent<InputManager>();
         playerInput.OnDash += HandleDash;
 
@@ -59,16 +55,6 @@ public class PlayerMovement : Component
         }
     }
 
-    private void Start()
-    {
-  
-        if (arrowTransform.parent == transform)
-            originalArrowOffset = arrowTransform.localPosition;
-        else
-            originalArrowOffset = arrowTransform.position - transform.position;
-    }
-
-
     private void OnDestroy()
     {
         playerInput.OnDash -= HandleDash;
@@ -76,22 +62,6 @@ public class PlayerMovement : Component
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
-        {
-   
-            movement = Vector2.zero;
-            if (isMoving)
-            {
-                isMoving = false;
-                StopMovementSound();
-            }
-            animator.SetFloat("Horizontal", 0);
-            animator.SetFloat("Vertical", 0);
-            animator.SetFloat("Speed", 0);
-            return;
-        }
-
-
         if (isAttacking)
         {
             baseMoveSpeed = 2.75f;
@@ -115,7 +85,7 @@ public class PlayerMovement : Component
             }
         }
 
-      
+
         if (!_canMove)
         {
             StopMovementSound();
@@ -124,56 +94,24 @@ public class PlayerMovement : Component
 
         if (!isDashing)
         {
-            Vector3 mouseWorld = mainCam.ScreenToWorldPoint(Input.mousePosition);
-            mouseWorld.z = transform.position.z;
+            movement = playerInput.inputVector;
 
-            Vector2 toMouse = mouseWorld - transform.position;
-
-            Vector2 dir = (mouseWorld - transform.position).normalized;
-            if (toMouse.sqrMagnitude > 0.0001f)
+            if (movement != Vector2.zero)
             {
-     
-                float rawAngle = Mathf.Atan2(toMouse.y, toMouse.x) * Mathf.Rad2Deg;
-                float targetAngle = rawAngle - 270f;
-                float currentZ = arrowTransform.localEulerAngles.z;
-                float smoothZ = Mathf.LerpAngle(currentZ, targetAngle, Time.deltaTime * 10f);
-                arrowTransform.localRotation = Quaternion.Euler(0, 0, smoothZ);
-
-                float halfRadius = originalArrowOffset.magnitude * 0.45f;
-                Vector3 newPos;
-                if (arrowTransform.parent == transform)
-                {
-                    newPos = (Vector3)toMouse.normalized * halfRadius;
-                    arrowTransform.localPosition = newPos + Vector3.down * 0.60f;
-                }
-                else
-                {
-                    newPos = transform.position + (Vector3)toMouse.normalized * halfRadius;
-                    arrowTransform.position = newPos;
-                }
-            }
-
-            float dist = toMouse.magnitude;
-
-            if (dist > stopRadius)
-            {
-                movement = toMouse.normalized;
+                lastDirection = movement;
 
                 if (!isMoving)
                 {
                     isMoving = true;
                     StartMovementSound();
                 }
+
                 AdjustSoundProperties();
             }
-            else
+            else if (isMoving)
             {
-                movement = Vector2.zero;
-                if (isMoving)
-                {
-                    isMoving = false;
-                    StopMovementSound();
-                }
+                isMoving = false;
+                StopMovementSound();
             }
 
             animator.SetFloat("Horizontal", movement.x);
@@ -191,12 +129,52 @@ public class PlayerMovement : Component
         }
     }
 
+    private void HandleDash()
+    {
+        if (SanityBar.instance == null || !SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        {
+            return;
+        }
+
+        if (canDash && !isAttacking)
+        {
+            if (movement != Vector2.zero)
+            {
+                if (dashCoroutine != null)
+                    StopCoroutine(dashCoroutine);
+
+                if (dashWaitCoroutine != null)
+                    StopCoroutine(dashWaitCoroutine);
+
+                dashCoroutine = StartCoroutine(Dash());
+                dashWaitCoroutine = StartCoroutine(DashTimings());
+            }
+        }
+    }
+
+    private IEnumerator DashTimings()
+    {
+        canDash = false;
+
+        yield return new WaitForSeconds(0.2f);
+
+        if (dashCount < maxDashCount)
+        {
+            canDash = true;
+        }
+        else
+        {
+            yield return new WaitForSeconds(dashCooldown);
+            dashCount = 0;
+            canDash = true;
+        }
+    }
+
     private IEnumerator Dash()
     {
         OnDash?.Invoke();
 
         isDashing = true;
-        canDash = false;
         dashCount++;
 
         StopMovementSound();
@@ -238,33 +216,6 @@ public class PlayerMovement : Component
         if (movement != Vector2.zero)
         {
             StartMovementSound();
-        }
-
-        if (dashCount < maxDashCount)
-        {
-            canDash = true;
-        }
-        else
-        {
-            yield return new WaitForSeconds(dashCooldown);
-            dashCount = 0; // Reset for next dashes
-            canDash = true;
-        }
-    }
-
-    private void HandleDash()
-    {
-        if (SanityBar.instance == null || !SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
-        {
-            return;
-        }
-
-        if (canDash && !isDashing && !isAttacking)
-        {
-            if (movement != Vector2.zero)
-            {
-                StartCoroutine(Dash());
-            }
         }
     }
 

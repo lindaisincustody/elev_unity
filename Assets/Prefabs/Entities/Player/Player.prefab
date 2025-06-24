@@ -196,8 +196,6 @@ MonoBehaviour:
   dashDuration: 0.2
   dashCooldown: 1
   canDash: 1
-  stopRadius: 0.2
-  arrowTransform: {fileID: 1376830490287005706}
   rb: {fileID: 6418275811729181238}
   animator: {fileID: 6330455195613800542}
   moveSound: {fileID: 6117977592564839130}
@@ -292,7 +290,7 @@ MonoBehaviour:
   combatModeText: {fileID: 0}
   meleeAttackRange: 2
   meleeDamage: 20
-  meleeCooldown: 0.7
+  meleeCooldown: 0.4
 --- !u!114 &8454522013865968226
 MonoBehaviour:
   m_ObjectHideFlags: 0

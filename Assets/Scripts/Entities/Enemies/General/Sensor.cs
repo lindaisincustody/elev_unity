@@ -63,7 +63,6 @@ public class Sensor : MonoBehaviour
         {
             if (other.CompareTag(t))
             {
-                Debug.Log(other.name + " "+ action);
                 action(other.transform);
             }
         }

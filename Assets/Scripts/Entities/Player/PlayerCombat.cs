@@ -1,20 +1,38 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using TMPro;
 
 public class PlayerCombat : Component
 {
-    [SerializeField] private Camera mainCamera;
-    [SerializeField] private TextMeshProUGUI combatModeText;
+    [SerializeField] Camera mainCamera;
+    [SerializeField] TextMeshProUGUI combatModeText;
+    [SerializeField] float meleeAttackRange = 2f;
+    [SerializeField] int meleeDamage = 5;
+    [SerializeField] float meleeCooldown = 0.7f;
 
-    [SerializeField] private float meleeAttackRange = 2f;
-    [SerializeField] private int meleeDamage = 5;
-    [SerializeField] private float meleeCooldown = 0.7f;
     private float nextMeleeTime = 0f;
-
     private Player player;
     private Animator animator;
     private InputManager inputManager;
+
+    private static readonly int MeleeRightHash = Animator.StringToHash("MeleeRight");
+    private static readonly int MeleeLeftHash = Animator.StringToHash("MeleeLeft");
+    private static readonly int MeleeBackHash = Animator.StringToHash("MeleeBack");
+    private static readonly int MeleeFrontHash = Animator.StringToHash("MeleeFront");
+
+    private void Awake()
+    {
+        player = GetComponent<Player>();
+        animator = GetComponent<Animator>();
+        inputManager = player.GetInputManager;
+        inputManager.OnShoot += Shoot;
+    }
+
+    private void Start()
+    {
+        if (combatModeText != null)
+            combatModeText.text = ""; // melee mode
+    }
 
     public Enemy GetNearestEnemy()
     {
@@ -36,26 +54,6 @@ public class PlayerCombat : Component
         return nearestEnemy;
     }
 
-    private void Awake()
-    {
-        player = GetComponent<Player>();
-        animator = GetComponent<Animator>();
-        inputManager = player.GetInputManager;
-        inputManager.OnShoot += Shoot;
-    }
-
-    private void Start()
-    {
-        if (combatModeText != null)
-        {
-            combatModeText.text = ""; //mode melee
-        }
-    }
-
-    private void Update()
-    {
-    }
-
     private void Shoot()
     {
         if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
@@ -70,26 +68,18 @@ public class PlayerCombat : Component
             return;
 
         nextMeleeTime = Time.time + meleeCooldown;
+
         player.GetComponent<PlayerMovement>().isAttacking = true;
 
-        Vector3 mousePosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0;
-        Vector2 attackDirection = (mousePosition - transform.position).normalized;
+        Vector3 mw = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        mw.z = 0;
+        Vector2 d = (mw - transform.position).normalized;
 
-        if (Mathf.Abs(attackDirection.x) > Mathf.Abs(attackDirection.y))
-        {
-            if (attackDirection.x > 0)
-                animator.SetTrigger("MeleeRight");
-            else
-                animator.SetTrigger("MeleeLeft");
-        }
-        else
-        {
-            if (attackDirection.y > 0)
-                animator.SetTrigger("MeleeBack");
-            else
-                animator.SetTrigger("MeleeFront");
-        }
+        int state = Mathf.Abs(d.x) > Mathf.Abs(d.y)
+            ? (d.x > 0 ? MeleeRightHash : MeleeLeftHash)
+            : (d.y > 0 ? MeleeBackHash : MeleeFrontHash);
+
+        animator.SetTrigger(state);
 
         StartCoroutine(DelayedMeleeHitDetection(0.2f));
     }
@@ -97,31 +87,24 @@ public class PlayerCombat : Component
     private IEnumerator DelayedMeleeHitDetection(float delay)
     {
         yield return new WaitForSeconds(delay);
-
-        Collider2D[] hitObjects = Physics2D.OverlapCircleAll(transform.position, meleeAttackRange);
-        foreach (Collider2D collider in hitObjects)
+        var hits = Physics2D.OverlapCircleAll(transform.position, meleeAttackRange);
+        foreach (var c in hits)
         {
-            EnemyHealth enemyHealth = collider.GetComponent<EnemyHealth>();
-            Enemy enemyComponent = collider.GetComponent<Enemy>();
-
-            if (enemyHealth != null && enemyHealth.currentHealth > 0 && enemyComponent.activeSymbols.Count == 0)
-            {
-                enemyHealth.TakeDamage(meleeDamage);
-            }
+            var h = c.GetComponent<EnemyHealth>();
+            var e = c.GetComponent<Enemy>();
+            if (h != null && h.currentHealth > 0 && e.activeSymbols.Count == 0)
+                h.TakeDamage(meleeDamage);
         }
-
         StartCoroutine(ResetMeleeAnimation());
     }
 
     private IEnumerator ResetMeleeAnimation()
     {
-        yield return new WaitForSeconds(0.1f);
-
-        animator.ResetTrigger("MeleeRight");
-        animator.ResetTrigger("MeleeLeft");
-        animator.ResetTrigger("MeleeBack");
-        animator.ResetTrigger("MeleeFront");
-
+        yield return new WaitForSeconds(0.05f);
+        animator.ResetTrigger(MeleeRightHash);
+        animator.ResetTrigger(MeleeLeftHash);
+        animator.ResetTrigger(MeleeBackHash);
+        animator.ResetTrigger(MeleeFrontHash);
         player.GetComponent<PlayerMovement>().isAttacking = false;
     }
 
