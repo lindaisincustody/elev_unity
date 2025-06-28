@@ -7,27 +7,17 @@ public class Bomb : MonoBehaviour
     [SerializeField] private float speed = 10f;
     [SerializeField] private float explosionRadius = 3f;
     [SerializeField] private LayerMask enemyLayer;
-    [SerializeField] private float explosionDelay = 3f;
-    [SerializeField] private int damage = 20;
+    [SerializeField] public float explosionDelay = 3f;
+    [SerializeField] public int damage = 20;
+    [SerializeField] private AnimationCurve scaleCurve = AnimationCurve.EaseInOut(0, 0.5f, 1, 1.5f);
 
     public bool Flying = false;
-    public event System.Action OnBombExploded;
-    public bool HasExploded { get; private set; } = false;
 
-    private void OnEnable()
+    public void Init()
     {
-        HasExploded = false;
+        StartCoroutine(FuseAndScale());
         StartCoroutine(ExplodeAfterDelay());
     }
-
-    public void Fly(Vector2 direction)
-    {
-        Flying = true;
-        gameObject.SetActive(true);
-        rb.velocity = direction * speed;
-    }
-
-    
 
     private IEnumerator ExplodeAfterDelay()
     {
@@ -48,21 +38,30 @@ public class Bomb : MonoBehaviour
             }
         }
 
-        HasExploded = true;
-        OnBombExploded?.Invoke();
-        Deactivate();
+        GameObject effect = EffectSystem.GetEffect(EffectType.Explosion);
+        effect.transform.position = transform.position;
+        effect.SetActive(true);
+        CoroutineRunner.Instance.StartCoroutine(EffectSystem.ReturnEffectOnComplete(EffectType.Explosion, effect));
+        Destroy(gameObject);
     }
 
-    private void Deactivate()
+    private IEnumerator FuseAndScale()
     {
-        Flying = false;
-        rb.velocity = Vector2.zero;
-        rb.isKinematic = false;
-        transform.parent = null;
-        gameObject.SetActive(false);
+        float elapsed = 0f;
+        Vector3 originalScale = transform.localScale;
 
-        // Unsubscribe all event handlers to avoid memory leaks or duplicate event calls
-        OnBombExploded = null;
+        while (elapsed < explosionDelay)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / explosionDelay);
+
+            float scaleMultiplier = scaleCurve.Evaluate(t);
+            transform.localScale = originalScale * scaleMultiplier;
+
+            yield return null;
+        }
+
+        Explode();
     }
 
     private void OnDrawGizmosSelected()

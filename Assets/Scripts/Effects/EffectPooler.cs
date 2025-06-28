@@ -37,5 +37,6 @@ public enum EffectType
     Stun,
     Swipe,
     WhiteSlash,
-    WhiteSlashFull
+    WhiteSlashFull,
+    Explosion
 }

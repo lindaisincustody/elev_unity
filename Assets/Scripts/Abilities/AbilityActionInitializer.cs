@@ -87,7 +87,7 @@ public class AbilityActionsInitializer : MonoBehaviour
             {
                 splashAbility.Activate();
                 // pass any MonoBehaviour to run the coroutine; letterDrawing works fine
-                splashAbility.SpawnSplashEffect(letterDrawing, Player.instance.transform);
+                splashAbility.SpawnSplashEffect(Player.instance.transform);
             }
             else
             {

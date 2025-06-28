@@ -38,7 +38,7 @@ public class RatAttack : EnemyAttack
 
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
-        swipe.Init(targetHealth, damageAmount);
+        swipe.Init(targetHealth, damageAmount, body);
 
         effect.transform.position = body.position;
 
@@ -64,7 +64,7 @@ public class RatAttack : EnemyAttack
         var effect = EffectSystem.GetEffect(EffectType.WhiteSlash);
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
-        swipe.Init(targetHealth, damageAmount);
+        swipe.Init(targetHealth, damageAmount, body);
 
         Vector3 swipePosition = body.position + direction * distance;
         effect.transform.position = swipePosition;

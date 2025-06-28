@@ -126,7 +126,7 @@ public class ChinchillaController : MonoBehaviour
         // Create the bullet and shoot it towards the target
         Bullet newBullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
         Vector3 direction = (currentTarget.position - bulletSpawnPoint.position).normalized;
-        newBullet.Fly(direction); // Assuming the Bullet class has a Fly method to set direction
+        newBullet.Fly(direction, 2f); // Assuming the Bullet class has a Fly method to set direction
 
         lastShootTime = Time.time; // Reset the shoot timer
     }

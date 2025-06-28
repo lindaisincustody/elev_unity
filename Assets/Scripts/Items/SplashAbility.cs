@@ -29,7 +29,7 @@ public class SplashAbility : Ability
         OnCooldown?.Invoke();
     }
 
-    public void SpawnSplashEffect(MonoBehaviour runner, Transform playerTransform)
+    public void SpawnSplashEffect(Transform playerTransform)
     {
         if (bubblePrefab == null || splashPrefab == null)
         {
@@ -69,7 +69,7 @@ public class SplashAbility : Ability
         );
 
         float totalAnimTime = ascendDuration + fallDuration + 0.1f;
-        runner.StartCoroutine(DestroyAfterCooldown(totalAnimTime));
+        CoroutineRunner.RunCoroutine(DestroyAfterCooldown(totalAnimTime));
     }
 
     private IEnumerator DestroyAfterCooldown(float delay)

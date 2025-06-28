@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public static class EffectSystem
@@ -23,6 +25,30 @@ public static class EffectSystem
         }
 
         return effect;
+    }
+
+    public static IEnumerator ReturnEffectOnComplete(EffectType type, GameObject effect)
+    {
+        var systems = effect.GetComponentsInChildren<ParticleSystem>();
+        if (systems.Length > 0)
+        {
+            yield return new WaitUntil(() =>
+                systems.All(ps => !ps.IsAlive(true))
+            );
+        }
+        else
+        {
+            yield return null;
+        }
+
+        effect.transform.localScale = new Vector3(
+            Mathf.Abs(effect.transform.localScale.x),
+            Mathf.Abs(effect.transform.localScale.y),
+            Mathf.Abs(effect.transform.localScale.z)
+        );
+
+        // 3) Return to pool
+        pooler.ReturnEffectToPool(type, effect);
     }
 
     public static void ReturnEffect(EffectType type, GameObject effect)

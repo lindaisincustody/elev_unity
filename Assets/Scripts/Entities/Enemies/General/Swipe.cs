@@ -6,6 +6,7 @@ public class Swipe : MonoBehaviour
 {
     [SerializeField] private Collider2D collider2D;
 
+    private Transform parent;
     private Health targetHeatlh;
     private int damage;
 
@@ -16,9 +17,18 @@ public class Swipe : MonoBehaviour
         wait = new WaitForSeconds(0.1f);
     }
 
-    public void Init(Health target, int damage)
+    private void Update()
+    {
+        if (parent == null)
+            return;
+
+        transform.position = parent.position;
+    }
+
+    public void Init(Health target, int damage, Transform source)
     {
         targetHeatlh = target;
+        parent = source;
         this.damage = damage;
     }
 

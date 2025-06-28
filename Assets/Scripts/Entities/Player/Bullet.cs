@@ -2,53 +2,62 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private Rigidbody2D rb;
+    [SerializeField] protected Rigidbody2D rb;
     [SerializeField] private float speed = 10f;
     [SerializeField] private float maxDistance = 2f;
-    [field: SerializeField] public int damage { get; private set; }
+    [SerializeField] private float maxDuration = 5f;
+    [field: SerializeField] public int damage { get; set; }
 
     public bool Flying = false;
     private Vector3 startPosition;
     private Transform target; // Target for homing
+    private float elapsedTime;
+    private float currentDuration;
 
     void OnEnable()
     {
         startPosition = transform.position;
+        elapsedTime = 0f;
     }
 
     void Update()
     {
-        if (Flying)
+        if (!Flying)
+            return;
+
+        if (target != null && target.gameObject.activeInHierarchy)
         {
-            if (target != null && target.gameObject.activeInHierarchy) // Check if target is valid
-            {
-                HomeInOnTarget();
-            }
-            else
-            {
-                // If target is null or inactive, deactivate bullet
-                Deactivate();
-            }
-        }
-    }
-
-    public void Fly(Vector2 direction, Transform homingTarget = null)
-    {
-        Flying = true;
-        gameObject.SetActive(true);
-        startPosition = transform.position;
-
-        // Set target if provided
-        target = homingTarget;
-
-        if (target == null)
-        {
-            rb.velocity = direction * speed; // Straight flight if no target
+            HomeInOnTarget();
         }
         else
         {
-            rb.velocity = Vector2.zero; // Reset velocity for homing
+            CheckDuration();
         }
+    }
+
+    public void Fly(Vector2 direction, Transform homingTarget)
+    {
+        Flying = true;
+        gameObject.SetActive(true);
+
+        startPosition = transform.position;
+        target = homingTarget;
+
+        rb.velocity = Vector2.zero;
+    }
+
+    public void Fly(Vector2 direction, float duration)
+    {
+        Flying = true;
+        gameObject.SetActive(true);
+
+        startPosition = transform.position;
+        target = null;
+
+        elapsedTime = 0f;
+        currentDuration = duration;
+
+        rb.velocity = direction * speed;
     }
 
     private void HomeInOnTarget()
@@ -62,16 +71,14 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    private void CheckDistance()
+    private void CheckDuration()
     {
-        float distanceTraveled = Vector3.Distance(startPosition, transform.position);
-        if (distanceTraveled >= maxDistance)
-        {
+        elapsedTime += Time.deltaTime;
+        if (elapsedTime >= (currentDuration > 0f ? currentDuration : maxDuration))
             Deactivate();
-        }
     }
 
-    private void Deactivate()
+    protected virtual void Deactivate()
     {
         Flying = false;
         rb.velocity = Vector2.zero;
