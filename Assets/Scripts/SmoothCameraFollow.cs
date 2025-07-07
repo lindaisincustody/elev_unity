@@ -1,70 +1,90 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Camera))]
 public class SmoothCameraFollow : MonoBehaviour
 {
-    public Transform target;
-    public Vector3 offset;
-    public float damping;
-    public Vector2 minBounds;
-    public Vector2 maxBounds;
+    [Header("Targets")]
+    public Transform player;              
+    public Camera gameCamera;             
+
+    [Header("Settings")]
+    [Range(0f, 1f)]
+    public float cursorWeight = 0.5f;
+    public float maxDistance = 5f;
+    public float smoothTime = 0.2f;
+    public float smoothTimeFollow = 0.2f;
+
+    [Header("Right-Click Zoom")]
+    public float zoomAmount = 1f;   
+    public float zoomSpeed = 3f;  
+
+    private float defaultOrthoSize;
     private Vector3 velocity = Vector3.zero;
 
-    // Orthographic zoom settings
-    public bool isScoped = false; // Toggle this flag to scope in/out
-    public float normalSize = 5f; // Default orthographic size
-    public float scopedSize = 2f; // Orthographic size when scoped
-    public float zoomSpeed = 5f; // How quickly to zoom in/out
-
-    private Camera cam;
-
-    void Awake()
+    void Reset()
     {
-        cam = GetComponent<Camera>();
-        if (cam == null)
-            cam = Camera.main;
+        gameCamera = GetComponent<Camera>();
+        player = GameObject.FindWithTag("Player")?.transform;
+    }
+
+    void Start()
+    {
+        if (gameCamera == null) gameCamera = Camera.main;
+        defaultOrthoSize = gameCamera.orthographicSize;
     }
 
     void FixedUpdate()
     {
-        Vector3 movePosition = target.position + offset;
-        Vector3 clampedPosition = new Vector3(
-            Mathf.Clamp(movePosition.x, minBounds.x, maxBounds.x),
-            Mathf.Clamp(movePosition.y, minBounds.y, maxBounds.y),
-            movePosition.z
+        // 1) Handle zoom on Right-Click
+        float targetSize = Input.GetMouseButton(1)
+            ? defaultOrthoSize + zoomAmount
+            : defaultOrthoSize;
+        gameCamera.orthographicSize = Mathf.Lerp(
+            gameCamera.orthographicSize,
+            targetSize,
+            zoomSpeed * Time.deltaTime
         );
 
-        transform.position = Vector3.SmoothDamp(transform.position, clampedPosition, ref velocity, damping);
-    }
-
-    void Update()
-    {
-        // Adjust orthographicSize if using an orthographic camera
-        if (cam != null && cam.orthographic)
+        // 2) Decide target position
+        Vector3 desiredPos;
+        if (Input.GetMouseButton(1))
         {
-            float targetSize = isScoped ? scopedSize : normalSize;
-            cam.orthographicSize = Mathf.Lerp(cam.orthographicSize, targetSize, zoomSpeed * Time.deltaTime);
+            // when holding R-click, center on player
+            desiredPos = player.position;
+
+            desiredPos.z = transform.position.z;
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                desiredPos,
+                ref velocity,
+                smoothTimeFollow
+            );
         }
-    }
+        else
+        {
+            // your original midpoint logic
+            Vector3 mouseScreen = Input.mousePosition;
+            mouseScreen.z = gameCamera.WorldToScreenPoint(player.position).z;
+            Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
 
-    public Vector2 GetMinBounds()
-    {
-        return minBounds;
-    }
+            desiredPos = Vector3.Lerp(player.position, mouseWorld, cursorWeight);
 
-    public Vector2 GetMaxBounds()
-    {
-        return maxBounds;
-    }
+            Vector3 offset = desiredPos - player.position;
+            if (offset.magnitude > maxDistance)
+                desiredPos = player.position + offset.normalized * maxDistance;
 
-    public void SetMinBounds(Vector2 newMinBounds)
-    {
-        minBounds = newMinBounds;
-    }
+            desiredPos.z = transform.position.z;
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                desiredPos,
+                ref velocity,
+                smoothTime
+            );
+        }
 
-    public void SetMaxBounds(Vector2 newMaxBounds)
-    {
-        maxBounds = newMaxBounds;
+       
+        
     }
 }
