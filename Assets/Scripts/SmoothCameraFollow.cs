@@ -5,10 +5,6 @@ using UnityEngine;
 [RequireComponent(typeof(Camera))]
 public class SmoothCameraFollow : MonoBehaviour
 {
-    [Header("Targets")]
-    public Transform player;              
-    public Camera gameCamera;             
-
     [Header("Settings")]
     [Range(0f, 1f)]
     public float cursorWeight = 0.45f;
@@ -18,20 +14,18 @@ public class SmoothCameraFollow : MonoBehaviour
 
     [Header("Right-Click Zoom")]
     public float zoomAmount = 1f;   
-    public float zoomSpeed = 3f;  
+    public float zoomSpeed = 3f;
+
+    private Transform player;
+    private Camera gameCamera;
 
     private float defaultOrthoSize;
     private Vector3 velocity = Vector3.zero;
 
-    void Reset()
-    {
-        gameCamera = GetComponent<Camera>();
-        player = GameObject.FindWithTag("Player")?.transform;
-    }
-
     void Start()
     {
-        if (gameCamera == null) gameCamera = Camera.main;
+        player = Player.instance.transform;
+        gameCamera = Camera.main;
         defaultOrthoSize = gameCamera.orthographicSize;
     }
 

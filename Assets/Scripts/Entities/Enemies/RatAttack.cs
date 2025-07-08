@@ -9,6 +9,8 @@ public class RatAttack : EnemyAttack
     [SerializeField] private Transform attackPos;
     [SerializeField] private Transform body;
 
+    private List<GameObject> _activeAttacks = new();
+
     private EnemyMovement movement;
     private EnemyAnimator animator;
 
@@ -19,6 +21,8 @@ public class RatAttack : EnemyAttack
     private void Start()
     {
         movement = Entity.Get<EnemyMovement>();
+
+        Entity.Get<EnemyHealth>().OnLethal += OnEnemyDeath;
     }
 
     public override void Attack(Context context, AttackRequest attackRequest)
@@ -34,8 +38,8 @@ public class RatAttack : EnemyAttack
 
     private IEnumerator SpecialAttack(Health targetHealth, Action onAttackEnd)
     {
-        var effect = EffectSystem.GetEffect(EffectType.WhiteSlashFull);
-
+        GameObject effect = EffectSystem.GetEffect(EffectType.WhiteSlashFull);
+        _activeAttacks.Add(effect);
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
         swipe.Init(targetHealth, damageAmount, body);
@@ -62,6 +66,7 @@ public class RatAttack : EnemyAttack
     private void SpawnSwipe(Health targetHealth, Vector3 direction, float distance)
     {
         var effect = EffectSystem.GetEffect(EffectType.WhiteSlash);
+        _activeAttacks.Add(effect);
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
         swipe.Init(targetHealth, damageAmount, body);
@@ -87,7 +92,17 @@ public class RatAttack : EnemyAttack
         effect.SetActive(true);
         swipe.ActivateCollider();
         yield return new WaitForSeconds(SWIPE_APPEAR_DELAY - SWIPE_DURATION);
+        _activeAttacks.Remove(effect);
         EffectSystem.ReturnEffect(effectType, effect);
+    }
+
+    private void OnEnemyDeath()
+    {
+        StopAllCoroutines();
+        foreach (GameObject attack in _activeAttacks)
+        {
+            Destroy(attack);
+        }
     }
 
     public override void ResetAttack()
@@ -98,5 +113,10 @@ public class RatAttack : EnemyAttack
     {
         StopAllCoroutines();
         animator.ResetAnimator();
+    }
+
+    private void OnDestroy()
+    {
+        Entity.Get<EnemyHealth>().OnLethal -= OnEnemyDeath;
     }
 }
