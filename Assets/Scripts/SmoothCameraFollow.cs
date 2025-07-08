@@ -11,10 +11,10 @@ public class SmoothCameraFollow : MonoBehaviour
 
     [Header("Settings")]
     [Range(0f, 1f)]
-    public float cursorWeight = 0.5f;
+    public float cursorWeight = 0.45f;
     public float maxDistance = 5f;
-    public float smoothTime = 0.2f;
-    public float smoothTimeFollow = 0.2f;
+    public float smoothTime = 0.5f;
+    public float smoothTimeFollow = 2f;
 
     [Header("Right-Click Zoom")]
     public float zoomAmount = 1f;   
