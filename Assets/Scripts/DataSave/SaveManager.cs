@@ -44,6 +44,8 @@ public class SaveManager : MonoBehaviour
 
     private void Start()
     {
+
+        
         if (saveGame)
         {
             saveGame = GetComponent<SaveGame>();

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -9,9 +7,8 @@ public class SanityBar : MonoBehaviour
     [field: SerializeField] public SanityEffectHandler sanityEffectHandler { get; private set; }
     public static SanityBar instance;
 
-    public delegate void SanityChangeHandler(int amount);
-
-    public event SanityChangeHandler OnSanityChange;
+    public delegate void SanityValueChangedHandler(int currentSanity);
+    public event SanityValueChangedHandler OnSanityValueChanged;
 
     public Image mask;
     public Image fill;
@@ -36,13 +33,14 @@ public class SanityBar : MonoBehaviour
     private void Start()
     {
         UpdateSanityUI();
+        NotifySanityChanged();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
-            DecreaseSanityBy50();
+            DecreaseSanity(50);
         }
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -53,42 +51,41 @@ public class SanityBar : MonoBehaviour
 
     public void AddSanity(int amount)
     {
-        currentSanity += amount;
-        if (currentSanity > maxSanity)
-            currentSanity = maxSanity;
-
-        OnSanityChange?.Invoke(amount);
+        currentSanity = Mathf.Clamp(currentSanity + amount, 0, maxSanity);
         UpdateSanityUI();
+        NotifySanityChanged();
+    }
+
+    public void DecreaseSanity(int amount)
+    {
+        currentSanity = Mathf.Clamp(currentSanity - amount, 0, maxSanity);
+        UpdateSanityUI();
+        NotifySanityChanged();
     }
 
     public void SanityToMin()
     {
-        DOVirtual.Int(currentSanity, 0, 150, (val) =>
+        DOVirtual.Int(currentSanity, 0, 150, val =>
         {
             currentSanity = val;
-            OnSanityChange?.Invoke(currentSanity);
             UpdateSanityUI();
+            NotifySanityChanged();
         }).SetSpeedBased(true);
     }
 
     public void SanityToMax()
     {
-        DOVirtual.Int(currentSanity, maxSanity, 150, (val) =>
+        DOVirtual.Int(currentSanity, maxSanity, 150, val =>
         {
             currentSanity = val;
-            OnSanityChange?.Invoke(currentSanity);
             UpdateSanityUI();
+            NotifySanityChanged();
         }).SetSpeedBased(true);
     }
 
-    public void DecreaseSanityBy50()
+    private void NotifySanityChanged()
     {
-        currentSanity -= 50;
-        if (currentSanity < 0)
-            currentSanity = 0;
-
-        OnSanityChange?.Invoke(-50);
-        UpdateSanityUI();
+        OnSanityValueChanged?.Invoke(currentSanity);
     }
 
     private void UpdateSanityUI()

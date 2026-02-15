@@ -55,7 +55,7 @@ public class EnemyMovement : Component
         spawnPos = transform.position;
         target = Vector2.zero;
 
-        SanityBar.instance.OnSanityChange += SanityChange;
+        SanityBar.instance.OnSanityValueChanged += SanityChange;
         SanityChange(0);
 
     }

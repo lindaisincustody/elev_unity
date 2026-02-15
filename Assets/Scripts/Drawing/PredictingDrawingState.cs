@@ -24,36 +24,57 @@ public class PredictingDrawingState : IDrawingState
 
 
     private string[] labels = new string[]
-    {
-        "_Capricorn", "_Heart", "_Leo", "_Moon", "_Rightarrow", "_bowtie",
-        "_clubsuit", "_descnode", "_diagup", "_diamond", "_downarrow",
-        "_infty", "_ocircle", "_oplus", "_spadesuit", "_square", "_star",
-        "_textgamma", "_textmusicalnote", "_varphi"
-    };
+{
+    "_Aries", "_Capricorn", "_Cross", "_EyesDollar", "_Heart", "_Leo", "_Mercury",
+    "_Moon", "_Rightarrow", "_Sigma", "_Taurus", "_alpha", "_bigtriangleup",
+    "_bowtie", "_boxplus", "_circlearrowleft", "_clubsuit", "_diagup",
+    "_diamondsuit", "_downarrow", "_emptyset", "_female", "_infty", "_lambda",
+    "_lightning", "_ltimes", "_male", "_psi", "_sim", "_spadesuit", "_square",
+    "_star", "_textasteriskcentered", "_textcent", "_textgamma",
+    "_textmusicalnote", "_theta", "_varphi"
+};
 
     private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
-    {
-        { "_Capricorn", "♑" },
-        { "_Heart", "♥" },
-        { "_Leo", "♌" },
-        { "_Moon", "☾" },
-        { "_Rightarrow", "⇒" },
-        { "_bowtie", "⧓" },
-        { "_clubsuit", "♣" },
-        { "_descnode", "⤵" },
-        { "_diagup", "/" },
-        { "_diamond", "♦" },
-        { "_downarrow", "↓" },
-        { "_infty", "∞" },
-        { "_ocircle", "⦾" },
-        { "_oplus", "⊕" },
-        { "_spadesuit", "♠" },
-        { "_square", "■" },
-        { "_star", "★" },
-        { "_textgamma", "γ" },
-        { "_textmusicalnote", "♪" },
-        { "_varphi", "φ" }
-    };
+{
+    { "_Aries", "♈" },
+    { "_Capricorn", "♑" },
+    { "_Cross", "†" },
+    { "_EyesDollar", "🤑" },
+    { "_Heart", "♥" },
+    { "_Leo", "♌" },
+    { "_Mercury", "☿" },
+    { "_Moon", "☾" },
+    { "_Rightarrow", "⇒" },
+    { "_Sigma", "Σ" },
+    { "_Taurus", "♉" },
+    { "_alpha", "α" },
+    { "_bigtriangleup", "△" },
+    { "_bowtie", "⧓" },
+    { "_boxplus", "⊞" },
+    { "_circlearrowleft", "↺" },
+    { "_clubsuit", "♣" },
+    { "_diagup", "/" },
+    { "_diamondsuit", "♦" },
+    { "_downarrow", "↓" },
+    { "_emptyset", "∅" },
+    { "_female", "♀" },
+    { "_infty", "∞" },
+    { "_lambda", "λ" },
+    { "_lightning", "⚡" },
+    { "_ltimes", "⋉" },
+    { "_male", "♂" },
+    { "_psi", "ψ" },
+    { "_sim", "∼" },
+    { "_spadesuit", "♠" },
+    { "_square", "■" },
+    { "_star", "★" },
+    { "_textasteriskcentered", "∗" },
+    { "_textcent", "¢" },
+    { "_textgamma", "γ" },
+    { "_textmusicalnote", "♪" },
+    { "_theta", "θ" },
+    { "_varphi", "φ" }
+};
 
     private float threshold = 0.91f;
     private int currentLetterIndex = 0;
@@ -190,11 +211,12 @@ public class PredictingDrawingState : IDrawingState
         prediction.SetPrediction(output, labels);
 
         float confidence = prediction.predicted.Max();
-        float threshold = 0.91f;
+        float threshold = 8.5f;
 
         if (confidence < threshold)
         {
             Debug.Log("Low confidence drawing, ignoring input.");
+            Debug.Log(confidence);
             TriggerMissSparkle(secondaryLineRenderer);
             output.Dispose();
             capturedTexture.Apply();
@@ -202,7 +224,7 @@ public class PredictingDrawingState : IDrawingState
             GameObject.Destroy(capturedTexture);
             return;
         }
-
+        Debug.Log(confidence);
         MatchSymbolWithPoem(prediction.predictedLabel);
         TriggerCorrectSparkle(secondaryLineRenderer);
         DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);

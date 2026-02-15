@@ -51,7 +51,7 @@ public class SanityEffectHandler : MonoBehaviour
     {
         if (SanityBar.instance != null)
         {
-            SanityBar.instance.OnSanityChange += OnSanityChange;
+            SanityBar.instance.OnSanityValueChanged += OnSanityChange;
         }
     }
 
@@ -72,7 +72,7 @@ public class SanityEffectHandler : MonoBehaviour
     {
         if (SanityBar.instance != null)
         {
-            SanityBar.instance.OnSanityChange -= OnSanityChange;
+            SanityBar.instance.OnSanityValueChanged -= OnSanityChange;
         }
     }
 
