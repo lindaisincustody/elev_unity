@@ -39043,11 +39043,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1856156294}
-  cursorWeight: 0.45
-  maxDistance: 5
+  cursorWeight: 0.333
+  maxDistance: 7.13
   smoothTime: 0.5
   smoothTimeFollow: 2
-  zoomAmount: 1
+  zoomAmount: 1.5
   zoomSpeed: 5
 --- !u!114 &484424889
 MonoBehaviour:
@@ -39086,7 +39086,7 @@ MonoBehaviour:
   m_Follow: {fileID: 1856156294}
   m_Lens:
     FieldOfView: 60
-    OrthographicSize: 7.2
+    OrthographicSize: 6.38
     NearClipPlane: 0.3
     FarClipPlane: 1000
     Dutch: 0
@@ -42908,7 +42908,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 7.2
+  orthographic size: 6.38
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -42933,7 +42933,7 @@ Transform:
   m_GameObject: {fileID: 519420028}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 109.58, y: -1.77, z: -10}
+  m_LocalPosition: {x: 109.47388, y: 1.5760798, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -43067,8 +43067,8 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 1
-  m_BlendUpdateMethod: 1
+  m_UpdateMethod: 0
+  m_BlendUpdateMethod: 0
   m_DefaultBlend:
     m_Style: 1
     m_Time: 2
@@ -79314,7 +79314,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1096406935}
   - component: {fileID: 1096406934}
-  m_Layer: 0
+  m_Layer: 21
   m_Name: CameraBounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -79365,12 +79365,13 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 8.217766, y: 19.205498}
-      - {x: -8.536681, y: 19.14665}
-      - {x: -8.488014, y: 9.438581}
-      - {x: -8.426263, y: -3.1268468}
-      - {x: 8.17341, y: -3.2954159}
-      - {x: 8.157401, y: 9.453908}
+    - - {x: 8.478584, y: 18.754438}
+      - {x: -19.478233, y: 18.672064}
+      - {x: -19.504723, y: 9.252941}
+      - {x: -20.807465, y: -3.6151977}
+      - {x: 20.351257, y: -3.202149}
+      - {x: 19.648249, y: -2.2735076}
+      - {x: 19.834335, y: 18.716507}
   m_UseDelaunayMesh: 0
 --- !u!4 &1096406935
 Transform:
@@ -94250,8 +94251,8 @@ MonoBehaviour:
   m_LookaheadTime: 0
   m_LookaheadSmoothing: 0
   m_LookaheadIgnoreY: 0
-  m_XDamping: 0.5
-  m_YDamping: 0.5
+  m_XDamping: 0.3
+  m_YDamping: 0.3
   m_ZDamping: 1
   m_TargetMovementOnly: 1
   m_ScreenX: 0.5
@@ -104844,6 +104845,7 @@ SceneRoots:
   - {fileID: 519420032}
   - {fileID: 410922778}
   - {fileID: 484424891}
+  - {fileID: 1096406935}
   - {fileID: 1805061726}
   - {fileID: 481071138}
   - {fileID: 956270065}
@@ -104855,4 +104857,3 @@ SceneRoots:
   - {fileID: 195638837}
   - {fileID: 666891006}
   - {fileID: 2118359205}
-  - {fileID: 1096406935}
