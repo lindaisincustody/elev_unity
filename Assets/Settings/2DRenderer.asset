@@ -25,7 +25,7 @@ MonoBehaviour:
     probeSamplingDebugTexture: {fileID: 0}
     probeVolumeBlendStatesCS: {fileID: 0}
   m_RendererFeatures:
-  - {fileID: 0}
+  - {fileID: 3625048947440481074}
   m_RendererFeatureMap: 32f397b5cfc24e32
   m_UseNativeRenderPass: 0
   m_LayerMask:
@@ -69,5 +69,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aca0a5beedae9934387996097f8e83b8, type: 3}
   m_Name: CRTRenderFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   crtMaterial: {fileID: 2100000, guid: c99d49292b7766241a1b56b8e8f08adf, type: 2}
