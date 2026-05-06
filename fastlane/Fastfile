@@ -21,7 +21,7 @@ platform :ios do
 
     update_code_signing_settings(
       use_automatic_signing: false,
-      path: "ios_build/Unity-iPhone.xcodeproj",
+      path: "ios_build/elev_unity/Unity-iPhone.xcodeproj", 
       bundle_identifier: ENV["IOS_BUNDLE_ID"],
       profile_name: "match AppStore #{ENV['IOS_BUNDLE_ID']}",
       code_sign_identity: "Apple Distribution",
@@ -29,7 +29,7 @@ platform :ios do
     )
 
     build_app(
-      project: "ios_build/Unity-iPhone.xcodeproj",
+      project: "ios_build/elev_unity/Unity-iPhone.xcodeproj",
       scheme: "Unity-iPhone",
       configuration: "Release",
       export_method: "app-store",
