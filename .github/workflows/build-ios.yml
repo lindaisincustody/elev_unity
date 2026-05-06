@@ -35,7 +35,7 @@ jobs:
   deploy-testflight:
     name: Sign and upload to TestFlight
     needs: build-unity-ios
-    runs-on: macos-15
+    runs-on: macos-26
     env:
       MATCH_GIT_URL: https://github.com/lindaisincustody/elev_unity_certificates.git
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
