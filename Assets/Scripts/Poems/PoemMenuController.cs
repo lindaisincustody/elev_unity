@@ -20,7 +20,7 @@ public class PoemMenuController : MonoBehaviour
     [SerializeField] private AutoFlip bookFlipper;
     [SerializeField] private RectTransform wordHolder;
     [SerializeField] private Image leftImage;
-    [SerializeField] private PoemAI poemAI;
+   // [SerializeField] private PoemAI poemAI;
     [Header("Player References")]
     [SerializeField] private GameObject hero;
     [Header("Cursor References")]
@@ -62,7 +62,7 @@ public class PoemMenuController : MonoBehaviour
             return;
 
         InventoryUI.Instance.CanOpenInventory(false);
-        poemAI.SendRequest(wordsData);
+        //poemAI.SendRequest(wordsData);
         isBookActive = true;
         _canBeTriggered = false;
         leftImage.enabled = false;
