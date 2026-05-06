@@ -43,7 +43,7 @@ public class Bullet : MonoBehaviour
         startPosition = transform.position;
         target = homingTarget;
 
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
     }
 
     public void Fly(Vector2 direction, float duration)
@@ -57,13 +57,13 @@ public class Bullet : MonoBehaviour
         elapsedTime = 0f;
         currentDuration = duration;
 
-        rb.velocity = direction * speed;
+        rb.linearVelocity = direction * speed;
     }
 
     private void HomeInOnTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        rb.velocity = direction * speed;
+        rb.linearVelocity = direction * speed;
 
         if (Vector3.Distance(transform.position, target.position) < 0.1f)
         {
@@ -81,7 +81,7 @@ public class Bullet : MonoBehaviour
     protected virtual void Deactivate()
     {
         Flying = false;
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         target = null;
         gameObject.SetActive(false);
     }

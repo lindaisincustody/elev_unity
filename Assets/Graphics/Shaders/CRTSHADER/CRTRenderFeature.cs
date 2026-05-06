@@ -7,30 +7,38 @@ public class CRTRenderFeature : ScriptableRendererFeature
     class CRTRenderPass : ScriptableRenderPass
     {
         public Material crtMaterial;
-        private RenderTargetIdentifier source;
-        private RenderTargetHandle tempTexture;
+        private RTHandle tempTexture;
+        private const string k_TempTextureName = "_TemporaryCRTRenderTexture";
 
-        public CRTRenderPass()
+        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
         {
-            tempTexture.Init("_TemporaryCRTRenderTexture");
+            RenderTextureDescriptor desc = renderingData.cameraData.cameraTargetDescriptor;
+            desc.depthBufferBits = 0;
+            RenderingUtils.ReAllocateIfNeeded(
+                ref tempTexture,
+                desc,
+                FilterMode.Bilinear,
+                TextureWrapMode.Clamp,
+                name: k_TempTextureName);
         }
 
         public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
         {
-            if (crtMaterial == null)
-                return;
-
-            source = new RenderTargetIdentifier(renderingData.cameraData.renderer.cameraColorTargetHandle.rt);
+            if (crtMaterial == null) return;
 
             CommandBuffer cmd = CommandBufferPool.Get("CRTRenderPass");
-            RenderTextureDescriptor opaqueDesc = renderingData.cameraData.cameraTargetDescriptor;
-            opaqueDesc.depthBufferBits = 0;
-            cmd.GetTemporaryRT(tempTexture.id, opaqueDesc, FilterMode.Bilinear);
-            Blit(cmd, source, tempTexture.Identifier(), crtMaterial);
-            Blit(cmd, tempTexture.Identifier(), source);
+            RTHandle source = renderingData.cameraData.renderer.cameraColorTargetHandle;
+
+            Blit(cmd, source, tempTexture, crtMaterial);
+            Blit(cmd, tempTexture, source);
 
             context.ExecuteCommandBuffer(cmd);
             CommandBufferPool.Release(cmd);
+        }
+
+        public void Dispose()
+        {
+            tempTexture?.Release();
         }
     }
 
@@ -46,12 +54,12 @@ public class CRTRenderFeature : ScriptableRendererFeature
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
     {
-        if (!Application.isPlaying)
-        {
-            return;
-        }
-
-
+        if (!Application.isPlaying) return;
         renderer.EnqueuePass(m_CRTPass);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        m_CRTPass?.Dispose();
     }
 }

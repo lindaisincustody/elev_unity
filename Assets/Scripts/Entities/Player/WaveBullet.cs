@@ -27,11 +27,11 @@ public class WaveBullet : Bullet
     {
         if (!Flying || _dragged.Count == 0) return;
 
-        Vector2 v = rb.velocity;
+        Vector2 v = rb.linearVelocity;
         foreach (Rigidbody2D enemyRb in _dragged)
         {
             if (enemyRb != null)
-                enemyRb.velocity = v * Force;
+                enemyRb.linearVelocity = v * Force;
         }
     }
 

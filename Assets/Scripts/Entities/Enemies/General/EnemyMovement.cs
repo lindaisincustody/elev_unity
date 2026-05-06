@@ -102,7 +102,7 @@ public class EnemyMovement : Component
     {
         if (isFrozen)
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
             return;
         }
 
@@ -112,7 +112,7 @@ public class EnemyMovement : Component
         }
         else
         {
-            rb.velocity = Vector2.zero;
+            rb.linearVelocity = Vector2.zero;
         }
     }
 
@@ -159,7 +159,7 @@ public class EnemyMovement : Component
         Vector2 direction = (targetPosition - rb.position).normalized;
 
         if (!isFrozen)
-            rb.velocity = direction * dashSpeed;
+            rb.linearVelocity = direction * dashSpeed;
 
         StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); 
     }
@@ -172,7 +172,7 @@ public class EnemyMovement : Component
     private IEnumerator StopDashAfterTime(float time, System.Action OnEnd)
     {
         yield return new WaitForSeconds(time);
-        rb.velocity = Vector2.zero;
+        rb.linearVelocity = Vector2.zero;
         OnEnd?.Invoke();
     }
 

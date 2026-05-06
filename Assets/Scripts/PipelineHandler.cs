@@ -10,6 +10,6 @@ public class PipelineHandler : MonoBehaviour
     // Update is called once per frame
     private void Start()
     {
-        GraphicsSettings.renderPipelineAsset = asset;
+        GraphicsSettings.defaultRenderPipeline = asset;
     }
 }

@@ -42,7 +42,7 @@ public class TrainMovement : MonoBehaviour
         if (!hasArrived && transform.position.x - stopOvershoot > arrivalX + stopOvershoot)
         {
             currentVelocity = Mathf.MoveTowards(currentVelocity, 0, Time.fixedDeltaTime * 10f); // Gradually decrease speed
-            rb.velocity = new Vector2(currentVelocity, 0);
+            rb.linearVelocity = new Vector2(currentVelocity, 0);
             if (Mathf.Abs(currentVelocity) > 5f) // Check if the train is moving fast enough to justify shaking
             {
                 StartCoroutine(cameraShake.Shake(0.5f, 0.01f)); // Trigger camera shake
@@ -60,7 +60,7 @@ public class TrainMovement : MonoBehaviour
             if (transform.position.x > leaveX)
             {
                 currentVelocity = Mathf.MoveTowards(currentVelocity, initialSpeed, Time.fixedDeltaTime * 2.5f); // Gradually increase speed
-                rb.velocity = new Vector2(currentVelocity, 0);
+                rb.linearVelocity = new Vector2(currentVelocity, 0);
                 if (Mathf.Abs(currentVelocity) > 5f) // Trigger camera shake if the train is moving fast enough while leaving
                 {
                     StartCoroutine(cameraShake.Shake(0.2f, 0.01f)); // Trigger camera shake
@@ -68,7 +68,7 @@ public class TrainMovement : MonoBehaviour
             }
             else
             {
-                rb.velocity = Vector2.zero; // Stop moving when past leaveX
+                rb.linearVelocity = Vector2.zero; // Stop moving when past leaveX
             }
         }
 
@@ -77,15 +77,15 @@ public class TrainMovement : MonoBehaviour
     IEnumerator DriftToStop()
     {
         // Allow a slight drift beyond the target stopping point
-        while (Mathf.Abs(rb.velocity.x) > 0.1f)
+        while (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
         {
             currentVelocity = Mathf.MoveTowards(currentVelocity, 0, Time.fixedDeltaTime * 5f);
-            rb.velocity = new Vector2(currentVelocity, 0);
+            rb.linearVelocity = new Vector2(currentVelocity, 0);
             // Trigger a gentle camera shake
             StartCoroutine(cameraShake.Shake(0.3f, 0.007f)); // Shorter duration and lower magnitude for gentle shake
             yield return null;
         }
-        rb.velocity = Vector2.zero; // Finally stop the train
+        rb.linearVelocity = Vector2.zero; // Finally stop the train
         Invoke("LeavingSound", 3.3f);
         Invoke("PrepareToLeave", 5f); // Wait for 5 seconds before leaving
     }
@@ -100,6 +100,6 @@ public class TrainMovement : MonoBehaviour
         Player.instance.ShowPlayer(true);
         leaveStation = true;
         currentVelocity = initialSpeed / 2; // Start leaving at half the initial speed
-        rb.velocity = new Vector2(currentVelocity, 0);
+        rb.linearVelocity = new Vector2(currentVelocity, 0);
     }
 }
