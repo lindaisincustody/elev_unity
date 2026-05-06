@@ -33,6 +33,6 @@ public class WwiseSanityRtpcBinder : MonoBehaviour
         float t = Mathf.InverseLerp(sanityMin, sanityMax, currentSanity);
         float rtpcValue = Mathf.Lerp(rtpcMin, rtpcMax, t);
 
-        AkSoundEngine.SetRTPCValue("RTPC_Sanity", rtpcValue, gameObject);
+       // AkSoundEngine.SetRTPCValue("RTPC_Sanity", rtpcValue, gameObject);
     }
 }

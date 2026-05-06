@@ -32,8 +32,8 @@ public sealed class WwiseAudioManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
 
-        if (GetComponent<AkGameObj>() == null)
-            gameObject.AddComponent<AkGameObj>();
+      //  if (GetComponent<AkGameObj>() == null)
+         //   gameObject.AddComponent<AkGameObj>();
     }
 
     private void OnEnable()
@@ -50,15 +50,15 @@ public sealed class WwiseAudioManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"[Wwise] IsInitialized={AkSoundEngine.IsInitialized()}");
+       // Debug.Log($"[Wwise] IsInitialized={AkSoundEngine.IsInitialized()}");
 
         LoadBankOrLog(initBank);
 
         foreach (var bank in additionalBanks)
             LoadBankOrLog(bank);
 
-        uint playingId = AkSoundEngine.PostEvent(playMusicEvent, gameObject);
-        Debug.Log($"[Wwise] PostEvent '{playMusicEvent}' playingId={playingId}");
+       // uint playingId = AkSoundEngine.PostEvent(playMusicEvent, gameObject);
+      //  Debug.Log($"[Wwise] PostEvent '{playMusicEvent}' playingId={playingId}");
 
         if (SanityBar.instance != null)
             OnSanityChanged(SanityBar.instance.currentSanity);
@@ -70,7 +70,7 @@ public sealed class WwiseAudioManager : MonoBehaviour
         float rtpcValue = Mathf.Lerp(rtpcMin, rtpcMax, t);
 
        
-            AkSoundEngine.SetRTPCValue(sanityRtpc, rtpcValue, gameObject);
+            //AkSoundEngine.SetRTPCValue(sanityRtpc, rtpcValue, gameObject);
 
         Debug.Log($"[Wwise] {sanityRtpc}={rtpcValue:0.00} sanity={sanity} scope={(setRtpcGlobally ? "Global" : "GameObject")}");
     }
@@ -81,7 +81,7 @@ public sealed class WwiseAudioManager : MonoBehaviour
             return;
 
         uint bankId;
-        var res = AkSoundEngine.LoadBank(bankName, out bankId);
-        Debug.Log($"[Wwise] LoadBank '{bankName}' -> {res} (id={bankId})");
+       // var res = AkSoundEngine.LoadBank(bankName, out bankId);
+       // Debug.Log($"[Wwise] LoadBank '{bankName}' -> {res} (id={bankId})");
     }
 }

@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class InputManager : MonoBehaviour
 {
+    [Header("Touch / Mobile")]
+    [SerializeField] private TouchJoystick virtualJoystick;
     // Player
     public event Action OnInteract = delegate { };
     public event Action OnCancel = delegate { };
@@ -57,7 +59,10 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        inputVector = inputActions.Player.Move.ReadValue<Vector2>();
+        if (virtualJoystick != null && virtualJoystick.IsActive)
+            inputVector = virtualJoystick.Direction;
+        else
+            inputVector = inputActions.Player.Move.ReadValue<Vector2>();
     }
 
     private void Navigate(InputAction.CallbackContext context)

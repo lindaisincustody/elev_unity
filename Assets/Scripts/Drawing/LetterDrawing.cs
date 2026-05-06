@@ -3,7 +3,9 @@ using System.Collections;
 using TMPro;
 using Unity.Barracuda;
 using UnityEngine;
+using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
+using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class LetterDrawing : Component
 {
@@ -53,6 +55,13 @@ public class LetterDrawing : Component
     [Tooltip("How long the stamp animation lasts")]
     public float symbolStampDuration = 0.5f;
 
+    [Header("Touch (mobile)")]
+    [Tooltip("Touches that start with screen X below this fraction are ignored (joystick zone).")]
+    [Range(0f, 1f)]
+    [SerializeField] private float drawZoneStartX = 0.5f;
+
+    // Tracks which finger is currently drawing. -1 means no finger.
+    private int drawingFingerId = -1;
 
     private float maxDrawDistance = int.MaxValue;
     private float currentDrawDistance = 0f;
@@ -77,6 +86,9 @@ public class LetterDrawing : Component
         ChangeState();
     }
 
+    private void OnEnable() => EnhancedTouchSupport.Enable();
+    private void OnDisable() => EnhancedTouchSupport.Disable();
+
     private void ChangeState()
     {
         switch (drawingMode)
@@ -98,13 +110,49 @@ public class LetterDrawing : Component
 
     void Update()
     {
+        // -------- TOUCH (iPhone / iPad) -------------------------------------
+        foreach (EnhancedTouch t in EnhancedTouch.activeTouches)
+        {
+            switch (t.phase)
+            {
+                case UnityEngine.InputSystem.TouchPhase.Began:
+                    // Only start drawing if no finger is already drawing AND
+                    // the touch is on the right half (left half is joystick).
+                    if (drawingFingerId == -1 &&
+                        t.screenPosition.x >= Screen.width * drawZoneStartX)
+                    {
+                        drawingFingerId = t.touchId;
+                        StartDrawing();
+                        AddPointAt(t.screenPosition);
+                    }
+                    break;
+
+                case UnityEngine.InputSystem.TouchPhase.Moved:
+                case UnityEngine.InputSystem.TouchPhase.Stationary:
+                    if (t.touchId == drawingFingerId)
+                        AddPointAt(t.screenPosition);
+                    break;
+
+                case UnityEngine.InputSystem.TouchPhase.Ended:
+                case UnityEngine.InputSystem.TouchPhase.Canceled:
+                    if (t.touchId == drawingFingerId)
+                    {
+                        currentState.ProcessDrawing(lineRenderer, secondaryLineRenderer);
+                        OnDraw?.Invoke();
+                        drawingFingerId = -1;
+                    }
+                    break;
+            }
+        }
+
+        // -------- MOUSE (kept so editor iteration still works) --------------
         if (Input.GetMouseButtonDown(1))
         {
             StartDrawing();
         }
         else if (Input.GetMouseButton(1))
         {
-            AddPoint();
+            AddPointAt(Input.mousePosition);
         }
         else if (Input.GetMouseButtonUp(1))
         {
@@ -124,18 +172,19 @@ public class LetterDrawing : Component
         reachedMaxDistance = false;
     }
 
-    private void AddPoint()
+    /// <summary>Add a point to the active stroke, given a screen-space position (mouse OR touch).</summary>
+    private void AddPointAt(Vector2 screenPosition)
     {
         if (reachedMaxDistance) return;
 
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        mousePosition.z = 0;
+        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPosition);
+        worldPos.z = 0;
 
-        Vector3 newPos = mousePosition;
+        Vector3 newPos = worldPos;
         if (lineRenderer.positionCount > 0)
         {
             Vector3 lastPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
-            newPos = Vector3.Lerp(lastPosition, mousePosition, 0.5f);
+            newPos = Vector3.Lerp(lastPosition, worldPos, 0.5f);
 
             float segLen = Vector3.Distance(lastPosition, newPos);
 

@@ -1,6 +1,7 @@
-using UnityEditor;
-using UnityEngine;
 
+using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
 [CustomEditor(typeof(Brain))]
 public class BrainEditor : Editor
 {
@@ -30,3 +31,4 @@ public class BrainEditor : Editor
         }
     }
 }
+#endif
