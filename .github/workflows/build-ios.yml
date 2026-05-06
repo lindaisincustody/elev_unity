@@ -1,0 +1,74 @@
+name: Build and deploy to TestFlight
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  build-unity-ios:
+    name: Build Unity iOS Xcode project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Cache Library
+        uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-iOS-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
+          restore-keys: |
+            Library-iOS-
+            Library-
+
+      - name: Build with GameCI
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: iOS
+          buildName: elev_unity
+
+      - name: Upload Xcode project as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: build/iOS
+
+  deploy-testflight:
+    name: Sign and upload to TestFlight
+    needs: build-unity-ios
+    runs-on: macos-14
+    env:
+      MATCH_GIT_URL: https://github.com/lindaisincustody/elev_unity_certificates.git
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      IOS_BUNDLE_ID: ${{ secrets.IOS_BUNDLE_ID }}
+      MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+      APPSTORE_KEY_ID: ${{ secrets.APPSTORE_KEY_ID }}
+      APPSTORE_ISSUER_ID: ${{ secrets.APPSTORE_ISSUER_ID }}
+      APPSTORE_P8: ${{ secrets.APPSTORE_P8 }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Xcode project
+        uses: actions/download-artifact@v4
+        with:
+          name: ios-build
+          path: ios_build
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: Fix Unity build script permissions
+        run: find ios_build -type f -name "*.sh" -exec chmod +x {} \;
+
+      - name: Build, sign, upload to TestFlight
+        run: bundle exec fastlane ios beta
