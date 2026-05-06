@@ -1,109 +1,69 @@
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.InputSystem.EnhancedTouch;
+using ETouch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
-/// <summary>
-/// Floating virtual joystick. Place this on a UI Image that covers the
-/// left half of the Canvas (raycast target ON, alpha can be 0).
-/// When the player taps the left half, the joystick "snaps" to that point
-/// and follows the finger until released. Outputs a normalized Vector2
-/// in <see cref="Direction"/>, which InputManager will read instead of WASD.
-/// </summary>
-[RequireComponent(typeof(Image))]
-public class TouchJoystick : MonoBehaviour,
-    IPointerDownHandler, IDragHandler, IPointerUpHandler
+public class TouchJoystick : MonoBehaviour
 {
-    [Header("References (children of the joystick zone)")]
-    [SerializeField] private RectTransform joystickBackground;
-    [SerializeField] private RectTransform joystickHandle;
+    [SerializeField] private RectTransform background;
+    [SerializeField] private RectTransform handle;
+    [SerializeField] private float handleRange = 100f;
+    [SerializeField, Range(0f, 1f)] private float zoneEndX = 0.5f; // left half
 
-    [Header("Tuning")]
-    [Tooltip("Max pixel distance the handle can travel from the background center.")]
-    [SerializeField] private float handleRange = 80f;
-    [Tooltip("Below this magnitude (0..1) input is treated as zero.")]
-    [SerializeField] private float deadZone = 0.1f;
-    [Tooltip("If true, the joystick visuals appear at the touch point and disappear on release.")]
-    [SerializeField] private bool floating = true;
+    private Vector2 _direction;
+    private bool _isActive;
+    private int _activeFingerIndex = -1;
 
-    private RectTransform baseRect;
-    private Canvas canvas;
-    private Camera uiCamera;
-    private Vector2 input = Vector2.zero;
-    private int activePointerId = -1;
+    public Vector2 Direction => _direction;
+    public bool IsActive => _isActive;
 
-    /// <summary>Normalized -1..1 direction. Vector2.zero when no finger.</summary>
-    public Vector2 Direction => input;
-
-    /// <summary>True while a finger is dragging this joystick.</summary>
-    public bool IsActive => activePointerId != -1;
-
-    private void Awake()
+    void OnEnable()
     {
-        baseRect = GetComponent<RectTransform>();
-        canvas = GetComponentInParent<Canvas>();
-        if (canvas == null)
-        {
-            Debug.LogError("[TouchJoystick] Must be a child of a Canvas.");
-            return;
-        }
-
-        if (canvas.renderMode != RenderMode.ScreenSpaceOverlay)
-            uiCamera = canvas.worldCamera;
-
-        // Make the zone invisible but still receive raycasts.
-        var zoneImage = GetComponent<Image>();
-        zoneImage.color = new Color(0f, 0f, 0f, 0f);
-        zoneImage.raycastTarget = true;
-
-        if (floating && joystickBackground != null)
-            joystickBackground.gameObject.SetActive(false);
+        EnhancedTouchSupport.Enable();
+        ETouch.onFingerDown += OnFingerDown;
+        ETouch.onFingerMove += OnFingerMove;
+        ETouch.onFingerUp += OnFingerUp;
+        Hide();
     }
 
-    public void OnPointerDown(PointerEventData eventData)
+    void OnDisable()
     {
-        // Already tracking a finger? Ignore secondary touches in this zone.
-        if (IsActive) return;
-
-        activePointerId = eventData.pointerId;
-
-        if (floating && joystickBackground != null)
-        {
-            joystickBackground.gameObject.SetActive(true);
-            // Move the visuals to the touch point, in the joystick zone's local space.
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                baseRect, eventData.position, uiCamera, out Vector2 localPoint);
-            joystickBackground.anchoredPosition = localPoint;
-        }
-
-        OnDrag(eventData);
+        ETouch.onFingerDown -= OnFingerDown;
+        ETouch.onFingerMove -= OnFingerMove;
+        ETouch.onFingerUp -= OnFingerUp;
     }
 
-    public void OnDrag(PointerEventData eventData)
+    void OnFingerDown(Finger f)
     {
-        if (eventData.pointerId != activePointerId) return;
-        if (joystickBackground == null || joystickHandle == null) return;
+        if (_activeFingerIndex != -1) return;                       // already tracking a finger
+        if (f.screenPosition.x > Screen.width * zoneEndX) return;   // outside left half
 
-        Vector2 bgScreenPos = RectTransformUtility.WorldToScreenPoint(
-            uiCamera, joystickBackground.position);
+        _activeFingerIndex = f.index;
+        _isActive = true;
+        background.position = f.screenPosition;
+        handle.position = f.screenPosition;
+        background.gameObject.SetActive(true);
+    }
 
-        Vector2 delta = eventData.position - bgScreenPos;
+    void OnFingerMove(Finger f)
+    {
+        if (f.index != _activeFingerIndex) return;
+        Vector2 delta = f.screenPosition - (Vector2)background.position;
         delta = Vector2.ClampMagnitude(delta, handleRange);
-        joystickHandle.anchoredPosition = delta;
-
-        Vector2 normalized = delta / handleRange;
-        input = normalized.magnitude < deadZone ? Vector2.zero : normalized;
+        handle.position = (Vector2)background.position + delta;
+        _direction = delta / handleRange;
     }
 
-    public void OnPointerUp(PointerEventData eventData)
+    void OnFingerUp(Finger f)
     {
-        if (eventData.pointerId != activePointerId) return;
+        if (f.index != _activeFingerIndex) return;
+        _activeFingerIndex = -1;
+        _isActive = false;
+        _direction = Vector2.zero;
+        Hide();
+    }
 
-        activePointerId = -1;
-        input = Vector2.zero;
-
-        if (joystickHandle != null)
-            joystickHandle.anchoredPosition = Vector2.zero;
-        if (floating && joystickBackground != null)
-            joystickBackground.gameObject.SetActive(false);
+    void Hide()
+    {
+        if (background != null) background.gameObject.SetActive(false);
     }
 }
