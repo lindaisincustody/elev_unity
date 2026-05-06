@@ -1,0 +1,45 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build Unity-generated Xcode project and upload to TestFlight"
+  lane :beta do
+    setup_ci
+
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APPSTORE_KEY_ID"],
+      issuer_id: ENV["APPSTORE_ISSUER_ID"],
+      key_content: ENV["APPSTORE_P8"],
+      duration: 1200,
+      in_house: false
+    )
+
+    match(
+      type: "appstore",
+      readonly: false,
+      api_key: api_key
+    )
+
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "ios_build/Unity-iPhone.xcodeproj",
+      bundle_identifier: ENV["IOS_BUNDLE_ID"],
+      profile_name: "match AppStore #{ENV['IOS_BUNDLE_ID']}",
+      code_sign_identity: "Apple Distribution",
+      team_id: ENV["APPLE_TEAM_ID"]
+    )
+
+    build_app(
+      project: "ios_build/Unity-iPhone.xcodeproj",
+      scheme: "Unity-iPhone",
+      configuration: "Release",
+      export_method: "app-store",
+      output_directory: "build",
+      output_name: "elev_unity.ipa"
+    )
+
+    upload_to_testflight(
+      api_key: api_key,
+      skip_waiting_for_build_processing: true
+    )
+  end
+end
