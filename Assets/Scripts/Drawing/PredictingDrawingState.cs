@@ -310,6 +310,9 @@ public class PredictingDrawingState : IDrawingState
         TriggerCorrectSparkle(secondaryLineRenderer);
         DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
 
+        // Broadcast the drawing result to the other player's device.
+        NetworkPlayerSync.Local?.BroadcastDrawingResult(prediction.predictedLabel);
+
         output.Dispose();
         DebugInputTexture(capturedTexture);
         GameObject.Destroy(capturedTexture);

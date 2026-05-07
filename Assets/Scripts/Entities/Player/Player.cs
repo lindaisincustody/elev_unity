@@ -43,9 +43,10 @@ public class Player : Entity
 
     private void Awake()
     {
-        if (instance != null)
-            Debug.LogError("Double Player or singleton problem");
-
+        // In multiplayer two Player instances exist on this device (local + remote proxy).
+        // NetworkPlayerSync.OnNetworkSpawn() re-assigns Player.instance to the correct
+        // local player after both objects spawn.  The assignment here is the fallback
+        // for single-player / editor play with no NetworkObject present.
         instance = this;
 
         dataManager = DataManager.Instance;

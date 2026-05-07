@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(grep -E \"\\\\.cs$\")"
+      "Bash(grep -E \"\\\\.cs$\")",
+      "Bash(Get-ChildItem -Recurse -Filter \"*layer*.cs\" -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -ExpandProperty FullName)"
     ]
   }
 }
