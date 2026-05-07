@@ -24,13 +24,29 @@ public class SmoothCameraFollow : MonoBehaviour
 
     void Start()
     {
-        player = Player.instance.transform;
+        player = Player.instance != null ? Player.instance.transform : null;
         gameCamera = Camera.main;
         defaultOrthoSize = gameCamera.orthographicSize;
     }
 
+    /// <summary>
+    /// Called by NetworkPlayerSync when the local player spawns over the network,
+    /// so the camera switches to follow the correct player on P2's device.
+    /// </summary>
+    public void SetPlayer(Transform newPlayer)
+    {
+        player = newPlayer;
+    }
+
     void FixedUpdate()
     {
+        // On P2's device the camera script starts before the network player spawns.
+        // Keep trying to grab the reference until it's available.
+        if (player == null)
+        {
+            if (Player.instance != null) player = Player.instance.transform;
+            else return;
+        }
         // 1) Handle zoom on Right-Click
         float targetSize = Input.GetMouseButton(1)
             ? defaultOrthoSize + zoomAmount

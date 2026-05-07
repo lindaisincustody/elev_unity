@@ -56,6 +56,16 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
         currentOffset = framing.m_TrackedObjectOffset;
     }
 
+    /// <summary>
+    /// Called by NetworkPlayerSync when the local player spawns over the network,
+    /// so the Cinemachine target switches to the correct player on P2's device.
+    /// </summary>
+    public void SetPlayer(Transform newPlayer)
+    {
+        player = newPlayer;
+        if (vcam != null) vcam.Follow = newPlayer;
+    }
+
     private void Update()
     {
         if (player == null || unityCam == null) return;

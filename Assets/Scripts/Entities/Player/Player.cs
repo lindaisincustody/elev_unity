@@ -44,10 +44,11 @@ public class Player : Entity
     private void Awake()
     {
         // In multiplayer two Player instances exist on this device (local + remote proxy).
-        // NetworkPlayerSync.OnNetworkSpawn() re-assigns Player.instance to the correct
-        // local player after both objects spawn.  The assignment here is the fallback
-        // for single-player / editor play with no NetworkObject present.
-        instance = this;
+        // Only the first one to Awake sets the singleton; NetworkPlayerSync.OnNetworkSpawn()
+        // then re-assigns it to whichever object IsOwner == true (the local player).
+        // This prevents the remote proxy's Awake from stomping the host's own reference.
+        if (instance == null)
+            instance = this;
 
         dataManager = DataManager.Instance;
     }

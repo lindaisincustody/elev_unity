@@ -37,6 +37,16 @@ public class NetworkPlayerSync : NetworkBehaviour
         NetworkVariableWritePermission.Owner
     );
 
+    /// <summary>
+    /// Movement vector synced every frame from the owner so remote proxies
+    /// can drive their Animator without running PlayerMovement locally.
+    /// </summary>
+    public NetworkVariable<Vector2> SyncedMovement = new NetworkVariable<Vector2>(
+        Vector2.zero,
+        NetworkVariableReadPermission.Everyone,
+        NetworkVariableWritePermission.Owner
+    );
+
     // ── Static convenience accessor ───────────────────────────────────────
 
     /// <summary>The NetworkPlayerSync that belongs to this device's local player.</summary>
@@ -47,6 +57,7 @@ public class NetworkPlayerSync : NetworkBehaviour
     private Player         player;
     private PlayerMovement playerMovement;
     private LetterDrawing  letterDrawing;
+    private Animator       proxyAnimator;   // animator on the remote proxy
 
     // ── Spawn / despawn ───────────────────────────────────────────────────
 
@@ -74,6 +85,16 @@ public class NetworkPlayerSync : NetworkBehaviour
             // LOCAL player: point the singleton so all existing code works.
             Local = this;
             Player.instance = player;
+
+            // Camera scripts cache Player.instance.transform in their Start/Awake,
+            // which runs before network objects spawn. Re-point them now so P2's
+            // camera follows their own character instead of P1's proxy.
+            var smoothCam = FindObjectOfType<SmoothCameraFollow>();
+            if (smoothCam != null) smoothCam.SetPlayer(transform);
+
+            var cineCam = FindObjectOfType<CinemachineTopDownAim_CM2>();
+            if (cineCam != null) cineCam.SetPlayer(transform);
+
             Debug.Log($"[Net] Local player spawned (slot: {(isPlayerTwo ? "P2" : "P1")}).");
         }
         else
@@ -87,6 +108,11 @@ public class NetworkPlayerSync : NetworkBehaviour
             if (letterDrawing != null && letterDrawing.gameObject == player.gameObject)
                 letterDrawing.enabled = false;
 
+            // Cache the animator so we can drive it from SyncedMovement changes.
+            proxyAnimator = GetComponent<Animator>();
+            if (proxyAnimator == null) proxyAnimator = GetComponentInChildren<Animator>();
+            SyncedMovement.OnValueChanged += OnSyncedMovementChanged;
+
             Debug.Log($"[Net] Remote proxy spawned (slot: {(isPlayerTwo ? "P2" : "P1")}).");
         }
     }
@@ -94,6 +120,29 @@ public class NetworkPlayerSync : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         if (IsOwner) Local = null;
+        else SyncedMovement.OnValueChanged -= OnSyncedMovementChanged;
+    }
+
+    // ── Animation sync ────────────────────────────────────────────────────
+
+    private void Update()
+    {
+        if (!IsOwner || playerMovement == null) return;
+
+        // Write movement every frame so remote proxies can animate.
+        // Only write when the value actually changes to save bandwidth.
+        Vector2 move = playerMovement.movement;
+        if (SyncedMovement.Value != move)
+            SyncedMovement.Value = move;
+    }
+
+    /// <summary>Fires on every device that has a remote proxy for this player.</summary>
+    private void OnSyncedMovementChanged(Vector2 previous, Vector2 current)
+    {
+        if (proxyAnimator == null) return;
+        proxyAnimator.SetFloat("Horizontal", current.x);
+        proxyAnimator.SetFloat("Vertical",   current.y);
+        proxyAnimator.SetFloat("Speed",       current.sqrMagnitude);
     }
 
     // ── Visuals ───────────────────────────────────────────────────────────
@@ -110,8 +159,15 @@ public class NetworkPlayerSync : NetworkBehaviour
             var anim = GetComponent<Animator>();
             if (anim == null) anim = GetComponentInChildren<Animator>();
             if (anim != null)
+            {
                 anim.runtimeAnimatorController = playerTwoAnimator;
+                Debug.Log($"[Net] P2 animator applied: {playerTwoAnimator.name}");
+            }
+            else
+                Debug.LogWarning("[Net] P2 animator NOT applied — no Animator component found on player or children.");
         }
+        else
+            Debug.LogWarning("[Net] P2 animator NOT applied — playerTwoAnimator is not assigned in the Inspector on the Player prefab's NetworkPlayerSync.");
 
         // ── Sprite tint (optional) ────────────────────────────────────────
         if (playerTwoColor != Color.white)
