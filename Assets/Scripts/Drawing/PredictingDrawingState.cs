@@ -3,6 +3,7 @@ using System.Linq;
 using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 using TMPro;
 using System.Collections;
 using System.Collections.Generic;
@@ -108,37 +109,43 @@ public class PredictingDrawingState : IDrawingState
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
         renderCamera.cullingMask = LayerMask.GetMask("Drawing");
 
-        Material trippyMaterial = new Material(Shader.Find("Unlit/Color"));
-        Material trippyMaterialSecondary = new Material(Shader.Find("Custom/TrippyTransparent"));
-        trippyMaterial.SetColor("_Color", Color.red);
-        trippyMaterial.SetFloat("_Transparency", 0.5f);
-        trippyMaterial.SetFloat("_TimeSpeed", 1.0f);
-        trippyMaterialSecondary.SetColor("_Color", Color.black);
-        trippyMaterialSecondary.SetFloat("_Transparency", 0.5f);
-        trippyMaterialSecondary.SetFloat("_TimeSpeed", 1.0f);
-        letterDrawing.lineRenderer.material = trippyMaterial;
-        letterDrawing.secondaryLineRenderer.material = trippyMaterialSecondary;
+        // Use inspector-assigned materials so no Shader.Find is needed at runtime.
+        // primaryLineMaterial  → white Unlit material (captured by render cam for ML)
+        // trippyTransparentMaterial → visual feedback material the player sees
+        if (letterDrawing.primaryLineMaterial != null)
+            letterDrawing.lineRenderer.material = letterDrawing.primaryLineMaterial;
+        else
+            Debug.LogError("LetterDrawing: primaryLineMaterial is not assigned. Drawing layer will be invisible.");
+
+        Material feedbackMat = null;
+        if (letterDrawing.trippyTransparentMaterial != null)
+        {
+            feedbackMat = letterDrawing.trippyTransparentMaterial;
+            letterDrawing.secondaryLineRenderer.material = feedbackMat;
+        }
+        else
+        {
+            feedbackMat = letterDrawing.secondaryLineRenderer.material;
+            Debug.LogWarning("LetterDrawing: trippyTransparentMaterial is not assigned. Using existing secondary material.");
+        }
 
         if (letterDrawing.renderTextureDisplay != null)
-        {
             letterDrawing.renderTextureDisplay.texture = renderTexture;
-        }
 
         if (letterDrawing.groundMaterial != null)
-        {
             letterDrawing.groundMaterial.mainTextureScale = new Vector2(10.0f, 0.5f);
-        }
 
         var sec = letterDrawing.secondaryLineRenderer;
+        Color secColor = feedbackMat != null ? feedbackMat.color : Color.white;
         Gradient initG = new Gradient();
         initG.SetKeys(
           new[] {
-        new GradientColorKey( trippyMaterialSecondary.GetColor("_Color"), 0f ),
-        new GradientColorKey( trippyMaterialSecondary.GetColor("_Color"), 1f )
+              new GradientColorKey(secColor, 0f),
+              new GradientColorKey(secColor, 1f)
           },
           new[] {
-        new GradientAlphaKey(1f, 0f),
-        new GradientAlphaKey(1f, 1f)
+              new GradientAlphaKey(1f, 0f),
+              new GradientAlphaKey(1f, 1f)
           }
         );
         sec.colorGradient = initG;
@@ -146,14 +153,25 @@ public class PredictingDrawingState : IDrawingState
 
     private void InitializeCamera()
     {
-        renderTexture = new RenderTexture(96, 96, 16, RenderTextureFormat.ARGB32);
-        renderCamera = new GameObject("Render Camera").AddComponent<Camera>();
+        renderTexture = new RenderTexture(96, 96, 16, RenderTextureFormat.R8);
+        renderTexture.Create();
 
+        var cameraGO = new GameObject("DrawingRenderCamera");
+        renderCamera = cameraGO.AddComponent<Camera>();
         renderCamera.orthographic = true;
         renderCamera.cullingMask = LayerMask.GetMask("Drawing");
         renderCamera.backgroundColor = Color.black;
         renderCamera.clearFlags = CameraClearFlags.Color;
         renderCamera.targetTexture = renderTexture;
+        renderCamera.enabled = false; // only render on demand via renderCamera.Render()
+
+        // URP requires AdditionalCameraData on any runtime-created camera;
+        // without it Camera.Render() skips the clear and outputs garbage.
+        var urpData = cameraGO.AddComponent<UniversalAdditionalCameraData>();
+        urpData.renderType = CameraRenderType.Base;
+        urpData.renderShadows = false;
+        urpData.requiresColorOption = CameraOverrideOption.Off;
+        urpData.requiresDepthOption = CameraOverrideOption.Off;
 
         Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
         renderCamera.orthographicSize = refCam.orthographicSize * 0.7f;
@@ -201,7 +219,7 @@ public class PredictingDrawingState : IDrawingState
         EndDrawing();
         CenterDrawingInTexture();
 
-        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.ARGB32, false);
+        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.R8, false);
         RenderTexture.active = renderTexture;
         capturedTexture.ReadPixels(new Rect(0, 0, 96, 96), 0, 0);
         capturedTexture.Apply();
@@ -269,6 +287,10 @@ public class PredictingDrawingState : IDrawingState
 
     private void EndDrawing()
     {
+        RenderTexture prev = RenderTexture.active;
+        RenderTexture.active = renderTexture;
+        GL.Clear(true, true, Color.black);
+        RenderTexture.active = prev;
         renderCamera.Render();
     }
 

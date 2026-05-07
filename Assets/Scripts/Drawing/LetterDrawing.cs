@@ -27,6 +27,9 @@ public class LetterDrawing : Component
 
     [Header("Predictions")]
     [SerializeField] public Material groundMaterial;
+    [Tooltip("White URP Unlit material — captured by the ML render camera. Must be visible on the Drawing layer.")]
+    [SerializeField] public Material primaryLineMaterial;
+    [Tooltip("Your Custom/TrippyTransparent material — what the player sees as the stroke.")]
     [SerializeField] public Material trippyTransparentMaterial;
     [SerializeField] public NNModel model;
     [SerializeField] public RawImage renderTextureDisplay;
@@ -201,14 +204,9 @@ public class LetterDrawing : Component
         Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
         if (cam == null) { Debug.LogError("LetterDrawing: no camera!"); return; }
 
-        // Convert via viewport space (0-1 normalized) — robust to render scale,
-        // target texture redirection, and pixel-perfect camera tricks.
-        Vector3 viewportPos = new Vector3(
-            screenPosition.x / Screen.width,
-            screenPosition.y / Screen.height,
-            Mathf.Abs(cam.transform.position.z)   // distance from camera plane
-        );
-        Vector3 worldPos = cam.ViewportToWorldPoint(viewportPos);
+        // ScreenToWorldPoint handles the camera's viewport rect correctly on all platforms.
+        float depth = Mathf.Abs(cam.transform.position.z);
+        Vector3 worldPos = cam.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, depth));
         worldPos.z = 0;
 
         Vector3 newPos = worldPos;

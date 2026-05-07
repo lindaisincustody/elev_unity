@@ -94365,6 +94365,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2080318423}
     - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: primaryLineMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 8e39ad95ebcc4964e80745cafb4b59ee, type: 2}
+    - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: sparkleEffectPrefab
       value: 
       objectReference: {fileID: 2503558607980736289, guid: d346fa3b78b20844699d951f5d9b48f2, type: 3}
