@@ -14,7 +14,12 @@ public class LetterDrawing : Component
     private DrawingMode previousMode;
 
     private IDrawingState currentState;
+    [Header("Camera (assign in Inspector!)")]
+    [Tooltip("The gameplay camera that renders the world. Do NOT rely on Camera.main.")]
+    [SerializeField] public Camera gameplayCamera;
 
+    [Header("Debug")]
+    [SerializeField] private Text debugText;   // optional UI Text for live touch values
     [Header("General")]
     [SerializeField] public LineRenderer lineRenderer;
     [SerializeField] public LineRenderer secondaryLineRenderer;
@@ -110,6 +115,22 @@ public class LetterDrawing : Component
 
     void Update()
     {
+        if (debugText != null)
+        {
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"Screen: {Screen.width}x{Screen.height}");
+            sb.AppendLine($"Orient: {Screen.orientation}");
+            Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
+            if (cam != null)
+            {
+                sb.AppendLine($"Cam: {cam.name}  Ortho={cam.orthographic}  Size={cam.orthographicSize:0.0}");
+                sb.AppendLine($"CamPixels: {cam.pixelWidth}x{cam.pixelHeight}");
+            }
+            sb.AppendLine($"DrawZoneStart X: {Screen.width * drawZoneStartX:0}");
+            foreach (var t in EnhancedTouch.activeTouches)
+                sb.AppendLine($"T{t.touchId}: ({t.screenPosition.x:0},{t.screenPosition.y:0}) ph={t.phase}");
+            debugText.text = sb.ToString();
+        }
         // -------- TOUCH (iPhone / iPad) -------------------------------------
         foreach (EnhancedTouch t in EnhancedTouch.activeTouches)
         {
@@ -177,7 +198,17 @@ public class LetterDrawing : Component
     {
         if (reachedMaxDistance) return;
 
-        Vector3 worldPos = Camera.main.ScreenToWorldPoint(screenPosition);
+        Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
+        if (cam == null) { Debug.LogError("LetterDrawing: no camera!"); return; }
+
+        // Convert via viewport space (0-1 normalized) — robust to render scale,
+        // target texture redirection, and pixel-perfect camera tricks.
+        Vector3 viewportPos = new Vector3(
+            screenPosition.x / Screen.width,
+            screenPosition.y / Screen.height,
+            Mathf.Abs(cam.transform.position.z)   // distance from camera plane
+        );
+        Vector3 worldPos = cam.ViewportToWorldPoint(viewportPos);
         worldPos.z = 0;
 
         Vector3 newPos = worldPos;
