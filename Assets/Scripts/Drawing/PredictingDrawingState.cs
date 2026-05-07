@@ -146,7 +146,7 @@ public class PredictingDrawingState : IDrawingState
 
     private void InitializeCamera()
     {
-        renderTexture = new RenderTexture(96, 96, 16, RenderTextureFormat.R8);
+        renderTexture = new RenderTexture(96, 96, 16, RenderTextureFormat.ARGB32);
         renderCamera = new GameObject("Render Camera").AddComponent<Camera>();
 
         renderCamera.orthographic = true;
@@ -155,9 +155,10 @@ public class PredictingDrawingState : IDrawingState
         renderCamera.clearFlags = CameraClearFlags.Color;
         renderCamera.targetTexture = renderTexture;
 
-        renderCamera.orthographicSize = Camera.main.orthographicSize * 0.7f;
+        Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
+        renderCamera.orthographicSize = refCam.orthographicSize * 0.7f;
         renderCamera.transform.position =
-            new Vector3(Camera.main.transform.position.x, Camera.main.transform.position.y, -10);
+            new Vector3(refCam.transform.position.x, refCam.transform.position.y, -10);
     }
 
     private void InitializeModel()
@@ -200,9 +201,11 @@ public class PredictingDrawingState : IDrawingState
         EndDrawing();
         CenterDrawingInTexture();
 
-        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.R8, false);
+        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.ARGB32, false);
         RenderTexture.active = renderTexture;
         capturedTexture.ReadPixels(new Rect(0, 0, 96, 96), 0, 0);
+        capturedTexture.Apply();
+        RenderTexture.active = null;
 
         using var inputTensor = new Tensor(renderTexture, 1);
         worker.Execute(inputTensor);
@@ -219,7 +222,6 @@ public class PredictingDrawingState : IDrawingState
             Debug.Log(confidence);
             TriggerMissSparkle(secondaryLineRenderer);
             output.Dispose();
-            capturedTexture.Apply();
             DebugInputTexture(capturedTexture);
             GameObject.Destroy(capturedTexture);
             return;
@@ -230,7 +232,6 @@ public class PredictingDrawingState : IDrawingState
         DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
 
         output.Dispose();
-        capturedTexture.Apply();
         DebugInputTexture(capturedTexture);
         GameObject.Destroy(capturedTexture);
     }
@@ -318,7 +319,8 @@ public class PredictingDrawingState : IDrawingState
         tmp.text = glyph;
         tmp.transform.localScale = Vector3.zero;
 
-        tmp.transform.rotation = Camera.main.transform.rotation;
+        Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
+        tmp.transform.rotation = refCam.transform.rotation;
 
         Vector3 targetScale = Vector3.one * worldSize;
         var tmpMesh = tmp.GetComponent<TextMeshPro>();

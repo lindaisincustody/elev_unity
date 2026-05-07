@@ -49,7 +49,12 @@ public class TouchDrawController : MonoBehaviour
 
     private void Awake()
     {
-        if (drawCamera == null) drawCamera = Camera.main;
+        if (drawCamera == null)
+        {
+            drawCamera = Camera.main;
+            if (drawCamera == null)
+                Debug.LogError("[TouchDrawController] drawCamera is not assigned and Camera.main is null. Assign the gameplay camera in the Inspector.");
+        }
         if (linePrefab == null)
             Debug.LogError("[TouchDrawController] linePrefab is not assigned.");
     }
