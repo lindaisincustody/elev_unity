@@ -95,6 +95,13 @@ public class NetworkPlayerSync : NetworkBehaviour
             var cineCam = FindObjectOfType<CinemachineTopDownAim_CM2>();
             if (cineCam != null) cineCam.SetPlayer(transform);
 
+            // Wire the scene joystick to this player's InputManager so P2 can move.
+            // P1 is already wired via the Inspector; calling SetJoystick on P1 is harmless.
+            var joystick = FindObjectOfType<TouchJoystick>();
+            var inputMgr = GetComponent<InputManager>();
+            if (joystick != null && inputMgr != null)
+                inputMgr.SetJoystick(joystick);
+
             Debug.Log($"[Net] Local player spawned (slot: {(isPlayerTwo ? "P2" : "P1")}).");
         }
         else

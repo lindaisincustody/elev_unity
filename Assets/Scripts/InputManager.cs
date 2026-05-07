@@ -26,6 +26,15 @@ public class InputManager : MonoBehaviour
     public event Action OnPoem = delegate { };
     public Vector2 inputVector { get; private set; }
 
+    /// <summary>
+    /// Called by NetworkPlayerSync at runtime so P2's spawned InputManager
+    /// receives direction from the same scene joystick as P1.
+    /// </summary>
+    public void SetJoystick(TouchJoystick joystick)
+    {
+        virtualJoystick = joystick;
+    }
+
     Controls inputActions;
 
     private void Awake()
