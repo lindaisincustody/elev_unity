@@ -31,6 +31,8 @@ public class LetterDrawing : Component
     [SerializeField] public Material primaryLineMaterial;
     [Tooltip("Your Custom/TrippyTransparent material — what the player sees as the stroke.")]
     [SerializeField] public Material trippyTransparentMaterial;
+    [Tooltip("RawImage overlay on top of DrawingZoneGrid — PredictingDrawingState fills its texture at runtime.")]
+    [SerializeField] public RawImage drawingDisplay;
     [SerializeField] public NNModel model;
     [SerializeField] public RawImage renderTextureDisplay;
     [SerializeField] public TextMeshProUGUI currentLetterText;
@@ -80,6 +82,13 @@ public class LetterDrawing : Component
     private bool reachedMaxDistance = false;
 
     [HideInInspector] public int drawVersion = 0;
+
+    /// <summary>
+    /// Fixed screen-space camera created by PredictingDrawingState.
+    /// Points are placed in its world space so they never drift when the
+    /// gameplay camera moves with the player.
+    /// </summary>
+    [HideInInspector] public Camera drawingCamera;
 
     private Action OnDraw;
 
@@ -187,6 +196,20 @@ public class LetterDrawing : Component
             currentState.ProcessDrawing(lineRenderer, secondaryLineRenderer);
             OnDraw?.Invoke();
         }
+
+        // -------- Drawing display camera --------------------------------
+        // Render the fixed drawing camera into the UI overlay every frame.
+        // The camera clears to transparent on each Render(), so the overlay
+        // is invisible whenever the line renderers have no points.
+        if (drawingCamera != null && !drawingCamera.enabled &&
+            drawingCamera.targetTexture != null)
+        {
+            RenderTexture prev = RenderTexture.active;
+            RenderTexture.active = drawingCamera.targetTexture;
+            GL.Clear(true, true, Color.clear);
+            RenderTexture.active = prev;
+            drawingCamera.Render();
+        }
     }
 
     private void StartDrawing()
@@ -196,8 +219,18 @@ public class LetterDrawing : Component
         if (secondaryLineRenderer != null)
             secondaryLineRenderer.positionCount = 0;
 
-        currentDrawDistance = 0f;                // ← reset
+        currentDrawDistance = 0f;
         reachedMaxDistance = false;
+
+        // Immediately clear the display RT so the old stroke vanishes before
+        // the first new point is drawn.
+        if (drawingCamera != null && drawingCamera.targetTexture != null)
+        {
+            RenderTexture prev = RenderTexture.active;
+            RenderTexture.active = drawingCamera.targetTexture;
+            GL.Clear(true, true, Color.clear);
+            RenderTexture.active = prev;
+        }
     }
 
     /// <summary>Add a point to the active stroke, given a screen-space position (mouse OR touch).</summary>
@@ -206,12 +239,28 @@ public class LetterDrawing : Component
         DrawingScreenPos = screenPosition;
         if (reachedMaxDistance) return;
 
-        Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
-        if (cam == null) { Debug.LogError("LetterDrawing: no camera!"); return; }
+        Vector3 worldPos;
 
-        // ScreenToWorldPoint handles the camera's viewport rect correctly on all platforms.
-        float depth = Mathf.Abs(cam.transform.position.z);
-        Vector3 worldPos = cam.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, depth));
+        if (drawingCamera != null)
+        {
+            // Map the screen position into the FIXED drawing camera's world space.
+            // Because this camera never moves, the stroke stays exactly where
+            // the finger touched regardless of player movement.
+            float zoneW = Mathf.Max((1f - drawZoneStartX) * Screen.width, 1f);
+            float normX  = (screenPosition.x - Screen.width * drawZoneStartX) / zoneW;
+            float normY  = screenPosition.y / Mathf.Max(Screen.height, 1f);
+            float depth  = Mathf.Abs(drawingCamera.transform.position.z);
+            worldPos = drawingCamera.ViewportToWorldPoint(new Vector3(normX, normY, depth));
+        }
+        else
+        {
+            // Fallback for non-Predicting modes: use the gameplay camera.
+            Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
+            if (cam == null) { Debug.LogError("LetterDrawing: no camera!"); return; }
+            float depth = Mathf.Abs(cam.transform.position.z);
+            worldPos = cam.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, depth));
+        }
+
         worldPos.z = 0;
 
         Vector3 newPos = worldPos;

@@ -39186,7 +39186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3159825026326283803, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
       propertyPath: m_Layer
-      value: 17
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 7496336467584829003, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
       propertyPath: m_SortingOrder
@@ -43535,6 +43535,96 @@ Transform:
   - {fileID: 210703199}
   m_Father: {fileID: 107420924}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &533963817
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 533963821}
+  - component: {fileID: 533963820}
+  - component: {fileID: 533963818}
+  - component: {fileID: 533963819}
+  m_Layer: 0
+  m_Name: DrawingDisplay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &533963818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533963817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+--- !u!114 &533963819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533963817}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6bf0baf9f667fa45839e0db2315f902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DrawingZoneController
+  letterDrawing: {fileID: 1856156293}
+  canvas: {fileID: 614376569}
+  revealSpeed: 4
+  hideSpeed: 2
+  pulseSpeed: 0.55
+--- !u!222 &533963820
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533963817}
+  m_CullTransparentMesh: 1
+--- !u!224 &533963821
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533963817}
+  m_LocalRotation: {x: -0.19911145, y: 0, z: 0, w: 0.97997695}
+  m_LocalPosition: {x: 0, y: 0, z: 95.3}
+  m_LocalScale: {x: 3, y: 1.2, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1842945665}
+  m_LocalEulerAnglesHint: {x: -22.97, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 6.300049, y: 0.060058594}
+  m_SizeDelta: {x: -642.7, y: -84.86}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1 &539283750
 GameObject:
   m_ObjectHideFlags: 0
@@ -43840,6 +43930,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 850726bf9dc650a4387c7996af2d54b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!223 &614376569 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 2522071070326896256, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+  m_PrefabInstance: {fileID: 700858751}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &648090740
 GameObject:
   m_ObjectHideFlags: 0
@@ -94394,6 +94489,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
+      propertyPath: drawingDisplay
+      value: 
+      objectReference: {fileID: 533963818}
+    - target: {fileID: 4811051021864669420, guid: 14bdb31e1a7c16c4cb7a8d94621c5648, type: 3}
       propertyPath: gameplayCamera
       value: 
       objectReference: {fileID: 519420031}
@@ -94712,6 +94811,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1455708285}
+  - {fileID: 533963821}
   - {fileID: 2035025628}
   m_Father: {fileID: 605178474}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -104857,6 +104957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawingZoneController
   letterDrawing: {fileID: 1856156293}
+  canvas: {fileID: 614376569}
   revealSpeed: 4
   hideSpeed: 2
   pulseSpeed: 0.55

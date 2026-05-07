@@ -16,8 +16,10 @@ public class PredictingDrawingState : IDrawingState
     public Prediction prediction;
 
     // Private fields for ML prediction.
-    private RenderTexture renderTexture;
-    private Camera renderCamera;
+    private RenderTexture mlRT;          // 96×96 B&W texture used for inference
+    private Camera        mlCamera;      // moves to tightly frame each stroke for capture
+    private RenderTexture displayRT;     // screen-resolution texture shown as UI overlay
+    private Camera        displayCamera; // fixed, never moves — positions strokes in screen space
     private IWorker worker;
 
     private ParticleSystem sparkleInstance;
@@ -107,7 +109,7 @@ public class PredictingDrawingState : IDrawingState
         UpdatePoemDisplay();
 
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
-        renderCamera.cullingMask = LayerMask.GetMask("Drawing");
+        mlCamera.cullingMask = LayerMask.GetMask("Drawing");
 
         // Use inspector-assigned materials so no Shader.Find is needed at runtime.
         // primaryLineMaterial  → white Unlit material (captured by render cam for ML)
@@ -130,7 +132,7 @@ public class PredictingDrawingState : IDrawingState
         }
 
         if (letterDrawing.renderTextureDisplay != null)
-            letterDrawing.renderTextureDisplay.texture = renderTexture;
+            letterDrawing.renderTextureDisplay.texture = mlRT;
 
         if (letterDrawing.groundMaterial != null)
             letterDrawing.groundMaterial.mainTextureScale = new Vector2(10.0f, 0.5f);
@@ -153,30 +155,75 @@ public class PredictingDrawingState : IDrawingState
 
     private void InitializeCamera()
     {
-        renderTexture = new RenderTexture(96, 96, 16, RenderTextureFormat.R8);
-        renderTexture.Create();
+        // ── ML capture camera (96×96, B&W, moves to centre each stroke) ──────
+        mlRT = new RenderTexture(96, 96, 16, RenderTextureFormat.ARGB32);
+        mlRT.Create();
 
-        var cameraGO = new GameObject("DrawingRenderCamera");
-        renderCamera = cameraGO.AddComponent<Camera>();
-        renderCamera.orthographic = true;
-        renderCamera.cullingMask = LayerMask.GetMask("Drawing");
-        renderCamera.backgroundColor = Color.black;
-        renderCamera.clearFlags = CameraClearFlags.Color;
-        renderCamera.targetTexture = renderTexture;
-        renderCamera.enabled = false; // only render on demand via renderCamera.Render()
+        var mlGO = new GameObject("DrawingMLCamera");
+        mlCamera = mlGO.AddComponent<Camera>();
+        mlCamera.orthographic    = true;
+        mlCamera.orthographicSize = 5f;
+        mlCamera.cullingMask     = LayerMask.GetMask("Drawing");
+        mlCamera.backgroundColor = Color.black;
+        mlCamera.clearFlags      = CameraClearFlags.SolidColor;
+        mlCamera.targetTexture   = mlRT;
+        mlCamera.enabled         = false;   // rendered on demand only
+        mlCamera.transform.position = new Vector3(0f, 0f, -10f);
 
-        // URP requires AdditionalCameraData on any runtime-created camera;
-        // without it Camera.Render() skips the clear and outputs garbage.
-        var urpData = cameraGO.AddComponent<UniversalAdditionalCameraData>();
-        urpData.renderType = CameraRenderType.Base;
-        urpData.renderShadows = false;
-        urpData.requiresColorOption = CameraOverrideOption.Off;
-        urpData.requiresDepthOption = CameraOverrideOption.Off;
+        var mlUrp = mlGO.AddComponent<UniversalAdditionalCameraData>();
+        mlUrp.renderType            = CameraRenderType.Base;
+        mlUrp.renderShadows         = false;
+        mlUrp.requiresColorOption   = CameraOverrideOption.Off;
+        mlUrp.requiresDepthOption   = CameraOverrideOption.Off;
 
-        Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
-        renderCamera.orthographicSize = refCam.orthographicSize * 0.7f;
-        renderCamera.transform.position =
-            new Vector3(refCam.transform.position.x, refCam.transform.position.y, -10);
+        // ── Fixed display camera (renders visual stroke to UI overlay) ────────
+        // Resolution: right half of screen, capped so it's not enormous on
+        // high-DPI iPhones.
+        int rtW = Mathf.Clamp(Mathf.RoundToInt((1f - letterDrawing.drawZoneStartX) * Screen.width),  64, 1080);
+        int rtH = Mathf.Clamp(Screen.height, 64, 2160);
+        displayRT = new RenderTexture(rtW, rtH, 0, RenderTextureFormat.ARGB32);
+        displayRT.Create();
+
+        // Secondary LR lives on "DrawingFX" layer so only the display camera
+        // sees it; the ML camera sees only "Drawing" (primary, white stroke).
+        int fxLayer = LayerMask.NameToLayer("DrawingFX");
+        if (fxLayer == -1)
+        {
+            Debug.LogWarning("[DrawingZone] 'DrawingFX' layer missing — " +
+                             "add it in Edit > Tags & Layers. Falling back to 'Drawing'.");
+            fxLayer = LayerMask.NameToLayer("Drawing");
+        }
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.gameObject.layer = fxLayer;
+
+        var dispGO = new GameObject("DrawingDisplayCamera");
+        displayCamera = dispGO.AddComponent<Camera>();
+        displayCamera.orthographic    = true;
+        displayCamera.orthographicSize = 5f;
+        // Aspect matches the drawing zone so ViewportToWorldPoint stays 1:1.
+        float zoneW   = (1f - letterDrawing.drawZoneStartX) * Screen.width;
+        displayCamera.aspect          = zoneW / Mathf.Max(Screen.height, 1f);
+        displayCamera.cullingMask     = fxLayer == LayerMask.NameToLayer("Drawing")
+                                        ? LayerMask.GetMask("Drawing")
+                                        : LayerMask.GetMask("DrawingFX");
+        displayCamera.backgroundColor = new Color(0f, 0f, 0f, 0f); // fully transparent
+        displayCamera.clearFlags      = CameraClearFlags.SolidColor;
+        displayCamera.targetTexture   = displayRT;
+        displayCamera.enabled         = false;  // LetterDrawing.Update() calls Render() manually
+        displayCamera.transform.position = new Vector3(0f, 0f, -10f);
+
+        var dispUrp = dispGO.AddComponent<UniversalAdditionalCameraData>();
+        dispUrp.renderType          = CameraRenderType.Base;
+        dispUrp.renderShadows       = false;
+        dispUrp.requiresColorOption = CameraOverrideOption.Off;
+        dispUrp.requiresDepthOption = CameraOverrideOption.Off;
+
+        // Expose the display camera so LetterDrawing.AddPointAt can use its
+        // viewport for coordinate mapping (independent of player movement).
+        letterDrawing.drawingCamera = displayCamera;
+
+        if (letterDrawing.drawingDisplay != null)
+            letterDrawing.drawingDisplay.texture = displayRT;
     }
 
     private void InitializeModel()
@@ -219,13 +266,13 @@ public class PredictingDrawingState : IDrawingState
         EndDrawing();
         CenterDrawingInTexture();
 
-        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.R8, false);
-        RenderTexture.active = renderTexture;
+        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.ARGB32, false);
+        RenderTexture.active = mlRT;
         capturedTexture.ReadPixels(new Rect(0, 0, 96, 96), 0, 0);
         capturedTexture.Apply();
         RenderTexture.active = null;
 
-        using var inputTensor = new Tensor(renderTexture, 1);
+        using var inputTensor = new Tensor(mlRT, 1);
         worker.Execute(inputTensor);
         Tensor output = worker.PeekOutput();
 
@@ -289,10 +336,10 @@ public class PredictingDrawingState : IDrawingState
     private void EndDrawing()
     {
         RenderTexture prev = RenderTexture.active;
-        RenderTexture.active = renderTexture;
+        RenderTexture.active = mlRT;
         GL.Clear(true, true, Color.black);
         RenderTexture.active = prev;
-        renderCamera.Render();
+        mlCamera.Render();
     }
 
     private void CenterDrawingInTexture()
@@ -304,15 +351,15 @@ public class PredictingDrawingState : IDrawingState
         }
 
         Vector3 center = bounds.center;
-        renderCamera.transform.position = new Vector3(center.x, center.y, renderCamera.transform.position.z);
+        mlCamera.transform.position = new Vector3(center.x, center.y, mlCamera.transform.position.z);
 
         float marginFactor = 1.2f;
         float maxDrawingSize = Mathf.Max(bounds.size.x, bounds.size.y) * marginFactor;
-        renderCamera.orthographicSize = maxDrawingSize / 2f;
+        mlCamera.orthographicSize = maxDrawingSize / 2f;
 
 
         float baseWidth = 0.1f;
-        float zoomLevel = renderCamera.orthographicSize;
+        float zoomLevel = mlCamera.orthographicSize;
         float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f);
         letterDrawing.lineRenderer.widthMultiplier = baseWidth * widthMultiplier;
 
@@ -321,7 +368,7 @@ public class PredictingDrawingState : IDrawingState
             letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.lineRenderer.widthMultiplier * 0.8f;
         }
 
-        renderCamera.Render();
+        mlCamera.Render();
     }
 
     private void DisplaySymbol(string label, LineRenderer lr)
@@ -595,8 +642,13 @@ public class PredictingDrawingState : IDrawingState
 
     public void Dispose()
     {
-        worker?.Dispose();    
+        worker?.Dispose();
         worker = null;
+
+        if (mlCamera != null)      { GameObject.Destroy(mlCamera.gameObject);      mlCamera      = null; }
+        if (displayCamera != null) { GameObject.Destroy(displayCamera.gameObject); displayCamera = null; }
+        if (mlRT != null)          { mlRT.Release();      mlRT      = null; }
+        if (displayRT != null)     { displayRT.Release(); displayRT = null; }
     }
 
 }

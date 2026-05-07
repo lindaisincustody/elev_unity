@@ -2,7 +2,7 @@
 %TAG !u! tag:unity3d.com,2011:
 --- !u!78 &1
 TagManager:
-  serializedVersion: 2
+  serializedVersion: 3
   tags:
   - Consumable
   - Pin
@@ -37,7 +37,7 @@ TagManager:
   - BoxLayer
   - Feet
   - CameraBounds
-  - 
+  - DrawingFX
   - 
   - 
   - 
@@ -66,3 +66,5 @@ TagManager:
   - name: New Layer 5
     uniqueID: 4236293633
     locked: 0
+  m_RenderingLayers:
+  - Default

@@ -41,8 +41,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _DistortRadius: 0.1
-    - _DistortStrength: 0.018
+    - _DistortRadius: 0.46
+    - _DistortStrength: 0.037
     - _EdgeFade: 0.1059
     - _EnableExternalAlpha: 0
     - _FingerActive: 0
