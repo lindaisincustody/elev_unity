@@ -201,20 +201,21 @@ public class PredictingDrawingState : IDrawingState
         mlUrp.requiresDepthOption   = CameraOverrideOption.Off;
 
         // ── Fixed display camera (renders visual stroke to UI overlay) ────────
-        // Resolution: right half of screen, capped so it's not enormous on
-        // high-DPI iPhones.
-        int rtW = Mathf.Clamp(Mathf.RoundToInt((1f - letterDrawing.drawZoneStartX) * Screen.width),  64, 1080);
+        // Derive RT from height × aspect so camera and RT always share the same
+        // ratio — no horizontal squishing on landscape / high-DPI phones.
+        float zoneW    = (1f - letterDrawing.drawZoneStartX) * Screen.width;
+        float camAspect = zoneW / Mathf.Max(Screen.height, 1f);
         int rtH = Mathf.Clamp(Screen.height, 64, 2160);
+        int rtW = Mathf.Clamp(Mathf.RoundToInt(rtH * camAspect), 64, 4096);
         displayRT = new RenderTexture(rtW, rtH, 0, RenderTextureFormat.ARGB32);
         displayRT.Create();
 
         var dispGO = new GameObject("DrawingDisplayCamera");
         displayCamera = dispGO.AddComponent<Camera>();
-        displayCamera.orthographic    = true;
+        displayCamera.orthographic     = true;
         displayCamera.orthographicSize = 5f;
-        // Aspect matches the drawing zone so ViewportToWorldPoint stays 1:1.
-        float zoneW   = (1f - letterDrawing.drawZoneStartX) * Screen.width;
-        displayCamera.aspect          = zoneW / Mathf.Max(Screen.height, 1f);
+        // camAspect matches the RT exactly — no stretch regardless of orientation.
+        displayCamera.aspect           = camAspect;
         // Both LRs are on "Drawing" layer. The primary is kept renderer-disabled except
         // during ML capture, so the display camera only ever sees the secondary (visual) LR.
         displayCamera.cullingMask     = LayerMask.GetMask("Drawing");
@@ -430,7 +431,24 @@ public class PredictingDrawingState : IDrawingState
         Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
         tmp.transform.rotation = refCam.transform.rotation;
 
-        Vector3 targetScale = Vector3.one * worldSize;
+        // When parented, localScale is in the parent's scale space.
+        // Counter-act the player's lossy scale so the glyph always renders at
+        // exactly symbolScale world units — even if the player sprite is
+        // non-uniformly scaled for pixel-art sizing.
+        Vector3 targetScale;
+        if (letterDrawing.playerTransform != null)
+        {
+            Vector3 ls = letterDrawing.playerTransform.lossyScale;
+            float sx = Mathf.Abs(ls.x) > 1e-4f ? worldSize / ls.x : worldSize;
+            float sy = Mathf.Abs(ls.y) > 1e-4f ? worldSize / ls.y : worldSize;
+            float sz = Mathf.Abs(ls.z) > 1e-4f ? worldSize / ls.z : worldSize;
+            targetScale = new Vector3(sx, sy, sz);
+        }
+        else
+        {
+            targetScale = Vector3.one * worldSize;
+        }
+
         var tmpMesh = tmp.GetComponent<TextMeshPro>();
         letterDrawing.StartCoroutine(
             ComplexStamp(tmpMesh.transform, tmpMesh, targetScale, letterDrawing.symbolStampDuration)
