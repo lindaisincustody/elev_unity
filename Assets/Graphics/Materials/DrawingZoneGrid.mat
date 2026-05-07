@@ -8,14 +8,14 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: DrawingZoneGrid
-  m_Shader: {fileID: 4800000, guid: e260cfa7296ee7642b167f1eb5be5023, type: 3}
+  m_Shader: {fileID: 4800000, guid: 68e7e645ad15af048aca41b074ed46eb, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -41,10 +41,31 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _DistortRadius: 0.1
+    - _DistortStrength: 0.018
+    - _EdgeFade: 0.1059
     - _EnableExternalAlpha: 0
+    - _FingerActive: 0
+    - _GlowFalloff: 4
+    - _GlowStr: 0.55
+    - _GridSize: 7.5
+    - _IdlePulseAlpha: 0.81
+    - _LineWidth: 0.0266
+    - _PulseAmp: 0.14
+    - _PulseDiag: 0
+    - _PulseSpeed: 1.1
+    - _PulseWidth: 0.6
+    - _RevealAmount: 0
+    - _ScanBright: 1.2
+    - _ScanSpeed: 0.38
+    - _ScanWidth: 0.055
     - _ZWrite: 0
     m_Colors:
+    - _BgColor: {r: 0.01, g: 0.02, b: 0.08, a: 0.19215687}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _FingerUV: {r: 0, g: 0, b: 0, a: 0}
+    - _GlowColor: {r: 0, g: 0.4, b: 0.95, a: 0.53333336}
+    - _LineColor: {r: 1, g: 1, b: 1, a: 0.50980395}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
