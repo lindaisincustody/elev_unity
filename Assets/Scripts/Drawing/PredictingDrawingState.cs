@@ -109,7 +109,26 @@ public class PredictingDrawingState : IDrawingState
         UpdatePoemDisplay();
 
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
+        letterDrawing.lineRenderer.useWorldSpace = true;
+        // Primary LR is invisible by default — only briefly enabled during ML capture.
+        // This prevents the thick white stroke from bleeding into the display overlay.
+        letterDrawing.lineRenderer.enabled = false;
+
+        if (letterDrawing.secondaryLineRenderer != null)
+        {
+            letterDrawing.secondaryLineRenderer.useWorldSpace = true;
+            letterDrawing.secondaryLineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
+        }
         mlCamera.cullingMask = LayerMask.GetMask("Drawing");
+
+        // ── Remove "Drawing" layer from the gameplay camera ──────────────────
+        // Both LRs are on "Drawing" and must only appear in the display-camera
+        // overlay. If the gameplay camera also sees "Drawing" the LRs show up
+        // as a blob in world space at (0,0,0) — exactly what causes the spikes.
+        Camera gameCam = letterDrawing.gameplayCamera != null
+                         ? letterDrawing.gameplayCamera : Camera.main;
+        if (gameCam != null)
+            gameCam.cullingMask &= ~LayerMask.GetMask("Drawing");
 
         // Use inspector-assigned materials so no Shader.Find is needed at runtime.
         // primaryLineMaterial  → white Unlit material (captured by render cam for ML)
@@ -151,6 +170,11 @@ public class PredictingDrawingState : IDrawingState
           }
         );
         sec.colorGradient = initG;
+
+        // Apply the inspector-tuned stroke width for the display camera's coordinate space.
+        // (drawingCamera orthoSize=5 → 1 unit ≈ screenHeight/10 px; start ~0.04–0.08)
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.drawStrokeWidth;
     }
 
     private void InitializeCamera()
@@ -184,18 +208,6 @@ public class PredictingDrawingState : IDrawingState
         displayRT = new RenderTexture(rtW, rtH, 0, RenderTextureFormat.ARGB32);
         displayRT.Create();
 
-        // Secondary LR lives on "DrawingFX" layer so only the display camera
-        // sees it; the ML camera sees only "Drawing" (primary, white stroke).
-        int fxLayer = LayerMask.NameToLayer("DrawingFX");
-        if (fxLayer == -1)
-        {
-            Debug.LogWarning("[DrawingZone] 'DrawingFX' layer missing — " +
-                             "add it in Edit > Tags & Layers. Falling back to 'Drawing'.");
-            fxLayer = LayerMask.NameToLayer("Drawing");
-        }
-        if (letterDrawing.secondaryLineRenderer != null)
-            letterDrawing.secondaryLineRenderer.gameObject.layer = fxLayer;
-
         var dispGO = new GameObject("DrawingDisplayCamera");
         displayCamera = dispGO.AddComponent<Camera>();
         displayCamera.orthographic    = true;
@@ -203,13 +215,14 @@ public class PredictingDrawingState : IDrawingState
         // Aspect matches the drawing zone so ViewportToWorldPoint stays 1:1.
         float zoneW   = (1f - letterDrawing.drawZoneStartX) * Screen.width;
         displayCamera.aspect          = zoneW / Mathf.Max(Screen.height, 1f);
-        displayCamera.cullingMask     = fxLayer == LayerMask.NameToLayer("Drawing")
-                                        ? LayerMask.GetMask("Drawing")
-                                        : LayerMask.GetMask("DrawingFX");
+        // Both LRs are on "Drawing" layer. The primary is kept renderer-disabled except
+        // during ML capture, so the display camera only ever sees the secondary (visual) LR.
+        displayCamera.cullingMask     = LayerMask.GetMask("Drawing");
         displayCamera.backgroundColor = new Color(0f, 0f, 0f, 0f); // fully transparent
         displayCamera.clearFlags      = CameraClearFlags.SolidColor;
         displayCamera.targetTexture   = displayRT;
-        displayCamera.enabled         = false;  // LetterDrawing.Update() calls Render() manually
+        displayCamera.depth           = -20;    // render before everything else
+        displayCamera.enabled         = true;   // URP drives this automatically every frame
         displayCamera.transform.position = new Vector3(0f, 0f, -10f);
 
         var dispUrp = dispGO.AddComponent<UniversalAdditionalCameraData>();
@@ -335,59 +348,84 @@ public class PredictingDrawingState : IDrawingState
 
     private void EndDrawing()
     {
+        // Show only the primary (white) LR for the ML capture; hide the visual one.
+        letterDrawing.lineRenderer.enabled = true;
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.enabled = false;
+
         RenderTexture prev = RenderTexture.active;
         RenderTexture.active = mlRT;
         GL.Clear(true, true, Color.black);
         RenderTexture.active = prev;
         mlCamera.Render();
+
+        letterDrawing.lineRenderer.enabled = false;
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.enabled = true;
     }
 
     private void CenterDrawingInTexture()
     {
         Bounds bounds = new Bounds(letterDrawing.lineRenderer.GetPosition(0), Vector3.zero);
         for (int i = 1; i < letterDrawing.lineRenderer.positionCount; i++)
-        {
             bounds.Encapsulate(letterDrawing.lineRenderer.GetPosition(i));
-        }
 
         Vector3 center = bounds.center;
         mlCamera.transform.position = new Vector3(center.x, center.y, mlCamera.transform.position.z);
 
         float marginFactor = 1.2f;
         float maxDrawingSize = Mathf.Max(bounds.size.x, bounds.size.y) * marginFactor;
-        mlCamera.orthographicSize = maxDrawingSize / 2f;
+        mlCamera.orthographicSize = Mathf.Max(maxDrawingSize / 2f, 0.01f);
 
-
-        float baseWidth = 0.1f;
+        // Scale primary LR width for the ML capture; leave the visual secondary LR untouched.
         float zoomLevel = mlCamera.orthographicSize;
         float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f);
-        letterDrawing.lineRenderer.widthMultiplier = baseWidth * widthMultiplier;
+        letterDrawing.lineRenderer.widthMultiplier = 0.1f * widthMultiplier;
 
+        // Swap visibility: ML camera needs primary on, secondary off.
+        letterDrawing.lineRenderer.enabled = true;
         if (letterDrawing.secondaryLineRenderer != null)
-        {
-            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.lineRenderer.widthMultiplier * 0.8f;
-        }
+            letterDrawing.secondaryLineRenderer.enabled = false;
 
         mlCamera.Render();
+
+        letterDrawing.lineRenderer.enabled = false;
+        if (letterDrawing.secondaryLineRenderer != null)
+            letterDrawing.secondaryLineRenderer.enabled = true;
     }
 
     private void DisplaySymbol(string label, LineRenderer lr)
     {
-
         string glyph = latexToUnicode.ContainsKey(label) ? latexToUnicode[label] : label;
 
-        var pts = new Vector3[lr.positionCount];
-        lr.GetPositions(pts);
-        var bounds = new Bounds(pts[0], Vector3.zero);
-        for (int i = 1; i < pts.Length; i++)
-            bounds.Encapsulate(pts[i]);
-        Vector3 worldPos = bounds.center + Vector3.up * letterDrawing.symbolVerticalOffset;
+        // Spawn above the player if a reference is set; fall back to stroke centre.
+        Vector3 worldPos;
+        if (letterDrawing.playerTransform != null)
+        {
+            worldPos = letterDrawing.playerTransform.position
+                     + Vector3.up * letterDrawing.symbolVerticalOffset;
+        }
+        else
+        {
+            var pts = new Vector3[lr.positionCount];
+            lr.GetPositions(pts);
+            var b = new Bounds(pts[0], Vector3.zero);
+            for (int i = 1; i < pts.Length; i++) b.Encapsulate(pts[i]);
+            worldPos = b.center + Vector3.up * letterDrawing.symbolVerticalOffset;
+        }
 
-        float worldSize = Mathf.Max(bounds.size.x, bounds.size.y) * letterDrawing.symbolScale;
+        float worldSize = letterDrawing.symbolScale;
 
         var tmp = GameObject.Instantiate(letterDrawing.symbolPrefab, worldPos, Quaternion.identity);
         tmp.text = glyph;
         tmp.transform.localScale = Vector3.zero;
+
+        // Parent to the player so the glyph tracks movement during its lifetime.
+        if (letterDrawing.playerTransform != null)
+        {
+            tmp.transform.SetParent(letterDrawing.playerTransform, worldPositionStays: false);
+            tmp.transform.localPosition = Vector3.up * letterDrawing.symbolVerticalOffset;
+        }
 
         Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
         tmp.transform.rotation = refCam.transform.rotation;

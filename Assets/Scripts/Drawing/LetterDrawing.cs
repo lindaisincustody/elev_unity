@@ -55,15 +55,26 @@ public class LetterDrawing : Component
     [Header("Symbol Display")]
     [Tooltip("A TextMeshPro (Mesh) prefab")]
     public TextMeshPro symbolPrefab;
-    [Tooltip("Multiplier for how large the glyph is relative to your draw bounds")]
+    [Tooltip("The player's Transform — symbol spawns above this position.")]
+    public Transform playerTransform;
+    [Tooltip("World-space size of the stamped glyph")]
     public float symbolScale = 1f;
     [Tooltip("How long the glyph stays on-screen")]
     public float symbolLifetime = 2f;
-    [Tooltip("How much higher than the stroke center to place the glyph")]
-    public float symbolVerticalOffset = 0.5f;
+    [Tooltip("How many world units above the player the glyph appears")]
+    public float symbolVerticalOffset = 1.5f;
 
     [Tooltip("How long the stamp animation lasts")]
     public float symbolStampDuration = 0.5f;
+
+    [Header("Stroke")]
+    [Tooltip("Visual line width in drawing-camera world units. " +
+             "Drawing camera orthoSize=5 → 1 unit ≈ screen_height/10 px. " +
+             "Start around 0.04–0.08 and tune visually.")]
+    [SerializeField] public float drawStrokeWidth = 0.05f;
+    [Tooltip("Minimum world-unit distance between consecutive stroke points. " +
+             "Prevents dense point stacking when the finger barely moves.")]
+    [SerializeField] public float minPointWorldDistance = 0.01f;
 
     [Header("Touch (mobile)")]
     [Tooltip("Touches that start with screen X below this fraction are ignored (joystick zone).")]
@@ -80,6 +91,7 @@ public class LetterDrawing : Component
     private float currentDrawDistance = 0f;
 
     private bool reachedMaxDistance = false;
+    private Vector3 lastAddedWorldPos;   // last world-space point added — avoids reading back from LR
 
     [HideInInspector] public int drawVersion = 0;
 
@@ -182,7 +194,12 @@ public class LetterDrawing : Component
             }
         }
 
-        // -------- MOUSE (kept so editor iteration still works) --------------
+        // -------- MOUSE (editor only — never run on device) -----------------
+        // On iOS, Input.GetMouseButton(1) can fire when two fingers are on
+        // screen, and Input.mousePosition returns the joystick finger's
+        // position (left side of screen). That maps to a negative normX in
+        // the drawing-zone calculation → out-of-range world positions → fan.
+#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(1))
         {
             StartDrawing();
@@ -196,20 +213,10 @@ public class LetterDrawing : Component
             currentState.ProcessDrawing(lineRenderer, secondaryLineRenderer);
             OnDraw?.Invoke();
         }
+#endif
 
-        // -------- Drawing display camera --------------------------------
-        // Render the fixed drawing camera into the UI overlay every frame.
-        // The camera clears to transparent on each Render(), so the overlay
-        // is invisible whenever the line renderers have no points.
-        if (drawingCamera != null && !drawingCamera.enabled &&
-            drawingCamera.targetTexture != null)
-        {
-            RenderTexture prev = RenderTexture.active;
-            RenderTexture.active = drawingCamera.targetTexture;
-            GL.Clear(true, true, Color.clear);
-            RenderTexture.active = prev;
-            drawingCamera.Render();
-        }
+        // The display camera (drawingCamera) runs with enabled=true so URP
+        // renders it automatically every frame — no manual Render() call needed.
     }
 
     private void StartDrawing()
@@ -221,16 +228,8 @@ public class LetterDrawing : Component
 
         currentDrawDistance = 0f;
         reachedMaxDistance = false;
-
-        // Immediately clear the display RT so the old stroke vanishes before
-        // the first new point is drawn.
-        if (drawingCamera != null && drawingCamera.targetTexture != null)
-        {
-            RenderTexture prev = RenderTexture.active;
-            RenderTexture.active = drawingCamera.targetTexture;
-            GL.Clear(true, true, Color.clear);
-            RenderTexture.active = prev;
-        }
+        lastAddedWorldPos = Vector3.positiveInfinity; // sentinel — no previous point yet
+        // The display camera's clearFlags handle RT clearing each frame automatically.
     }
 
     /// <summary>Add a point to the active stroke, given a screen-space position (mouse OR touch).</summary>
@@ -264,23 +263,32 @@ public class LetterDrawing : Component
         worldPos.z = 0;
 
         Vector3 newPos = worldPos;
-        if (lineRenderer.positionCount > 0)
-        {
-            Vector3 lastPosition = lineRenderer.GetPosition(lineRenderer.positionCount - 1);
-            newPos = Vector3.Lerp(lastPosition, worldPos, 0.5f);
+        bool hasLast = !float.IsInfinity(lastAddedWorldPos.x);
 
-            float segLen = Vector3.Distance(lastPosition, newPos);
+        // Skip this sample if the finger hasn't moved far enough — prevents
+        // point stacking that makes the displayed stroke look bloated.
+        if (hasLast && Vector3.Distance(lastAddedWorldPos, worldPos) < minPointWorldDistance)
+            return;
+        if (hasLast)
+        {
+            // Lerp in pure world space — never touch GetPosition() to avoid
+            // local-vs-world confusion when the renderer is on a moving object.
+            newPos = Vector3.Lerp(lastAddedWorldPos, worldPos, 0.5f);
+
+            float segLen = Vector3.Distance(lastAddedWorldPos, newPos);
 
             if (maxDrawDistance > 0f && currentDrawDistance + segLen > maxDrawDistance)
             {
                 float allowed = maxDrawDistance - currentDrawDistance;
-                Vector3 dir = (newPos - lastPosition).normalized;
-                newPos = lastPosition + dir * allowed;
+                Vector3 dir = (newPos - lastAddedWorldPos).normalized;
+                newPos = lastAddedWorldPos + dir * allowed;
                 reachedMaxDistance = true;
             }
 
-            currentDrawDistance += Vector3.Distance(lastPosition, newPos);
+            currentDrawDistance += Vector3.Distance(lastAddedWorldPos, newPos);
         }
+
+        lastAddedWorldPos = newPos;
 
         lineRenderer.positionCount++;
         lineRenderer.SetPosition(lineRenderer.positionCount - 1, newPos);

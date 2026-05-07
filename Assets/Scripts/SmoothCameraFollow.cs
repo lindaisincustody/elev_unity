@@ -56,12 +56,11 @@ public class SmoothCameraFollow : MonoBehaviour
                 smoothTimeFollow
             );
         }
-        else
+        else if (TryGetAimScreenPos(out Vector2 aimScreen))
         {
-            // your original midpoint logic
-            Vector3 mouseScreen = Input.mousePosition;
-            mouseScreen.z = gameCamera.WorldToScreenPoint(player.position).z;
-            Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(mouseScreen);
+            float depth = gameCamera.WorldToScreenPoint(player.position).z;
+            Vector3 mouseWorld = gameCamera.ScreenToWorldPoint(
+                new Vector3(aimScreen.x, aimScreen.y, depth));
 
             desiredPos = Vector3.Lerp(player.position, mouseWorld, cursorWeight);
 
@@ -77,8 +76,49 @@ public class SmoothCameraFollow : MonoBehaviour
                 smoothTime
             );
         }
+        else
+        {
+            // No valid input — smoothly re-centre on the player.
+            desiredPos = new Vector3(player.position.x, player.position.y, transform.position.z);
+            transform.position = Vector3.SmoothDamp(
+                transform.position,
+                desiredPos,
+                ref velocity,
+                smoothTimeFollow
+            );
+        }
 
-       
-        
+    }
+
+    /// <summary>
+    /// Returns a valid screen position on both mouse (editor/desktop) and touch (mobile).
+    /// Returns false when no input is present — avoids passing Infinity to ScreenToWorldPoint.
+    /// </summary>
+    private bool TryGetAimScreenPos(out Vector2 pos)
+    {
+#if UNITY_EDITOR
+        Vector2 mp = Input.mousePosition;
+        if (float.IsInfinity(mp.x) || float.IsInfinity(mp.y) ||
+            float.IsNaN(mp.x)      || float.IsNaN(mp.y))
+        {
+            pos = Vector2.zero;
+            return false;
+        }
+        pos = mp;
+        return true;
+#else
+        if (Input.touchCount > 0)
+        {
+            // Pick the rightmost touch (draw-zone finger).
+            Touch best = Input.GetTouch(0);
+            for (int i = 1; i < Input.touchCount; i++)
+                if (Input.GetTouch(i).position.x > best.position.x)
+                    best = Input.GetTouch(i);
+            pos = best.position;
+            return true;
+        }
+        pos = Vector2.zero;
+        return false;
+#endif
     }
 }

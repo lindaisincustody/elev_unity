@@ -79,9 +79,10 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
             desiredOffset = Vector3.zero;
             dampTime = smoothTimeFollow;
         }
-        else
+        else if (TryGetAimScreenPos(out Vector2 screenPos))
         {
-            Vector3 mouseWorld = unityCam.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mouseWorld = unityCam.ScreenToWorldPoint(
+                new Vector3(screenPos.x, screenPos.y, Mathf.Abs(unityCam.transform.position.z)));
             mouseWorld.z = player.position.z;
 
             Vector3 targetPos = Vector3.Lerp(player.position, mouseWorld, cursorWeight);
@@ -92,6 +93,12 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
 
             desiredOffset = offset;
             dampTime = smoothTime;
+        }
+        else
+        {
+            // No valid cursor/touch â€” keep current offset, smooth back to zero slowly.
+            desiredOffset = Vector3.zero;
+            dampTime = smoothTimeFollow;
         }
 
         // 3) Smooth the offset
@@ -105,9 +112,42 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
         currentOffset.z = 0f;
         framing.m_TrackedObjectOffset = currentOffset;
 
-        // Optional: tie Cinemachine damping to mode (prevents “floaty” feel differences)
+        // Optional: tie Cinemachine damping to mode (prevents ï¿½floatyï¿½ feel differences)
         float d = Mathf.Clamp(dampTime, 0f, 10f);
         framing.m_XDamping = d;
         framing.m_YDamping = d;
+    }
+
+    /// <summary>
+    /// Returns a valid screen position to aim toward.
+    /// On mobile uses the first active touch; on desktop uses the mouse.
+    /// Returns false when no input is available (avoids Infinity positions).
+    /// </summary>
+    private bool TryGetAimScreenPos(out Vector2 pos)
+    {
+#if UNITY_EDITOR
+        Vector2 mp = Input.mousePosition;
+        if (float.IsInfinity(mp.x) || float.IsInfinity(mp.y) ||
+            float.IsNaN(mp.x)      || float.IsNaN(mp.y))
+        {
+            pos = Vector2.zero;
+            return false;
+        }
+        pos = mp;
+        return true;
+#else
+        if (Input.touchCount > 0)
+        {
+            // Pick the rightmost touch (the draw-zone finger).
+            Touch best = Input.GetTouch(0);
+            for (int i = 1; i < Input.touchCount; i++)
+                if (Input.GetTouch(i).position.x > best.position.x)
+                    best = Input.GetTouch(i);
+            pos = best.position;
+            return true;
+        }
+        pos = Vector2.zero;
+        return false;
+#endif
     }
 }
