@@ -488,12 +488,13 @@ public class PredictingDrawingState : IDrawingState
             AnimateSparkleAlong(secondaryLR);
         }
 
-        // flash + pop
+        // flash + pop — reset width immediately so interrupted animations don't compound
         if (feedbackRoutine != null)
+        {
             letterDrawing.StopCoroutine(feedbackRoutine);
+            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.drawStrokeWidth;
+        }
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
-
-        
     }
 
     private IEnumerator StopSparkle()
@@ -506,7 +507,11 @@ public class PredictingDrawingState : IDrawingState
     {
         var mat = letterDrawing.secondaryLineRenderer.material;
         var originalColor = mat.GetColor("_Color");
-        var originalWidth = letterDrawing.secondaryLineRenderer.widthMultiplier;
+
+        // Always animate from the inspector-defined base width, never from
+        // the current widthMultiplier — which may be mid-animation if a rapid
+        // second draw interrupted the previous coroutine before it could restore.
+        float baseWidth = letterDrawing.drawStrokeWidth;
         float elapsed = 0f, total = letterDrawing.flashDuration;
 
         while (elapsed < total)
@@ -515,14 +520,14 @@ public class PredictingDrawingState : IDrawingState
             float pulse = Mathf.Sin(norm * Mathf.PI);
             mat.SetColor("_Color", Color.Lerp(originalColor, Color.white, pulse));
             letterDrawing.secondaryLineRenderer.widthMultiplier =
-                originalWidth * (1 + (letterDrawing.scalePop - 1) * pulse);
+                baseWidth * (1f + (letterDrawing.scalePop - 1f) * pulse);
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         mat.SetColor("_Color", originalColor);
-        letterDrawing.secondaryLineRenderer.widthMultiplier = originalWidth;
+        letterDrawing.secondaryLineRenderer.widthMultiplier = baseWidth;
     }
     private void AnimateSparkleAlong(LineRenderer lr)
     {
@@ -586,9 +591,12 @@ public class PredictingDrawingState : IDrawingState
 
         AnimateSparkleAlong(lr);
 
-        // flash and pop
+        // flash and pop — reset width immediately so interrupted animations don't compound
         if (feedbackRoutine != null)
+        {
             letterDrawing.StopCoroutine(feedbackRoutine);
+            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.drawStrokeWidth;
+        }
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
 
         // pulse the line gradient
