@@ -66,10 +66,13 @@ public class LetterDrawing : Component
     [Header("Touch (mobile)")]
     [Tooltip("Touches that start with screen X below this fraction are ignored (joystick zone).")]
     [Range(0f, 1f)]
-    [SerializeField] private float drawZoneStartX = 0.5f;
+    [SerializeField] public float drawZoneStartX = 0.5f;
 
     // Tracks which finger is currently drawing. -1 means no finger.
     private int drawingFingerId = -1;
+
+    public bool IsDrawing => drawingFingerId != -1;
+    public Vector2 DrawingScreenPos { get; private set; }
 
     private float maxDrawDistance = int.MaxValue;
     private float currentDrawDistance = 0f;
@@ -161,7 +164,8 @@ public class LetterDrawing : Component
                 case UnityEngine.InputSystem.TouchPhase.Canceled:
                     if (t.touchId == drawingFingerId)
                     {
-                        drawingFingerId = -1; // reset before ProcessDrawing so any exception can't lock future touches
+                        drawingFingerId = -1;
+                        DrawingScreenPos = Vector2.zero;
                         currentState?.ProcessDrawing(lineRenderer, secondaryLineRenderer);
                         OnDraw?.Invoke();
                     }
@@ -199,6 +203,7 @@ public class LetterDrawing : Component
     /// <summary>Add a point to the active stroke, given a screen-space position (mouse OR touch).</summary>
     private void AddPointAt(Vector2 screenPosition)
     {
+        DrawingScreenPos = screenPosition;
         if (reachedMaxDistance) return;
 
         Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
