@@ -53,9 +53,14 @@ public class PlayerSpawner : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPos = playerTwoSpawnPoint != null
-            ? playerTwoSpawnPoint.position
-            : Vector3.zero;
+        // Prefer an explicit spawn point; fall back to beside P1 so P2 is always on screen.
+        Vector3 spawnPos;
+        if (playerTwoSpawnPoint != null)
+            spawnPos = playerTwoSpawnPoint.position;
+        else if (Player.instance != null)
+            spawnPos = Player.instance.transform.position + new Vector3(2f, 0f, 0f);
+        else
+            spawnPos = Vector3.zero;
 
         var go     = Instantiate(playerTwoPrefab, spawnPos, Quaternion.identity);
         var netObj = go.GetComponent<NetworkObject>();

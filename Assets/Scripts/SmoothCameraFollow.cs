@@ -40,10 +40,17 @@ public class SmoothCameraFollow : MonoBehaviour
 
     void FixedUpdate()
     {
-        // On P2's device the camera script starts before the network player spawns.
-        // Keep trying to grab the reference until it's available.
-        if (player == null)
+        // Multiplayer: always follow the LOCAL player's character.
+        // NetworkPlayerSync.Local is set in OnNetworkSpawn for the owner, so this
+        // self-heals even if SetPlayer() was missed due to a timing race.
+        if (NetworkPlayerSync.Local != null)
         {
+            if (player != NetworkPlayerSync.Local.transform)
+                player = NetworkPlayerSync.Local.transform;
+        }
+        else if (player == null)
+        {
+            // Single-player fallback: grab Player.instance when available.
             if (Player.instance != null) player = Player.instance.transform;
             else return;
         }

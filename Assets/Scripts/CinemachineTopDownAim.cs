@@ -68,6 +68,18 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
 
     private void Update()
     {
+        // Multiplayer: always follow the LOCAL player's character.
+        // Self-heals each frame so a missed or early SetPlayer() call doesn't matter.
+        if (NetworkPlayerSync.Local != null)
+        {
+            Transform localT = NetworkPlayerSync.Local.transform;
+            if (player != localT)
+            {
+                player = localT;
+                if (vcam != null) vcam.Follow = localT;
+            }
+        }
+
         if (player == null || unityCam == null) return;
 
         // 1) Zoom
