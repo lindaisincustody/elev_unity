@@ -257,8 +257,9 @@ public class PredictingDrawingState : IDrawingState
     private void DebugInputTexture(Texture2D texture)
     {
         byte[] bytes = texture.EncodeToPNG();
-        System.IO.File.WriteAllBytes("DebugInput.png", bytes);
-        Debug.Log("Input texture saved for debugging: DebugInput.png");
+        string path = System.IO.Path.Combine(Application.persistentDataPath, "DebugInput.png");
+        System.IO.File.WriteAllBytes(path, bytes);
+        Debug.Log($"Input texture saved: {path}");
     }
 
 

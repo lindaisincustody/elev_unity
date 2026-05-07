@@ -161,9 +161,9 @@ public class LetterDrawing : Component
                 case UnityEngine.InputSystem.TouchPhase.Canceled:
                     if (t.touchId == drawingFingerId)
                     {
-                        currentState.ProcessDrawing(lineRenderer, secondaryLineRenderer);
+                        drawingFingerId = -1; // reset before ProcessDrawing so any exception can't lock future touches
+                        currentState?.ProcessDrawing(lineRenderer, secondaryLineRenderer);
                         OnDraw?.Invoke();
-                        drawingFingerId = -1;
                     }
                     break;
             }
