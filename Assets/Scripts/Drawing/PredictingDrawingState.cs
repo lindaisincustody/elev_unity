@@ -297,12 +297,6 @@ public class PredictingDrawingState : IDrawingState
         EndDrawing();
         CenterDrawingInTexture();
 
-        Texture2D capturedTexture = new Texture2D(96, 96, TextureFormat.ARGB32, false);
-        RenderTexture.active = mlRT;
-        capturedTexture.ReadPixels(new Rect(0, 0, 96, 96), 0, 0);
-        capturedTexture.Apply();
-        RenderTexture.active = null;
-
         using var inputTensor = new Tensor(mlRT, 1);
         worker.Execute(inputTensor);
         Tensor output = worker.PeekOutput();
@@ -317,8 +311,6 @@ public class PredictingDrawingState : IDrawingState
             Debug.Log(confidence);
             TriggerMissSparkle(secondaryLineRenderer);
             output.Dispose();
-            DebugInputTexture(capturedTexture);
-            GameObject.Destroy(capturedTexture);
             return;
         }
         Debug.Log(confidence);
@@ -335,18 +327,7 @@ public class PredictingDrawingState : IDrawingState
         NetworkPlayerSync.Local?.BroadcastDrawingResult(prediction.predictedLabel, glyph);
 
         output.Dispose();
-        DebugInputTexture(capturedTexture);
-        GameObject.Destroy(capturedTexture);
     }
-
-    private void DebugInputTexture(Texture2D texture)
-    {
-        byte[] bytes = texture.EncodeToPNG();
-        string path = System.IO.Path.Combine(Application.persistentDataPath, "DebugInput.png");
-        System.IO.File.WriteAllBytes(path, bytes);
-        Debug.Log($"Input texture saved: {path}");
-    }
-
 
     private void MatchSymbolWithPoem(string predictedSymbol)
     {
