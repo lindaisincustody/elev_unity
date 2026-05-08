@@ -71,7 +71,7 @@ public class LetterDrawing : Component
     [Tooltip("Visual line width in drawing-camera world units. " +
              "Drawing camera orthoSize=5 → 1 unit ≈ screen_height/10 px. " +
              "Start around 0.04–0.08 and tune visually.")]
-    [SerializeField] public float drawStrokeWidth = 0.05f;
+    [SerializeField] public float drawStrokeWidth = 0.10f;
     [Tooltip("Minimum world-unit distance between consecutive stroke points. " +
              "Prevents dense point stacking when the finger barely moves.")]
     [SerializeField] public float minPointWorldDistance = 0.01f;
@@ -108,6 +108,52 @@ public class LetterDrawing : Component
     private PredictingDrawingState predictingDrawingState;
     private PaintingFireDrawingState paintingFireDrawingState;
 
+    private void Awake()
+    {
+        // Ensure both LineRenderers exist AND live at scene root with position (0,0,0).
+        //
+        // WHY scene root matters:
+        //   P1 uses scene-root LineRenderer objects so their Transform.position = (0,0,0).
+        //   The display camera sits at (0,0,-10) with orthoSize=5 and only covers the area
+        //   near the world origin.  Unity computes LineRenderer.bounds from world vertices
+        //   (useWorldSpace=true) but internally still uses the renderer's own Transform for
+        //   camera frustum culling — if the LR is a child of Player(Clone) at the spawn
+        //   point (e.g. (3,-5,0)) the bounds test fails and the display camera culls the
+        //   LR even though the drawn stroke is inside its frustum.
+        //   Moving the LR to scene root (position=0,0,0) matches P1's working setup exactly.
+        //
+        // If the prefab already has LRs wired as child objects, reparent them to root.
+        // If they are null (scene refs that don't survive in the prefab), create fresh ones.
+
+        if (lineRenderer == null)
+        {
+            var go = new GameObject("LineRenderer_Dynamic");
+            // No SetParent — stays at scene root, position (0,0,0).
+            lineRenderer = go.AddComponent<LineRenderer>();
+            Debug.Log($"[LD] '{gameObject.name}': created dynamic primary LR at scene root.");
+        }
+        else if (lineRenderer.transform.parent != null)
+        {
+            // Already exists but is a prefab child — move to scene root.
+            lineRenderer.transform.SetParent(null);
+            lineRenderer.transform.position = Vector3.zero;
+            Debug.Log($"[LD] '{gameObject.name}': moved primary LR to scene root (was child of '{lineRenderer.transform.parent?.name ?? "?"}').");
+        }
+
+        if (secondaryLineRenderer == null)
+        {
+            var go = new GameObject("SecondaryLineRenderer_Dynamic");
+            secondaryLineRenderer = go.AddComponent<LineRenderer>();
+            Debug.Log($"[LD] '{gameObject.name}': created dynamic secondary LR at scene root.");
+        }
+        else if (secondaryLineRenderer.transform.parent != null)
+        {
+            secondaryLineRenderer.transform.SetParent(null);
+            secondaryLineRenderer.transform.position = Vector3.zero;
+            Debug.Log($"[LD] '{gameObject.name}': moved secondary LR to scene root (was child).");
+        }
+    }
+
     void Start()
     {
         predictingDrawingState = new PredictingDrawingState(this);
@@ -118,8 +164,50 @@ public class LetterDrawing : Component
         ChangeState();
     }
 
-    private void OnEnable() => EnhancedTouchSupport.Enable();
-    private void OnDisable() => EnhancedTouchSupport.Disable();
+    private void OnEnable()
+    {
+        EnhancedTouchSupport.Enable();
+
+        if (drawingCamera != null)
+        {
+            drawingCamera.gameObject.SetActive(true);
+            drawingCamera.enabled = true;
+
+            Debug.Log($"[LD] '{gameObject.name}' re-enabled drawingCamera '{drawingCamera.name}'.");
+        }
+    }
+
+    // NOTE: Do NOT call EnhancedTouchSupport.Disable() here.
+    // EnhancedTouchSupport is a global, non-reference-counted flag.
+    // In multiplayer the remote-proxy LetterDrawing is disabled via
+    // letterDrawing.enabled = false (so its Update never runs — safe).
+    // Calling Disable() here would globally kill touch input for the
+    // local player's LetterDrawing as well, since both share the same
+    // process. EnhancedTouchSupport is properly balanced by
+    // NetworkPlayerSync.OnNetworkDespawn (which calls Disable once when
+    // the owner leaves). In single-player the subsystem stays enabled
+    // for the lifetime of the scene, which is harmless.
+    private void OnDisable()
+    {
+        // Do NOT disable EnhancedTouchSupport here.
+        // It is global and would break the local player's input in multiplayer.
+
+        // However, this LetterDrawing may have created a display/drawing camera
+        // before it was disabled, especially when a player prefab starts as local
+        // single-player and later becomes a remote/non-owner player.
+        //
+        // If we leave this camera alive, URP can still render it even though this
+        // LetterDrawing no longer updates. In multiplayer, that can cause an older
+        // inactive player's display camera to steal the render slot/depth from the
+        // active player's display camera.
+        if (drawingCamera != null)
+        {
+            drawingCamera.enabled = false;
+            drawingCamera.gameObject.SetActive(false);
+
+            Debug.Log($"[LD] '{gameObject.name}' disabled drawingCamera '{drawingCamera.name}'.");
+        }
+    }
 
     private void ChangeState()
     {
@@ -159,6 +247,15 @@ public class LetterDrawing : Component
             debugText.text = sb.ToString();
         }
         // -------- TOUCH (iPhone / iPad) -------------------------------------
+        // ── Touch diagnostic (fires once per Began so console doesn't flood) ─
+        foreach (EnhancedTouch t in EnhancedTouch.activeTouches)
+        {
+            if (t.phase == UnityEngine.InputSystem.TouchPhase.Began)
+                Debug.Log($"[LD] '{gameObject.name}' Began  x={t.screenPosition.x:0}/{Screen.width * drawZoneStartX:0}(threshold)" +
+                          $"  EnhancedEnabled={EnhancedTouchSupport.enabled}" +
+                          $"  drawingFingerId={drawingFingerId}");
+        }
+
         foreach (EnhancedTouch t in EnhancedTouch.activeTouches)
         {
             switch (t.phase)
@@ -187,6 +284,18 @@ public class LetterDrawing : Component
                     {
                         drawingFingerId = -1;
                         DrawingScreenPos = Vector2.zero;
+
+                        // ── Drawing diagnostic — remove once drawing visuals are confirmed ──
+                        Debug.Log($"[LD] Draw end on '{gameObject.name}'" +
+                                  $"  drawCam={(drawingCamera != null ? drawingCamera.name : "NULL")}" +
+                                  $"  dispDisplay={(drawingDisplay != null ? "OK" : "NULL")}" +
+                                  $"  dispTex={(drawingDisplay?.texture != null ? drawingDisplay.texture.name : "null")}" +
+                                  $"  secLRpts={secondaryLineRenderer?.positionCount}" +
+                                  $"  secLRenabled={secondaryLineRenderer?.enabled}" +
+                                  $"  secLRlayer={LayerMask.LayerToName(secondaryLineRenderer?.gameObject.layer ?? 0)}");
+                        if (secondaryLineRenderer != null && secondaryLineRenderer.positionCount > 0)
+                            Debug.Log($"[LD] SecLR first={secondaryLineRenderer.GetPosition(0)}  last={secondaryLineRenderer.GetPosition(secondaryLineRenderer.positionCount - 1)}");
+
                         currentState?.ProcessDrawing(lineRenderer, secondaryLineRenderer);
                         OnDraw?.Invoke();
                     }
@@ -347,6 +456,17 @@ public class LetterDrawing : Component
         drawingMode = previousMode;
         maxDrawDistance = int.MaxValue;
         ChangeState();
+    }
+
+    /// <summary>
+    /// Re-wires drawingDisplay.texture to the RenderTexture created by
+    /// PredictingDrawingState.  Call this after assigning drawingDisplay at
+    /// runtime (WireLetterDrawingReferences) because the texture assignment in
+    /// InitializeCamera ran before the scene reference existed.
+    /// </summary>
+    public void RefreshDrawingDisplayTexture()
+    {
+        predictingDrawingState?.RefreshDisplayTexture(drawingDisplay);
     }
 
     private void OnDestroy()

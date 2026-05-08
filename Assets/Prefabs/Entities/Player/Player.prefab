@@ -25,9 +25,8 @@ GameObject:
   - component: {fileID: 7374925929689665054}
   - component: {fileID: 8468488059332638287}
   - component: {fileID: 4894950884552192383}
-  - component: {fileID: 6709163132327088839}
   - component: {fileID: 6982353179971992840}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -44,7 +43,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.92, y: -2.6, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2420360173590594345}
@@ -80,7 +79,7 @@ SpriteRenderer:
   m_SmallMeshCulling: 1
   m_ForceMeshLod: -1
   m_MeshLodSelectionBias: 0
-  m_RenderingLayerMask: 1
+  m_RenderingLayerMask: 3
   m_RendererPriority: 0
   m_Materials:
   - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
@@ -102,9 +101,9 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_GlobalIlluminationMeshLod: 0
-  m_SortingLayerID: -318751195
-  m_SortingLayer: 3
-  m_SortingOrder: 50
+  m_SortingLayerID: -883732801
+  m_SortingLayer: 4
+  m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 21300000, guid: c54d4173096dcd24db3d539cb883c972, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -185,7 +184,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -203,9 +202,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxDashCount: 1
   baseMoveSpeed: 4
-  dashSpeed: 5
-  dashDuration: 0.2
-  dashCooldown: 1
+  dashSpeed: 15.5
+  dashDuration: 0.28
+  dashCooldown: 0.5
   canDash: 1
   rb: {fileID: 6418275811729181238}
   animator: {fileID: 6330455195613800542}
@@ -359,13 +358,13 @@ MonoBehaviour:
   drawingMode: 0
   gameplayCamera: {fileID: 0}
   debugText: {fileID: 0}
-  lineRenderer: {fileID: 2524244512325843035, guid: cc9111edd6d19d044b72046e8d6a576b, type: 3}
-  secondaryLineRenderer: {fileID: 7496336467584829003, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
+  lineRenderer: {fileID: 0}
+  secondaryLineRenderer: {fileID: 0}
   groundMaterial: {fileID: 2100000, guid: 7cc60ea8881148245b8876a10bbc6c13, type: 2}
-  primaryLineMaterial: {fileID: 0}
+  primaryLineMaterial: {fileID: 2100000, guid: 8e39ad95ebcc4964e80745cafb4b59ee, type: 2}
   trippyTransparentMaterial: {fileID: 2100000, guid: 25191b7fd45341141a02ebd7aa82d024, type: 2}
   drawingDisplay: {fileID: 0}
-  model: {fileID: 5022602860645237092, guid: cc11e77015fc7514e8112c5da2cda4c5, type: 3}
+  model: {fileID: 5022602860645237092, guid: 94dee1124f917c24ca2d6ed6684eae2b, type: 3}
   renderTextureDisplay: {fileID: 0}
   currentLetterText: {fileID: 0}
   poemTextDisplay: {fileID: 0}
@@ -378,19 +377,19 @@ MonoBehaviour:
 
     A silent dance, where moonlight
     lies.'
-  sparkleEffectPrefab: {fileID: 0}
-  sparkleDuration: 0.5
-  flashDuration: 0.4
-  scalePop: 1.3
-  correctSparkleColor: {r: 1, g: 1, b: 1, a: 1}
+  sparkleEffectPrefab: {fileID: 2503558607980736289, guid: d346fa3b78b20844699d951f5d9b48f2, type: 3}
+  sparkleDuration: 0.75
+  flashDuration: 1
+  scalePop: 1.45
+  correctSparkleColor: {r: 0.33490568, g: 0.9727591, b: 1, a: 1}
   missSparkleColor: {r: 1, g: 0, b: 0, a: 1}
-  symbolPrefab: {fileID: 0}
-  playerTransform: {fileID: 0}
+  symbolPrefab: {fileID: 6930059259639808039, guid: 63182828c18f3064a82cbd2635294472, type: 3}
+  playerTransform: {fileID: 7495908359777589927}
   symbolScale: 1
   symbolLifetime: 2
-  symbolVerticalOffset: 0.5
+  symbolVerticalOffset: 1.75
   symbolStampDuration: 0.5
-  drawStrokeWidth: 0.05
+  drawStrokeWidth: 0.5
   minPointWorldDistance: 0.01
   drawZoneStartX: 0.5
   drawVersion: 0
@@ -544,7 +543,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
   GlobalObjectIdHash: 3894436261
-  InScenePlacedSourceGlobalObjectIdHash: 0
+  InScenePlacedSourceGlobalObjectIdHash: 3894436261
   DeferredDespawnTick: 0
   Ownership: 1
   AlwaysReplicateAsRoot: 0
@@ -556,52 +555,6 @@ MonoBehaviour:
   AutoObjectParentSync: 1
   SyncOwnerTransformWhenParented: 1
   AllowOwnerToParent: 0
---- !u!114 &6709163132327088839
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 514501729019924183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e96cb6065543e43c4a752faaa1468eb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.Components.NetworkTransform
-  ShowTopMostFoldoutHeaderGroup: 1
-  NetworkTransformExpanded: 0
-  AutoOwnerAuthorityTickOffset: 1
-  PositionInterpolationType: 0
-  RotationInterpolationType: 0
-  ScaleInterpolationType: 0
-  PositionLerpSmoothing: 1
-  PositionMaxInterpolationTime: 0.1
-  RotationLerpSmoothing: 1
-  RotationMaxInterpolationTime: 0.1
-  ScaleLerpSmoothing: 1
-  ScaleMaxInterpolationTime: 0.1
-  AuthorityMode: 0
-  TickSyncChildren: 0
-  UseUnreliableDeltas: 0
-  SyncPositionX: 1
-  SyncPositionY: 1
-  SyncPositionZ: 1
-  SyncRotAngleX: 1
-  SyncRotAngleY: 1
-  SyncRotAngleZ: 1
-  SyncScaleX: 1
-  SyncScaleY: 1
-  SyncScaleZ: 1
-  PositionThreshold: 0.001
-  RotAngleThreshold: 0.01
-  ScaleThreshold: 0.01
-  UseQuaternionSynchronization: 0
-  UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
-  InLocalSpace: 0
-  SwitchTransformSpaceWhenParented: 0
-  Interpolate: 1
-  SlerpPosition: 0
 --- !u!114 &6982353179971992840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -616,7 +569,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerSync
   ShowTopMostFoldoutHeaderGroup: 1
   playerTwoAnimator: {fileID: 22100000, guid: 1dd3186288fd34f43a87f58f8b49c3e4, type: 2}
-  playerTwoColor: {r: 1, g: 0.495283, b: 0.8791958, a: 1}
+  playerTwoColor: {r: 1, g: 0.5990566, b: 0.87079316, a: 1}
   SyncedHealth:
     UpdateTraits:
       MinSecondsBetweenUpdates: 0
@@ -627,6 +580,11 @@ MonoBehaviour:
       MinSecondsBetweenUpdates: 0
       MaxSecondsBetweenUpdates: 0
     m_InternalValue: {x: 0, y: 0}
+  SyncedPosition:
+    UpdateTraits:
+      MinSecondsBetweenUpdates: 0
+      MaxSecondsBetweenUpdates: 0
+    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!1 &1033117730231277173
 GameObject:
   m_ObjectHideFlags: 0
@@ -1041,7 +999,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5534933685275003079}
   - component: {fileID: 8796152357307627773}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Generic_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}

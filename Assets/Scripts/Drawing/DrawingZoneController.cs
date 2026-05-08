@@ -21,6 +21,7 @@ public class DrawingZoneController : MonoBehaviour
     private RectTransform _rect;
     private float         _revealAmount;
     private float         _pulseDiag;
+    private bool          _wasDrawing;   // diagnostic: track drawing state changes
 
     void Awake()
     {
@@ -38,6 +39,14 @@ public class DrawingZoneController : MonoBehaviour
     void Update()
     {
         bool drawing = letterDrawing != null && letterDrawing.IsDrawing;
+
+        // ── Diagnostic: log whenever drawing state flips ──────────────────
+        if (drawing != _wasDrawing)
+        {
+            Debug.Log($"[DZC] drawing={drawing}  ld={letterDrawing?.gameObject.name ?? "NULL"}" +
+                      $"  revealAmt={_revealAmount:F3}  matNull={_mat == null}");
+            _wasDrawing = drawing;
+        }
 
         // ── Reveal amount ────────────────────────────────────────────────
         float target = drawing ? 1f : 0f;
@@ -72,6 +81,17 @@ public class DrawingZoneController : MonoBehaviour
         {
             _mat.SetFloat("_FingerActive", 0f);
         }
+    }
+
+    /// <summary>
+    /// Called by NetworkPlayerSync when the local player spawns over the network
+    /// so the reveal/pulse animation reacts to the correct player's drawing state
+    /// (P2's LetterDrawing instead of the scene-placed P1 reference).
+    /// </summary>
+    public void SetLetterDrawing(LetterDrawing ld)
+    {
+        letterDrawing = ld;
+        Debug.Log($"[DZC] SetLetterDrawing → {(ld != null ? ld.gameObject.name : "NULL")}");
     }
 
     void OnDestroy()

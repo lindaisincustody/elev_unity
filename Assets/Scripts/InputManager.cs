@@ -66,12 +66,29 @@ public class InputManager : MonoBehaviour
         inputActions.UI.Disable();
     }
 
+    private int _diagFrame;
+
     private void Update()
     {
+        // Auto-find the joystick if it wasn't wired at spawn time.
+        // Runs every frame until found (once found the null-check is always false).
+        // true = include inactive objects so it works even if the lobby UI hid the panel.
+        if (virtualJoystick == null)
+            virtualJoystick = FindObjectOfType<TouchJoystick>(true);
+
         if (virtualJoystick != null && virtualJoystick.IsActive)
             inputVector = virtualJoystick.Direction;
         else
             inputVector = inputActions.Player.Move.ReadValue<Vector2>();
+
+        // ── Diagnostic: log input state every 120 frames (~2 s at 60 fps) ──
+        _diagFrame++;
+        if (_diagFrame % 120 == 0)
+        {
+            Debug.Log($"[InputMgr] GO={gameObject.name}  joystick={(virtualJoystick != null ? virtualJoystick.name : "NULL")}" +
+                      $"  IsActive={virtualJoystick?.IsActive}  Direction={virtualJoystick?.Direction}" +
+                      $"  inputVector={inputVector}");
+        }
     }
 
     private void Navigate(InputAction.CallbackContext context)

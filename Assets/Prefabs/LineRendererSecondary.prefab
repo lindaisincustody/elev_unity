@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9141734026007474170}
   - component: {fileID: 7496336467584829003}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: LineRendererSecondary
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34,14 +34,14 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!120 &7496336467584829003
 LineRenderer:
-  serializedVersion: 2
+  serializedVersion: 3
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3159825026326283803}
   m_Enabled: 1
-  m_CastShadows: 1
+  m_CastShadows: 0
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
@@ -50,10 +50,15 @@ LineRenderer:
   m_ReflectionProbeUsage: 0
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 25191b7fd45341141a02ebd7aa82d024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -71,39 +76,21 @@ LineRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -883732801
   m_SortingLayer: 4
-  m_SortingOrder: 0
-  m_Positions:
-  - {x: 34.63595, y: 8.252203, z: 0}
-  - {x: 34.68574, y: 8.227851, z: 0}
-  - {x: 34.735535, y: 8.205743, z: 0}
-  - {x: 34.78533, y: 8.188065, z: 0}
-  - {x: 34.835125, y: 8.176876, z: 0}
-  - {x: 34.88492, y: 8.174066, z: 0}
-  - {x: 34.93471, y: 8.181289, z: 0}
-  - {x: 34.984505, y: 8.19993, z: 0}
-  - {x: 35.0343, y: 8.231061, z: 0}
-  - {x: 35.084095, y: 8.275414, z: 0}
-  - {x: 35.13389, y: 8.333359, z: 0}
-  - {x: 35.18368, y: 8.404896, z: 0}
-  - {x: 35.23348, y: 8.489654, z: 0}
-  - {x: 35.28327, y: 8.586903, z: 0}
-  - {x: 35.333065, y: 8.695568, z: 0}
-  - {x: 35.38286, y: 8.814269, z: 0}
-  - {x: 35.43265, y: 8.941346, z: 0}
-  - {x: 35.48245, y: 9.074915, z: 0}
-  - {x: 35.53224, y: 9.212912, z: 0}
-  - {x: 35.582035, y: 9.353154, z: 0}
+  m_SortingOrder: -1
+  m_MaskInteraction: 0
+  m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.05
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.79310346
+        value: 0.24732709
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -143,14 +130,13 @@ LineRenderer:
       m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 90
+    numCapVertices: 90
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MaskInteraction: 0
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1

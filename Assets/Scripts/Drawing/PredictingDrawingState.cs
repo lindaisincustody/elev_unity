@@ -113,6 +113,12 @@ public class PredictingDrawingState : IDrawingState
         // Primary LR is invisible by default — only briefly enabled during ML capture.
         // This prevents the thick white stroke from bleeding into the display overlay.
         letterDrawing.lineRenderer.enabled = false;
+        // Use startWidth/endWidth (absolute world-space values) instead of
+        // widthMultiplier so the result is independent of whatever baked curve
+        // value exists on the scene-placed or dynamically-created LR asset.
+        letterDrawing.lineRenderer.widthMultiplier = 1f;
+        letterDrawing.lineRenderer.startWidth      = 0.10f;
+        letterDrawing.lineRenderer.endWidth        = 0.10f;
 
         if (letterDrawing.secondaryLineRenderer != null)
         {
@@ -172,9 +178,14 @@ public class PredictingDrawingState : IDrawingState
         sec.colorGradient = initG;
 
         // Apply the inspector-tuned stroke width for the display camera's coordinate space.
-        // (drawingCamera orthoSize=5 → 1 unit ≈ screenHeight/10 px; start ~0.04–0.08)
+        // Use startWidth/endWidth (absolute world-space values) so the result is independent
+        // of whatever baked curve values exist on the LR asset.
         if (letterDrawing.secondaryLineRenderer != null)
-            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.drawStrokeWidth;
+        {
+            letterDrawing.secondaryLineRenderer.widthMultiplier = 1f;
+            letterDrawing.secondaryLineRenderer.startWidth      = letterDrawing.drawStrokeWidth;
+            letterDrawing.secondaryLineRenderer.endWidth        = letterDrawing.drawStrokeWidth;
+        }
     }
 
     private void InitializeCamera()
@@ -238,6 +249,12 @@ public class PredictingDrawingState : IDrawingState
 
         if (letterDrawing.drawingDisplay != null)
             letterDrawing.drawingDisplay.texture = displayRT;
+
+        Debug.Log($"[PDS] InitializeCamera for '{letterDrawing.gameObject.name}'" +
+                  $"  rtW={rtW}  rtH={rtH}  camAspect={camAspect:F3}" +
+                  $"  displayRT={(displayRT != null ? "OK" : "NULL")}" +
+                  $"  drawingDisplay={(letterDrawing.drawingDisplay != null ? "OK" : "NULL")}" +
+                  $"  displayCamEnabled={displayCamera?.enabled}");
     }
 
     private void InitializeModel()
@@ -293,7 +310,6 @@ public class PredictingDrawingState : IDrawingState
         prediction.SetPrediction(output, labels);
 
         float confidence = prediction.predicted.Max();
-        float threshold = 8.5f;
 
         if (confidence < threshold)
         {
@@ -311,7 +327,12 @@ public class PredictingDrawingState : IDrawingState
         DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
 
         // Broadcast the drawing result to the other player's device.
-        NetworkPlayerSync.Local?.BroadcastDrawingResult(prediction.predictedLabel);
+        // Send the raw label (for AbilityActionRegistry) AND the pre-converted glyph
+        // (for the visual symbol) so the remote device needs no copy of latexToUnicode.
+        string glyph = latexToUnicode.ContainsKey(prediction.predictedLabel)
+            ? latexToUnicode[prediction.predictedLabel]
+            : prediction.predictedLabel;
+        NetworkPlayerSync.Local?.BroadcastDrawingResult(prediction.predictedLabel, glyph);
 
         output.Dispose();
         DebugInputTexture(capturedTexture);
@@ -381,10 +402,11 @@ public class PredictingDrawingState : IDrawingState
         float maxDrawingSize = Mathf.Max(bounds.size.x, bounds.size.y) * marginFactor;
         mlCamera.orthographicSize = Mathf.Max(maxDrawingSize / 2f, 0.01f);
 
-        // Scale primary LR width for the ML capture; leave the visual secondary LR untouched.
-        float zoomLevel = mlCamera.orthographicSize;
-        float widthMultiplier = Mathf.Clamp(10f / zoomLevel, 5f, 9f);
-        letterDrawing.lineRenderer.widthMultiplier = 0.1f * widthMultiplier;
+        // Keep primary LR at the same absolute width as everywhere else.
+        // widthMultiplier stays 1 so startWidth/endWidth are the sole source of truth.
+        letterDrawing.lineRenderer.widthMultiplier = 1f;
+        letterDrawing.lineRenderer.startWidth      = 0.10f;
+        letterDrawing.lineRenderer.endWidth        = 0.10f;
 
         // Swap visibility: ML camera needs primary on, secondary off.
         letterDrawing.lineRenderer.enabled = true;
@@ -492,7 +514,8 @@ public class PredictingDrawingState : IDrawingState
         if (feedbackRoutine != null)
         {
             letterDrawing.StopCoroutine(feedbackRoutine);
-            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.drawStrokeWidth;
+            letterDrawing.secondaryLineRenderer.startWidth = letterDrawing.drawStrokeWidth;
+            letterDrawing.secondaryLineRenderer.endWidth   = letterDrawing.drawStrokeWidth;
         }
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
     }
@@ -505,7 +528,7 @@ public class PredictingDrawingState : IDrawingState
 
     private IEnumerator FlashPop()
     {
-        var mat = letterDrawing.secondaryLineRenderer.material;
+        var mat = letterDrawing.secondaryLineRenderer.sharedMaterial;
         var originalColor = mat.GetColor("_Color");
 
         // Always animate from the inspector-defined base width, never from
@@ -519,15 +542,17 @@ public class PredictingDrawingState : IDrawingState
             float norm = elapsed / total;
             float pulse = Mathf.Sin(norm * Mathf.PI);
             mat.SetColor("_Color", Color.Lerp(originalColor, Color.white, pulse));
-            letterDrawing.secondaryLineRenderer.widthMultiplier =
-                baseWidth * (1f + (letterDrawing.scalePop - 1f) * pulse);
+            float animWidth = baseWidth * (1f + (letterDrawing.scalePop - 1f) * pulse);
+            letterDrawing.secondaryLineRenderer.startWidth = animWidth;
+            letterDrawing.secondaryLineRenderer.endWidth   = animWidth;
 
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         mat.SetColor("_Color", originalColor);
-        letterDrawing.secondaryLineRenderer.widthMultiplier = baseWidth;
+        letterDrawing.secondaryLineRenderer.startWidth = baseWidth;
+        letterDrawing.secondaryLineRenderer.endWidth   = baseWidth;
     }
     private void AnimateSparkleAlong(LineRenderer lr)
     {
@@ -595,7 +620,8 @@ public class PredictingDrawingState : IDrawingState
         if (feedbackRoutine != null)
         {
             letterDrawing.StopCoroutine(feedbackRoutine);
-            letterDrawing.secondaryLineRenderer.widthMultiplier = letterDrawing.drawStrokeWidth;
+            letterDrawing.secondaryLineRenderer.startWidth = letterDrawing.drawStrokeWidth;
+            letterDrawing.secondaryLineRenderer.endWidth   = letterDrawing.drawStrokeWidth;
         }
         feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
 
@@ -705,6 +731,20 @@ public class PredictingDrawingState : IDrawingState
         sym.localScale = targetScale;
         sym.localRotation = Quaternion.identity;
         tmp.color = baseColor;
+    }
+
+    /// <summary>
+    /// Re-assigns the display RenderTexture to <paramref name="display"/> so the
+    /// drawing camera's output appears in the correct RawImage.
+    ///
+    /// Call this after assigning LetterDrawing.drawingDisplay at runtime
+    /// (e.g. from NetworkPlayerSync.WireLetterDrawingReferences) because
+    /// InitializeCamera() runs in Start() before the scene reference is wired.
+    /// </summary>
+    public void RefreshDisplayTexture(UnityEngine.UI.RawImage display)
+    {
+        if (display != null && displayRT != null)
+            display.texture = displayRT;
     }
 
     public void Dispose()

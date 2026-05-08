@@ -132,13 +132,24 @@ public class SmoothCameraFollow : MonoBehaviour
 #else
         if (Input.touchCount > 0)
         {
-            // Pick the rightmost touch (draw-zone finger).
-            Touch best = Input.GetTouch(0);
-            for (int i = 1; i < Input.touchCount; i++)
-                if (Input.GetTouch(i).position.x > best.position.x)
-                    best = Input.GetTouch(i);
-            pos = best.position;
-            return true;
+            // Only use right-half touches for camera aim.
+            // Left-half touches are the joystick — including them pulls the
+            // camera toward the joystick and makes all movement appear diagonal.
+            Touch best = default;
+            bool found = false;
+            for (int i = 0; i < Input.touchCount; i++)
+            {
+                Touch t = Input.GetTouch(i);
+                if (t.position.x > Screen.width * 0.5f)
+                {
+                    if (!found || t.position.x > best.position.x)
+                    {
+                        best  = t;
+                        found = true;
+                    }
+                }
+            }
+            if (found) { pos = best.position; return true; }
         }
         pos = Vector2.zero;
         return false;

@@ -60,7 +60,16 @@ public class TouchDrawController : MonoBehaviour
     }
 
     private void OnEnable() => EnhancedTouchSupport.Enable();
-    private void OnDisable() => EnhancedTouchSupport.Disable();
+
+    // NOTE: Do NOT call EnhancedTouchSupport.Disable() here.
+    // EnhancedTouchSupport is a global, non-reference-counted flag shared by every
+    // component in the process (TouchJoystick, LetterDrawing, etc.).  Calling
+    // Disable() here would kill touch input for all of them the moment this
+    // component is disabled — including when the network spawn sequence
+    // temporarily deactivates scene objects.  LetterDrawing and NetworkPlayerSync
+    // balance the Enable/Disable lifecycle correctly; this script should only
+    // enable, never disable.
+    private void OnDisable() { }
 
     private void Update()
     {
