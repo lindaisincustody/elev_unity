@@ -259,7 +259,7 @@ public class PredictingDrawingState : IDrawingState
 
     private void InitializeModel()
     {
-        worker = ModelLoader.Load(letterDrawing.model).CreateWorker(WorkerFactory.Device.GPU);
+        worker = ModelLoader.Load(letterDrawing.model).CreateWorker(WorkerFactory.Device.CPU);
         prediction = new Prediction();
     }
 
