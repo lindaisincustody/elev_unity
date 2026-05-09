@@ -21,6 +21,9 @@ public class MultiplayerLobbyUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI statusLabel;    // "Waiting…", "Joining…", errors
     [SerializeField] private TextMeshProUGUI codeDisplay;    // shows the generated code to Player 1
 
+    [Header("Toggle button (always visible — opens/closes the lobby panel)")]
+    [SerializeField] private Button          btnToggleLobby;  // the cogwheel button
+
     [Header("In-game HUD (shown after both players are connected)")]
     [SerializeField] private GameObject      hudRoot;
     [SerializeField] private TextMeshProUGUI hudStatusText;  // "● P2 connected" etc.
@@ -30,8 +33,11 @@ public class MultiplayerLobbyUI : MonoBehaviour
 
     private void Start()
     {
-        lobbyRoot.SetActive(true);
+        lobbyRoot.SetActive(false);   // hidden by default — cogwheel opens it
         hudRoot.SetActive(false);
+
+        if (btnToggleLobby != null)
+            btnToggleLobby.onClick.AddListener(() => lobbyRoot.SetActive(!lobbyRoot.activeSelf));
 
         btnHost.onClick.AddListener(OnHostClicked);
         btnJoin.onClick.AddListener(OnJoinClicked);
