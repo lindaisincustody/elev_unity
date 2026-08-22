@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class AbilityActionsInitializer : MonoBehaviour
 {
-    [Header("References")] [SerializeField]
     private LetterDrawing letterDrawing;
 
     private void Start()
     {
+        letterDrawing = Player.instance.Get<LetterDrawing>();
+
         AbilityActionRegistry.Instance.RegisterAction("_diagup", () =>
         {
             var playerAbilities = Player.instance.GetComponent<PlayerAbilities>();

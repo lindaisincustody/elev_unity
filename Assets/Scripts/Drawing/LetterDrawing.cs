@@ -234,69 +234,7 @@ public class LetterDrawing : Component
                 sb.AppendLine($"T{t.touchId}: ({t.screenPosition.x:0},{t.screenPosition.y:0}) ph={t.phase}");
             debugText.text = sb.ToString();
         }
-        // -------- TOUCH (iPhone / iPad) -------------------------------------
-        // ── Touch diagnostic (fires once per Began so console doesn't flood) ─
-        foreach (EnhancedTouch t in EnhancedTouch.activeTouches)
-        {
-            if (t.phase == UnityEngine.InputSystem.TouchPhase.Began)
-                Debug.Log($"[LD] '{gameObject.name}' Began  x={t.screenPosition.x:0}/{Screen.width * drawZoneStartX:0}(threshold)" +
-                          $"  EnhancedEnabled={EnhancedTouchSupport.enabled}" +
-                          $"  drawingFingerId={drawingFingerId}");
-        }
 
-        foreach (EnhancedTouch t in EnhancedTouch.activeTouches)
-        {
-            switch (t.phase)
-            {
-                case UnityEngine.InputSystem.TouchPhase.Began:
-                    // Only start drawing if no finger is already drawing AND
-                    // the touch is on the right half (left half is joystick).
-                    if (drawingFingerId == -1 &&
-                        t.screenPosition.x >= Screen.width * drawZoneStartX)
-                    {
-                        drawingFingerId = t.touchId;
-                        StartDrawing();
-                        AddPointAt(t.screenPosition);
-                    }
-                    break;
-
-                case UnityEngine.InputSystem.TouchPhase.Moved:
-                case UnityEngine.InputSystem.TouchPhase.Stationary:
-                    if (t.touchId == drawingFingerId)
-                        AddPointAt(t.screenPosition);
-                    break;
-
-                case UnityEngine.InputSystem.TouchPhase.Ended:
-                case UnityEngine.InputSystem.TouchPhase.Canceled:
-                    if (t.touchId == drawingFingerId)
-                    {
-                        drawingFingerId = -1;
-                        DrawingScreenPos = Vector2.zero;
-
-                        // ── Drawing diagnostic — remove once drawing visuals are confirmed ──
-                        Debug.Log($"[LD] Draw end on '{gameObject.name}'" +
-                                  $"  drawCam={(drawingCamera != null ? drawingCamera.name : "NULL")}" +
-                                  $"  dispDisplay={(drawingDisplay != null ? "OK" : "NULL")}" +
-                                  $"  dispTex={(drawingDisplay?.texture != null ? drawingDisplay.texture.name : "null")}" +
-                                  $"  secLRpts={secondaryLineRenderer?.positionCount}" +
-                                  $"  secLRenabled={secondaryLineRenderer?.enabled}" +
-                                  $"  secLRlayer={LayerMask.LayerToName(secondaryLineRenderer?.gameObject.layer ?? 0)}");
-                        if (secondaryLineRenderer != null && secondaryLineRenderer.positionCount > 0)
-                            Debug.Log($"[LD] SecLR first={secondaryLineRenderer.GetPosition(0)}  last={secondaryLineRenderer.GetPosition(secondaryLineRenderer.positionCount - 1)}");
-
-                        currentState?.ProcessDrawing(lineRenderer, secondaryLineRenderer);
-                        OnDraw?.Invoke();
-                    }
-                    break;
-            }
-        }
-
-        // -------- MOUSE (editor only — never run on device) -----------------
-        // On iOS, Input.GetMouseButton(1) can fire when two fingers are on
-        // screen, and Input.mousePosition returns the joystick finger's
-        // position (left side of screen). That maps to a negative normX in
-        // the drawing-zone calculation → out-of-range world positions → fan.
-#if UNITY_EDITOR
         if (Input.GetMouseButtonDown(1))
         {
             StartDrawing();
@@ -310,10 +248,6 @@ public class LetterDrawing : Component
             currentState.ProcessDrawing(lineRenderer, secondaryLineRenderer);
             OnDraw?.Invoke();
         }
-#endif
-
-        // The display camera (drawingCamera) runs with enabled=true so URP
-        // renders it automatically every frame — no manual Render() call needed.
     }
 
     private void StartDrawing()

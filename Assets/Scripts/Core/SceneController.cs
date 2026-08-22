@@ -9,19 +9,6 @@ public class SceneController : MonoBehaviour
     public static SceneController instance;
     [SerializeField] Animator transitionAnim;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
     private void Start()
     {
         dataManager = DataManager.Instance;

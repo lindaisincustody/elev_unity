@@ -5,7 +5,6 @@ using UnityEngine.UI;
 public class DrawingZoneController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private LetterDrawing letterDrawing;
     [Tooltip("Canvas that owns this element. Needed for Screen Space Camera mode. " +
              "Leave empty — Awake fills it automatically.")]
     [SerializeField] private Canvas canvas;
@@ -22,6 +21,12 @@ public class DrawingZoneController : MonoBehaviour
     private float         _revealAmount;
     private float         _pulseDiag;
     private bool          _wasDrawing;   // diagnostic: track drawing state changes
+    private LetterDrawing letterDrawing;
+
+    void Start()
+    {
+        letterDrawing = Player.instance.Get<LetterDrawing>();
+    }
 
     void Awake()
     {
