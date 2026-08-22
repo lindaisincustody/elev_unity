@@ -6,4 +6,8 @@ public class ConfigManager : MonoBehaviour
 
     [field: SerializeField] public DrawingRigReferences DrawingRig { get; private set; }
 
+    private void Awake()
+    {
+        Instance = this;
+    }
 }

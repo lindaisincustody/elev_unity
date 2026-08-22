@@ -35,6 +35,7 @@ Transform:
   - {fileID: 4427215538349417273}
   - {fileID: 2148958809417733667}
   - {fileID: 2938504714180895721}
+  - {fileID: 1371981983030482437}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5071251536237737620
@@ -127,6 +128,63 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FrameRateManager
   targetFPS: 120
+--- !u!1 &7476959203782954386
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371981983030482437}
+  - component: {fileID: 5516315378308778242}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1371981983030482437
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7476959203782954386}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6140382831497581559}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5516315378308778242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7476959203782954386}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a5456ab82cf30040b2684d160e005f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  rootPrefab: {fileID: 8365478147447046522, guid: 79a93873766702b42b148bb915f4cf89, type: 3}
+  spawnOnAwake:
+  - {fileID: 748526414926618642, guid: b860c4b4bfd670e45a3ca493b59bc254, type: 3}
+  - {fileID: 4993174426707177722, guid: a9b0e5652fc38c24483f2cd38739c2a5, type: 3}
+  uiPrefabs:
+  - {fileID: 5784456066528392054, guid: 64a94ceea612fcf4b9a4f5f83d95e254, type: 3}
+  - {fileID: 6397684750470102542, guid: a91f232e4c547cb4793f9cbde26af247, type: 3}
+  - {fileID: 7574927325954668685, guid: cb2cc14511a8b5f4d8af92233400d522, type: 3}
+  - {fileID: 6280355687144204717, guid: 10ef27ba46cb9534ea503592d4d3b5ad, type: 3}
+  - {fileID: 6225071512015849257, guid: d340e92e173462545b3f5308ac7113e4, type: 3}
+  - {fileID: 1796664138314127161, guid: 87e758ff836e0184e8a56bf177d8295f, type: 3}
+  - {fileID: 5395884692171543224, guid: 920675c092cda04479c0e6d0f13f419b, type: 3}
+  - {fileID: 4090785355166234292, guid: 6c652134cdaab43448c4bb189e98ad8b, type: 3}
 --- !u!1 &7692388275285083575
 GameObject:
   m_ObjectHideFlags: 0
@@ -172,8 +230,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DrawingRigSpawner
   target: {fileID: 0}
-  spawnOnAwake: 1
-  destroyRigOnDestroy: 1
 --- !u!1001 &1228300180439050955
 PrefabInstance:
   m_ObjectHideFlags: 0

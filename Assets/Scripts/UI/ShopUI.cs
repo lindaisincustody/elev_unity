@@ -24,7 +24,7 @@ public class ShopUI : MonoBehaviour
     {
         if (!panel.activeSelf)
             return;
-        InventoryUI.Instance.CanOpenInventory(true);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         panel.SetActive(false);
         player.SetMovement(true);
         itemsSelection.SetShopOpenState(false);
@@ -33,7 +33,7 @@ public class ShopUI : MonoBehaviour
     public void ShowShop()
     {
         UpdateGoldText();
-        InventoryUI.Instance.CanOpenInventory(false);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         panel.SetActive(true);
         player.SetMovement(false);
         itemsSelection.SetShopOpenState(true);

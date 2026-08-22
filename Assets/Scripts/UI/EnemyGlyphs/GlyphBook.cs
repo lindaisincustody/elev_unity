@@ -8,8 +8,6 @@ using UnityEngine.Tilemaps;
 
 public class GlyphBook : MonoBehaviour
 {
-    public static GlyphBook instance;
-
     private Dictionary<Enemy, GlyphText> keyValuePairs = new Dictionary<Enemy, GlyphText>();
 
     [SerializeField] private GlyphText glyphPrefab;
@@ -19,16 +17,8 @@ public class GlyphBook : MonoBehaviour
     [SerializeField] private GameObject glyphBook;
     [SerializeField] private TMP_Text poemText;
 
-    [SerializeField] private Tilemap wallTilemap;
-    [SerializeField] private List<Vector3Int> wallTilePositionsToRemove;
-
     private int currentWordIndex = 0;
     private float bookScaleTime = 0.6f;
-
-    private void Awake()
-    {
-        instance = this;
-    }
 
     public void ClearCompleteText()
     {
@@ -131,24 +121,9 @@ public class GlyphBook : MonoBehaviour
         newGlyphText.WriteText("Poem Complete", () =>
         {
             HideBook();
-            RemoveWallTiles();
         });
     }
 
-
-    private void RemoveWallTiles()
-    {
-        if (wallTilemap == null)
-        {
-            Debug.LogWarning("Wall Tilemap is not assigned!");
-            return;
-        }
-
-        foreach (Vector3Int pos in wallTilePositionsToRemove)
-        {
-            wallTilemap.SetTile(pos, null);
-        }
-    }
 
     private void HideBook()
     {

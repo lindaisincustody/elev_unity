@@ -29,7 +29,7 @@ public class PoemTrigger : Interactable
         if (playerIsInTrigger)
         {
             base.HandleInteract();
-            PoemMenuController.instance.OpenPoemBook(wordsData);
+            UIManager.Instance.Get<PoemMenuController>().OpenPoemBook(wordsData);
             gameObject.SetActive(false);
         }
     }

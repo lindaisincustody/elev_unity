@@ -2,18 +2,16 @@ using UnityEngine;
 
 public class DrawingRigSpawner : MonoBehaviour
 {
+    [SerializeField] private LetterDrawing target;
+
     private DrawingRigReferences references;
 
     public LineRenderer Primary { get; private set; }
     public LineRenderer Secondary { get; private set; }
-    public bool HasSpawned => Primary != null && Secondary != null;
 
     public void Spawn()
     {
-            
         references = ConfigManager.Instance.DrawingRig;
-
-        LetterDrawing target = Player.instance.Get<LetterDrawing>();
 
         Primary = SpawnLine(references.primaryLine);
         Secondary = SpawnLine(references.secondaryLine);
@@ -25,15 +23,8 @@ public class DrawingRigSpawner : MonoBehaviour
     private LineRenderer SpawnLine(DrawingRigReferences.LineEntry entry)
     {
         LineRenderer line = Instantiate(entry.prefab, Vector3.zero, Quaternion.identity);
-        line.name = string.IsNullOrEmpty(entry.instanceName) ? entry.prefab.name : entry.instanceName;
-
-        int layer = LayerMask.NameToLayer(entry.layerName);
-        if (layer < 0)
-            Debug.LogError($"[DrawingRigSpawner] Layer \"{entry.layerName}\" does not exist — " +
-                           $"'{line.name}' stays on layer {line.gameObject.layer}.", this);
-        else
-            line.gameObject.layer = layer;
-
+        line.name = entry.instanceName;
+        line.gameObject.layer = LayerMask.NameToLayer(entry.layerName);
         line.sortingOrder = entry.sortingOrder;
         line.numCapVertices = entry.capVertices;
         line.numCornerVertices = entry.cornerVertices;

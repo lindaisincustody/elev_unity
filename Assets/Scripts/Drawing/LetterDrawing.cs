@@ -156,6 +156,12 @@ public class LetterDrawing : Component
 
     void Start()
     {
+        HeaderCanvas header = UIManager.Instance.Get<HeaderCanvas>();
+        drawingDisplay = header.DrawingDisplay;
+        renderTextureDisplay = header.RenderTextureDisplay;
+        currentLetterText = header.CurrentLetterText;
+        poemTextDisplay = header.PoemTextDisplay;
+
         predictingDrawingState = new PredictingDrawingState(this);
         paintingPathDrawingState = new PaintingPathDrawingState();
         paintingFireDrawingState = new PaintingFireDrawingState();

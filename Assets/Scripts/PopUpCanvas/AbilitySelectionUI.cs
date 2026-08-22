@@ -7,7 +7,6 @@ using NaughtyAttributes;
 
 public class AbilitySelectionUI : MonoBehaviour
 {
-    public static AbilitySelectionUI Instance { get; private set; }
 
     [SerializeField] private GameObject abilitySelectionPanel;
     [SerializeField] private Transform buttonContainer;
@@ -18,24 +17,11 @@ public class AbilitySelectionUI : MonoBehaviour
 
     private List<AbilityTier> currentTiersToShow;
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
     private void Start()
     {
         abilitySelectionPanel.SetActive(false);
     }
 
-    [Button]
     public void Show(List<AbilityTier> abilityTiers)
     {
         currentTiersToShow = new List<AbilityTier>(abilityTiers);

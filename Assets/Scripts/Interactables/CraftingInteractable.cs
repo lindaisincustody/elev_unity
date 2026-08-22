@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class CraftingInteractable : Interactable
 {
-    private CraftingUI craftingUI;
-
-    protected override void Start()
-    {
-        base.Start();
-        craftingUI = CraftingUI.Instance;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -35,7 +27,7 @@ public class CraftingInteractable : Interactable
         if (playerIsInTrigger)
         {
             base.HandleInteract();
-            craftingUI.OpenPanel();
+            UIManager.Instance.Get<CraftingUI>().OpenPanel();
         }
     }
 }

@@ -1104,6 +1104,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 357aef23bb586c24683c818df94969b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <DrawingDisplay>k__BackingField: {fileID: 3839653586067053629}
+  <RenderTextureDisplay>k__BackingField: {fileID: 8610320829425202628}
+  <CurrentLetterText>k__BackingField: {fileID: 7331395147870660702}
+  <PoemTextDisplay>k__BackingField: {fileID: 4497085372729849235}
+  <CombatModeText>k__BackingField: {fileID: 4306933585931116044}
 --- !u!1 &6600167903515859254
 GameObject:
   m_ObjectHideFlags: 0
@@ -2404,6 +2409,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: efd4861839857af448ac21989aa8ad0b, type: 3}
+--- !u!114 &3839653586067053629 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8554394734385809402, guid: efd4861839857af448ac21989aa8ad0b, type: 3}
+  m_PrefabInstance: {fileID: 4899459168628186055}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.RawImage
 --- !u!224 &7728721722343882816 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2936223068541557639, guid: efd4861839857af448ac21989aa8ad0b, type: 3}

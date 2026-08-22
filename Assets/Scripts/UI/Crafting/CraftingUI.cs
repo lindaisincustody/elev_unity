@@ -9,7 +9,6 @@ using UnityEngine.InputSystem;
 
 public class CraftingUI : MonoBehaviour
 {
-    public static CraftingUI Instance { get; private set; }
 
     [SerializeField]
     private CraftingRecipes craftingRecipes;
@@ -37,18 +36,6 @@ public class CraftingUI : MonoBehaviour
 
     private bool isCraftingOpen = false;
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
     private void Start()
     {
         player = Player.instance;
@@ -62,11 +49,6 @@ public class CraftingUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (Instance == this)
-        {
-            Instance = null;
-        }
-
         if (isCraftingOpen)
         {
             ReturnCraftItemsToInventory();
@@ -96,7 +78,7 @@ public class CraftingUI : MonoBehaviour
         }
 
         RefreshUI();
-        InventoryUI.Instance.CanOpenInventory(false);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         isCraftingOpen = true;
         craftingPanel.SetActive(true);
         craftingBG.SetActive(true);
@@ -112,7 +94,7 @@ public class CraftingUI : MonoBehaviour
 
         ReturnCraftItemsToInventory();
         UpdateCraftButton();
-        InventoryUI.Instance.CanOpenInventory(true);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
         craftingBG.SetActive(false);

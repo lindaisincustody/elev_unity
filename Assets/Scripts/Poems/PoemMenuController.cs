@@ -13,7 +13,6 @@ public enum Trail
 
 public class PoemMenuController : MonoBehaviour
 {
-    public static PoemMenuController instance;
     [Header("Self-References")]
     [SerializeField] private WordFiller wordFiller;
     [SerializeField] private RectTransform bookMover;
@@ -42,8 +41,6 @@ public class PoemMenuController : MonoBehaviour
 
     void Start()
     {
-        instance = this;
-
         player = Player.instance;
         playerInput = player.GetInputManager;
         playerMovement = player.Get<PlayerMovement>();
@@ -61,7 +58,7 @@ public class PoemMenuController : MonoBehaviour
         if (!_canBeTriggered)
             return;
 
-        InventoryUI.Instance.CanOpenInventory(false);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         //poemAI.SendRequest(wordsData);
         isBookActive = true;
         _canBeTriggered = false;
@@ -120,7 +117,7 @@ public class PoemMenuController : MonoBehaviour
         playerMovement.SetMovement(true);
         yield return new WaitForSeconds(2f);
         bookFlipper.FlipLeftPage();
-        InventoryUI.Instance.CanOpenInventory(true);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         yield return new WaitForSeconds(3f);
         wordFiller.EnableWordChoosing(false);
         _canBeTriggered = true;

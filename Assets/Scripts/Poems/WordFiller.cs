@@ -61,7 +61,7 @@ public class WordFiller : MonoBehaviour
         {
             btn.interactable = false;
         }
-        PoemMenuController.instance.UpdateAttributes(wordDataHolder.words[wordIndex]);
+        UIManager.Instance.Get<PoemMenuController>().UpdateAttributes(wordDataHolder.words[wordIndex]);
         particleMask.calculateDuration(wordDataHolder.words[wordIndex].word);
         oldChosenWord = wordDataHolder.words[wordIndex].word;
         writingEffect.gameObject.SetActive(true);

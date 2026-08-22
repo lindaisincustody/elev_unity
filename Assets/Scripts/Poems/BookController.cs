@@ -59,7 +59,7 @@ public class BookController : MonoBehaviour
 
     public void InitiateClosingBook(GameObject objectToDisable)
     {
-        PoemMenuController.instance.ClosePoemBook();
+        UIManager.Instance.Get<PoemMenuController>().ClosePoemBook();
         StartCoroutine(CloseBookDelay(objectToDisable));
     }
 

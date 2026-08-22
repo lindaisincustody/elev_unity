@@ -60,7 +60,7 @@ public class DialogueController : MonoBehaviour
     {
         currentTrigger = trigger;
         dialogueData = newDialogueData;
-        InventoryUI.Instance.CanOpenInventory(false);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         currentDialogueLine = 0;
         StartCoroutine(SetDialogueActive());
         if (newDialogueData.dialogueType == DialogueType.Dialogue)
@@ -229,7 +229,7 @@ public class DialogueController : MonoBehaviour
     {
         if (!isDialogueActive && !isMinigamesBoxActive) return;
 
-        InventoryUI.Instance.CanOpenInventory(true);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         isDialogueActive = false;
         dialogueData = null;
         currentDialogueLine = 0;

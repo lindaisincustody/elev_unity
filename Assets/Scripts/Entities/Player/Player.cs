@@ -136,7 +136,7 @@ public class Player : Entity
             }
             playerData.poemsUsed++;
             dataManager.SavePlayerData(playerData);
-            PoemMenuController.instance.OpenPoemBook(wordsData[poemToOpen]);
+            UIManager.Instance.Get<PoemMenuController>().OpenPoemBook(wordsData[poemToOpen]);
         }
     }
 

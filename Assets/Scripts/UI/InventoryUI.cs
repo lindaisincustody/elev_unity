@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    public static InventoryUI Instance { get; private set; }
 
     [SerializeField]
     private GameObject inventoryPanel;
@@ -41,18 +40,6 @@ public class InventoryUI : MonoBehaviour
     private int selectedIndex = 0;
     private const int numberOfColumns = 4;
 
-    private void Awake()
-    {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
-    }
-
     private void Start()
     {
         player = Player.instance;
@@ -68,10 +55,6 @@ public class InventoryUI : MonoBehaviour
     {
         playerInput.OnInventory -= ToggleInventory;
 
-        if (Instance == this)
-        {
-            Instance = null;
-        }
     }
 
     public void ToggleInventory()

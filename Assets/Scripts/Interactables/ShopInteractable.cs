@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class ShopInteractable : Interactable
 {
-    [SerializeField] ShopUI shopUI;
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -29,7 +27,7 @@ public class ShopInteractable : Interactable
         if (playerIsInTrigger)
         {
             base.HandleInteract();
-            shopUI.ShowShop();
+            UIManager.Instance.Get<ShopUI>().ShowShop();
         }
     }
 }

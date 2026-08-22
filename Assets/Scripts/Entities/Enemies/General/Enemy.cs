@@ -91,7 +91,7 @@ public class Enemy : Entity
                 foreach (var matchedSymbol in matchedSymbols)
                 {
                     displayedSymbols.Remove(matchedSymbol); 
-                    GlyphBook.instance.GlyphWritten(this, matchedSymbol);
+                    UIManager.Instance.Get<GlyphBook>().GlyphWritten(this, matchedSymbol);
                     Destroy(matchedSymbol.gameObject);   
                 }
 

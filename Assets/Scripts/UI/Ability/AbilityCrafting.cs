@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class AbilityCrafting : MonoBehaviour
 {
-    public static AbilityCrafting Instance { get; private set; }
 
     [SerializeField] GameObject craftingPanel;
     [SerializeField] GameObject craftingBG;
@@ -22,12 +21,6 @@ public class AbilityCrafting : MonoBehaviour
 
     bool isCraftingOpen;
 
-    void Awake()
-    {
-        if (Instance != null && Instance != this) Destroy(gameObject);
-        else Instance = this;
-    }
-
     void Start()
     {
         player = Player.instance;
@@ -39,7 +32,6 @@ public class AbilityCrafting : MonoBehaviour
 
     void OnDestroy()
     {
-        if (Instance == this) Instance = null;
         if (isCraftingOpen) ReturnCraftItemsToInventory();
         playerInput.OnUICancel -= ClosePanel;
     }
@@ -56,7 +48,7 @@ public class AbilityCrafting : MonoBehaviour
 
         RefreshUI();
         UpdateCraftButton();
-        InventoryUI.Instance.CanOpenInventory(false);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         isCraftingOpen = true;
         craftingPanel.SetActive(true);
         craftingBG.SetActive(true);
@@ -68,7 +60,7 @@ public class AbilityCrafting : MonoBehaviour
         if (!isCraftingOpen) return;
 
         ReturnCraftItemsToInventory();
-        InventoryUI.Instance.CanOpenInventory(true);
+        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
         craftingBG.SetActive(false);
@@ -84,7 +76,7 @@ public class AbilityCrafting : MonoBehaviour
             tiers.Add(((AbilityShardItem)slot.Item).Tier);
         }
 
-        AbilitySelectionUI.Instance.Show(tiers);
+        UIManager.Instance.Get<AbilitySelectionUI>().Show(tiers);
 
         foreach (var slot in craftSlots)
             if (slot.Item != null) slot.Clear();
@@ -198,7 +190,7 @@ public class AbilityCrafting : MonoBehaviour
         foreach (var w in warningSlots) w.SetActive(false);
 
         var playerAbilities = Player.instance.GetComponent<PlayerAbilities>().Abilities;
-        var remaining = AbilitySelectionUI.Instance.availableAbilities
+        var remaining = UIManager.Instance.Get<AbilitySelectionUI>().availableAbilities
             .Where(a => !playerAbilities.Contains(a))
             .ToList();
 

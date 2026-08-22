@@ -6,7 +6,6 @@ using UnityEngine.Playables;
 
 public class DialogueTrigger : Interactable
 {
-    [SerializeField] private DialogueController dialogueController;
     [SerializeField] private DialogueData dialogueData;
     [SerializeField] private PlayableDirector director;
     [SerializeField] private bool instant = false;
@@ -28,8 +27,8 @@ public class DialogueTrigger : Interactable
 
         if (instant)
         {
-            dialogueController?.ActivateDialogue(dialogueData, this);
-            dialogueController?.NextAction();
+            UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
+            UIManager.Instance.Get<DialogueController>().NextAction();
         }
         else
         {
@@ -67,7 +66,7 @@ public class DialogueTrigger : Interactable
         }
         else
         {
-            dialogueController?.ActivateDialogue(dialogueData, this);
+            UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
         }
     }
 
@@ -97,8 +96,8 @@ public class DialogueTrigger : Interactable
 
         director.stopped -= OnPlaybackStopped;
 
-        dialogueController?.ActivateDialogue(dialogueData, this);
-        dialogueController?.NextAction();
+        UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
+        UIManager.Instance.Get<DialogueController>().NextAction();
     }
 
     public void ChangeMaterial()
@@ -111,6 +110,6 @@ public class DialogueTrigger : Interactable
 
     public void ActivateDialogue()
     {
-        dialogueController?.ActivateDialogue(dialogueData, this);
+        UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
     }
 }

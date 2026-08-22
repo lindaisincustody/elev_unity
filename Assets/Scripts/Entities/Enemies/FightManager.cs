@@ -86,7 +86,7 @@ public class FightManager : MonoBehaviour
 
     private void CompleteFight()
     {
-        GlyphBook.instance.TranslateGlyphs();
+        UIManager.Instance.Get<GlyphBook>().TranslateGlyphs();
         SanityBar.instance.SanityToMax();
 
         _activeFight.CompleteFight();
@@ -96,10 +96,10 @@ public class FightManager : MonoBehaviour
     {
         if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld) return;
 
-        GlyphBook.instance.ActivateBook();
+        UIManager.Instance.Get<GlyphBook>().ActivateBook();
         foreach (Enemy enemy in _activeEnemies)
         {
-            GlyphBook.instance.AddEnemy(enemy);
+            UIManager.Instance.Get<GlyphBook>().AddEnemy(enemy);
         }
     }
 

@@ -28,6 +28,4 @@ public class DrawingRigReferences : ScriptableObject
         layerName = "Drawing",
         sortingOrder = -1,
     };
-
-    public bool IsComplete => primaryLine?.prefab != null && secondaryLine?.prefab != null;
 }

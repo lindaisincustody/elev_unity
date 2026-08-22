@@ -4,14 +4,6 @@ using UnityEngine;
 
 public class AbilityCraftingInteractable : Interactable
 {
-    private AbilityCrafting abilityCrafting;
-
-    protected override void Start()
-    {
-        base.Start();
-        abilityCrafting = AbilityCrafting.Instance;
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -35,7 +27,7 @@ public class AbilityCraftingInteractable : Interactable
         if (playerIsInTrigger)
         {
             base.HandleInteract();
-            abilityCrafting.OpenPanel();
+            UIManager.Instance.Get<AbilityCrafting>().OpenPanel();
         }
     }
 }

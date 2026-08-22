@@ -5,7 +5,7 @@ using TMPro;
 public class PlayerCombat : Component
 {
     [SerializeField] Camera mainCamera;
-    [SerializeField] TextMeshProUGUI combatModeText;
+    private TextMeshProUGUI combatModeText;
     [SerializeField] float meleeAttackRange = 2f;
     [SerializeField] int meleeDamage = 5;
     [SerializeField] float meleeCooldown = 0.7f;
@@ -30,8 +30,8 @@ public class PlayerCombat : Component
 
     private void Start()
     {
-        if (combatModeText != null)
-            combatModeText.text = ""; // melee mode
+        combatModeText = UIManager.Instance.Get<HeaderCanvas>().CombatModeText;
+        combatModeText.text = "";
     }
 
     public Enemy GetNearestEnemy()
