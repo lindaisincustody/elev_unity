@@ -70,3 +70,13 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+
+# Office lock files
+~$*
+
+# Local run/debug artefacts
+/logRunSetup.txt
+/DebugInput.png
+
+# Wwise integration installers — re-downloadable from Audiokinetic
+/WwiseUnityIntegration_*_Src.zip
