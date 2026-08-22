@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(RawImage))]
@@ -39,7 +39,6 @@ public class DrawingZoneController : MonoBehaviour
     void Update()
     {
         bool drawing = letterDrawing != null && letterDrawing.IsDrawing;
-
         // ── Diagnostic: log whenever drawing state flips ──────────────────
         if (drawing != _wasDrawing)
         {
@@ -81,17 +80,6 @@ public class DrawingZoneController : MonoBehaviour
         {
             _mat.SetFloat("_FingerActive", 0f);
         }
-    }
-
-    /// <summary>
-    /// Called by NetworkPlayerSync when the local player spawns over the network
-    /// so the reveal/pulse animation reacts to the correct player's drawing state
-    /// (P2's LetterDrawing instead of the scene-placed P1 reference).
-    /// </summary>
-    public void SetLetterDrawing(LetterDrawing ld)
-    {
-        letterDrawing = ld;
-        Debug.Log($"[DZC] SetLetterDrawing → {(ld != null ? ld.gameObject.name : "NULL")}");
     }
 
     void OnDestroy()

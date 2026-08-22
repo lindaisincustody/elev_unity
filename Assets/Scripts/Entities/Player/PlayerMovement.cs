@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -124,16 +124,9 @@ public class PlayerMovement : Component
 
     void FixedUpdate()
     {
-        // ── Position-delta diagnostic ────────────────────────────────────────
-        // Log every FixedUpdate where movement is non-zero so we can see the
-        // ACTUAL world-space position change, not just what we asked for.
         if (movement.sqrMagnitude > 0.01f)
         {
             Vector2 delta = rb.position - _prevPos;
-            Debug.Log($"[PM.Fix2] GO={name}" +
-                      $"  input={movement:F2}" +
-                      $"  worldDelta={delta:F3}" +
-                      $"  pos={rb.position:F2}");
         }
         _prevPos = rb.position;
 

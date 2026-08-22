@@ -29,28 +29,10 @@ public class SmoothCameraFollow : MonoBehaviour
         defaultOrthoSize = gameCamera.orthographicSize;
     }
 
-    /// <summary>
-    /// Called by NetworkPlayerSync when the local player spawns over the network,
-    /// so the camera switches to follow the correct player on P2's device.
-    /// </summary>
-    public void SetPlayer(Transform newPlayer)
-    {
-        player = newPlayer;
-    }
-
     void FixedUpdate()
     {
-        // Multiplayer: always follow the LOCAL player's character.
-        // NetworkPlayerSync.Local is set in OnNetworkSpawn for the owner, so this
-        // self-heals even if SetPlayer() was missed due to a timing race.
-        if (NetworkPlayerSync.Local != null)
+        if (player == null)
         {
-            if (player != NetworkPlayerSync.Local.transform)
-                player = NetworkPlayerSync.Local.transform;
-        }
-        else if (player == null)
-        {
-            // Single-player fallback: grab Player.instance when available.
             if (Player.instance != null) player = Player.instance.transform;
             else return;
         }

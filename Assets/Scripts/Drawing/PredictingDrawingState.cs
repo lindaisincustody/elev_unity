@@ -218,7 +218,9 @@ public class PredictingDrawingState : IDrawingState
         float camAspect = zoneW / Mathf.Max(Screen.height, 1f);
         int rtH = Mathf.Clamp(Screen.height, 64, 2160);
         int rtW = Mathf.Clamp(Mathf.RoundToInt(rtH * camAspect), 64, 4096);
-        displayRT = new RenderTexture(rtW, rtH, 0, RenderTextureFormat.ARGB32);
+        // Depth must be non-zero: the URP render graph rejects a camera target
+        // texture whose Depth Stencil Format is None, even for a 2D-only camera.
+        displayRT = new RenderTexture(rtW, rtH, 24, RenderTextureFormat.ARGB32);
         displayRT.Create();
 
         var dispGO = new GameObject("DrawingDisplayCamera");
@@ -317,14 +319,6 @@ public class PredictingDrawingState : IDrawingState
         MatchSymbolWithPoem(prediction.predictedLabel);
         TriggerCorrectSparkle(secondaryLineRenderer);
         DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
-
-        // Broadcast the drawing result to the other player's device.
-        // Send the raw label (for AbilityActionRegistry) AND the pre-converted glyph
-        // (for the visual symbol) so the remote device needs no copy of latexToUnicode.
-        string glyph = latexToUnicode.ContainsKey(prediction.predictedLabel)
-            ? latexToUnicode[prediction.predictedLabel]
-            : prediction.predictedLabel;
-        NetworkPlayerSync.Local?.BroadcastDrawingResult(prediction.predictedLabel, glyph);
 
         output.Dispose();
     }
@@ -712,20 +706,6 @@ public class PredictingDrawingState : IDrawingState
         sym.localScale = targetScale;
         sym.localRotation = Quaternion.identity;
         tmp.color = baseColor;
-    }
-
-    /// <summary>
-    /// Re-assigns the display RenderTexture to <paramref name="display"/> so the
-    /// drawing camera's output appears in the correct RawImage.
-    ///
-    /// Call this after assigning LetterDrawing.drawingDisplay at runtime
-    /// (e.g. from NetworkPlayerSync.WireLetterDrawingReferences) because
-    /// InitializeCamera() runs in Start() before the scene reference is wired.
-    /// </summary>
-    public void RefreshDisplayTexture(UnityEngine.UI.RawImage display)
-    {
-        if (display != null && displayRT != null)
-            display.texture = displayRT;
     }
 
     public void Dispose()

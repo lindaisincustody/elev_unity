@@ -24,8 +24,6 @@ GameObject:
   - component: {fileID: 2997224443469270906}
   - component: {fileID: 7374925929689665054}
   - component: {fileID: 8468488059332638287}
-  - component: {fileID: 4894950884552192383}
-  - component: {fileID: 6982353179971992840}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -530,61 +528,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   trail: {fileID: 2388857520201769837}
   playerRenderer: {fileID: 2226871447008519275}
---- !u!114 &4894950884552192383
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 514501729019924183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.Netcode.Runtime::Unity.Netcode.NetworkObject
-  GlobalObjectIdHash: 3894436261
-  InScenePlacedSourceGlobalObjectIdHash: 3894436261
-  DeferredDespawnTick: 0
-  Ownership: 1
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 0
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
-  SyncOwnerTransformWhenParented: 1
-  AllowOwnerToParent: 0
---- !u!114 &6982353179971992840
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 514501729019924183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5e3436a3a6be28a4b964670264e3f1fe, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::NetworkPlayerSync
-  ShowTopMostFoldoutHeaderGroup: 1
-  playerTwoAnimator: {fileID: 22100000, guid: 1dd3186288fd34f43a87f58f8b49c3e4, type: 2}
-  playerTwoColor: {r: 1, g: 0.5990566, b: 0.87079316, a: 1}
-  SyncedHealth:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: 100
-  SyncedMovement:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: {x: 0, y: 0}
-  SyncedPosition:
-    UpdateTraits:
-      MinSecondsBetweenUpdates: 0
-      MaxSecondsBetweenUpdates: 0
-    m_InternalValue: {x: 0, y: 0, z: 0}
 --- !u!1 &1033117730231277173
 GameObject:
   m_ObjectHideFlags: 0

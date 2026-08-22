@@ -45,60 +45,34 @@ public class Player : Entity
 
     private void Awake()
     {
-        // In multiplayer two Player instances exist on this device (local + remote proxy).
-        // Only the first one to Awake sets the singleton; NetworkPlayerSync.OnNetworkSpawn()
-        // then re-assigns it to whichever object IsOwner == true (the local player).
-        // This prevents the remote proxy's Awake from stomping the host's own reference.
-        if (instance == null)
-            instance = this;
+        if (instance != null)
+            Debug.LogError("Double Player or singleton problem");
+
+        instance = this;
 
         dataManager = DataManager.Instance;
     }
 
     private void Start()
     {
-        // inputManager is an Inspector-assigned reference that is null on the spawned
-        // prefab clone (prefabs can't hold scene-object refs). Guard every access.
-        if (inputManager == null)
-            inputManager = GetComponent<InputManager>();
-
-        if (inputManager != null)
-            inputManager.OnPoem += OpenPoemBook;
-        else
-            Debug.LogWarning("[Player] inputManager is null — OnPoem will not fire. " +
-                             "Assign InputManager in the Player prefab Inspector.");
-
+        inputManager.OnPoem += OpenPoemBook;
         playerData = dataManager.GetPlayerData();
         SetUpPlayerData();
     }
 
     private void OnDestroy()
     {
-        if (inputManager != null)
-            inputManager.OnPoem -= OpenPoemBook;
+        inputManager.OnPoem -= OpenPoemBook;
     }
 
     private void SetUpPlayerData()
     {
         _inventory.AddGold(playerData.gold);
 
-        // Only restore the saved position for the scene-placed (P1) player.
-        // The network-spawned clone (P2) is positioned by PlayerSpawner at its
-        // spawn point; teleporting it here would place it at P1's last position.
-        var netObj = GetComponent<Unity.Netcode.NetworkObject>();
-        bool isNetworkSpawned = netObj != null && netObj.IsSpawned;
-        bool isLocalOwner     = netObj != null && netObj.IsOwner;
-
-        // Only apply saved position to the local P1 (host, not a spawned prefab).
-        // P1 is the scene-placed player: it has no NetworkObject yet when Start()
-        // first fires, OR it is the owner and has a saved position.
-        if (!isNetworkSpawned || (isLocalOwner && isNetworkSpawned))
+        Vector3? savedPosition = GetSavedScenePosition();
+        if (savedPosition.HasValue)
         {
-            Vector3? savedPosition = GetSavedScenePosition();
-            if (savedPosition.HasValue)
-            {
-                transform.position = savedPosition.Value;
-            }
+            transform.position = savedPosition.Value;
         }
     }
 

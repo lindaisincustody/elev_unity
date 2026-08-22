@@ -178,28 +178,16 @@ public class LetterDrawing : Component
     }
 
     // NOTE: Do NOT call EnhancedTouchSupport.Disable() here.
-    // EnhancedTouchSupport is a global, non-reference-counted flag.
-    // In multiplayer the remote-proxy LetterDrawing is disabled via
-    // letterDrawing.enabled = false (so its Update never runs — safe).
-    // Calling Disable() here would globally kill touch input for the
-    // local player's LetterDrawing as well, since both share the same
-    // process. EnhancedTouchSupport is properly balanced by
-    // NetworkPlayerSync.OnNetworkDespawn (which calls Disable once when
-    // the owner leaves). In single-player the subsystem stays enabled
-    // for the lifetime of the scene, which is harmless.
+    // EnhancedTouchSupport is a global, non-reference-counted flag shared by
+    // every component in the process (TouchJoystick, TouchDrawController, ...).
+    // Calling Disable() here would kill touch input for all of them. The
+    // subsystem stays enabled for the lifetime of the scene, which is harmless.
     private void OnDisable()
     {
-        // Do NOT disable EnhancedTouchSupport here.
-        // It is global and would break the local player's input in multiplayer.
-
-        // However, this LetterDrawing may have created a display/drawing camera
-        // before it was disabled, especially when a player prefab starts as local
-        // single-player and later becomes a remote/non-owner player.
-        //
-        // If we leave this camera alive, URP can still render it even though this
-        // LetterDrawing no longer updates. In multiplayer, that can cause an older
-        // inactive player's display camera to steal the render slot/depth from the
-        // active player's display camera.
+        // This LetterDrawing may have created a display/drawing camera before it
+        // was disabled. If we leave that camera alive, URP can still render it
+        // even though this LetterDrawing no longer updates, letting a stale
+        // camera steal the render slot/depth from the active one.
         if (drawingCamera != null)
         {
             drawingCamera.enabled = false;
@@ -456,17 +444,6 @@ public class LetterDrawing : Component
         drawingMode = previousMode;
         maxDrawDistance = int.MaxValue;
         ChangeState();
-    }
-
-    /// <summary>
-    /// Re-wires drawingDisplay.texture to the RenderTexture created by
-    /// PredictingDrawingState.  Call this after assigning drawingDisplay at
-    /// runtime (WireLetterDrawingReferences) because the texture assignment in
-    /// InitializeCamera ran before the scene reference existed.
-    /// </summary>
-    public void RefreshDrawingDisplayTexture()
-    {
-        predictingDrawingState?.RefreshDisplayTexture(drawingDisplay);
     }
 
     private void OnDestroy()
