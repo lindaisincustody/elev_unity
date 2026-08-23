@@ -19,9 +19,14 @@ public class Teleporter : Interactable
     [SerializeField] float scene_Y;
     [SerializeField] Transform position;
 
+    private SceneController sceneController;
+
     protected override void Start()
     {
         base.Start();
+
+        sceneController = UIManager.Instance.Get<SceneController>();
+
         if (!Unlocked)
             gameObject.SetActive(false);
 
@@ -69,13 +74,13 @@ public class Teleporter : Interactable
             if (teleport == Teleport.SameScene)
             {
                 if (position != null)
-                    StartCoroutine(SceneController.instance.LoadInScene(position.position.x, position.position.y));
+                    StartCoroutine(sceneController.LoadInScene(position.position.x, position.position.y));
                 else
-                    StartCoroutine(SceneController.instance.LoadInScene(scene_X, scene_Y));
+                    StartCoroutine(sceneController.LoadInScene(scene_X, scene_Y));
                 OnTeleport?.Invoke();
             }
             else if (teleport == Teleport.NewScene)
-                StartCoroutine(SceneController.instance.LoadScene(GetSceneName()));
+                StartCoroutine(sceneController.LoadScene(GetSceneName()));
         }
     }
 

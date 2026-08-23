@@ -249,7 +249,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f08253e4e26878a4aa66befdefdab9be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  virtualJoystick: {fileID: 0}
 --- !u!114 &938505823323063305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +271,7 @@ MonoBehaviour:
   - {fileID: 7374925929689665054}
   - {fileID: 8468488059332638287}
   InteractableUI: {fileID: 8420326837088205274}
+  <Animator>k__BackingField: {fileID: 6330455195613800542}
   spriteRenderer: {fileID: 2226871447008519275}
   playerMovement: {fileID: 7905350812563266831}
   inputManager: {fileID: 614701009068581888}
@@ -297,7 +297,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 0}
-  combatModeText: {fileID: 0}
   meleeAttackRange: 2
   meleeDamage: 20
   meleeCooldown: 0.4
@@ -526,6 +525,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 025f16aff55fb4245a303aa5dcb3c3b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <Light>k__BackingField: {fileID: 8666088299801794120}
   trail: {fileID: 2388857520201769837}
   playerRenderer: {fileID: 2226871447008519275}
 --- !u!1 &1033117730231277173

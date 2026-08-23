@@ -5,9 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-    private DataManager dataManager;
-    public static SceneController instance;
     [SerializeField] Animator transitionAnim;
+
+    private DataManager dataManager;
+
 
     private void Start()
     {

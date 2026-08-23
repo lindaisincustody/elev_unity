@@ -112,6 +112,8 @@ MonoBehaviour:
   sanityLight: {fileID: 0}
   PlayerAnimator: {fileID: 0}
   rippleMaterial: {fileID: 2100000, guid: 770db0076aa830142b4907f509e0e057, type: 2}
+  crteffectMaterial: {fileID: 2100000, guid: c99d49292b7766241a1b56b8e8f08adf, type: 2}
+  transitionSpeed: 3
 --- !u!1 &629682528435260878
 GameObject:
   m_ObjectHideFlags: 0

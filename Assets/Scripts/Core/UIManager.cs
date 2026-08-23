@@ -48,6 +48,9 @@ public class UIManager : MonoBehaviour
         rect.sizeDelta = Vector2.zero;
         rect.localScale = Vector3.one;
 
+        foreach (MonoBehaviour component in instance.GetComponents<MonoBehaviour>())
+            spawned[component.GetType()] = component;
+
         return instance;
     }
 }

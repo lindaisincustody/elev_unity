@@ -7,8 +7,15 @@ using UnityEngine.Rendering.Universal;
 
 public class SanityEffectHandler : MonoBehaviour
 {
-    public Volume globalVolume;
-    public Light2D sanityLight;
+    public Material rippleMaterial;
+    public Material crteffectMaterial;
+
+    private Light2D sanityLight;
+    private Animator playerAnimator;
+
+    private Volume globalVolume;
+
+    private DepthOfField depthOfField;
     private Vignette vignette;
     private ChromaticAberration chromaticAberration;
     private ColorAdjustments colorAdjustments;
@@ -16,11 +23,6 @@ public class SanityEffectHandler : MonoBehaviour
     private FilmGrain filmGrain;
     private Bloom bloom;
     private MotionBlur motionBlur;
-    public Animator PlayerAnimator;
-    private DepthOfField depthOfField;
-    public Material rippleMaterial;
-
-    public Material crteffectMaterial;
 
     private float timeElapsed;
 
@@ -47,23 +49,20 @@ public class SanityEffectHandler : MonoBehaviour
 
     private Coroutine crteffectCoroutine;
 
-    private void Awake()
-    {
-        if (SanityBar.instance != null)
-        {
-            SanityBar.instance.OnSanityValueChanged += OnSanityChange;
-        }
-    }
-
     private void Start()
     {
         LoadVolumeComponents();
         ResetEffects();
 
         IsPlayerInUnderworld = false;
-        PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
+        playerAnimator = Player.instance.Animator;
+        sanityLight = Player.instance.Get<PlayerVisuals>().Light;
+        playerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
 
-        displayedSanity = SanityBar.instance != null ? SanityBar.instance.currentSanity : 300f;
+        displayedSanity = SanityBar.instance.currentSanity;
+
+        SanityBar.instance.OnSanityValueChanged += OnSanityChange;
+        OnSanityChange(SanityBar.instance.currentSanity);
 
         StartCoroutine(UpdateEffectsBasedOnSanity());
     }
@@ -93,7 +92,7 @@ public class SanityEffectHandler : MonoBehaviour
             sanityLight.intensity = 2f;
         }
 
-        PlayerAnimator.SetBool("IsPlayerInUnderworldAnimation", IsPlayerInUnderworld);
+        playerAnimator.SetBool("IsPlayerInUnderworldAnimation", IsPlayerInUnderworld);
 
         TriggerCRTEffectTransition();
     }
@@ -224,6 +223,8 @@ public class SanityEffectHandler : MonoBehaviour
 
     private void LoadVolumeComponents()
     {
+        globalVolume = SceneEffectManager.Instance.GlobalVolume;
+
         globalVolume.profile.TryGet(out vignette);
         globalVolume.profile.TryGet(out chromaticAberration);
         globalVolume.profile.TryGet(out colorAdjustments);

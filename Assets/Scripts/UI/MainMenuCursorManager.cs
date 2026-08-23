@@ -13,12 +13,14 @@ public class MainMenuCursorManager : MonoBehaviour
     private bool isControlsPanelOpen = false;
 
     private DataManager dataManager;
+    private SceneController sceneController;
 
     private bool submit = false;
 
     private void Start()
     {
         dataManager = DataManager.Instance;
+        sceneController = UIManager.Instance.Get<SceneController>();
         cursor.ActivateCursor(uIElements.cursorElements, null);
     }
 
@@ -30,9 +32,9 @@ public class MainMenuCursorManager : MonoBehaviour
         submit = true;
         string lastScene = dataManager.GetLastScene();
         if (string.IsNullOrEmpty(lastScene))
-            StartCoroutine(SceneController.instance.LoadScene(Constants.SceneNames.TrainStation));
+            StartCoroutine(sceneController.LoadScene(Constants.SceneNames.TrainStation));
         else
-            StartCoroutine(SceneController.instance.LoadScene(lastScene));
+            StartCoroutine(sceneController.LoadScene(lastScene));
     }
 
     public void OpenControls()

@@ -9,14 +9,15 @@ public class PauseMenu : MonoBehaviour
     [SerializeField] CursorController cursor;
     [SerializeField] UIElementsHolder elements;
 
+    private SceneController sceneController;
     private InputManager playerInput;
 
 
     private void Start()
     {
-        if (Player.instance != null)
-            playerInput = Player.instance.GetInputManager;
-        playerInput = FindObjectOfType<InputManager>();
+        playerInput = Player.instance.GetInputManager;
+        sceneController = UIManager.Instance.Get<SceneController>();
+
         playerInput.OnCancel += PauseGame;
     }
 
@@ -39,7 +40,7 @@ public class PauseMenu : MonoBehaviour
     public void OpenMainMenu()
     {
         Time.timeScale = 1f;
-        StartCoroutine(SceneController.instance.LoadScene(Constants.SceneNames.MainMenu));
+        StartCoroutine(sceneController.LoadScene(Constants.SceneNames.MainMenu));
     }
 
     private void OnDestroy()

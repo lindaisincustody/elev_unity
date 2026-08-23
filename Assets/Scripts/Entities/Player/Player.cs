@@ -9,6 +9,7 @@ public class Player : Entity
 {
     [SerializeField] GameObject InteractableUI;
     [Header("Self-Referneces")]
+    [field: SerializeField] public Animator Animator { get; private set; }
     [SerializeField] public SpriteRenderer spriteRenderer;
     [SerializeField] PlayerMovement playerMovement;
     [SerializeField] InputManager inputManager;
@@ -21,7 +22,7 @@ public class Player : Entity
     private DataManager dataManager;
     public PlayerData playerData;
 
-    public static Player instance { get; set; }
+    public static Player instance { get; private set; }
     public InputManager GetInputManager => inputManager;
 
     public bool InDangerZone;

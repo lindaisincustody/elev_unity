@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class DrawingRigSpawner : MonoBehaviour
 {
-    [SerializeField] private LetterDrawing target;
+    private LetterDrawing target;
 
     private DrawingRigReferences references;
 
@@ -11,6 +11,7 @@ public class DrawingRigSpawner : MonoBehaviour
 
     public void Spawn()
     {
+        target = Player.instance.Get<LetterDrawing>();
         references = ConfigManager.Instance.DrawingRig;
 
         Primary = SpawnLine(references.primaryLine);

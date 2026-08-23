@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class PlayerVisuals : Component
 {
+    [field: SerializeField] public Light2D Light { get; private set; }
     [SerializeField] private TrailRenderer trail;
     [SerializeField] private SpriteRenderer playerRenderer;
 
