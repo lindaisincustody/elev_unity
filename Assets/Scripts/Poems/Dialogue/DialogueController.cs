@@ -38,10 +38,10 @@ public class DialogueController : MonoBehaviour
 
     private DialogueTrigger currentTrigger;
 
-    private void Start()
+    private void Awake()
     {
         player = Player.instance;
-        playerInput = player.GetInputManager;
+        playerInput = InputManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
         playerInput.OnInteract += NextAction;
         playerInput.OnUICancel += ExitDialogue;
@@ -58,9 +58,11 @@ public class DialogueController : MonoBehaviour
 
     public void ActivateDialogue(DialogueData newDialogueData, DialogueTrigger trigger)
     {
+        if (!UIManager.Instance.RequestOpen(this))
+            return;
+
         currentTrigger = trigger;
         dialogueData = newDialogueData;
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         currentDialogueLine = 0;
         StartCoroutine(SetDialogueActive());
         if (newDialogueData.dialogueType == DialogueType.Dialogue)
@@ -229,7 +231,7 @@ public class DialogueController : MonoBehaviour
     {
         if (!isDialogueActive && !isMinigamesBoxActive) return;
 
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
+        UIManager.Instance.NotifyClosed(this);
         isDialogueActive = false;
         dialogueData = null;
         currentDialogueLine = 0;

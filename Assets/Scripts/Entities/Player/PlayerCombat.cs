@@ -1,11 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using TMPro;
 
 public class PlayerCombat : Component
 {
     [SerializeField] Camera mainCamera;
-    private TextMeshProUGUI combatModeText;
     [SerializeField] float meleeAttackRange = 2f;
     [SerializeField] int meleeDamage = 5;
     [SerializeField] float meleeCooldown = 0.7f;
@@ -24,14 +23,8 @@ public class PlayerCombat : Component
     {
         player = GetComponent<Player>();
         animator = GetComponent<Animator>();
-        inputManager = player.GetInputManager;
+        inputManager = InputManager.Instance;
         inputManager.OnShoot += Shoot;
-    }
-
-    private void Start()
-    {
-        combatModeText = UIManager.Instance.Get<HeaderCanvas>().CombatModeText;
-        combatModeText.text = "";
     }
 
     public Enemy GetNearestEnemy()

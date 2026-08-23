@@ -26,7 +26,7 @@ public class AbilityCrafting : MonoBehaviour
         player = Player.instance;
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();
-        playerInput = player.GetInputManager;
+        playerInput = InputManager.Instance;
         playerInput.OnUICancel += ClosePanel;
     }
 
@@ -46,9 +46,10 @@ public class AbilityCrafting : MonoBehaviour
     {
         if (isCraftingOpen) return;
 
+        if (!UIManager.Instance.RequestOpen(this)) return;
+
         RefreshUI();
         UpdateCraftButton();
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         isCraftingOpen = true;
         craftingPanel.SetActive(true);
         craftingBG.SetActive(true);
@@ -60,11 +61,11 @@ public class AbilityCrafting : MonoBehaviour
         if (!isCraftingOpen) return;
 
         ReturnCraftItemsToInventory();
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
         craftingBG.SetActive(false);
         playerMovement.SetMovement(true);
+        UIManager.Instance.NotifyClosed(this);
     }
 
     public void Craft()

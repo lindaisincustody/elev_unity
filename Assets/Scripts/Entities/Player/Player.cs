@@ -12,7 +12,6 @@ public class Player : Entity
     [field: SerializeField] public Animator Animator { get; private set; }
     [SerializeField] public SpriteRenderer spriteRenderer;
     [SerializeField] PlayerMovement playerMovement;
-    [SerializeField] InputManager inputManager;
     [SerializeField] private GameObject poemAvailable;
     [SerializeField] private WordData[] wordsData;
     [SerializeField] private Collider2D bodyCollider;
@@ -23,7 +22,6 @@ public class Player : Entity
     public PlayerData playerData;
 
     public static Player instance { get; private set; }
-    public InputManager GetInputManager => inputManager;
 
     public bool InDangerZone;
     public bool InSafeZone;
@@ -56,14 +54,14 @@ public class Player : Entity
 
     private void Start()
     {
-        inputManager.OnPoem += OpenPoemBook;
+        InputManager.Instance.OnPoem += OpenPoemBook;
         playerData = dataManager.GetPlayerData();
         SetUpPlayerData();
     }
 
     private void OnDestroy()
     {
-        inputManager.OnPoem -= OpenPoemBook;
+        InputManager.Instance.OnPoem -= OpenPoemBook;
     }
 
     private void SetUpPlayerData()

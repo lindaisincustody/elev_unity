@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 3438065229502251464}
   - component: {fileID: 8258813671630947319}
   - component: {fileID: 23276845611745371}
-  - component: {fileID: 8762852080788992112}
+  - component: {fileID: 3523306356231875940}
+  - component: {fileID: 709220804637521774}
   m_Layer: 5
   m_Name: SanityBar
   m_TagString: Untagged
@@ -36,8 +37,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -1594, y: -966.37}
-  m_SizeDelta: {x: 376.024, y: 56.2872}
+  m_AnchoredPosition: {x: -1596.6, y: -898}
+  m_SizeDelta: {x: 396.0863, y: 58.2338}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8258813671630947319
 CanvasRenderer:
@@ -77,23 +78,39 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8762852080788992112
+--- !u!114 &3523306356231875940
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 505232307698590991}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9318668a09e7d0f44b749664008ae857, type: 3}
+  m_Script: {fileID: 11500000, guid: d3f408cc482261b4c8945e304dd211a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  <sanityEffectHandler>k__BackingField: {fileID: 709220804637521774}
   mask: {fileID: 9178857457889128665}
   fill: {fileID: 4236518128642888012}
-  color: {r: 0.94509804, g: 0.4745098, b: 0, a: 1}
-  currentExperience: 0
-  maxExperience: 300
+  color: {r: 0.05490196, g: 0.6, b: 1, a: 0}
+  currentSanity: 300
+  maxSanity: 300
+--- !u!114 &709220804637521774
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 505232307698590991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6ef9e843fafdc04cbc6b972f3f1029c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rippleMaterial: {fileID: 2100000, guid: 770db0076aa830142b4907f509e0e057, type: 2}
+  crteffectMaterial: {fileID: 2100000, guid: c99d49292b7766241a1b56b8e8f08adf, type: 2}
+  transitionSpeed: 3
 --- !u!1 &629682528435260878
 GameObject:
   m_ObjectHideFlags: 0
@@ -128,8 +145,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.25, y: 0.5}
-  m_SizeDelta: {x: -19.5, y: -27.5}
+  m_AnchoredPosition: {x: 7.25, y: 0}
+  m_SizeDelta: {x: -14.5, y: -26}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &236993437685608173
 CanvasRenderer:
@@ -152,7 +169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.94509804, g: 0.51204664, b: 0, a: 1}
+  m_Color: {r: 0.05490196, g: 0.6, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -241,7 +258,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.721
+  m_FillAmount: 0.75
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0

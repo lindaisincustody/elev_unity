@@ -24,10 +24,13 @@ public class InputManager : MonoBehaviour
     public event Action OnPoem = delegate { };
     public Vector2 inputVector { get; private set; }
 
+    public static InputManager Instance { get; private set; }
+
     Controls inputActions;
 
     private void Awake()
     {
+        Instance = this;
         inputActions = new Controls();
     }
 

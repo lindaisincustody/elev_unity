@@ -32,10 +32,7 @@ public class CursorController : MonoBehaviour
     private void Start()
     {
         player = Player.instance;
-        if (player != null)
-            playerInput = player.GetInputManager;
-        else
-            playerInput = FindObjectOfType<InputManager>();
+        playerInput = InputManager.Instance;
 
         playerInput.OnNavigate += OnNavigate;
         playerInput.OnSubmit += Sumbit;

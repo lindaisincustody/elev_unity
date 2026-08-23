@@ -36,8 +36,6 @@ public class LetterDrawing : Component
     [SerializeField] public NNModel model;
     [SerializeField] public RawImage renderTextureDisplay;
     [SerializeField] public TextMeshProUGUI currentLetterText;
-    [SerializeField] public TextMeshProUGUI poemTextDisplay;
-    [SerializeField, TextArea] public string poem = "Your poem text goes here.";
 
     [Header("Feedback FX")]
     public ParticleSystem sparkleEffectPrefab;
@@ -159,8 +157,6 @@ public class LetterDrawing : Component
         HeaderCanvas header = UIManager.Instance.Get<HeaderCanvas>();
         drawingDisplay = header.DrawingDisplay;
         renderTextureDisplay = header.RenderTextureDisplay;
-        currentLetterText = header.CurrentLetterText;
-        poemTextDisplay = header.PoemTextDisplay;
 
         predictingDrawingState = new PredictingDrawingState(this);
         paintingPathDrawingState = new PaintingPathDrawingState();

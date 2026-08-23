@@ -42,7 +42,7 @@ public class PlayerMovement : Component
 
     private void Awake()
     {
-        playerInput = GetComponent<InputManager>();
+        playerInput = InputManager.Instance;
         playerInput.OnDash += HandleDash;
 
         if (moveSound != null)

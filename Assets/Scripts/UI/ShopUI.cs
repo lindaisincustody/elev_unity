@@ -15,7 +15,7 @@ public class ShopUI : MonoBehaviour
     void Start()
     {
         player = Player.instance;
-        playerInput = player.GetInputManager;
+        playerInput = InputManager.Instance;
 
         playerInput.OnUICancel += ExitShop;
     }
@@ -24,16 +24,18 @@ public class ShopUI : MonoBehaviour
     {
         if (!panel.activeSelf)
             return;
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
         panel.SetActive(false);
         player.SetMovement(true);
         itemsSelection.SetShopOpenState(false);
+        UIManager.Instance.NotifyClosed(this);
     }
 
     public void ShowShop()
     {
+        if (!UIManager.Instance.RequestOpen(this))
+            return;
+
         UpdateGoldText();
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
         panel.SetActive(true);
         player.SetMovement(false);
         itemsSelection.SetShopOpenState(true);

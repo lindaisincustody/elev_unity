@@ -10,7 +10,7 @@ public abstract class Interactable : MonoBehaviour
     protected virtual void Start()
     {
         player = Player.instance;
-        player.GetInputManager.OnInteract += HandleInteract;
+        InputManager.Instance.OnInteract += HandleInteract;
     }
 
     protected virtual void HandleInteract() {
@@ -21,6 +21,6 @@ public abstract class Interactable : MonoBehaviour
     protected void OnDestroy()
     {
         player = Player.instance;
-        player.GetInputManager.OnInteract -= HandleInteract;
+        InputManager.Instance.OnInteract -= HandleInteract;
     }
 }

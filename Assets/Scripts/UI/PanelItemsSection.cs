@@ -28,7 +28,7 @@ public class PanelItemsSection : MonoBehaviour
     void Start()
     {
         player = Player.instance;
-        playerInput = player.GetInputManager;
+        playerInput = InputManager.Instance;
         //playerInput.OnNavigate += OnNavigate;
        // playerInput.OnSubmit += Buy;
 

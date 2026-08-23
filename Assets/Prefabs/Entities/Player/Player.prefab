@@ -14,7 +14,6 @@ GameObject:
   - component: {fileID: 6418275811729181238}
   - component: {fileID: 7905350812563266831}
   - component: {fileID: 6330455195613800542}
-  - component: {fileID: 614701009068581888}
   - component: {fileID: 938505823323063305}
   - component: {fileID: 5376793493941146557}
   - component: {fileID: 8454522013865968226}
@@ -237,18 +236,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &614701009068581888
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 514501729019924183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f08253e4e26878a4aa66befdefdab9be, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &938505823323063305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -274,7 +261,6 @@ MonoBehaviour:
   <Animator>k__BackingField: {fileID: 6330455195613800542}
   spriteRenderer: {fileID: 2226871447008519275}
   playerMovement: {fileID: 7905350812563266831}
-  inputManager: {fileID: 614701009068581888}
   poemAvailable: {fileID: 0}
   wordsData:
   - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}

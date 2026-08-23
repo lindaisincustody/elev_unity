@@ -42,7 +42,7 @@ public class PoemMenuController : MonoBehaviour
     void Start()
     {
         player = Player.instance;
-        playerInput = player.GetInputManager;
+        playerInput = InputManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
 
         playerInput.OnInteract += OpenNextPage;
@@ -58,7 +58,9 @@ public class PoemMenuController : MonoBehaviour
         if (!_canBeTriggered)
             return;
 
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(false);
+        if (!UIManager.Instance.RequestOpen(this))
+            return;
+
         //poemAI.SendRequest(wordsData);
         isBookActive = true;
         _canBeTriggered = false;
@@ -117,7 +119,7 @@ public class PoemMenuController : MonoBehaviour
         playerMovement.SetMovement(true);
         yield return new WaitForSeconds(2f);
         bookFlipper.FlipLeftPage();
-        UIManager.Instance.Get<InventoryUI>().CanOpenInventory(true);
+        UIManager.Instance.NotifyClosed(this);
         yield return new WaitForSeconds(3f);
         wordFiller.EnableWordChoosing(false);
         _canBeTriggered = true;

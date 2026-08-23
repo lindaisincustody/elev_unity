@@ -106,7 +106,6 @@ public class PredictingDrawingState : IDrawingState
         InitializeCamera();
         InitializeModel();
         InitializeFX();
-        UpdatePoemDisplay();
 
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
         letterDrawing.lineRenderer.useWorldSpace = true;
@@ -250,7 +249,10 @@ public class PredictingDrawingState : IDrawingState
         letterDrawing.drawingCamera = displayCamera;
 
         if (letterDrawing.drawingDisplay != null)
+        {
             letterDrawing.drawingDisplay.texture = displayRT;
+            letterDrawing.drawingDisplay.enabled = true;
+        }
 
         Debug.Log($"[PDS] InitializeCamera for '{letterDrawing.gameObject.name}'" +
                   $"  rtW={rtW}  rtH={rtH}  camAspect={camAspect:F3}" +
@@ -265,34 +267,6 @@ public class PredictingDrawingState : IDrawingState
         prediction = new Prediction();
     }
 
-    private void UpdatePoemDisplay()
-    {
-        while (currentLetterIndex < letterDrawing.poem.Length &&
-               (letterDrawing.poem[currentLetterIndex] == ' ' || !char.IsLetter(letterDrawing.poem[currentLetterIndex])))
-        {
-            currentLetterIndex++;
-        }
-
-        if (currentLetterIndex < letterDrawing.poem.Length)
-        {
-            string currentTargetLetter = letterDrawing.poem[currentLetterIndex].ToString();
-            letterDrawing.currentLetterText.text = $"{currentTargetLetter}";
-        }
-        else
-        {
-            letterDrawing.currentLetterText.text = "Poem completed!";
-        }
-
-        string before = letterDrawing.poem.Substring(0, currentLetterIndex);
-        string highlighted = currentLetterIndex < letterDrawing.poem.Length
-            ? $"<color=#000000><b>{letterDrawing.poem[currentLetterIndex]}</b></color>"
-            : "";
-        string after = currentLetterIndex + 1 < letterDrawing.poem.Length
-            ? $"<color=#00000080>{letterDrawing.poem.Substring(currentLetterIndex + 1)}</color>"
-            : "";
-
-        letterDrawing.poemTextDisplay.text = before + highlighted + after;
-    }
 
     public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
     {
@@ -712,6 +686,12 @@ public class PredictingDrawingState : IDrawingState
     {
         worker?.Dispose();
         worker = null;
+
+        if (letterDrawing.drawingDisplay != null)
+        {
+            letterDrawing.drawingDisplay.enabled = false;
+            letterDrawing.drawingDisplay.texture = null;
+        }
 
         if (mlCamera != null)      { GameObject.Destroy(mlCamera.gameObject);      mlCamera      = null; }
         if (displayCamera != null) { GameObject.Destroy(displayCamera.gameObject); displayCamera = null; }

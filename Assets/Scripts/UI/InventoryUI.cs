@@ -35,7 +35,6 @@ public class InventoryUI : MonoBehaviour
     private PlayerMovement playerMovement;
 
     private bool isInventoryOpen = false;
-    private bool canOpenInventory = true;
 
     private int selectedIndex = 0;
     private const int numberOfColumns = 4;
@@ -44,7 +43,7 @@ public class InventoryUI : MonoBehaviour
     {
         player = Player.instance;
         dataManager = DataManager.Instance;
-        playerInput = player.GetInputManager;
+        playerInput = InputManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();
 
@@ -59,11 +58,6 @@ public class InventoryUI : MonoBehaviour
 
     public void ToggleInventory()
     {
-        if (!canOpenInventory)
-        {
-            return;
-        }
-
         if (isInventoryOpen)
         {
             CloseInventory();
@@ -77,6 +71,11 @@ public class InventoryUI : MonoBehaviour
     public void OpenInventory()
     {
         if (isInventoryOpen)
+        {
+            return;
+        }
+
+        if (!UIManager.Instance.RequestOpen(this))
         {
             return;
         }
@@ -99,11 +98,7 @@ public class InventoryUI : MonoBehaviour
         inventoryPanel.SetActive(false);
         inventoryBG.SetActive(false);
         playerMovement.SetMovement(true);
-    }
-
-    public void CanOpenInventory(bool canOpen)
-    {
-        canOpenInventory = canOpen;
+        UIManager.Instance.NotifyClosed(this);
     }
 
     private void RefreshUI()

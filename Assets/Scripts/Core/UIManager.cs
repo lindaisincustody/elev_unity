@@ -4,14 +4,23 @@ using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
+    [Serializable]
+    public class UIEntry
+    {
+        public GameObject prefab;
+        public bool stackable;
+    }
+
     public static UIManager Instance { get; private set; }
 
     [SerializeField] private UIRoot rootPrefab;
-    [SerializeField] private List<GameObject> spawnOnAwake = new List<GameObject>();
-    [SerializeField] private List<GameObject> uiPrefabs = new List<GameObject>();
+    [SerializeField] private List<UIEntry> spawnOnAwake = new List<UIEntry>();
+    [SerializeField] private List<UIEntry> uiPrefabs = new List<UIEntry>();
 
     private UIRoot root;
     private readonly Dictionary<Type, UnityEngine.Component> spawned = new Dictionary<Type, UnityEngine.Component>();
+    private readonly Dictionary<Type, bool> stackable = new Dictionary<Type, bool>();
+    private readonly List<UnityEngine.Component> openPanels = new List<UnityEngine.Component>();
 
 
     private void Awake()
@@ -20,8 +29,8 @@ public class UIManager : MonoBehaviour
         root = Instantiate(rootPrefab, transform, false);
         root.name = rootPrefab.name;
 
-        foreach (GameObject prefab in spawnOnAwake)
-            Spawn(prefab);
+        foreach (UIEntry entry in spawnOnAwake)
+            Spawn(entry);
     }
 
     public T Get<T>() where T : UnityEngine.Component
@@ -31,15 +40,40 @@ public class UIManager : MonoBehaviour
         if (spawned.TryGetValue(type, out UnityEngine.Component existing))
             return (T)existing;
 
-        T component = Spawn(uiPrefabs.Find(p => p.GetComponent<T>())).GetComponent<T>();
+        T component = Spawn(uiPrefabs.Find(e => e.prefab.GetComponent<T>())).GetComponent<T>();
         spawned[type] = component;
         return component;
     }
 
-    private GameObject Spawn(GameObject prefab)
+    public bool RequestOpen(UnityEngine.Component ui)
     {
-        GameObject instance = Instantiate(prefab, root.Holder, false);
-        instance.name = prefab.name;
+        if (openPanels.Contains(ui))
+            return true;
+
+        foreach (UnityEngine.Component open in openPanels)
+        {
+            if (!stackable[open.GetType()])
+                return false;
+        }
+
+        openPanels.Add(ui);
+        return true;
+    }
+
+    public void NotifyClosed(UnityEngine.Component ui)
+    {
+        openPanels.Remove(ui);
+    }
+
+    public bool IsOpen(UnityEngine.Component ui)
+    {
+        return openPanels.Contains(ui);
+    }
+
+    private GameObject Spawn(UIEntry entry)
+    {
+        GameObject instance = Instantiate(entry.prefab, root.Holder, false);
+        instance.name = entry.prefab.name;
 
         RectTransform rect = instance.GetComponent<RectTransform>();
         rect.anchorMin = Vector2.zero;
@@ -49,7 +83,10 @@ public class UIManager : MonoBehaviour
         rect.localScale = Vector3.one;
 
         foreach (MonoBehaviour component in instance.GetComponents<MonoBehaviour>())
+        {
             spawned[component.GetType()] = component;
+            stackable[component.GetType()] = entry.stackable;
+        }
 
         return instance;
     }
