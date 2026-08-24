@@ -1,12 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 using Cinemachine;
 
 [DisallowMultipleComponent]
 [RequireComponent(typeof(CinemachineVirtualCamera))]
 public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Transform player;
 
     [Header("Cursor Pull")]
     [Range(0f, 1f)]
@@ -22,6 +20,7 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     [SerializeField] private float zoomSpeed = 3f;
 
     private Camera unityCam;
+    private Transform player;
     private CinemachineVirtualCamera vcam;
     private CinemachineFramingTransposer framing;
 
@@ -34,8 +33,7 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     {
         vcam = GetComponent<CinemachineVirtualCamera>();
 
-        if (player == null && Player.instance != null)
-            player = Player.instance.transform;
+        player = Player.instance.transform;
 
         vcam.Follow = player;
 

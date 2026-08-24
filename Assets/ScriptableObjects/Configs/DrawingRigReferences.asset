@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a684e787393a41747e19c8d3174fd56, type: 3}
   m_Name: DrawingRigReferences
   m_EditorClassIdentifier: Assembly-CSharp::DrawingRigReferences
+  cameraRig: {fileID: 4611263551097482303, guid: 2b8e5d1c47a3406fb9c2e7d0518fa64c, type: 3}
   primaryLine:
     prefab: {fileID: 2524244512325843035, guid: cc9111edd6d19d044b72046e8d6a576b, type: 3}
     instanceName: LineRenderer

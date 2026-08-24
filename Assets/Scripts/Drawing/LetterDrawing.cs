@@ -14,16 +14,6 @@ public class LetterDrawing : Component
     private DrawingMode previousMode;
 
     private IDrawingState currentState;
-    [Header("Camera (assign in Inspector!)")]
-    [Tooltip("The gameplay camera that renders the world. Do NOT rely on Camera.main.")]
-    [SerializeField] public Camera gameplayCamera;
-
-    [Header("Debug")]
-    [SerializeField] private Text debugText;   // optional UI Text for live touch values
-    [Header("General")]
-    [SerializeField] public LineRenderer lineRenderer;
-    [SerializeField] public LineRenderer secondaryLineRenderer;
-
 
     [Header("Predictions")]
     [SerializeField] public Material groundMaterial;
@@ -93,12 +83,10 @@ public class LetterDrawing : Component
 
     [HideInInspector] public int drawVersion = 0;
 
-    /// <summary>
-    /// Fixed screen-space camera created by PredictingDrawingState.
-    /// Points are placed in its world space so they never drift when the
-    /// gameplay camera moves with the player.
-    /// </summary>
-    [HideInInspector] public Camera drawingCamera;
+    public Camera drawingCamera { get; private set; }
+
+    public LineRenderer lineRenderer { get; private set; }
+    public LineRenderer secondaryLineRenderer { get; private set; }
 
     private Action OnDraw;
 
@@ -106,50 +94,18 @@ public class LetterDrawing : Component
     private PredictingDrawingState predictingDrawingState;
     private PaintingFireDrawingState paintingFireDrawingState;
 
+    public DrawingCameraRig CameraRig { get; private set; }
+
+    private readonly PlayerDrawingRig drawingRig = new PlayerDrawingRig();
+
     private void Awake()
     {
-        // Ensure both LineRenderers exist AND live at scene root with position (0,0,0).
-        //
-        // WHY scene root matters:
-        //   P1 uses scene-root LineRenderer objects so their Transform.position = (0,0,0).
-        //   The display camera sits at (0,0,-10) with orthoSize=5 and only covers the area
-        //   near the world origin.  Unity computes LineRenderer.bounds from world vertices
-        //   (useWorldSpace=true) but internally still uses the renderer's own Transform for
-        //   camera frustum culling — if the LR is a child of Player(Clone) at the spawn
-        //   point (e.g. (3,-5,0)) the bounds test fails and the display camera culls the
-        //   LR even though the drawn stroke is inside its frustum.
-        //   Moving the LR to scene root (position=0,0,0) matches P1's working setup exactly.
-        //
-        // If the prefab already has LRs wired as child objects, reparent them to root.
-        // If they are null (scene refs that don't survive in the prefab), create fresh ones.
+        drawingRig.Spawn();
 
-        if (lineRenderer == null)
-        {
-            var go = new GameObject("LineRenderer_Dynamic");
-            // No SetParent — stays at scene root, position (0,0,0).
-            lineRenderer = go.AddComponent<LineRenderer>();
-            Debug.Log($"[LD] '{gameObject.name}': created dynamic primary LR at scene root.");
-        }
-        else if (lineRenderer.transform.parent != null)
-        {
-            // Already exists but is a prefab child — move to scene root.
-            lineRenderer.transform.SetParent(null);
-            lineRenderer.transform.position = Vector3.zero;
-            Debug.Log($"[LD] '{gameObject.name}': moved primary LR to scene root (was child of '{lineRenderer.transform.parent?.name ?? "?"}').");
-        }
-
-        if (secondaryLineRenderer == null)
-        {
-            var go = new GameObject("SecondaryLineRenderer_Dynamic");
-            secondaryLineRenderer = go.AddComponent<LineRenderer>();
-            Debug.Log($"[LD] '{gameObject.name}': created dynamic secondary LR at scene root.");
-        }
-        else if (secondaryLineRenderer.transform.parent != null)
-        {
-            secondaryLineRenderer.transform.SetParent(null);
-            secondaryLineRenderer.transform.position = Vector3.zero;
-            Debug.Log($"[LD] '{gameObject.name}': moved secondary LR to scene root (was child).");
-        }
+        lineRenderer = drawingRig.Primary;
+        secondaryLineRenderer = drawingRig.Secondary;
+        CameraRig = drawingRig.Cameras;
+        drawingCamera = CameraRig.DisplayCamera;
     }
 
     void Start()
@@ -170,13 +126,8 @@ public class LetterDrawing : Component
     {
         EnhancedTouchSupport.Enable();
 
-        if (drawingCamera != null)
-        {
-            drawingCamera.gameObject.SetActive(true);
-            drawingCamera.enabled = true;
-
-            Debug.Log($"[LD] '{gameObject.name}' re-enabled drawingCamera '{drawingCamera.name}'.");
-        }
+        drawingCamera.gameObject.SetActive(true);
+        drawingCamera.enabled = true;
     }
 
     // NOTE: Do NOT call EnhancedTouchSupport.Disable() here.
@@ -186,17 +137,9 @@ public class LetterDrawing : Component
     // subsystem stays enabled for the lifetime of the scene, which is harmless.
     private void OnDisable()
     {
-        // This LetterDrawing may have created a display/drawing camera before it
-        // was disabled. If we leave that camera alive, URP can still render it
-        // even though this LetterDrawing no longer updates, letting a stale
-        // camera steal the render slot/depth from the active one.
-        if (drawingCamera != null)
-        {
-            drawingCamera.enabled = false;
-            drawingCamera.gameObject.SetActive(false);
 
-            Debug.Log($"[LD] '{gameObject.name}' disabled drawingCamera '{drawingCamera.name}'.");
-        }
+        drawingCamera.enabled = false;
+        drawingCamera.gameObject.SetActive(false);
     }
 
     private void ChangeState()
@@ -220,23 +163,7 @@ public class LetterDrawing : Component
 
     void Update()
     {
-        if (debugText != null)
-        {
-            var sb = new System.Text.StringBuilder();
-            sb.AppendLine($"Screen: {Screen.width}x{Screen.height}");
-            sb.AppendLine($"Orient: {Screen.orientation}");
-            Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
-            if (cam != null)
-            {
-                sb.AppendLine($"Cam: {cam.name}  Ortho={cam.orthographic}  Size={cam.orthographicSize:0.0}");
-                sb.AppendLine($"CamPixels: {cam.pixelWidth}x{cam.pixelHeight}");
-            }
-            sb.AppendLine($"DrawZoneStart X: {Screen.width * drawZoneStartX:0}");
-            foreach (var t in EnhancedTouch.activeTouches)
-                sb.AppendLine($"T{t.touchId}: ({t.screenPosition.x:0},{t.screenPosition.y:0}) ph={t.phase}");
-            debugText.text = sb.ToString();
-        }
-
+        Debug.Log(drawingCamera);
         if (Input.GetMouseButtonDown(1))
         {
             StartDrawing();
@@ -265,7 +192,6 @@ public class LetterDrawing : Component
         // The display camera's clearFlags handle RT clearing each frame automatically.
     }
 
-    /// <summary>Add a point to the active stroke, given a screen-space position (mouse OR touch).</summary>
     private void AddPointAt(Vector2 screenPosition)
     {
         DrawingScreenPos = screenPosition;
@@ -286,11 +212,8 @@ public class LetterDrawing : Component
         }
         else
         {
-            // Fallback for non-Predicting modes: use the gameplay camera.
-            Camera cam = gameplayCamera != null ? gameplayCamera : Camera.main;
-            if (cam == null) { Debug.LogError("LetterDrawing: no camera!"); return; }
-            float depth = Mathf.Abs(cam.transform.position.z);
-            worldPos = cam.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, depth));
+            float depth = Mathf.Abs(Camera.main.transform.position.z);
+            worldPos = Camera.main.ScreenToWorldPoint(new Vector3(screenPosition.x, screenPosition.y, depth));
         }
 
         worldPos.z = 0;

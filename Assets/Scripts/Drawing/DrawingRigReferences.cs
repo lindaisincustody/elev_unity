@@ -3,6 +3,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "DrawingRigReferences", menuName = "Custom/Drawing Rig References")]
 public class DrawingRigReferences : ScriptableObject
 {
+    public DrawingCameraRig cameraRig;
+
     [System.Serializable]
     public class LineEntry
     {

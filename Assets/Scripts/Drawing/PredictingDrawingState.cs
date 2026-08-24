@@ -15,7 +15,6 @@ public class PredictingDrawingState : IDrawingState
 
     public Prediction prediction;
 
-    // Private fields for ML prediction.
     private RenderTexture mlRT;          // 96×96 B&W texture used for inference
     private Camera        mlCamera;      // moves to tightly frame each stroke for capture
     private RenderTexture displayRT;     // screen-resolution texture shown as UI overlay
@@ -109,39 +108,15 @@ public class PredictingDrawingState : IDrawingState
 
         letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
         letterDrawing.lineRenderer.useWorldSpace = true;
-        // Primary LR is invisible by default — only briefly enabled during ML capture.
-        // This prevents the thick white stroke from bleeding into the display overlay.
         letterDrawing.lineRenderer.enabled = false;
-        // Use startWidth/endWidth (absolute world-space values) instead of
-        // widthMultiplier so the result is independent of whatever baked curve
-        // value exists on the scene-placed or dynamically-created LR asset.
         letterDrawing.lineRenderer.widthMultiplier = 1f;
         letterDrawing.lineRenderer.startWidth      = 0.10f;
         letterDrawing.lineRenderer.endWidth        = 0.10f;
 
-        if (letterDrawing.secondaryLineRenderer != null)
-        {
-            letterDrawing.secondaryLineRenderer.useWorldSpace = true;
-            letterDrawing.secondaryLineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
-        }
-        mlCamera.cullingMask = LayerMask.GetMask("Drawing");
+        letterDrawing.secondaryLineRenderer.useWorldSpace = true;
+        letterDrawing.secondaryLineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
 
-        // ── Remove "Drawing" layer from the gameplay camera ──────────────────
-        // Both LRs are on "Drawing" and must only appear in the display-camera
-        // overlay. If the gameplay camera also sees "Drawing" the LRs show up
-        // as a blob in world space at (0,0,0) — exactly what causes the spikes.
-        Camera gameCam = letterDrawing.gameplayCamera != null
-                         ? letterDrawing.gameplayCamera : Camera.main;
-        if (gameCam != null)
-            gameCam.cullingMask &= ~LayerMask.GetMask("Drawing");
-
-        // Use inspector-assigned materials so no Shader.Find is needed at runtime.
-        // primaryLineMaterial  → white Unlit material (captured by render cam for ML)
-        // trippyTransparentMaterial → visual feedback material the player sees
-        if (letterDrawing.primaryLineMaterial != null)
-            letterDrawing.lineRenderer.material = letterDrawing.primaryLineMaterial;
-        else
-            Debug.LogError("LetterDrawing: primaryLineMaterial is not assigned. Drawing layer will be invisible.");
+        letterDrawing.lineRenderer.material = letterDrawing.primaryLineMaterial;
 
         Material feedbackMat = null;
         if (letterDrawing.trippyTransparentMaterial != null)
@@ -176,41 +151,20 @@ public class PredictingDrawingState : IDrawingState
         );
         sec.colorGradient = initG;
 
-        // Apply the inspector-tuned stroke width for the display camera's coordinate space.
-        // Use startWidth/endWidth (absolute world-space values) so the result is independent
-        // of whatever baked curve values exist on the LR asset.
-        if (letterDrawing.secondaryLineRenderer != null)
-        {
-            letterDrawing.secondaryLineRenderer.widthMultiplier = 1f;
-            letterDrawing.secondaryLineRenderer.startWidth      = letterDrawing.drawStrokeWidth;
-            letterDrawing.secondaryLineRenderer.endWidth        = letterDrawing.drawStrokeWidth;
-        }
+        letterDrawing.secondaryLineRenderer.widthMultiplier = 1f;
+        letterDrawing.secondaryLineRenderer.startWidth      = letterDrawing.drawStrokeWidth;
+        letterDrawing.secondaryLineRenderer.endWidth        = letterDrawing.drawStrokeWidth;
     }
 
     private void InitializeCamera()
     {
-        // ── ML capture camera (96×96, B&W, moves to centre each stroke) ──────
+        mlCamera = letterDrawing.CameraRig.MLCamera;
+        displayCamera = letterDrawing.CameraRig.DisplayCamera;
+
         mlRT = new RenderTexture(96, 96, 16, RenderTextureFormat.ARGB32);
         mlRT.Create();
+        mlCamera.targetTexture = mlRT;
 
-        var mlGO = new GameObject("DrawingMLCamera");
-        mlCamera = mlGO.AddComponent<Camera>();
-        mlCamera.orthographic    = true;
-        mlCamera.orthographicSize = 5f;
-        mlCamera.cullingMask     = LayerMask.GetMask("Drawing");
-        mlCamera.backgroundColor = Color.black;
-        mlCamera.clearFlags      = CameraClearFlags.SolidColor;
-        mlCamera.targetTexture   = mlRT;
-        mlCamera.enabled         = false;   // rendered on demand only
-        mlCamera.transform.position = new Vector3(0f, 0f, -10f);
-
-        var mlUrp = mlGO.AddComponent<UniversalAdditionalCameraData>();
-        mlUrp.renderType            = CameraRenderType.Base;
-        mlUrp.renderShadows         = false;
-        mlUrp.requiresColorOption   = CameraOverrideOption.Off;
-        mlUrp.requiresDepthOption   = CameraOverrideOption.Off;
-
-        // ── Fixed display camera (renders visual stroke to UI overlay) ────────
         // Derive RT from height × aspect so camera and RT always share the same
         // ratio — no horizontal squishing on landscape / high-DPI phones.
         float zoneW    = (1f - letterDrawing.drawZoneStartX) * Screen.width;
@@ -222,37 +176,12 @@ public class PredictingDrawingState : IDrawingState
         displayRT = new RenderTexture(rtW, rtH, 24, RenderTextureFormat.ARGB32);
         displayRT.Create();
 
-        var dispGO = new GameObject("DrawingDisplayCamera");
-        displayCamera = dispGO.AddComponent<Camera>();
-        displayCamera.orthographic     = true;
-        displayCamera.orthographicSize = 5f;
         // camAspect matches the RT exactly — no stretch regardless of orientation.
-        displayCamera.aspect           = camAspect;
-        // Both LRs are on "Drawing" layer. The primary is kept renderer-disabled except
-        // during ML capture, so the display camera only ever sees the secondary (visual) LR.
-        displayCamera.cullingMask     = LayerMask.GetMask("Drawing");
-        displayCamera.backgroundColor = new Color(0f, 0f, 0f, 0f); // fully transparent
-        displayCamera.clearFlags      = CameraClearFlags.SolidColor;
-        displayCamera.targetTexture   = displayRT;
-        displayCamera.depth           = -20;    // render before everything else
-        displayCamera.enabled         = true;   // URP drives this automatically every frame
-        displayCamera.transform.position = new Vector3(0f, 0f, -10f);
+        displayCamera.aspect = camAspect;
+        displayCamera.targetTexture = displayRT;
 
-        var dispUrp = dispGO.AddComponent<UniversalAdditionalCameraData>();
-        dispUrp.renderType          = CameraRenderType.Base;
-        dispUrp.renderShadows       = false;
-        dispUrp.requiresColorOption = CameraOverrideOption.Off;
-        dispUrp.requiresDepthOption = CameraOverrideOption.Off;
-
-        // Expose the display camera so LetterDrawing.AddPointAt can use its
-        // viewport for coordinate mapping (independent of player movement).
-        letterDrawing.drawingCamera = displayCamera;
-
-        if (letterDrawing.drawingDisplay != null)
-        {
-            letterDrawing.drawingDisplay.texture = displayRT;
-            letterDrawing.drawingDisplay.enabled = true;
-        }
+        letterDrawing.drawingDisplay.texture = displayRT;
+        letterDrawing.drawingDisplay.enabled = true;
 
         Debug.Log($"[PDS] InitializeCamera for '{letterDrawing.gameObject.name}'" +
                   $"  rtW={rtW}  rtH={rtH}  camAspect={camAspect:F3}" +
@@ -402,7 +331,7 @@ public class PredictingDrawingState : IDrawingState
             tmp.transform.localPosition = Vector3.up * letterDrawing.symbolVerticalOffset;
         }
 
-        Camera refCam = letterDrawing.gameplayCamera != null ? letterDrawing.gameplayCamera : Camera.main;
+        Camera refCam = Camera.main;
         tmp.transform.rotation = refCam.transform.rotation;
 
         // When parented, localScale is in the parent's scale space.
@@ -693,8 +622,11 @@ public class PredictingDrawingState : IDrawingState
             letterDrawing.drawingDisplay.texture = null;
         }
 
-        if (mlCamera != null)      { GameObject.Destroy(mlCamera.gameObject);      mlCamera      = null; }
-        if (displayCamera != null) { GameObject.Destroy(displayCamera.gameObject); displayCamera = null; }
+        if (letterDrawing.CameraRig != null)
+            GameObject.Destroy(letterDrawing.CameraRig.gameObject);
+
+        mlCamera      = null;
+        displayCamera = null;
         if (mlRT != null)          { mlRT.Release();      mlRT      = null; }
         if (displayRT != null)     { displayRT.Release(); displayRT = null; }
     }

@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     {
         public GameObject prefab;
         public bool stackable;
+        public int sortOrder;
     }
 
     public static UIManager Instance { get; private set; }
@@ -81,6 +82,10 @@ public class UIManager : MonoBehaviour
         rect.anchoredPosition = Vector2.zero;
         rect.sizeDelta = Vector2.zero;
         rect.localScale = Vector3.one;
+
+        Canvas canvas = instance.GetComponent<Canvas>();
+        canvas.overrideSorting = true;
+        canvas.sortingOrder = entry.sortOrder;
 
         foreach (MonoBehaviour component in instance.GetComponents<MonoBehaviour>())
         {
