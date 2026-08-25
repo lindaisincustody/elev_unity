@@ -1,23 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : CoreService
 {
     public static EnemyManager Instance { get; private set; }
 
     private List<Enemy> enemies = new List<Enemy>();
 
-    private void Awake()
+    public override UniTask Initialize()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
+
+        return UniTask.CompletedTask;
     }
 
     public void RegisterEnemy(Enemy enemy)

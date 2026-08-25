@@ -43,6 +43,6 @@ public class DebugPanel : MonoBehaviour
 
     public void DeleteAllData()
     {
-        SavingWrapper.Instance.DeleteAllData();
+        SaveLoadService.Instance.EraseProgress();
     }
 }

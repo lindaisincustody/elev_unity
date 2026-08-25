@@ -1,12 +1,15 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class FrameRateManager : MonoBehaviour
+public class FrameRateManager : CoreService
 {
     [SerializeField] private int targetFPS = 120;
 
-    private void Awake()
+    public override UniTask Initialize()
     {
         QualitySettings.vSyncCount = 0;
         Application.targetFrameRate = targetFPS;
+
+        return UniTask.CompletedTask;
     }
 }

@@ -15,15 +15,15 @@ public class Fight : MonoBehaviour
 
     private void Start()
     {
-        PlayerData playerData = SavingWrapper.Instance.LoadPlayerData();
+        PlayerSnapshot playerSnapshot = SaveLoadService.Instance.Get<GeneralSaveFile>().PlayerSnapshot;
         string lastFightId;
-        if (string.IsNullOrEmpty(playerData.lastFightID))
+        if (string.IsNullOrEmpty(playerSnapshot.LastFightId))
         {
             lastFightId = defaultFightId;
         }
         else
         {
-            lastFightId = playerData.lastFightID;
+            lastFightId = playerSnapshot.LastFightId;
         }
 
         if (lastFightId == fightID)
@@ -63,7 +63,8 @@ public class Fight : MonoBehaviour
 
         FightManager.Instance.SetUpFight(this, enemies);
 
-        Player.instance.playerData.lastFightID = fightID;
+        SaveLoadService.Instance.Get<GeneralSaveFile>().PlayerSnapshot.LastFightId = fightID;
+        SaveLoadService.Instance.SaveProgress();
     }
 
     public void CompleteFight()

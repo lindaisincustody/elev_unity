@@ -1,16 +1,19 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class AbilityActionRegistry : MonoBehaviour
+public class AbilityActionRegistry : CoreService
 {
     public static AbilityActionRegistry Instance { get; private set; }
 
     private Dictionary<string, Action> abilityActions = new Dictionary<string, Action>();
 
-    private void Awake()
+    public override UniTask Initialize()
     {
         Instance = this;
+
+        return UniTask.CompletedTask;
     }
 
     public void RegisterAction(string label, Action action)

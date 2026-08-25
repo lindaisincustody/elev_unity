@@ -1,6 +1,7 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class SoundsHolder : MonoBehaviour
+public class SoundsHolder : CoreService
 {
     // Singleton instance
     private static SoundsHolder instance;
@@ -27,8 +28,10 @@ public class SoundsHolder : MonoBehaviour
         }
     }
 
-    private void Awake()
+    public override UniTask Initialize()
     {
         SoundManager.Initialize();
+
+        return UniTask.CompletedTask;
     }
 }

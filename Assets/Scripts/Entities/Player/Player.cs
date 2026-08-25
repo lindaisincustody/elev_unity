@@ -18,8 +18,7 @@ public class Player : Entity
 
     public float SpecialSymbolChance { get; set; }
 
-    private DataManager dataManager;
-    public PlayerData playerData;
+    private GeneralSaveFile saveFile;
 
     public static Player instance { get; private set; }
 
@@ -49,30 +48,18 @@ public class Player : Entity
 
         instance = this;
 
-        dataManager = DataManager.Instance;
+        saveFile = SaveLoadService.Instance.Get<GeneralSaveFile>();
     }
 
     private void Start()
     {
         InputManager.Instance.OnPoem += OpenPoemBook;
-        playerData = dataManager.GetPlayerData();
-        SetUpPlayerData();
+        _inventory.AddGold(saveFile.PlayerSnapshot.Gold);
     }
 
     private void OnDestroy()
     {
         InputManager.Instance.OnPoem -= OpenPoemBook;
-    }
-
-    private void SetUpPlayerData()
-    {
-        _inventory.AddGold(playerData.gold);
-
-        Vector3? savedPosition = GetSavedScenePosition();
-        if (savedPosition.HasValue)
-        {
-            transform.position = savedPosition.Value;
-        }
     }
 
     public void ToggleGhostForm()
@@ -90,8 +77,8 @@ public class Player : Entity
     {
         _inventory.AddGold(goldAmount);
 
-        playerData.gold = _inventory.GetGold();
-        dataManager.SavePlayerData(playerData);
+        saveFile.PlayerSnapshot.Gold = _inventory.GetGold();
+        SaveLoadService.Instance.SaveProgress();
     }
 
     public int GetGold()
@@ -115,8 +102,8 @@ public class Player : Entity
 
     private void LevelUp()
     {
-        playerData.currentLevel++;
-        dataManager.SavePlayerData(playerData);
+        saveFile.PlayerSnapshot.CurrentLevel++;
+        SaveLoadService.Instance.SaveProgress();
         ExperienceBar.instance.currentExperience = 0;
         ExperienceBar.instance.maxExperience += 100;
 
@@ -126,15 +113,18 @@ public class Player : Entity
     private void OpenPoemBook()
     {
         poemAvailable.SetActive(false);
-        if (playerData.currentLevel > playerData.poemsUsed)
+
+        PlayerSnapshot player = saveFile.PlayerSnapshot;
+
+        if (player.CurrentLevel > player.PoemsUsed)
         {
-            int poemToOpen = playerData.currentLevel;
-            if (playerData.currentLevel > wordsData.Length - 1)
+            int poemToOpen = player.CurrentLevel;
+            if (player.CurrentLevel > wordsData.Length - 1)
             {
                 poemToOpen = wordsData.Length - 1;
             }
-            playerData.poemsUsed++;
-            dataManager.SavePlayerData(playerData);
+            player.PoemsUsed++;
+            SaveLoadService.Instance.SaveProgress();
             UIManager.Instance.Get<PoemMenuController>().OpenPoemBook(wordsData[poemToOpen]);
         }
     }
@@ -143,7 +133,7 @@ public class Player : Entity
     {
         _inventory.AddGoldMultiplier(attribute, multiplier);
 
-        dataManager.SavePlayerData(playerData);
+        SaveLoadService.Instance.SaveProgress();
     }
 
     public float GetGoldMultiplier(Attribute attribute)
@@ -172,52 +162,18 @@ public class Player : Entity
 
     public void SaveCurrentScenePosition()
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-        var scenePosition = playerData.scenePositions.Find(sp => sp.sceneName == currentScene);
-        if (scenePosition != null)
-        {
-            scenePosition.lastPos = transform.position;
-        }
-        else
-        {
-            playerData.scenePositions.Add(new ScenePosition { sceneName = currentScene, lastPos = transform.position });
-        }
-        dataManager.SavePlayerData(playerData);
+        saveFile.SceneSnapshot.SceneName = SceneManager.GetActiveScene().name;
+        saveFile.SceneSnapshot.PlayerPosition = transform.position;
+        SaveLoadService.Instance.SaveProgress();
     }
 
-    // Method to get the saved position for the current scene
     public Vector3? GetSavedScenePosition()
     {
-        string currentScene = SceneManager.GetActiveScene().name;
-        var scenePosition = playerData.scenePositions.Find(sp => sp.sceneName == currentScene);
-        if (scenePosition != null)
-        {
-            return scenePosition.lastPos;
-        }
+        SceneSnapshot scene = saveFile.SceneSnapshot;
+
+        if (scene.SceneName == SceneManager.GetActiveScene().name)
+            return scene.PlayerPosition;
+
         return null;
     }
-}
-
-public class PlayerData
-{
-    public string lastScene;
-    public string lastFightID;
-
-    public int gold;
-
-    public int currentExperience = 0;
-    public int maxExperience = 300;
-    public int currentLevel = 0;
-    public int poemsUsed = 0;
-
-    public List<ScenePosition> scenePositions = new List<ScenePosition>();
-    public bool tutorialComplete = false;
-    public float pillTimeLeft = 0;
-}
-
-[System.Serializable]
-public class ScenePosition
-{
-    public string sceneName;
-    public Vector3 lastPos;
 }

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : CoreService
 {
     [Serializable]
     public class UIEntry
@@ -15,7 +16,7 @@ public class UIManager : MonoBehaviour
     public static UIManager Instance { get; private set; }
 
     [SerializeField] private UIRoot rootPrefab;
-    [SerializeField] private List<UIEntry> spawnOnAwake = new List<UIEntry>();
+    [SerializeField] private List<UIEntry> spawnOnStartup = new List<UIEntry>();
     [SerializeField] private List<UIEntry> uiPrefabs = new List<UIEntry>();
 
     private UIRoot root;
@@ -24,14 +25,16 @@ public class UIManager : MonoBehaviour
     private readonly List<UnityEngine.Component> openPanels = new List<UnityEngine.Component>();
 
 
-    private void Awake()
+    public override UniTask Initialize()
     {
         Instance = this;
         root = Instantiate(rootPrefab, transform, false);
         root.name = rootPrefab.name;
 
-        foreach (UIEntry entry in spawnOnAwake)
+        foreach (UIEntry entry in spawnOnStartup)
             Spawn(entry);
+
+        return UniTask.CompletedTask;
     }
 
     public T Get<T>() where T : UnityEngine.Component

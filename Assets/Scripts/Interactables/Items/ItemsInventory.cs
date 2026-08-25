@@ -1,57 +1,69 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
-using System.IO;
 using NaughtyAttributes;
 using UnityEngine;
 
-[System.Serializable]
-public class InventoryData
-{
-    public List<Item> items = new List<Item>();
-}
-
 public class ItemsInventory : Component
 {
-    public InventoryData inventoryData = new InventoryData();
+    private readonly List<Item> items = new List<Item>();
 
-    private SavingWrapper savingWrapper;
-
+    private GeneralSaveFile saveFile;
 
     private void Awake()
     {
-        savingWrapper = SavingWrapper.Instance;
-        inventoryData = savingWrapper.LoadInventory();
+        saveFile = SaveLoadService.Instance.Get<GeneralSaveFile>();
+        LoadItems();
     }
 
     public void AddItem(Item newItem)
     {
-        inventoryData.items.Add(newItem);
-        savingWrapper.SaveInventory(inventoryData);
+        items.Add(newItem);
+        SaveItems();
     }
 
     [Button]
     public void DeleteItems()
     {
-        inventoryData.items.Clear();
-        savingWrapper.SaveInventory(inventoryData);
+        items.Clear();
+        SaveItems();
     }
 
     public void RemoveItem(Item itemToRemove)
     {
-        // Check if the item exists in the inventory
-        if (inventoryData.items.Contains(itemToRemove))
-        {
-            inventoryData.items.Remove(itemToRemove);
-            savingWrapper.SaveInventory(inventoryData); // Save changes
-        }
-        else
-        {
-            Debug.LogWarning("Attempted to remove an item not present in the inventory.");
-        }
+        items.Remove(itemToRemove);
+        SaveItems();
     }
 
     public List<Item> GetAllItems()
     {
-        return inventoryData.items;
+        return items;
+    }
+
+    private void SaveItems()
+    {
+        List<string> itemIds = saveFile.InventorySnapshot.ItemIds;
+        itemIds.Clear();
+
+        foreach (Item item in items)
+            itemIds.Add(item.itemId);
+
+        SaveLoadService.Instance.SaveProgress();
+    }
+
+    private void LoadItems()
+    {
+        Item[] allItems = Resources.LoadAll<Item>("Items");
+
+        items.Clear();
+
+        foreach (string itemId in saveFile.InventorySnapshot.ItemIds)
+        {
+            Item item = Array.Find(allItems, x => x.itemId == itemId);
+
+            if (item != null)
+                items.Add(item);
+            else
+                Debug.LogWarning("Item with itemId " + itemId + " not found in Resources.");
+        }
     }
 }

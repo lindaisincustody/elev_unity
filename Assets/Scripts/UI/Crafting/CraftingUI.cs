@@ -30,7 +30,6 @@ public class CraftingUI : MonoBehaviour
 
     private Player player;
     private ItemsInventory itemsInventory;
-    private DataManager dataManager;
     private PlayerMovement playerMovement;
     private InputManager playerInput;
 
@@ -39,7 +38,6 @@ public class CraftingUI : MonoBehaviour
     private void Start()
     {
         player = Player.instance;
-        dataManager = DataManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();
         playerInput = InputManager.Instance;

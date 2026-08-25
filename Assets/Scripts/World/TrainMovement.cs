@@ -19,7 +19,8 @@ public class TrainMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
         currentVelocity = initialSpeed; // Initialize current velocity
         cameraShake = Camera.main.GetComponent<CameraShake>(); // Get the CameraShake component from the main camera
-        if (DataManager.Instance.GetPlayerData().tutorialComplete)
+        PlayerSnapshot playerSnapshot = SaveLoadService.Instance.Get<GeneralSaveFile>().PlayerSnapshot;
+        if (playerSnapshot.TutorialComplete)
         {
             Player.instance.ShowPlayer(true);
             gameObject.SetActive(false);
@@ -28,7 +29,8 @@ public class TrainMovement : MonoBehaviour
         else
         {
             Player.instance.ShowPlayer(false);
-            DataManager.Instance.CompleteTutorial();
+            playerSnapshot.TutorialComplete = true;
+            SaveLoadService.Instance.SaveProgress();
             SoundManager.PlaySound2D(SoundManager.Sound.TrainComing);
         }
     }

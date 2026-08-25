@@ -5,7 +5,6 @@ using Unity.Barracuda;
 using UnityEngine;
 using UnityEngine.InputSystem.EnhancedTouch;
 using UnityEngine.UI;
-using EnhancedTouch = UnityEngine.InputSystem.EnhancedTouch.Touch;
 
 public class LetterDrawing : Component
 {
@@ -21,11 +20,7 @@ public class LetterDrawing : Component
     [SerializeField] public Material primaryLineMaterial;
     [Tooltip("Your Custom/TrippyTransparent material — what the player sees as the stroke.")]
     [SerializeField] public Material trippyTransparentMaterial;
-    [Tooltip("RawImage overlay on top of DrawingZoneGrid — PredictingDrawingState fills its texture at runtime.")]
-    [SerializeField] public RawImage drawingDisplay;
     [SerializeField] public NNModel model;
-    [SerializeField] public RawImage renderTextureDisplay;
-    [SerializeField] public TextMeshProUGUI currentLetterText;
 
     [Header("Feedback FX")]
     public ParticleSystem sparkleEffectPrefab;
@@ -87,6 +82,9 @@ public class LetterDrawing : Component
 
     public LineRenderer lineRenderer { get; private set; }
     public LineRenderer secondaryLineRenderer { get; private set; }
+
+    public RawImage drawingDisplay { get; private set; }
+    public RawImage renderTextureDisplay  { get; private set; }
 
     private Action OnDraw;
 
@@ -163,7 +161,6 @@ public class LetterDrawing : Component
 
     void Update()
     {
-        Debug.Log(drawingCamera);
         if (Input.GetMouseButtonDown(1))
         {
             StartDrawing();

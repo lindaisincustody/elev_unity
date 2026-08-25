@@ -1,24 +1,20 @@
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-public class FightManager : MonoBehaviour
+public class FightManager : CoreService
 {
     public static FightManager Instance { get; private set; }
 
     private Fight _activeFight;
     private List<Enemy> _activeEnemies = new List<Enemy>();
 
-    private void Awake()
+    public override UniTask Initialize()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+        Instance = this;
+
+        return UniTask.CompletedTask;
     }
 
     private void Start()

@@ -5,16 +5,10 @@ using System.Linq;
 using NaughtyAttributes;
 using UnityEngine;
 
-[System.Serializable]
-public class PlayerAbilitiesData
-{
-    public List<string> abilityIds = new List<string>();
-}
-
 public class PlayerAbilities : Component
 {
     public List<Ability> Abilities = new();
-    private SavingWrapper savingWrapper;
+    private GeneralSaveFile saveFile;
 
     public Action<Ability> OnAbilityAdded;
     public Action<Ability> OnAbilityRemoved;
@@ -43,8 +37,7 @@ public class PlayerAbilities : Component
 
     private void Awake()
     {
-        //RemoveAll();
-        savingWrapper = SavingWrapper.Instance;
+        saveFile = SaveLoadService.Instance.Get<GeneralSaveFile>();
     }
 
     public void Init()
@@ -97,11 +90,29 @@ public class PlayerAbilities : Component
 
     private void SaveAbilities()
     {
-        savingWrapper.SavePlayerAbilities(Abilities);
+        List<string> abilityIds = saveFile.AbilitiesSnapshot.AbilityIds;
+        abilityIds.Clear();
+
+        foreach (Ability ability in Abilities)
+            abilityIds.Add(ability.abilityId);
+
+        SaveLoadService.Instance.SaveProgress();
     }
 
     private void LoadAbilities()
     {
-        Abilities = savingWrapper.LoadPlayerAbilities();
+        Ability[] resourceAbilities = Resources.LoadAll<Ability>("Abilities");
+
+        Abilities.Clear();
+
+        foreach (string abilityId in saveFile.AbilitiesSnapshot.AbilityIds)
+        {
+            Ability ability = Array.Find(resourceAbilities, a => a.abilityId == abilityId);
+
+            if (ability != null)
+                Abilities.Add(ability);
+            else
+                Debug.LogWarning("Ability with ID " + abilityId + " not found in Resources.");
+        }
     }
 }

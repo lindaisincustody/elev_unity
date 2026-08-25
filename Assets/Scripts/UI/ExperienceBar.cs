@@ -44,7 +44,6 @@ public class ExperienceBar : MonoBehaviour
 
     private void UpdateExperienceUI()
     {
-        //PlayerData playerData = Player.instance?.playerData; // Access player data from the Player singleton
 
             float currentOffset = currentExperience;
             float maximumOffset = maxExperience;

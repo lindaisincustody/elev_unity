@@ -7,24 +7,13 @@ public class SceneController : MonoBehaviour
 {
     [SerializeField] Animator transitionAnim;
 
-    private DataManager dataManager;
-
-
-    private void Start()
-    {
-        dataManager = DataManager.Instance;
-    }
-
     public IEnumerator LoadScene(string sceneName)
     {
         transitionAnim.SetTrigger("End");
         if (Player.instance != null)
         {
             Player.instance.SaveCurrentScenePosition();
-            DataManager.Instance.SavePillTime();
         }
-        if (sceneName != Constants.SceneNames.MainMenu)
-            DataManager.Instance.SaveScene(sceneName);
 
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);

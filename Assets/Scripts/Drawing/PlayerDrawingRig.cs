@@ -16,6 +16,7 @@ public class PlayerDrawingRig
 
         Cameras = Object.Instantiate(references.cameraRig, Vector3.zero, Quaternion.identity);
         Cameras.name = references.cameraRig.name;
+        Object.DontDestroyOnLoad(Cameras.gameObject);
     }
 
     private LineRenderer SpawnLine(DrawingRigReferences.LineEntry entry)
@@ -27,6 +28,7 @@ public class PlayerDrawingRig
         line.numCapVertices = entry.capVertices;
         line.numCornerVertices = entry.cornerVertices;
         line.shadowCastingMode = entry.castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
+        Object.DontDestroyOnLoad(line.gameObject);
 
         return line;
     }

@@ -4,7 +4,6 @@ using TMPro;
 
 public class PlayerCombat : Component
 {
-    [SerializeField] Camera mainCamera;
     [SerializeField] float meleeAttackRange = 2f;
     [SerializeField] int meleeDamage = 5;
     [SerializeField] float meleeCooldown = 0.7f;
@@ -64,7 +63,7 @@ public class PlayerCombat : Component
 
         player.GetComponent<PlayerMovement>().isAttacking = true;
 
-        Vector3 mw = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mw = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         mw.z = 0;
         Vector2 d = (mw - transform.position).normalized;
 

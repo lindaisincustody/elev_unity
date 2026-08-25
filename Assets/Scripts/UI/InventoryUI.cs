@@ -30,7 +30,6 @@ public class InventoryUI : MonoBehaviour
 
     private Player player;
     private ItemsInventory itemsInventory;
-    private DataManager dataManager;
     private InputManager playerInput;
     private PlayerMovement playerMovement;
 
@@ -42,7 +41,6 @@ public class InventoryUI : MonoBehaviour
     private void Start()
     {
         player = Player.instance;
-        dataManager = DataManager.Instance;
         playerInput = InputManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();

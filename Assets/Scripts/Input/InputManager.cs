@@ -1,10 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class InputManager : MonoBehaviour
+public class InputManager : CoreService
 {
     // Player
     public event Action OnInteract = delegate { };
@@ -28,14 +29,11 @@ public class InputManager : MonoBehaviour
 
     Controls inputActions;
 
-    private void Awake()
+    public override UniTask Initialize()
     {
         Instance = this;
         inputActions = new Controls();
-    }
 
-    private void OnEnable()
-    {
         inputActions.Player.Enable();
         inputActions.UI.Enable();
 
@@ -50,9 +48,11 @@ public class InputManager : MonoBehaviour
         inputActions.UI.Submit.started += Sumbit;
         inputActions.UI.Cancel.started += UICancel;
         inputActions.UI.Inventory.started += UIInventory;
+
+        return UniTask.CompletedTask;
     }
 
-    private void OnDisable()
+    private void OnDestroy()
     {
         inputActions.Player.Disable();
         inputActions.UI.Disable();

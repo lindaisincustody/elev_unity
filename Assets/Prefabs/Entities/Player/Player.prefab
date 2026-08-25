@@ -339,27 +339,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   drawingMode: 0
-  gameplayCamera: {fileID: 0}
-  debugText: {fileID: 0}
-  lineRenderer: {fileID: 0}
-  secondaryLineRenderer: {fileID: 0}
   groundMaterial: {fileID: 2100000, guid: 7cc60ea8881148245b8876a10bbc6c13, type: 2}
   primaryLineMaterial: {fileID: 2100000, guid: 8e39ad95ebcc4964e80745cafb4b59ee, type: 2}
   trippyTransparentMaterial: {fileID: 2100000, guid: 25191b7fd45341141a02ebd7aa82d024, type: 2}
-  drawingDisplay: {fileID: 0}
   model: {fileID: 5022602860645237092, guid: 94dee1124f917c24ca2d6ed6684eae2b, type: 3}
-  renderTextureDisplay: {fileID: 0}
-  currentLetterText: {fileID: 0}
-  poemTextDisplay: {fileID: 0}
-  poem: 'In whispers soft, the daylight fades,
-
-    Through trees and shadows, evening
-    wades.
-
-    The stars awake in velvet skies,
-
-    A silent dance, where moonlight
-    lies.'
   sparkleEffectPrefab: {fileID: 2503558607980736289, guid: d346fa3b78b20844699d951f5d9b48f2, type: 3}
   sparkleDuration: 0.75
   flashDuration: 1
@@ -372,11 +355,10 @@ MonoBehaviour:
   symbolLifetime: 2
   symbolVerticalOffset: 1.75
   symbolStampDuration: 0.5
-  drawStrokeWidth: 0.5
+  drawStrokeWidth: 0.1
   minPointWorldDistance: 0.01
   drawZoneStartX: 0.5
   drawVersion: 0
-  drawingCamera: {fileID: 0}
 --- !u!120 &2997224443469270906
 LineRenderer:
   serializedVersion: 3
