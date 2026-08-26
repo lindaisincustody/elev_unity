@@ -55,7 +55,7 @@ public class EnemyMovement : Component
         spawnPos = transform.position;
         target = Vector2.zero;
 
-        SanityBar.instance.OnSanityValueChanged += SanityChange;
+        SanityManager.Instance.OnSanityChanged += SanityChange;
         SanityChange(0);
 
     }
@@ -82,7 +82,7 @@ public class EnemyMovement : Component
 
     private void SanityChange(int amount)
     {
-        speed = SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld ? nightSpeed : daySpeed;
+        speed = SanityManager.Instance.IsPlayerInUnderworld ? nightSpeed : daySpeed;
     }
 
     public void Avoid(Transform player)

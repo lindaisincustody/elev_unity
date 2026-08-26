@@ -10,7 +10,7 @@ public class DistortionEffect : MonoBehaviour
 
     private void Update()
     {
-        if (SanityBar.instance.currentSanity <= 50)
+        if (SanityManager.Instance.CurrentSanity <= 50)
         {
             float distortion = Mathf.PingPong(Time.time * distortionSpeed, maxDistortion);
             distortionMaterial.SetFloat("_Distortion", distortion);

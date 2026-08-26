@@ -148,9 +148,9 @@ public class ElevatorManager : MonoBehaviour
 
         floorsCompleted[floor - 1] = true;
 
-        SanityBar.instance.DecreaseSanity(50);
+        SanityManager.Instance.DecreaseSanity(50);
 
-        if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        if (SanityManager.Instance.IsPlayerInUnderworld)
         {
             EndGame();
             yield break;

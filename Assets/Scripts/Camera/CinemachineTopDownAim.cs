@@ -33,10 +33,6 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     {
         vcam = GetComponent<CinemachineVirtualCamera>();
 
-        player = Player.instance.transform;
-
-        vcam.Follow = player;
-
         framing = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
         if (framing == null)
         {
@@ -52,6 +48,12 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
         defaultOrthoSize = vcam.m_Lens.OrthographicSize;
 
         currentOffset = framing.m_TrackedObjectOffset;
+    }
+
+    private void Start()
+    {
+        player = Player.instance.transform;
+        vcam.Follow = player;
     }
 
     private void Update()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
@@ -30,69 +31,66 @@ public class SanityEffectHandler : MonoBehaviour
 
     public float transitionSpeed = 3f;
 
-    private bool _isPlayerInUnderworld;
-
-    public bool IsPlayerInUnderworld
-    {
-        get => _isPlayerInUnderworld;
-        set
-        {
-            if (_isPlayerInUnderworld != value)
-            {
-                _isPlayerInUnderworld = value;
-                OnWorldChange?.Invoke();
-            }
-        }
-    }
-
-    public Action OnWorldChange { get; set; }
-
     private Coroutine crteffectCoroutine;
+
+    private bool bound;
 
     private void Start()
     {
-        LoadVolumeComponents();
-        ResetEffects();
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+        GameSession.Instance.OnGameStarted += Bind;
 
-        IsPlayerInUnderworld = false;
-        playerAnimator = Player.instance.Animator;
-        sanityLight = Player.instance.Get<PlayerVisuals>().Light;
-        playerAnimator.SetBool("IsPlayerInUnderworldAnimation", false);
-
-        displayedSanity = SanityBar.instance.currentSanity;
-
-        SanityBar.instance.OnSanityValueChanged += OnSanityChange;
-        OnSanityChange(SanityBar.instance.currentSanity);
-
-        StartCoroutine(UpdateEffectsBasedOnSanity());
+        if (GameSession.Instance.IsRunning)
+            Bind();
     }
 
     private void OnDestroy()
     {
-        if (SanityBar.instance != null)
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+        GameSession.Instance.OnGameStarted -= Bind;
+        SanityManager.Instance.OnSanityChanged -= OnSanityChange;
+    }
+
+    private void HandleSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        if (GameSession.Instance.IsRunning)
+            Bind();
+    }
+
+    private void Bind()
+    {
+        LoadVolumeComponents();
+        ResetEffects();
+
+        playerAnimator = Player.instance.Animator;
+        sanityLight = Player.instance.Get<PlayerVisuals>().Light;
+
+        displayedSanity = SanityManager.Instance.CurrentSanity;
+
+        if (!bound)
         {
-            SanityBar.instance.OnSanityValueChanged -= OnSanityChange;
+            bound = true;
+            SanityManager.Instance.OnSanityChanged += OnSanityChange;
+            StartCoroutine(UpdateEffectsBasedOnSanity());
         }
+
+        OnSanityChange(SanityManager.Instance.CurrentSanity);
     }
 
     private void OnSanityChange(int amount)
     {
-        int sanity = Mathf.Clamp(SanityBar.instance.currentSanity, 0, 300);
-
-        if (sanity >= 100)
+        if (!SanityManager.Instance.IsPlayerInUnderworld)
         {
-            IsPlayerInUnderworld = false;
             sanityLight.color = new Color32(0xF8, 0xC4, 0x64, 0xFF);
             sanityLight.intensity = 1f;
         }
         else
         {
-            IsPlayerInUnderworld = true;
             sanityLight.color = new Color32(0x00, 0xE7, 0xFF, 0xFF);
             sanityLight.intensity = 2f;
         }
 
-        playerAnimator.SetBool("IsPlayerInUnderworldAnimation", IsPlayerInUnderworld);
+        playerAnimator.SetBool("IsPlayerInUnderworldAnimation", SanityManager.Instance.IsPlayerInUnderworld);
 
         TriggerCRTEffectTransition();
     }
@@ -102,7 +100,7 @@ public class SanityEffectHandler : MonoBehaviour
         while (true)
         {
             timeElapsed += Time.deltaTime;
-            float targetSanity = Mathf.Clamp(SanityBar.instance.currentSanity, 0, 300);
+            float targetSanity = SanityManager.Instance.CurrentSanity;
             displayedSanity = Mathf.Lerp(displayedSanity, targetSanity, transitionSpeed * Time.deltaTime);
 
             float sanity = displayedSanity;

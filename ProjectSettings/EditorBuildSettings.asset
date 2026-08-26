@@ -5,13 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 8b5cc896bf348684c860aac923dcc4fc
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/City.unity
     guid: 2cda990e2423bbf4892e6590ba056729
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/TrainStation.unity
     guid: 98ded8171f2de6b48a81966a7ef2ecba
   - enabled: 1
@@ -19,3 +19,4 @@ EditorBuildSettings:
     guid: d49ccf77c15e2b043adfb02d222c3000
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 9d91050c0faa73540ad814608ed2727f, type: 2}
+  m_UseUCBPForAssetBundles: 0

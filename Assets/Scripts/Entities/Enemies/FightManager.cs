@@ -19,7 +19,7 @@ public class FightManager : CoreService
 
     private void Start()
     {
-        SanityBar.instance.sanityEffectHandler.OnWorldChange += SetUpGlyphs;
+        SanityManager.Instance.OnWorldChange += SetUpGlyphs;
     }
 
     private void Update()
@@ -83,14 +83,14 @@ public class FightManager : CoreService
     private void CompleteFight()
     {
         UIManager.Instance.Get<GlyphBook>().TranslateGlyphs();
-        SanityBar.instance.SanityToMax();
+        SanityManager.Instance.SanityToMax();
 
         _activeFight.CompleteFight();
     }
 
     public void SetUpGlyphs()
     {
-        if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld) return;
+        if (!SanityManager.Instance.IsPlayerInUnderworld) return;
 
         UIManager.Instance.Get<GlyphBook>().ActivateBook();
         foreach (Enemy enemy in _activeEnemies)
@@ -101,6 +101,6 @@ public class FightManager : CoreService
 
     private void OnDestroy()
     {
-        SanityBar.instance.sanityEffectHandler.OnWorldChange -= SetUpGlyphs;
+        SanityManager.Instance.OnWorldChange -= SetUpGlyphs;
     }
 }

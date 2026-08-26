@@ -138,7 +138,7 @@ public class PlayerMovement : Component
 
     private void HandleDash()
     {
-        if (SanityBar.instance == null || !SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        if (!SanityManager.Instance.IsPlayerInUnderworld)
         {
             return;
         }

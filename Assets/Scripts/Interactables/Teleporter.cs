@@ -30,12 +30,12 @@ public class Teleporter : Interactable
         if (!Unlocked)
             gameObject.SetActive(false);
 
-        SanityBar.instance.sanityEffectHandler.OnWorldChange += ChangeTeleportState;
+        SanityManager.Instance.OnWorldChange += ChangeTeleportState;
     }
 
     private void ChangeTeleportState()
     {
-        if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        if (SanityManager.Instance.IsPlayerInUnderworld)
         {
             gameObject.SetActive(false);
         }
@@ -88,14 +88,6 @@ public class Teleporter : Interactable
     {
         switch (sceneName)
         {
-            case Scene.IntelligenceGame:
-                return Constants.SceneNames.IntelligenceGameScene;
-            case Scene.StrengthGame:
-                return Constants.SceneNames.StrengthGameScene;
-            case Scene.NeutralityGame:
-                return Constants.SceneNames.NeutralityGameScene;
-            case Scene.CoordinationGame:
-                return Constants.SceneNames.CoordinationGameScene;
             case Scene.Main:
                 return Constants.SceneNames.MainScene;
             case Scene.Station:
@@ -109,7 +101,7 @@ public class Teleporter : Interactable
 
     private void OnDestroy()
     {
-        SanityBar.instance.sanityEffectHandler.OnWorldChange -= ChangeTeleportState;
+        SanityManager.Instance.OnWorldChange -= ChangeTeleportState;
     }
 }
 

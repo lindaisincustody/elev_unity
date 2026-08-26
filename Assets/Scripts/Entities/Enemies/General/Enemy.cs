@@ -28,7 +28,7 @@ public class Enemy : Entity
             component.Init(this);
         }
 
-        SanityBar.instance.sanityEffectHandler.OnWorldChange += SanityChange;
+        SanityManager.Instance.OnWorldChange += SanityChange;
     }
 
     void Start()
@@ -139,7 +139,7 @@ public class Enemy : Entity
 
     private void SanityChange()
     {
-        if (SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        if (SanityManager.Instance.IsPlayerInUnderworld)
         {
             ShowGlyphs();
             ShowEnemy();
@@ -186,7 +186,7 @@ public class Enemy : Entity
 
     void OnDestroy()
     {
-        SanityBar.instance.sanityEffectHandler.OnWorldChange -= SanityChange;
+        SanityManager.Instance.OnWorldChange -= SanityChange;
         Get<EnemyHealth>().OnDeath -= OnEnemyDeath;
     }
 }

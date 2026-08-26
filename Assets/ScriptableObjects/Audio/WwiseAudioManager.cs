@@ -38,14 +38,12 @@ public sealed class WwiseAudioManager : MonoBehaviour
 
     private void OnEnable()
     {
-        if (SanityBar.instance != null)
-            SanityBar.instance.OnSanityValueChanged += OnSanityChanged;
+        SanityManager.Instance.OnSanityChanged += OnSanityChanged;
     }
 
     private void OnDisable()
     {
-        if (SanityBar.instance != null)
-            SanityBar.instance.OnSanityValueChanged -= OnSanityChanged;
+        SanityManager.Instance.OnSanityChanged -= OnSanityChanged;
     }
 
     private void Start()
@@ -60,8 +58,7 @@ public sealed class WwiseAudioManager : MonoBehaviour
        // uint playingId = AkSoundEngine.PostEvent(playMusicEvent, gameObject);
       //  Debug.Log($"[Wwise] PostEvent '{playMusicEvent}' playingId={playingId}");
 
-        if (SanityBar.instance != null)
-            OnSanityChanged(SanityBar.instance.currentSanity);
+        OnSanityChanged(SanityManager.Instance.CurrentSanity);
     }
 
     private void OnSanityChanged(int sanity)

@@ -8,23 +8,42 @@ public class PlayerSpawner : CoreService
 
     public override UniTask Initialize()
     {
-        Player player = Instantiate(playerPrefab);
-        player.name = playerPrefab.name;
-        DontDestroyOnLoad(player.gameObject);
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+        GameSession.Instance.OnGameStarted += SpawnPlayer;
 
-        SceneManager.sceneLoaded += PlaceInScene;
+        if (GameSession.Instance.IsRunning)
+            SpawnPlayer();
 
         return UniTask.CompletedTask;
     }
 
-    private void OnDestroy()
+    private void SpawnPlayer()
     {
-        SceneManager.sceneLoaded -= PlaceInScene;
+        if (Player.instance == null)
+        {
+            Player player = Instantiate(playerPrefab);
+            player.name = playerPrefab.name;
+            DontDestroyOnLoad(player.gameObject);
+        }
+
+        PlaceInScene();
     }
 
-    private void PlaceInScene(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    private void HandleSceneLoaded(UnityEngine.SceneManagement.Scene scene, LoadSceneMode mode)
+    {
+        if (GameSession.Instance.IsRunning)
+            PlaceInScene();
+    }
+
+    private void PlaceInScene()
     {
         Vector3? savedPosition = Player.instance.GetSavedScenePosition();
         Player.instance.transform.position = savedPosition ?? PlayerSpawnPoint.Instance.transform.position;
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= HandleSceneLoaded;
+        GameSession.Instance.OnGameStarted -= SpawnPlayer;
     }
 }

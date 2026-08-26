@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 8258813671630947319}
   - component: {fileID: 23276845611745371}
   - component: {fileID: 3523306356231875940}
-  - component: {fileID: 709220804637521774}
   m_Layer: 5
   m_Name: SanityBar
   m_TagString: Untagged
@@ -90,27 +89,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f408cc482261b4c8945e304dd211a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <sanityEffectHandler>k__BackingField: {fileID: 709220804637521774}
+  <sanityEffectHandler>k__BackingField: {fileID: 0}
   mask: {fileID: 9178857457889128665}
   fill: {fileID: 4236518128642888012}
   color: {r: 0.05490196, g: 0.6, b: 1, a: 0}
   currentSanity: 300
   maxSanity: 300
---- !u!114 &709220804637521774
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 505232307698590991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6ef9e843fafdc04cbc6b972f3f1029c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rippleMaterial: {fileID: 2100000, guid: 770db0076aa830142b4907f509e0e057, type: 2}
-  crteffectMaterial: {fileID: 2100000, guid: c99d49292b7766241a1b56b8e8f08adf, type: 2}
-  transitionSpeed: 3
 --- !u!1 &629682528435260878
 GameObject:
   m_ObjectHideFlags: 0

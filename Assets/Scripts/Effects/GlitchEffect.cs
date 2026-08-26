@@ -11,7 +11,7 @@ public class GlitchEffect : MonoBehaviour
 
     private void Update()
     {
-        if (SanityBar.instance.currentSanity <= 50)
+        if (SanityManager.Instance.CurrentSanity <= 50)
         {
             glitchAmount = Mathf.PingPong(Time.time * glitchSpeed, maxGlitchAmount);
             glitchMaterial.SetFloat("_GlitchAmount", glitchAmount);

@@ -135,6 +135,8 @@ public class LetterDrawing : Component
     // subsystem stays enabled for the lifetime of the scene, which is harmless.
     private void OnDisable()
     {
+        if (drawingCamera == null)
+            return;
 
         drawingCamera.enabled = false;
         drawingCamera.gameObject.SetActive(false);

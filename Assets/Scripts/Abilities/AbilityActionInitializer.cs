@@ -7,6 +7,19 @@ public class AbilityActionsInitializer : MonoBehaviour
 
     private void Start()
     {
+        GameSession.Instance.OnGameStarted += RegisterActions;
+
+        if (GameSession.Instance.IsRunning)
+            RegisterActions();
+    }
+
+    private void OnDestroy()
+    {
+        GameSession.Instance.OnGameStarted -= RegisterActions;
+    }
+
+    private void RegisterActions()
+    {
         letterDrawing = Player.instance.Get<LetterDrawing>();
 
         AbilityActionRegistry.Instance.RegisterAction("_diagup", () =>

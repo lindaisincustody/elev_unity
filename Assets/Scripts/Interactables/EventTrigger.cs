@@ -6,6 +6,6 @@ public class EventTrigger : MonoBehaviour
 {
     public void ActivateDarkWorld()
     {
-        SanityBar.instance.SanityToMin();
+        SanityManager.Instance.SanityToMin();
     }
 }

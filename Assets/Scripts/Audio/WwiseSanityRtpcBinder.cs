@@ -15,17 +15,13 @@ public class WwiseSanityRtpcBinder : MonoBehaviour
 
     private void OnEnable()
     {
-        if (SanityBar.instance != null)
-            SanityBar.instance.OnSanityValueChanged += HandleSanityChanged;
-
-        if (SanityBar.instance != null)
-            HandleSanityChanged(SanityBar.instance.currentSanity);
+        SanityManager.Instance.OnSanityChanged += HandleSanityChanged;
+        HandleSanityChanged(SanityManager.Instance.CurrentSanity);
     }
 
     private void OnDisable()
     {
-        if (SanityBar.instance != null)
-            SanityBar.instance.OnSanityValueChanged -= HandleSanityChanged;
+        SanityManager.Instance.OnSanityChanged -= HandleSanityChanged;
     }
 
     private void HandleSanityChanged(int currentSanity)

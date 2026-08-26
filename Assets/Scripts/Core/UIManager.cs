@@ -16,10 +16,11 @@ public class UIManager : CoreService
     public static UIManager Instance { get; private set; }
 
     [SerializeField] private UIRoot rootPrefab;
-    [SerializeField] private List<UIEntry> spawnOnStartup = new List<UIEntry>();
+    [SerializeField] private List<UIEntry> spawnOnGameStart = new List<UIEntry>();
     [SerializeField] private List<UIEntry> uiPrefabs = new List<UIEntry>();
 
     private UIRoot root;
+    private bool gameplayUISpawned;
     private readonly Dictionary<Type, UnityEngine.Component> spawned = new Dictionary<Type, UnityEngine.Component>();
     private readonly Dictionary<Type, bool> stackable = new Dictionary<Type, bool>();
     private readonly List<UnityEngine.Component> openPanels = new List<UnityEngine.Component>();
@@ -31,10 +32,28 @@ public class UIManager : CoreService
         root = Instantiate(rootPrefab, transform, false);
         root.name = rootPrefab.name;
 
-        foreach (UIEntry entry in spawnOnStartup)
-            Spawn(entry);
+        GameSession.Instance.OnGameStarted += SpawnGameplayUI;
+
+        if (GameSession.Instance.IsRunning)
+            SpawnGameplayUI();
 
         return UniTask.CompletedTask;
+    }
+
+    private void OnDestroy()
+    {
+        GameSession.Instance.OnGameStarted -= SpawnGameplayUI;
+    }
+
+    private void SpawnGameplayUI()
+    {
+        if (gameplayUISpawned)
+            return;
+
+        gameplayUISpawned = true;
+
+        foreach (UIEntry entry in spawnOnGameStart)
+            Spawn(entry);
     }
 
     public T Get<T>() where T : UnityEngine.Component

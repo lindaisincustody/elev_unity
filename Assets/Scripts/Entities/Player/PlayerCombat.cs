@@ -48,7 +48,7 @@ public class PlayerCombat : Component
 
     private void Shoot()
     {
-        if (!SanityBar.instance.sanityEffectHandler.IsPlayerInUnderworld)
+        if (!SanityManager.Instance.IsPlayerInUnderworld)
             return;
 
         PerformMeleeAttack();
