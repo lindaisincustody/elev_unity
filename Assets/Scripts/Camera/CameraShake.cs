@@ -1,25 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
+using Cinemachine;
 using UnityEngine;
 
-public class CameraShake : MonoBehaviour
+public class CameraShake : CinemachineExtension
 {
-    public IEnumerator Shake(float duration, float magnitude)
+    private float remaining;
+    private float magnitude;
+
+    public void Shake(float duration, float shakeMagnitude)
     {
-        Vector3 originalPosition = transform.position;
-        float elapsed = 0.0f;
+        remaining = duration;
+        magnitude = shakeMagnitude;
+    }
 
+    protected override void PostPipelineStageCallback(
+        CinemachineVirtualCameraBase vcam,
+        CinemachineCore.Stage stage,
+        ref CameraState state,
+        float deltaTime)
+    {
+        if (stage != CinemachineCore.Stage.Finalize || remaining <= 0f)
+            return;
 
-        while (elapsed < duration)
-        {
-            float x = Random.Range(-1f, 1f) * magnitude;
-            float y = Random.Range(-1f, 1f) * magnitude;
+        remaining -= Time.deltaTime;
 
-            transform.position = new Vector3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
-            elapsed += Time.deltaTime;
-            yield return null;
-        }
+        float x = Random.Range(-1f, 1f) * magnitude;
+        float y = Random.Range(-1f, 1f) * magnitude;
 
-        transform.position = originalPosition; // Reset to original position after shaking
+        state.PositionCorrection += new Vector3(x, y, 0f);
     }
 }

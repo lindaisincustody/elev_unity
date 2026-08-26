@@ -38204,6 +38204,7 @@ GameObject:
   - component: {fileID: 484424890}
   - component: {fileID: 484424889}
   - component: {fileID: 484424887}
+  - component: {fileID: 7712334455667711001}
   m_Layer: 0
   m_Name: Vcam_Main
   m_TagString: Untagged
@@ -100560,3 +100561,15 @@ SceneRoots:
   - {fileID: 671264671}
   - {fileID: 195638837}
   - {fileID: 2118359205}
+--- !u!114 &7712334455667711001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484424886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d7c94f1a05b4e3b8c61f0d2947ab3e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

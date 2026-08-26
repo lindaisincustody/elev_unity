@@ -21,14 +21,15 @@ public class SceneController : MonoBehaviour
     }
     public IEnumerator LoadInScene(float x, float y)
     {
-        PlayerMovement playerController = FindObjectOfType<PlayerMovement>();
+        Player player = Player.instance;
         transitionAnim.SetTrigger("End");
         yield return new WaitForSeconds(2f);
 
-        if (playerController != null)
-            playerController.transform.position = new Vector3(x, y, playerController.transform.position.z);
-        if (Player.instance != null)
-            Player.instance.SaveCurrentScenePosition();
+        player.transform.position = new Vector3(x, y, player.transform.position.z);
+        PlayerFollowCamera.Instance.Snap();
+
+        player.SaveCurrentScenePosition();
+
         transitionAnim.SetTrigger("Start");
     }
 }

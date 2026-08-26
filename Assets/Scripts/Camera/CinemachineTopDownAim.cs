@@ -53,7 +53,6 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     private void Start()
     {
         player = Player.instance.transform;
-        vcam.Follow = player;
     }
 
     private void Update()

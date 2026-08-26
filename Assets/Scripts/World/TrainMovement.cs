@@ -18,7 +18,6 @@ public class TrainMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
         currentVelocity = initialSpeed; // Initialize current velocity
-        cameraShake = Camera.main.GetComponent<CameraShake>(); // Get the CameraShake component from the main camera
         PlayerSnapshot playerSnapshot = SaveLoadService.Instance.Get<GeneralSaveFile>().PlayerSnapshot;
         if (playerSnapshot.TutorialComplete)
         {
@@ -47,7 +46,7 @@ public class TrainMovement : MonoBehaviour
             rb.linearVelocity = new Vector2(currentVelocity, 0);
             if (Mathf.Abs(currentVelocity) > 5f) // Check if the train is moving fast enough to justify shaking
             {
-                StartCoroutine(cameraShake.Shake(0.5f, 0.01f)); // Trigger camera shake
+                cameraShake.Shake(0.5f, 0.01f); // Trigger camera shake
             }
         }
         else if (!hasArrived && transform.position.x <= arrivalX - stopOvershoot)
@@ -65,7 +64,7 @@ public class TrainMovement : MonoBehaviour
                 rb.linearVelocity = new Vector2(currentVelocity, 0);
                 if (Mathf.Abs(currentVelocity) > 5f) // Trigger camera shake if the train is moving fast enough while leaving
                 {
-                    StartCoroutine(cameraShake.Shake(0.2f, 0.01f)); // Trigger camera shake
+                    cameraShake.Shake(0.2f, 0.01f); // Trigger camera shake
                 }
             }
             else
@@ -84,7 +83,7 @@ public class TrainMovement : MonoBehaviour
             currentVelocity = Mathf.MoveTowards(currentVelocity, 0, Time.fixedDeltaTime * 5f);
             rb.linearVelocity = new Vector2(currentVelocity, 0);
             // Trigger a gentle camera shake
-            StartCoroutine(cameraShake.Shake(0.3f, 0.007f)); // Shorter duration and lower magnitude for gentle shake
+            cameraShake.Shake(0.3f, 0.007f); // Shorter duration and lower magnitude for gentle shake
             yield return null;
         }
         rb.linearVelocity = Vector2.zero; // Finally stop the train
