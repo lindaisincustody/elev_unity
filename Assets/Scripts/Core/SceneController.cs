@@ -10,14 +10,25 @@ public class SceneController : MonoBehaviour
     public IEnumerator LoadScene(string sceneName)
     {
         transitionAnim.SetTrigger("End");
-        if (Player.instance != null)
-        {
+
+        if (sceneName == Constants.SceneNames.MainMenu)
             Player.instance.SaveCurrentScenePosition();
-        }
+        else
+            SaveTargetScene(sceneName);
 
         yield return new WaitForSeconds(1.5f);
         SceneManager.LoadScene(sceneName);
         transitionAnim.SetTrigger("Start");
+    }
+
+    private void SaveTargetScene(string sceneName)
+    {
+        SceneSnapshot snapshot = SaveLoadService.Instance.Get<GeneralSaveFile>().SceneSnapshot;
+
+        snapshot.SceneName = sceneName;
+        snapshot.HasPlayerPosition = false;
+
+        SaveLoadService.Instance.SaveProgress();
     }
     public IEnumerator LoadInScene(float x, float y)
     {

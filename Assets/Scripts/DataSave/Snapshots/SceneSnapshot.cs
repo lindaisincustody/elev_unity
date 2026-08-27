@@ -6,6 +6,7 @@ public class SceneSnapshot
 {
     public string SceneName;
     public Vector3 PlayerPosition;
+    public bool HasPlayerPosition;
 
     public SceneSnapshot()
     {
@@ -15,5 +16,6 @@ public class SceneSnapshot
     {
         SceneName = sceneName;
         PlayerPosition = playerPosition;
+        HasPlayerPosition = true;
     }
 }

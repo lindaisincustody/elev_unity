@@ -30,7 +30,7 @@ public class SoundsHolder : CoreService
 
     public override UniTask Initialize()
     {
-        SoundManager.Initialize();
+        SoundManager.Initialize(transform);
 
         return UniTask.CompletedTask;
     }

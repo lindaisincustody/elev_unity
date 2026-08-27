@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public static class SoundManager
 {
@@ -28,14 +29,33 @@ public static class SoundManager
     private static GameObject ambientSoundGameObject;
 
     private static GameObject audioHolder;
+    private static SoundManagerHelper audioHolderHelper;
 
     private static Dictionary<Sound, AudioSource> loopedSounds = new Dictionary<Sound, AudioSource>();
 
-    public static void Initialize()
+    public static void Initialize(Transform persistentParent)
     {
         soundTimerDictionary = new Dictionary<Sound, float>();
         soundTimerDictionary[Sound.Sound1] = 0f;
+
         audioHolder = new GameObject("All Sounds");
+        audioHolder.transform.SetParent(persistentParent);
+        audioHolderHelper = audioHolder.AddComponent<SoundManagerHelper>();
+
+        SceneManager.sceneLoaded += HandleSceneLoaded;
+    }
+
+    private static void HandleSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        audioHolderHelper.StopAllCoroutines();
+
+        foreach (Transform child in audioHolder.transform)
+            Object.Destroy(child.gameObject);
+
+        oneShotGameObject = null;
+        oneShotAudioSource = null;
+        ambientSoundGameObject = null;
+        loopedSounds.Clear();
     }
 
     public static void PlayLoopedSound(Sound sound, float volume = 1)
@@ -81,15 +101,7 @@ public static class SoundManager
         {
             AudioSource audioSource = loopedSounds[sound];
 
-
-            SoundManagerHelper helper = audioHolder.GetComponent<SoundManagerHelper>();
-            if (helper == null)
-            {
-                helper = audioHolder.AddComponent<SoundManagerHelper>();
-            }
-
-            // Start the fade-out coroutine.
-            helper.StartCoroutine(FadeOutAndStop(audioSource, fadeDuration));
+            audioHolderHelper.StartCoroutine(FadeOutAndStop(audioSource, fadeDuration));
             loopedSounds.Remove(sound);
         }
     }

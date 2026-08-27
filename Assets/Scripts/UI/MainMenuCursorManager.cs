@@ -4,13 +4,7 @@ using UnityEngine;
 
 public class MainMenuCursorManager : MonoBehaviour
 {
-    [SerializeField] CursorController cursor;
     [SerializeField] UIElementsHolder uIElements;
-    [SerializeField] UIElementsHolder controlsUIElements;
-
-    [SerializeField] GameObject ControlsPanel;
-
-    private bool isControlsPanelOpen = false;
 
     private GeneralSaveFile saveFile;
     private SceneController sceneController;
@@ -21,7 +15,6 @@ public class MainMenuCursorManager : MonoBehaviour
     {
         saveFile = SaveLoadService.Instance.Get<GeneralSaveFile>();
         sceneController = UIManager.Instance.Get<SceneController>();
-        cursor.ActivateCursor(uIElements.cursorElements, null);
     }
 
     public void StartGame()
@@ -39,18 +32,7 @@ public class MainMenuCursorManager : MonoBehaviour
 
     public void OpenControls()
     {
-        if (!isControlsPanelOpen)
-        {
-            ControlsPanel.SetActive(true);
-            cursor.ActivateCursor(controlsUIElements.cursorElements, null);
-            isControlsPanelOpen = true;
-        }
-        else
-        {
-            ControlsPanel.SetActive(false);
-            cursor.ActivateCursor(uIElements.cursorElements, null);
-            isControlsPanelOpen = false;
-        }
+
     }
 
     public void Quit()

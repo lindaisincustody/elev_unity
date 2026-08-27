@@ -164,6 +164,7 @@ public class Player : Entity
     {
         saveFile.SceneSnapshot.SceneName = SceneManager.GetActiveScene().name;
         saveFile.SceneSnapshot.PlayerPosition = transform.position;
+        saveFile.SceneSnapshot.HasPlayerPosition = true;
         SaveLoadService.Instance.SaveProgress();
     }
 
@@ -171,7 +172,7 @@ public class Player : Entity
     {
         SceneSnapshot scene = saveFile.SceneSnapshot;
 
-        if (scene.SceneName == SceneManager.GetActiveScene().name)
+        if (scene.HasPlayerPosition && scene.SceneName == SceneManager.GetActiveScene().name)
             return scene.PlayerPosition;
 
         return null;

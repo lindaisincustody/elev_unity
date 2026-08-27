@@ -11,7 +11,7 @@ public class Teleporter : Interactable
     [SerializeField] public Teleport teleport;
 
     [Header("Scene To Load")] [SerializeField]
-    Scene sceneName;
+    SceneName sceneName;
 
     [Header("Position To Move")] [SerializeField]
     float scene_X;
@@ -88,11 +88,11 @@ public class Teleporter : Interactable
     {
         switch (sceneName)
         {
-            case Scene.Main:
+            case SceneName.Main:
                 return Constants.SceneNames.MainScene;
-            case Scene.Station:
+            case SceneName.Station:
                 return Constants.SceneNames.TrainStation;
-            case Scene.Hotel:
+            case SceneName.Hotel:
                 return Constants.SceneNames.HotelScene;
             default:
                 return ""; // Default return, you can handle this case as needed.
@@ -111,7 +111,7 @@ public enum Teleport
     NewScene
 }
 
-public enum Scene
+public enum SceneName
 {
     IntelligenceGame,
     StrengthGame,
