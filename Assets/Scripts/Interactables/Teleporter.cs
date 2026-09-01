@@ -88,8 +88,8 @@ public class Teleporter : Interactable
     {
         switch (sceneName)
         {
-            case SceneName.Main:
-                return Constants.SceneNames.MainScene;
+            case SceneName.City:
+                return Constants.SceneNames.CityScene;
             case SceneName.Station:
                 return Constants.SceneNames.TrainStation;
             case SceneName.Hotel:
@@ -113,11 +113,7 @@ public enum Teleport
 
 public enum SceneName
 {
-    IntelligenceGame,
-    StrengthGame,
-    NeutralityGame,
-    CoordinationGame,
-    Main,
+    City,
     Station,
     Hotel
 }

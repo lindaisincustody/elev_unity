@@ -2,16 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Playables;
 
 public class DialogueTrigger : Interactable
 {
     [SerializeField] private DialogueData dialogueData;
-    [SerializeField] private PlayableDirector director;
     [SerializeField] private bool instant = false;
     [SerializeField] private Material newMaterial;
     [SerializeField] private SpriteRenderer targetRenderer;
-    [SerializeField] private bool isDoorInteraction;
     [SerializeField] private bool isInteractionCircle;
     [SerializeField] private Item itemToAdd;
     [SerializeField] public UnityEvent OnComplete;
@@ -27,8 +24,7 @@ public class DialogueTrigger : Interactable
 
         if (instant)
         {
-            UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
-            UIManager.Instance.Get<DialogueController>().NextAction();
+            ActivateDialogueInstantly();
         }
         else
         {
@@ -59,15 +55,18 @@ public class DialogueTrigger : Interactable
             DisableInteractionCircle();
         }
 
-        if (isDoorInteraction)
-        {
-            director.stopped += OnPlaybackStopped;
-            director.Play();
-        }
-        else
-        {
-            UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
-        }
+        Trigger();
+    }
+
+    protected virtual void Trigger()
+    {
+        ActivateDialogue();
+    }
+
+    protected void ActivateDialogueInstantly()
+    {
+        ActivateDialogue();
+        UIManager.Instance.Get<DialogueController>().NextAction();
     }
 
     private void HandleItemAddition()
@@ -90,16 +89,6 @@ public class DialogueTrigger : Interactable
         }
     }
 
-    private void OnPlaybackStopped(PlayableDirector aDirector)
-    {
-        if (aDirector != director) return;
-
-        director.stopped -= OnPlaybackStopped;
-
-        UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
-        UIManager.Instance.Get<DialogueController>().NextAction();
-    }
-
     public void ChangeMaterial()
     {
         if (targetRenderer != null && newMaterial != null)
@@ -112,4 +101,4 @@ public class DialogueTrigger : Interactable
     {
         UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
     }
-}
+}

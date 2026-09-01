@@ -1,13 +1,12 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerMovement : Component
 {
     private int dashCount = 0;
     public int maxDashCount = 1;
-    public float baseMoveSpeed = 5.5f;
+    public float baseMoveSpeed = 3.5f;
     public float dashSpeed = 5f;
     public float dashDuration = 0.2f;
     public float dashCooldown = 2f;
@@ -73,16 +72,7 @@ public class PlayerMovement : Component
         }
         else
         {
-            string sceneName = SceneManager.GetActiveScene().name;
-
-            if (sceneName == Constants.SceneNames.MainScene || sceneName == Constants.SceneNames.TrainStation)
-            {
-                baseMoveSpeed = 3.5f;
-            }
-            else
-            {
-                baseMoveSpeed = 5.5f;
-            }
+            baseMoveSpeed = 3.5f;
         }
 
 

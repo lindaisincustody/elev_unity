@@ -11,7 +11,7 @@ public class Constants
 
     public class SceneNames
     {
-        public const string MainScene = "City";
+        public const string CityScene = "City";
         public const string TrainStation = "TrainStation";
         public const string HotelScene = "Hotel";
         public const string MainMenu = "MainMenu";
