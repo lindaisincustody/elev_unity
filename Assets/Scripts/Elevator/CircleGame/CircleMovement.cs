@@ -1,101 +1,56 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CircleMovement : MonoBehaviour
 {
-    [Header("References")] public PolygonCollider2D baseRingCollider;
+    [Header("References")] [SerializeField]
+    private RectTransform ring;
+
     [SerializeField] private HollowCircleManager mngr;
 
-    [Header("Movement Settings")] public float rotationSpeed = 1f;
+    [Header("Movement Settings")] public float rotationSpeed = 3f;
 
-    public Vector2 playerColliderOffset = new Vector2(-3.6f, 0f);
+    public float orbitRadius = 365f;
+    public float hitAngleTolerance = 17f;
 
-    public float ringThickness = 1f;
-
-    private bool isPinAligned = false;
     public bool isActive = false;
-    private HollowCircle collidedHollowCircle;
 
-    private Vector2 ringCenter;
-    private float ringRadius;
-    private float effectiveRadius;
+    private RectTransform rect;
     private float currentAngle;
 
-    void Start()
+    private void Awake()
     {
-        if (baseRingCollider == null)
-        {
-            Debug.LogError("BaseRingCollider is not assigned in CircleMovement!");
-            return;
-        }
-
-        ringCenter = baseRingCollider.transform.TransformPoint(baseRingCollider.offset);
-
-        Vector2 firstPoint = baseRingCollider.points[0] + baseRingCollider.offset;
-        Vector2 worldFirstPoint = baseRingCollider.transform.TransformPoint(firstPoint);
-        ringRadius = Vector2.Distance(ringCenter, worldFirstPoint);
-
-        effectiveRadius = ringRadius - ringThickness / 2f;
-
-        currentAngle = 0f;
-
-        Vector2 newPos = ringCenter + new Vector2(Mathf.Cos(currentAngle), Mathf.Sin(currentAngle)) * effectiveRadius;
-        transform.position = new Vector3(newPos.x - playerColliderOffset.x, newPos.y - playerColliderOffset.y,
-            transform.position.z);
+        rect = (RectTransform)transform;
+        UpdateOrbitPosition();
     }
 
-    void Update()
+    private void OnEnable()
+    {
+        currentAngle = 0f;
+        UpdateOrbitPosition();
+    }
+
+    private void Update()
     {
         if (!isActive)
             return;
 
         currentAngle += rotationSpeed * Time.deltaTime;
-        Vector2 newPos = ringCenter + new Vector2(Mathf.Cos(currentAngle), Mathf.Sin(currentAngle)) * effectiveRadius;
-        transform.position = new Vector3(newPos.x - playerColliderOffset.x, newPos.y - playerColliderOffset.y,
-            transform.position.z);
+        UpdateOrbitPosition();
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (HasCollidedWithHollowCircle())
-            {
-                HitHollowCircle();
-            }
-            else
-            {
-                mngr.MissAnimation();
-            }
-        }
+        if (!Input.GetKeyDown(KeyCode.Space))
+            return;
+
+        HollowCircle target = mngr.FindCircleAtAngle(currentAngle * Mathf.Rad2Deg, hitAngleTolerance);
+
+        if (target == null)
+            mngr.MissAnimation();
+        else
+            target.HitHollowCircle();
     }
 
-    private bool HasCollidedWithHollowCircle()
+    private void UpdateOrbitPosition()
     {
-        return isPinAligned && collidedHollowCircle != null;
-    }
-
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("HollowCircle"))
-        {
-            isPinAligned = true;
-            collidedHollowCircle = other.GetComponent<HollowCircle>();
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("HollowCircle"))
-        {
-            isPinAligned = false;
-            collidedHollowCircle = null;
-        }
-    }
-
-    void HitHollowCircle()
-    {
-        if (collidedHollowCircle != null)
-        {
-            collidedHollowCircle.HitHollowCircle();
-        }
+        Vector2 direction = new Vector2(Mathf.Cos(currentAngle), Mathf.Sin(currentAngle));
+        rect.anchoredPosition = ring.anchoredPosition + direction * orbitRadius;
     }
 }

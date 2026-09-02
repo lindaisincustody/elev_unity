@@ -21,8 +21,9 @@ public class LeverMover : MonoBehaviour
     private Vector3 lastMousePosition;
     private bool canRotate = true;
 
-    void Start()
+    void OnEnable()
     {
+        isDragging = false;
         currentRotation = 0f;
         lever.rotation = Quaternion.Euler(0, 0, -currentRotation);
     }
@@ -59,7 +60,7 @@ public class LeverMover : MonoBehaviour
 
             if (Mathf.Abs(currentRotation) > 0f && canRotate)
             {
-                // Start playing the Elevator sound if it isn’t already playing.
+                // Start playing the Elevator sound if it isnï¿½t already playing.
                 SoundManager.PlayLoopedSound(SoundManager.Sound.Elevator);
 
                 // Map the lever's absolute rotation to a pitch value.

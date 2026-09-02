@@ -1,22 +1,23 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class HollowCircleManager : MonoBehaviour
 {
-    public GameObject hollowCirclePrefab;
-    public PolygonCollider2D baseRingCollider;
+    [SerializeField] private HollowCircle hollowCirclePrefab;
+    [SerializeField] private RectTransform spawnParent;
+    [SerializeField] private float spawnRadius = 365f;
 
     private int circlesToSpawn = 1;
     private int circlesHit = 0;
     private int levelsToBeat = 3;
     private int levelsBeat = 0;
-    private List<GameObject> activeCircles = new List<GameObject>();
-    private float minDistanceBetweenCircles = 1.5f;
+    private readonly List<HollowCircle> activeCircles = new List<HollowCircle>();
     private Animator animator;
     private System.Action Complete;
 
-    void Start()
+    private RectTransform Ring => (RectTransform)transform;
+
+    private void Awake()
     {
         animator = GetComponent<Animator>();
         animator.enabled = false;
@@ -32,85 +33,43 @@ public class HollowCircleManager : MonoBehaviour
         SpawnHollowCircles(circlesToSpawn);
     }
 
-    public void RemoveHollowCircle(GameObject hollowCircle)
+    public HollowCircle FindCircleAtAngle(float angle, float tolerance)
     {
-        if (activeCircles.Contains(hollowCircle))
+        foreach (HollowCircle circle in activeCircles)
         {
-            activeCircles.Remove(hollowCircle);
-            Destroy(hollowCircle);
-            circlesHit++;
-
-            if (circlesHit == circlesToSpawn)
-            {
-                ProgressToNextLevel();
-            }
+            if (Mathf.Abs(Mathf.DeltaAngle(angle, circle.Angle)) <= tolerance)
+                return circle;
         }
+
+        return null;
     }
 
-    void ProgressToNextLevel()
+    public void RemoveHollowCircle(HollowCircle hollowCircle)
     {
-        circlesHit = 0;
-        circlesToSpawn++;
-        levelsBeat++;
-        if (levelsBeat == levelsToBeat)
-        {
-            Complete?.Invoke();
-        }
-        else
-        {
-            SpawnHollowCircles(circlesToSpawn);
-        }
-    }
-
-    void SpawnHollowCircles(int numberOfCircles)
-    {
-        if (baseRingCollider == null)
-        {
-            Debug.LogError("BaseRingCollider is not assigned!");
+        if (!activeCircles.Remove(hollowCircle))
             return;
-        }
 
-        Vector2 ringCenter = baseRingCollider.transform.TransformPoint(baseRingCollider.offset);
-        Vector2 firstPoint = baseRingCollider.points[0] + baseRingCollider.offset;
-        Vector2 worldFirstPoint = baseRingCollider.transform.TransformPoint(firstPoint);
-        float ringRadius = Vector2.Distance(ringCenter, worldFirstPoint);
+        Destroy(hollowCircle.gameObject);
+        circlesHit++;
 
-        for (int i = 0; i < numberOfCircles; i++)
-        {
-            float angle = (2 * Mathf.PI / numberOfCircles) * i;
-            Vector2 spawnPosition = ringCenter + new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * ringRadius;
-            GameObject circle = Instantiate(hollowCirclePrefab, new Vector3(spawnPosition.x, spawnPosition.y, 0f),
-                Quaternion.identity);
-            HollowCircle circleScript = circle.GetComponent<HollowCircle>();
-
-            if (circleScript != null)
-            {
-                circleScript.Initialize(this);
-                activeCircles.Add(circle);
-            }
-        }
+        if (circlesHit == circlesToSpawn)
+            ProgressToNextLevel();
     }
 
-    bool IsTooCloseToExistingCircles(Vector3 position)
+    public void ClearCircles()
     {
-        foreach (var circle in activeCircles)
-        {
-            if (Vector3.Distance(position, circle.transform.position) < minDistanceBetweenCircles)
-            {
-                return true;
-            }
-        }
+        foreach (HollowCircle circle in activeCircles)
+            Destroy(circle.gameObject);
 
-        return false;
+        activeCircles.Clear();
+        circlesHit = 0;
     }
 
     public void ResetGameToLevel1()
     {
         circlesToSpawn = 1;
-        circlesHit = 0;
         levelsBeat = 0;
-        activeCircles.ForEach(Destroy);
-        activeCircles.Clear();
+        ClearCircles();
         SpawnHollowCircles(circlesToSpawn);
     }
 
@@ -125,5 +84,37 @@ public class HollowCircleManager : MonoBehaviour
     {
         animator.enabled = true;
         animator.SetTrigger("Ring_tw");
+    }
+
+    private void ProgressToNextLevel()
+    {
+        circlesHit = 0;
+        circlesToSpawn++;
+        levelsBeat++;
+
+        if (levelsBeat == levelsToBeat)
+            Complete?.Invoke();
+        else
+            SpawnHollowCircles(circlesToSpawn);
+    }
+
+    private void SpawnHollowCircles(int numberOfCircles)
+    {
+        for (int i = 0; i < numberOfCircles; i++)
+        {
+            float angle = (360f / numberOfCircles) * i;
+
+            HollowCircle circle = Instantiate(hollowCirclePrefab, spawnParent);
+            circle.Rect.anchoredPosition = Ring.anchoredPosition + AngleToOffset(angle);
+            circle.Initialize(this, angle);
+
+            activeCircles.Add(circle);
+        }
+    }
+
+    private Vector2 AngleToOffset(float angle)
+    {
+        float radians = angle * Mathf.Deg2Rad;
+        return new Vector2(Mathf.Cos(radians), Mathf.Sin(radians)) * spawnRadius;
     }
 }

@@ -1,6 +1,8 @@
-using System.Collections;
-using UnityEngine;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class ElevatorManager : MonoBehaviour
@@ -16,7 +18,7 @@ public class ElevatorManager : MonoBehaviour
     private GameObject movingCircle;
 
     [SerializeField] private GameObject circle;
-    [SerializeField] private SpriteRenderer fadeOut;
+    [SerializeField] private Image fadeOut;
 
     [Header("NPC Passenger UI")] [SerializeField]
     private GameObject npcUIPanel;
@@ -25,201 +27,123 @@ public class ElevatorManager : MonoBehaviour
     [SerializeField] private Image npcSpriteImage;
     [SerializeField] private TextMeshProUGUI npcRequestText;
 
-    [Header("NPC Data")] [SerializeField] private NPCData[] npcDataList;
+    [Header("Settings")] [SerializeField] private float fadeDuration = 0.5f;
+    [SerializeField] private float fadeAlpha = 0.95f;
+    [SerializeField] private float beatDuration = 1f;
+    [SerializeField] private float miniGameStartDelay = 0.5f;
 
-    [Header("Settings")] [SerializeField] int totalFloors = 6;
+    private NPCData passenger;
+    private UniTaskCompletionSource floorReached;
 
-    private int currentFloor = 0;
-    private bool[] floorsCompleted;
-    private NPCData currentNPC;
-
-    void Start()
+    public async UniTask Ride(NPCData newPassenger, int miniGameLevels, CancellationToken token)
     {
-        floorsCompleted = new bool[totalFloors];
-        //SpawnNPCPassenger();
-    }
+        passenger = newPassenger;
+        floorReached = new UniTaskCompletionSource();
 
-    public void SpawnNPCPassenger()
-    {
-        if (npcDataList == null || npcDataList.Length == 0)
-        {
-            Debug.LogWarning("No NPC Data assigned to ElevatorManager.");
-            return;
-        }
+        levels.ResetToGround();
+        levels.SetTargetLevel(passenger.requestedFloor);
+        ShowPassenger();
+        leverMover.UnlockLever();
 
-        int index = Random.Range(0, npcDataList.Length);
-        currentNPC = Instantiate(npcDataList[index]);
-
-        int currentElevatorFloor = levels.GetCurrentLevel();
-
-        int randomFloor = Random.Range(1, totalFloors + 1);
-        while (randomFloor == currentElevatorFloor)
-        {
-            randomFloor = Random.Range(1, totalFloors + 1);
-        }
-
-        currentNPC.requestedFloor = randomFloor;
-        levels.SetTargetLevel(currentNPC.requestedFloor);
-
-        if (npcNameText != null)
-            npcNameText.text = currentNPC.npcName;
-        if (npcSpriteImage != null)
-            npcSpriteImage.sprite = currentNPC.npcSprite;
-
-        if (npcUIPanel != null)
-            npcUIPanel.SetActive(true);
-        if (npcRequestText != null)
-        {
-            npcRequestText.gameObject.SetActive(true);
-            string message = currentNPC.greetingText + "\n(Take me to floor " + currentNPC.requestedFloor + "!)";
-            NPCTypewriterWithSound typewriter = npcRequestText.GetComponent<NPCTypewriterWithSound>();
-            if (typewriter != null)
-            {
-                typewriter.PlayTypewriterEffect(message);
-            }
-            else
-            {
-                npcRequestText.text = message;
-            }
-        }
-    }
-
-    public void StartMiniGameForFloor(int floor)
-    {
-        if (currentNPC == null || floor != currentNPC.requestedFloor)
-            return;
+        await floorReached.Task.AttachExternalCancellation(token);
 
         leverMover.LockLever();
-        StartCoroutine(ActivateMiniGame(floor));
-    }
 
-    private IEnumerator ActivateMiniGame(int floor)
-    {
-        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
+        SetFadeAlpha(0f);
         fadeOut.gameObject.SetActive(true);
 
-        float fadeDuration = 0.5f;
-        float elapsedTime = 0f;
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(0f, 0.95f, elapsedTime / fadeDuration);
-            fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, alpha);
-            yield return null;
-        }
+        await FadeTo(fadeAlpha, token);
+        await UniTask.Delay(TimeSpan.FromSeconds(beatDuration), cancellationToken: token);
 
-        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0.95f);
-        yield return new WaitForSeconds(1f);
+        await PlayMiniGame(miniGameLevels, token);
 
-        movingCircle.SetActive(true);
-        circle.SetActive(true);
+        await FadeTo(0f, token);
+        fadeOut.gameObject.SetActive(false);
 
-        circleManager.ActivateGame(3, () => MiniGameComplete(floor));
-        yield return new WaitForSeconds(0.5f);
-        circleMovement.isActive = true;
+        Say(passenger.thankYouText);
+        await UniTask.Delay(TimeSpan.FromSeconds(beatDuration), cancellationToken: token);
+
+        npcUIPanel.SetActive(false);
     }
 
-    private void MiniGameComplete(int floor)
+    public void OnFloorReached(int floor)
     {
-        StartCoroutine(DeactivateMiniGame(floor));
+        if (floor != passenger.requestedFloor)
+            return;
+
+        floorReached.TrySetResult();
     }
 
-    private IEnumerator DeactivateMiniGame(int floor)
+    public void Stop()
     {
+        leverMover.LockLever();
+
         circleMovement.isActive = false;
-        yield return new WaitForSeconds(1f);
+        circleManager.ClearCircles();
 
         movingCircle.SetActive(false);
         circle.SetActive(false);
+        npcUIPanel.SetActive(false);
 
-        float fadeDuration = 0.5f;
-        float elapsedTime = 0f;
-        float startAlpha = fadeOut.color.a;
-        while (elapsedTime < fadeDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float alpha = Mathf.Lerp(startAlpha, 0f, elapsedTime / fadeDuration);
-            fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, alpha);
-            yield return null;
-        }
-
-        fadeOut.color = new Color(fadeOut.color.r, fadeOut.color.g, fadeOut.color.b, 0f);
+        SetFadeAlpha(0f);
         fadeOut.gameObject.SetActive(false);
-
-        floorsCompleted[floor - 1] = true;
-
-        SanityManager.Instance.DecreaseSanity(50);
-
-        if (SanityManager.Instance.IsPlayerInUnderworld)
-        {
-            EndGame();
-            yield break;
-        }
-
-        if (CameraElevatorShake.instance != null)
-            CameraElevatorShake.instance.shakeIntensity = 0f;
-
-        if (npcRequestText != null)
-        {
-            NPCTypewriterWithSound typewriter = npcRequestText.GetComponent<NPCTypewriterWithSound>();
-            if (typewriter != null)
-            {
-                typewriter.PlayTypewriterEffect(currentNPC.thankYouText);
-            }
-            else
-            {
-                npcRequestText.text = currentNPC.thankYouText;
-            }
-        }
-
-        yield return new WaitForSeconds(1f);
-        if (npcUIPanel != null)
-            npcUIPanel.SetActive(false);
-
-
-        leverMover.UnlockLever();
-
-        SpawnNPCPassenger();
     }
 
-    private void EndGame()
+    private async UniTask PlayMiniGame(int miniGameLevels, CancellationToken token)
     {
-        Debug.Log("Game Over: Player is in the underworld. Ending game and respawning...");
+        movingCircle.SetActive(true);
+        circle.SetActive(true);
 
-        GameObject player = GameObject.FindWithTag("Player");
-        if (player != null)
-        {
-            player.transform.position = new Vector2(31.97f, 49.23f);
-        }
-        else
-        {
-            Debug.LogWarning("Player object not found!");
-        }
+        UniTaskCompletionSource miniGameCompleted = new UniTaskCompletionSource();
+        circleManager.ActivateGame(miniGameLevels, () => miniGameCompleted.TrySetResult());
 
-        if (npcUIPanel != null)
-            npcUIPanel.SetActive(false);
+        await UniTask.Delay(TimeSpan.FromSeconds(miniGameStartDelay), cancellationToken: token);
+        circleMovement.isActive = true;
 
-        if (leverMover != null)
-            leverMover.enabled = false;
+        await miniGameCompleted.Task.AttachExternalCancellation(token);
 
-        if (levels != null)
-            levels.enabled = false;
+        circleMovement.isActive = false;
+        await UniTask.Delay(TimeSpan.FromSeconds(beatDuration), cancellationToken: token);
 
-        if (movingCircle != null)
-            movingCircle.SetActive(false);
-        if (circle != null)
-            circle.SetActive(false);
-        if (fadeOut != null)
-            fadeOut.gameObject.SetActive(false);
-
-        if (CameraElevatorShake.instance != null)
-            CameraElevatorShake.instance.shakeIntensity = 0f;
-
-        this.enabled = false;
+        movingCircle.SetActive(false);
+        circle.SetActive(false);
     }
 
-    public bool IsFloorUnlocked(int floor)
+    private void ShowPassenger()
     {
-        return floorsCompleted[floor - 1];
+        npcNameText.text = passenger.npcName;
+        npcSpriteImage.sprite = passenger.npcSprite;
+
+        npcUIPanel.SetActive(true);
+        npcRequestText.gameObject.SetActive(true);
+
+        Say(passenger.greetingText + "\n(Take me to floor " + passenger.requestedFloor + "!)");
+    }
+
+    private void Say(string message)
+    {
+        npcRequestText.GetComponent<NPCTypewriterWithSound>().PlayTypewriterEffect(message);
+    }
+
+    private async UniTask FadeTo(float targetAlpha, CancellationToken token)
+    {
+        float startAlpha = fadeOut.color.a;
+        float elapsed = 0f;
+
+        while (elapsed < fadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            SetFadeAlpha(Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeDuration));
+
+            await UniTask.Yield(token);
+        }
+
+        SetFadeAlpha(targetAlpha);
+    }
+
+    private void SetFadeAlpha(float alpha)
+    {
+        Color color = fadeOut.color;
+        fadeOut.color = new Color(color.r, color.g, color.b, alpha);
     }
 }

@@ -89,12 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3f408cc482261b4c8945e304dd211a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <sanityEffectHandler>k__BackingField: {fileID: 0}
   mask: {fileID: 9178857457889128665}
-  fill: {fileID: 4236518128642888012}
-  color: {r: 0.05490196, g: 0.6, b: 1, a: 0}
-  currentSanity: 300
-  maxSanity: 300
 --- !u!1 &629682528435260878
 GameObject:
   m_ObjectHideFlags: 0
@@ -129,8 +124,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 7.25, y: 0}
-  m_SizeDelta: {x: -14.5, y: -26}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -21.467518, y: -16.7937}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &236993437685608173
 CanvasRenderer:
@@ -242,7 +237,7 @@ MonoBehaviour:
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 0
-  m_FillAmount: 0.75
+  m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0

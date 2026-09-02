@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HollowCircle : MonoBehaviour
@@ -7,17 +5,20 @@ public class HollowCircle : MonoBehaviour
     private Animator animator;
     private HollowCircleManager manager;
 
+    public float Angle { get; private set; }
+    public RectTransform Rect { get; private set; }
 
-    private void Start()
+    private void Awake()
     {
+        Rect = (RectTransform)transform;
         animator = GetComponent<Animator>();
-
         animator.enabled = false;
     }
 
-    public void Initialize(HollowCircleManager manager)
+    public void Initialize(HollowCircleManager manager, float angle)
     {
         this.manager = manager;
+        Angle = angle;
     }
 
     public void HitHollowCircle()
@@ -26,17 +27,11 @@ public class HollowCircle : MonoBehaviour
         manager.TwitchAnimation();
         animator.SetTrigger("Hollow_trigger");
 
-        if (manager != null)
-        {
-            Invoke("RemoveHollowCircleAfterDelay", 0.5f);
-        }
+        Invoke(nameof(RemoveHollowCircleAfterDelay), 0.5f);
     }
 
     private void RemoveHollowCircleAfterDelay()
     {
-        if (manager != null)
-        {
-            manager.RemoveHollowCircle(gameObject);
-        }
+        manager.RemoveHollowCircle(this);
     }
 }
