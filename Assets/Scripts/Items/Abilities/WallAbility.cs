@@ -5,6 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "WallAbility", menuName = "Custom/Ability/WallAbility")]
 public class WallAbility : Ability
 {
+    [Header("References")]
+    [field: SerializeField] public Material Material { get; private set; }
+    [field: SerializeField] public Material TrippyMaterial { get; private set; }
+
     [Header("Chain Effect")]
     [Tooltip("Shader to use for the chain effect")]
     [SerializeField] private Shader chainShader;
@@ -20,6 +24,7 @@ public class WallAbility : Ability
     [SerializeField] private float chainWaveAmp = 0.15f;
     [Tooltip("Wave frequency")]
     [SerializeField] private float chainWaveFreq = 8f;
+
     public GameObject SpawnWall(Vector2[] points, MonoBehaviour runner,
         LineRenderer secondaryLineRenderer,
         Material groundMaterial, Material trippyTransparentMaterial)

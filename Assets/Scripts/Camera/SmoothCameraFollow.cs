@@ -18,26 +18,35 @@ public class SmoothCameraFollow : MonoBehaviour
 
     private Transform player;
     private Camera gameCamera;
+    private LetterDrawing letterDrawing;
 
     private float defaultOrthoSize;
     private Vector3 velocity = Vector3.zero;
 
     void Start()
     {
-        player = Player.instance != null ? Player.instance.transform : null;
         gameCamera = Camera.main;
         defaultOrthoSize = gameCamera.orthographicSize;
+
+        if (Player.instance == null) return;
+
+        player = Player.instance.transform;
+        letterDrawing = Player.instance.Get<LetterDrawing>();
     }
 
     void FixedUpdate()
     {
         if (player == null)
         {
-            if (Player.instance != null) player = Player.instance.transform;
-            else return;
+            if (Player.instance == null) return;
+
+            player = Player.instance.transform;
+            letterDrawing = Player.instance.Get<LetterDrawing>();
         }
-        // 1) Handle zoom on Right-Click
-        float targetSize = Input.GetMouseButton(1)
+
+        bool drawing = letterDrawing.IsDrawing;
+
+        float targetSize = drawing
             ? defaultOrthoSize + zoomAmount
             : defaultOrthoSize;
         gameCamera.orthographicSize = Mathf.Lerp(
@@ -48,9 +57,8 @@ public class SmoothCameraFollow : MonoBehaviour
 
         // 2) Decide target position
         Vector3 desiredPos;
-        if (Input.GetMouseButton(1))
+        if (drawing)
         {
-            // when holding R-click, center on player
             desiredPos = player.position;
 
             desiredPos.z = transform.position.z;

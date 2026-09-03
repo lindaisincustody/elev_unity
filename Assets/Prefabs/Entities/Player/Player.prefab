@@ -334,7 +334,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4f9bb808ee569a419ef244096c85bf1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  drawingMode: 0
   groundMaterial: {fileID: 2100000, guid: 7cc60ea8881148245b8876a10bbc6c13, type: 2}
   primaryLineMaterial: {fileID: 2100000, guid: 8e39ad95ebcc4964e80745cafb4b59ee, type: 2}
   trippyTransparentMaterial: {fileID: 2100000, guid: 25191b7fd45341141a02ebd7aa82d024, type: 2}
@@ -353,7 +352,6 @@ MonoBehaviour:
   symbolStampDuration: 0.5
   drawStrokeWidth: 0.1
   minPointWorldDistance: 0.01
-  drawZoneStartX: 0.5
   drawVersion: 0
 --- !u!120 &2997224443469270906
 LineRenderer:

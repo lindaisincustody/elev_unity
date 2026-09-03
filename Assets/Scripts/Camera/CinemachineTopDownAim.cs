@@ -23,6 +23,7 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     private Transform player;
     private CinemachineVirtualCamera vcam;
     private CinemachineFramingTransposer framing;
+    private LetterDrawing letterDrawing;
 
     private float defaultOrthoSize;
 
@@ -53,14 +54,17 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     private void Start()
     {
         player = Player.instance.transform;
+        letterDrawing = Player.instance.Get<LetterDrawing>();
     }
 
     private void Update()
     {
         if (player == null || unityCam == null) return;
 
+        bool rmb = letterDrawing.IsDrawing;
+
         // 1) Zoom
-        float targetSize = Input.GetMouseButton(1) ? defaultOrthoSize + zoomAmount : defaultOrthoSize;
+        float targetSize = rmb ? defaultOrthoSize + zoomAmount : defaultOrthoSize;
         vcam.m_Lens.OrthographicSize = Mathf.Lerp(
             vcam.m_Lens.OrthographicSize,
             targetSize,
@@ -68,7 +72,6 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
         );
 
         // 2) Desired offset
-        bool rmb = Input.GetMouseButton(1);
 
         Vector3 desiredOffset;
         float dampTime;

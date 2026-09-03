@@ -1,18 +1,23 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
 public class PlayerDrawingRig
 {
     public LineRenderer Primary { get; private set; }
-    public LineRenderer Secondary { get; private set; }
     public DrawingCameraRig Cameras { get; private set; }
+    public Dictionary<DrawingMode, LineRenderer> ModeLines { get; private set; }
 
     public void Spawn()
     {
         DrawingRigReferences references = ConfigManager.Instance.DrawingRig;
+        DrawingConfig config = ConfigManager.Instance.Drawing;
 
         Primary = SpawnLine(references.primaryLine);
-        Secondary = SpawnLine(references.secondaryLine);
+
+        ModeLines = new Dictionary<DrawingMode, LineRenderer>();
+        foreach (DrawingConfig.ModeEntry entry in config.Modes)
+            ModeLines[entry.mode] = SpawnModeLine(entry);
 
         Cameras = Object.Instantiate(references.cameraRig, Vector3.zero, Quaternion.identity);
         Cameras.name = references.cameraRig.name;
@@ -28,6 +33,19 @@ public class PlayerDrawingRig
         line.numCapVertices = entry.capVertices;
         line.numCornerVertices = entry.cornerVertices;
         line.shadowCastingMode = entry.castShadows ? ShadowCastingMode.On : ShadowCastingMode.Off;
+        line.useWorldSpace = true;
+        Object.DontDestroyOnLoad(line.gameObject);
+
+        return line;
+    }
+
+    private LineRenderer SpawnModeLine(DrawingConfig.ModeEntry entry)
+    {
+        LineRenderer line = Object.Instantiate(entry.linePrefab, Vector3.zero, Quaternion.identity);
+        line.name = entry.linePrefab.name;
+        line.useWorldSpace = true;
+        line.positionCount = 0;
+        line.enabled = false;
         Object.DontDestroyOnLoad(line.gameObject);
 
         return line;

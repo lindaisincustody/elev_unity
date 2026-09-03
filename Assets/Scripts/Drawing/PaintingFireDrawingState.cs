@@ -2,8 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PaintingFireDrawingState : IDrawingState
+public class PaintingFireDrawingState : PaintingDrawingState
 {
+    public override DrawingMode Mode => DrawingMode.PaintingFire;
+    public override DrawingWorld World => DrawingWorld.Underworld;
+
     private float _duration;
     private int _damage;
     private float _interval;
@@ -19,7 +22,7 @@ public class PaintingFireDrawingState : IDrawingState
         _layerMask = layerMask;
     }
 
-    public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
+    public override void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
     {
         int pointCount = mainLineRenderer.positionCount;
         if (pointCount < 2)

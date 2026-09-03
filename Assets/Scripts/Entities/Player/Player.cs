@@ -175,6 +175,6 @@ public class Player : Entity
         if (scene.HasPlayerPosition && scene.SceneName == SceneManager.GetActiveScene().name)
             return scene.PlayerPosition;
 
-        return null;
+        return PlayerSpawnPoint.Instance.transform.position;
     }
 }

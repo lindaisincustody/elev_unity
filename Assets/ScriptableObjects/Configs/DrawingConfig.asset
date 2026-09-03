@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2df8a91b4c7e40d6b8153ea92c60f778, type: 3}
+  m_Name: DrawingConfig
+  m_EditorClassIdentifier: Assembly-CSharp::DrawingConfig
+  modes:
+  - mode: 0
+    linePrefab: {fileID: 7496336467584829003, guid: 3ac1f70d5b2e4f4a9d61c8e07b45a112, type: 3}
+    sprite: {fileID: 21300000, guid: 69093463334ee1341baa0486ffb54cdc, type: 3}
+  - mode: 1
+    linePrefab: {fileID: 7496336467584829003, guid: 5be2a81c6c3f4a5bae72d9f18c56b223, type: 3}
+    sprite: {fileID: 21300000, guid: fbd4a3178e8e7ae45b7ed53985452674, type: 3}
+  - mode: 2
+    linePrefab: {fileID: 7496336467584829003, guid: 7cf3b92d7d404b6cbf83eaf29d67c334, type: 3}
+    sprite: {fileID: 21300000, guid: ab9442fcced485346adc1121efbcb7da, type: 3}

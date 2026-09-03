@@ -22,6 +22,8 @@ MonoBehaviour:
   activeTime: 5
   Glyph: "\u25A0"
   description: Summon a wall by drawing a square.
+  <Material>k__BackingField: {fileID: 2100000, guid: 7cc60ea8881148245b8876a10bbc6c13, type: 2}
+  <TrippyMaterial>k__BackingField: {fileID: 2100000, guid: 25191b7fd45341141a02ebd7aa82d024, type: 2}
   chainShader: {fileID: 4800000, guid: a1f41d0677de5dc4ebf7e55c8a9ffc01, type: 3}
   chainTexture: {fileID: 2800000, guid: 76df063c54c47a94d9b5e33af17c40e4, type: 3}
   chainTint: {r: 0.9528302, g: 0.6538149, b: 0.0764062, a: 1}

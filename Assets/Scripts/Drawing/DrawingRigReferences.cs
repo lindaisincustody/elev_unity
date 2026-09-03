@@ -23,11 +23,4 @@ public class DrawingRigReferences : ScriptableObject
         layerName = "Drawing",
         sortingOrder = 0,
     };
-
-    public LineEntry secondaryLine = new LineEntry
-    {
-        instanceName = "LineRendererSecondary",
-        layerName = "Drawing",
-        sortingOrder = -1,
-    };
 }

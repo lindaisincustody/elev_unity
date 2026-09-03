@@ -8,7 +8,6 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 
-
 public class PredictingDrawingState : IDrawingState
 {
     private LetterDrawing letterDrawing;
@@ -23,7 +22,6 @@ public class PredictingDrawingState : IDrawingState
 
     private ParticleSystem sparkleInstance;
     private Coroutine feedbackRoutine;
-
 
     private string[] labels = new string[]
 {
@@ -98,6 +96,33 @@ public class PredictingDrawingState : IDrawingState
         }
     }
 
+    public DrawingMode Mode => DrawingMode.Predicting;
+    public DrawingWorld World => DrawingWorld.Underworld;
+
+    private Camera ZoneCamera =>
+        letterDrawing.DrawZoneCanvas.renderMode == RenderMode.ScreenSpaceOverlay
+            ? null
+            : letterDrawing.DrawZoneCanvas.worldCamera;
+
+    public bool CanStartStrokeAt(Vector2 screenPosition)
+    {
+        return RectTransformUtility.RectangleContainsScreenPoint(
+            letterDrawing.DrawZoneRect, screenPosition, ZoneCamera);
+    }
+
+    public Vector3 ScreenToWorldPoint(Vector2 screenPosition)
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            letterDrawing.DrawZoneRect, screenPosition, ZoneCamera, out Vector2 local);
+
+        Rect zone = letterDrawing.DrawZoneRect.rect;
+
+        return displayCamera.ViewportToWorldPoint(new Vector3(
+            Mathf.Clamp01((local.x - zone.xMin) / zone.width),
+            Mathf.Clamp01((local.y - zone.yMin) / zone.height),
+            Mathf.Abs(displayCamera.transform.position.z)));
+    }
+
     public PredictingDrawingState(LetterDrawing newLetterDrawing)
     {
         letterDrawing = newLetterDrawing;
@@ -106,54 +131,24 @@ public class PredictingDrawingState : IDrawingState
         InitializeModel();
         InitializeFX();
 
-        letterDrawing.lineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
-        letterDrawing.lineRenderer.useWorldSpace = true;
-        letterDrawing.lineRenderer.enabled = false;
-        letterDrawing.lineRenderer.widthMultiplier = 1f;
-        letterDrawing.lineRenderer.startWidth      = 0.10f;
-        letterDrawing.lineRenderer.endWidth        = 0.10f;
-
-        letterDrawing.secondaryLineRenderer.useWorldSpace = true;
-        letterDrawing.secondaryLineRenderer.gameObject.layer = LayerMask.NameToLayer("Drawing");
-
-        letterDrawing.lineRenderer.material = letterDrawing.primaryLineMaterial;
-
-        Material feedbackMat = null;
-        if (letterDrawing.trippyTransparentMaterial != null)
-        {
-            feedbackMat = letterDrawing.trippyTransparentMaterial;
-            letterDrawing.secondaryLineRenderer.material = feedbackMat;
-        }
-        else
-        {
-            feedbackMat = letterDrawing.secondaryLineRenderer.material;
-            Debug.LogWarning("LetterDrawing: trippyTransparentMaterial is not assigned. Using existing secondary material.");
-        }
-
         if (letterDrawing.renderTextureDisplay != null)
             letterDrawing.renderTextureDisplay.texture = mlRT;
+    }
 
-        if (letterDrawing.groundMaterial != null)
-            letterDrawing.groundMaterial.mainTextureScale = new Vector2(10.0f, 0.5f);
+    public void Enter(LetterDrawing drawing)
+    {
+        letterDrawing = drawing;
 
-        var sec = letterDrawing.secondaryLineRenderer;
-        Color secColor = feedbackMat != null ? feedbackMat.color : Color.white;
-        Gradient initG = new Gradient();
-        initG.SetKeys(
-          new[] {
-              new GradientColorKey(secColor, 0f),
-              new GradientColorKey(secColor, 1f)
-          },
-          new[] {
-              new GradientAlphaKey(1f, 0f),
-              new GradientAlphaKey(1f, 1f)
-          }
-        );
-        sec.colorGradient = initG;
+        letterDrawing.CameraRig.SetActive(true);
+        letterDrawing.ShowDrawZone(true);
+        letterDrawing.drawingDisplay.texture = displayRT;
+        letterDrawing.drawingDisplay.enabled = true;
+    }
 
-        letterDrawing.secondaryLineRenderer.widthMultiplier = 1f;
-        letterDrawing.secondaryLineRenderer.startWidth      = letterDrawing.drawStrokeWidth;
-        letterDrawing.secondaryLineRenderer.endWidth        = letterDrawing.drawStrokeWidth;
+    public void Exit()
+    {
+        letterDrawing.CameraRig.SetActive(false);
+        letterDrawing.drawingDisplay.enabled = false;
     }
 
     private void InitializeCamera()
@@ -165,11 +160,10 @@ public class PredictingDrawingState : IDrawingState
         mlRT.Create();
         mlCamera.targetTexture = mlRT;
 
-        // Derive RT from height × aspect so camera and RT always share the same
-        // ratio — no horizontal squishing on landscape / high-DPI phones.
-        float zoneW    = (1f - letterDrawing.drawZoneStartX) * Screen.width;
-        float camAspect = zoneW / Mathf.Max(Screen.height, 1f);
-        int rtH = Mathf.Clamp(Screen.height, 64, 2160);
+        Rect zone = letterDrawing.DrawZoneRect.rect;
+        float camAspect = zone.width / zone.height;
+        float scale = letterDrawing.DrawZoneCanvas.scaleFactor;
+        int rtH = Mathf.Clamp(Mathf.RoundToInt(zone.height * scale), 64, 2160);
         int rtW = Mathf.Clamp(Mathf.RoundToInt(rtH * camAspect), 64, 4096);
         // Depth must be non-zero: the URP render graph rejects a camera target
         // texture whose Depth Stencil Format is None, even for a 2D-only camera.
@@ -179,9 +173,6 @@ public class PredictingDrawingState : IDrawingState
         // camAspect matches the RT exactly — no stretch regardless of orientation.
         displayCamera.aspect = camAspect;
         displayCamera.targetTexture = displayRT;
-
-        letterDrawing.drawingDisplay.texture = displayRT;
-        letterDrawing.drawingDisplay.enabled = true;
 
         Debug.Log($"[PDS] InitializeCamera for '{letterDrawing.gameObject.name}'" +
                   $"  rtW={rtW}  rtH={rtH}  camAspect={camAspect:F3}" +
@@ -195,7 +186,6 @@ public class PredictingDrawingState : IDrawingState
         worker = ModelLoader.Load(letterDrawing.model).CreateWorker(WorkerFactory.Device.CPU);
         prediction = new Prediction();
     }
-
 
     public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
     {
@@ -231,7 +221,6 @@ public class PredictingDrawingState : IDrawingState
         string predictedLabel = prediction.predictedLabel;
         Debug.Log($"Predicted Symbol: {predictedLabel}");
 
-
         foreach (var enemy in EnemyManager.Instance.GetAllEnemies())
         {
             if (enemy.activeSymbols.Any(g =>
@@ -244,7 +233,6 @@ public class PredictingDrawingState : IDrawingState
                     : predictedSymbol));
             }
         }
-
 
         AbilityActionRegistry.Instance.ExecuteAction(predictedLabel);
     }
@@ -371,37 +359,6 @@ public class PredictingDrawingState : IDrawingState
             );
             sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
         }
-    }
-
-    private void TriggerFeedback(LineRenderer secondaryLR)
-    {
-        // sparkles
-        if (sparkleInstance != null)
-        {
-            var pts = new Vector3[secondaryLR.positionCount];
-            secondaryLR.GetPositions(pts);
-            sparkleInstance.transform.position = pts[pts.Length - 1];
-            sparkleInstance.Play();
-            letterDrawing.StartCoroutine(StopSparkle());
-            int thisVersion = letterDrawing.drawVersion;
-            letterDrawing.StartCoroutine(ClearLinesAfter(1f, thisVersion));
-            AnimateSparkleAlong(secondaryLR);
-        }
-
-        // flash + pop — reset width immediately so interrupted animations don't compound
-        if (feedbackRoutine != null)
-        {
-            letterDrawing.StopCoroutine(feedbackRoutine);
-            letterDrawing.secondaryLineRenderer.startWidth = letterDrawing.drawStrokeWidth;
-            letterDrawing.secondaryLineRenderer.endWidth   = letterDrawing.drawStrokeWidth;
-        }
-        feedbackRoutine = letterDrawing.StartCoroutine(FlashPop());
-    }
-
-    private IEnumerator StopSparkle()
-    {
-        yield return new WaitForSeconds(letterDrawing.sparkleDuration);
-        sparkleInstance.Stop(true, ParticleSystemStopBehavior.StopEmitting);
     }
 
     private IEnumerator FlashPop()

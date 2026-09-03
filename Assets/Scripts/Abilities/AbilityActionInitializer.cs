@@ -49,7 +49,7 @@ public class AbilityActionsInitializer : MonoBehaviour
                 if (points != null)
                 {
                     wallAbility.SpawnWall(points, letterDrawing, letterDrawing.secondaryLineRenderer,
-                        letterDrawing.groundMaterial, letterDrawing.trippyTransparentMaterial);
+                        wallAbility.Material, wallAbility.TrippyMaterial);
                 }
             }
             else

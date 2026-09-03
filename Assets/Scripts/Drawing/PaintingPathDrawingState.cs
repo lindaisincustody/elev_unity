@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PaintingPathDrawingState : IDrawingState
+public class PaintingPathDrawingState : PaintingDrawingState
 {
+    public override DrawingMode Mode => DrawingMode.PaintingPath;
+    public override DrawingWorld World => DrawingWorld.Overworld;
+
     private GameObject lastPathColliderObj;
 
-    public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
+    public override void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
     {
         int pointCount = mainLineRenderer.positionCount;
         if (pointCount < 2)

@@ -1,16 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawingStyleChanger : MonoBehaviour
 {
-    [SerializeField] private LetterDrawing.DrawingMode drawingStyle;
+    [SerializeField] private DrawingMode drawingStyle;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.GetComponent<Entity>().Get<LetterDrawing>().ChangeState(drawingStyle);
+            collision.GetComponent<Entity>().Get<LetterDrawing>().PushZoneMode(this, drawingStyle);
         }
     }
 
@@ -18,7 +16,7 @@ public class DrawingStyleChanger : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            collision.GetComponent<Entity>().Get<LetterDrawing>().RevertToPreviousState();
+            collision.GetComponent<Entity>().Get<LetterDrawing>().PopZoneMode(this);
         }
     }
 }

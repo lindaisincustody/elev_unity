@@ -6,6 +6,7 @@ public class ConfigManager : CoreService
     public static ConfigManager Instance { get; private set; }
 
     [field: SerializeField] public DrawingRigReferences DrawingRig { get; private set; }
+    [field: SerializeField] public DrawingConfig Drawing { get; private set; }
 
     public override UniTask Initialize()
     {

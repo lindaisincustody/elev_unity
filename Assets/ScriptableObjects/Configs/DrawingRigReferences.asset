@@ -21,11 +21,3 @@ MonoBehaviour:
     capVertices: 90
     cornerVertices: 90
     castShadows: 0
-  secondaryLine:
-    prefab: {fileID: 7496336467584829003, guid: 9f1bee9271701c049aab9d577942a057, type: 3}
-    instanceName: LineRendererSecondary
-    layerName: Drawing
-    sortingOrder: -1
-    capVertices: 90
-    cornerVertices: 90
-    castShadows: 0
