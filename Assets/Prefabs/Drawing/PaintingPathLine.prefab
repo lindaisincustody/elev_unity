@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9141734026007474170}
   - component: {fileID: 7496336467584829003}
+  - component: {fileID: 5501234026007474171}
   m_Layer: 0
   m_Name: PaintingPathLine
   m_TagString: Untagged
@@ -58,7 +59,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 25191b7fd45341141a02ebd7aa82d024, type: 2}
+  - {fileID: 2100000, guid: b2d5a1e3f6c44d70ab8e2f9c4d61a853, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,13 +85,13 @@ LineRenderer:
   m_Positions: []
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.05
+    widthMultiplier: 0.8
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 0.24732709
+        value: 1
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -130,8 +131,8 @@ LineRenderer:
       m_ColorSpace: -1
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 90
-    numCapVertices: 90
+    numCornerVertices: 8
+    numCapVertices: 8
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -140,3 +141,16 @@ LineRenderer:
   m_UseWorldSpace: 1
   m_Loop: 0
   m_ApplyActiveColorSpace: 1
+--- !u!114 &5501234026007474171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3159825026326283803}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6b9e5c7da088b14ef2c6d3a815aec97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkableWidthRatio: 0.72

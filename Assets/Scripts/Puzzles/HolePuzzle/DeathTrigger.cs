@@ -6,7 +6,7 @@ public class DeathTrigger : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Feet"))
         {
             Player.instance.InDangerZone = true;
             if (!Player.instance.InSafeZone)
@@ -16,7 +16,7 @@ public class DeathTrigger : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Feet"))
         {
             Player.instance.InDangerZone = false;
         }
