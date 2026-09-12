@@ -8,4 +8,5 @@ public class GeneralSaveFile : ISaveFile
     public PlayerSnapshot PlayerSnapshot = new PlayerSnapshot();
     public InventorySnapshot InventorySnapshot = new InventorySnapshot();
     public AbilitiesSnapshot AbilitiesSnapshot = new AbilitiesSnapshot();
+    public FightsSnapshot FightsSnapshot = new FightsSnapshot();
 }

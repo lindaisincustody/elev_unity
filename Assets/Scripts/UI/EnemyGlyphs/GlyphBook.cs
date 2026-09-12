@@ -19,6 +19,7 @@ public class GlyphBook : MonoBehaviour
 
     private int currentWordIndex = 0;
     private float bookScaleTime = 0.6f;
+    private float glyphTravelTime = 1.2f;
 
     public void ClearCompleteText()
     {
@@ -73,8 +74,7 @@ public class GlyphBook : MonoBehaviour
 
     private void MoveToBook(Glyph newGlpyh, Glyph glyph)
     {
-        newGlpyh.transform.DOMove(glyph.transform.position, 3).SetEase(Ease.InSine)
-            .SetSpeedBased(true)
+        newGlpyh.GetComponent<RectTransform>().DOAnchorPos(Vector2.zero, glyphTravelTime).SetEase(Ease.InSine)
             .OnComplete(() =>
             {
                 glyph.Text.DOColor(Color.red, 2f);

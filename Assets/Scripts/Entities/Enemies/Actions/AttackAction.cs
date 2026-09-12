@@ -13,8 +13,12 @@ public class AttackAction : AIAction
 
     private void Attack(Context context)
     {
-        context.brain.isActionBusy = true;
         var health = context.target.GetComponent<Health>();
+
+        if (health == null)
+            return;
+
+        context.brain.isActionBusy = true;
         var animator = context.brain.enemy.Get<EnemyAnimator>();
         var lastAnim = animator.lastAnim;
         AttackRequest attackRequest = new AttackRequest(

@@ -7,18 +7,16 @@ public class PlayerSnapshot
     public int CurrentLevel;
     public int PoemsUsed;
     public bool TutorialComplete;
-    public string LastFightId;
 
     public PlayerSnapshot()
     {
     }
 
-    public PlayerSnapshot(int gold, int currentLevel, int poemsUsed, bool tutorialComplete, string lastFightId)
+    public PlayerSnapshot(int gold, int currentLevel, int poemsUsed, bool tutorialComplete)
     {
         Gold = gold;
         CurrentLevel = currentLevel;
         PoemsUsed = poemsUsed;
         TutorialComplete = tutorialComplete;
-        LastFightId = lastFightId;
     }
 }

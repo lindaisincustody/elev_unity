@@ -14,11 +14,13 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private EnemyGlyphSO enemyGlyphSO;
     [SerializeField] private ItemDropper itemDropper;
 
-    public List<Enemy> SpawnEnemies()
+    public int EnemyCount => spawnPoints.Count;
+
+    public List<Enemy> SpawnEnemies(int count)
     {
         List<Enemy> spawnedEnemies = new List<Enemy>();
 
-        for (int i = 0; i < spawnPoints.Count; i++)
+        for (int i = 0; i < count; i++)
         {
             Enemy newEnemy = Instantiate(enemyPrefab, spawnPoints[i].position, Quaternion.identity);
             newEnemy.name = enemyPrefab.name + "_" + i;

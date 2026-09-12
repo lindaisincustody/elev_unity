@@ -28,19 +28,35 @@ public class EnemyMovement : Component
     [SerializeField] private float daySpeed;
     [SerializeField] private float nightSpeed;
     [SerializeField] private float smoothTime = 0.3f;
+    [SerializeField] private LayerMask pathObstacles = 1;
 
     public Vector2 spawnPos { get; private set; }
-    public Vector2 minBound { get; set; }
-    public Vector2 maxBound { get; set; }
+    public Vector2 minBound => enemy.minBound;
+    public Vector2 maxBound => enemy.maxBound;
     public float passedTime { get; set; }
+
+    private const float DASH_DURATION = 0.2f;
 
     private bool isFrozen = false;
     private List<string> freezeReqeusts = new();
 
+    private readonly List<Vector2> path = new List<Vector2>();
+    private int pathIndex;
+    private Vector2 pathGoal;
+    private float pathTime;
+
+    private static readonly Collider2D[] OverlapBuffer = new Collider2D[1];
+
+    private Collider2D bodyCollider;
+    private ContactFilter2D obstacleFilter;
+    private bool pathBlocked;
+    private bool movePending;
     private Body bodyHandler;
     private AvoidBehaviour enemyBehavior;
     private Vector2 velocity = Vector2.zero;
     private float speed;
+
+    private Enemy enemy => (Enemy)Entity;
 
     private float originalDaySpeed;
     private float originalNightSpeed;
@@ -50,8 +66,18 @@ public class EnemyMovement : Component
         originalDaySpeed = daySpeed;
         originalNightSpeed = nightSpeed;
 
+        foreach (Collider2D collider2D in rb.GetComponents<Collider2D>())
+        {
+            if (!collider2D.isTrigger)
+                bodyCollider = collider2D;
+        }
+
+        rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
+
+        obstacleFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = pathObstacles };
+
         bodyHandler = new(body);
-        enemyBehavior = new (rb, minBound, maxBound);
+        enemyBehavior = new (rb);
         spawnPos = transform.position;
         target = Vector2.zero;
 
@@ -89,12 +115,9 @@ public class EnemyMovement : Component
     {
         Vector2 directionAwayFromPlayer = (rb.position - (Vector2)player.position).normalized;
 
-        Vector2 proposedPosition = rb.position + enemyBehavior.GetDirection(directionAwayFromPlayer);
+        Vector2 proposedPosition = rb.position + enemyBehavior.GetDirection(directionAwayFromPlayer, minBound, maxBound);
 
-        proposedPosition.x = Mathf.Clamp(proposedPosition.x, minBound.x, maxBound.x);
-        proposedPosition.y = Mathf.Clamp(proposedPosition.y, minBound.y, maxBound.y);
-
-        target = proposedPosition;
+        target = ClampToBounds(proposedPosition);
         Move();
     }
 
@@ -108,31 +131,88 @@ public class EnemyMovement : Component
 
         if (target.HasValue)
         {
-            MoveTowardsTarget();
+            movePending = true;
         }
         else
         {
+            movePending = false;
             rb.linearVelocity = Vector2.zero;
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (!movePending || !target.HasValue || isFrozen)
+            return;
+
+        movePending = false;
+        MoveTowardsTarget();
+    }
+
     private void MoveTowardsTarget()
     {
-        Vector2 currentPos = rb.position;
-        Vector2 targetPos = target.Value;
+        Vector2 goal = ClampToBounds(target.Value);
 
-        targetPos.x = Mathf.Clamp(targetPos.x, minBound.x, maxBound.x);
-        targetPos.y = Mathf.Clamp(targetPos.y, minBound.y, maxBound.y);
+        RefreshPath(goal);
 
-        rb.position = Vector2.SmoothDamp(currentPos, targetPos, ref velocity, smoothTime, speed, Time.fixedDeltaTime);
+        bool onFinalWaypoint = pathIndex >= path.Count - 1;
+        Vector2 waypoint = path.Count > 0 ? path[pathIndex] : goal;
 
-        if (Vector2.Distance(rb.position, targetPos) < 0.1f)
+        Vector2 nextPosition = Vector2.SmoothDamp(rb.position, waypoint, ref velocity, smoothTime, speed, Time.fixedDeltaTime);
+
+        rb.MovePosition(nextPosition);
+
+        if (Vector2.Distance(nextPosition, waypoint) < (onFinalWaypoint ? 0.1f : 0.35f))
         {
-            animator.Play(EnemyAnimator.AnimationType.Idle);
-            target = null;
+            if (onFinalWaypoint)
+            {
+                animator.Play(EnemyAnimator.AnimationType.Idle);
+                target = null;
+                path.Clear();
+            }
+            else
+            {
+                pathIndex++;
+            }
         }
 
-        bodyHandler.UpdateBody(_target);
+        bodyHandler.UpdateBody(waypoint);
+    }
+
+    private void RefreshPath(Vector2 goal)
+    {
+        if (minBound == maxBound)
+            return;
+
+        if (Time.time - pathTime < 0.1f)
+            return;
+
+        if (Time.time - pathTime < 0.5f && Vector2.Distance(goal, pathGoal) < 0.5f)
+            return;
+
+        NavGrid grid = NavGridCache.Get(minBound, maxBound, ColliderOffset(), ColliderRadius(), pathObstacles);
+
+        pathGoal = goal;
+        pathTime = Time.time;
+        pathIndex = 0;
+
+        pathBlocked = !grid.FindPath(rb.position, goal, path);
+
+        if (pathBlocked)
+        if (pathBlocked)
+            path.Clear();
+    }
+
+    private Vector2 ColliderOffset()
+    {
+        return (Vector2)bodyCollider.bounds.center - rb.position;
+    }
+
+    private float ColliderRadius()
+    {
+        Vector3 extents = bodyCollider.bounds.extents;
+
+        return Mathf.Max(extents.x, extents.y);
     }
 
     public void FaceTarget(Transform target)
@@ -152,21 +232,21 @@ public class EnemyMovement : Component
     public void Dash(Context context, float dashSpeed, System.Action OnEnd)
     {
         FaceTarget(context.target);
-        Vector2 targetPosition = context.target.position;
-        targetPosition.x = Mathf.Clamp(targetPosition.x, minBound.x, maxBound.x);
-        targetPosition.y = Mathf.Clamp(targetPosition.y, minBound.y, maxBound.y);
+        Vector2 targetPosition = ClampToBounds(context.target.position);
 
-        Vector2 direction = (targetPosition - rb.position).normalized;
+        Vector2 toTarget = targetPosition - rb.position;
+        float dashDistance = Mathf.Min(dashSpeed * DASH_DURATION, toTarget.magnitude);
 
         if (!isFrozen)
-            rb.linearVelocity = direction * dashSpeed;
+            rb.linearVelocity = toTarget.normalized * dashSpeed;
 
-        StartCoroutine(StopDashAfterTime(0.2f, OnEnd)); 
+        StartCoroutine(StopDashAfterTime(dashDistance / dashSpeed, OnEnd));
     }
 
     public void Stop()
     {
         StopAllCoroutines();
+        rb.linearVelocity = Vector2.zero;
     }
 
     private IEnumerator StopDashAfterTime(float time, System.Action OnEnd)
@@ -194,4 +274,65 @@ public class EnemyMovement : Component
         speed = originalSpeed;
     }
 
+
+    private void OnDrawGizmos()
+    {
+        if (!Application.isPlaying || path.Count == 0)
+            return;
+
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawLine(rb.position, path[pathIndex]);
+
+        for (int i = pathIndex; i < path.Count - 1; i++)
+            Gizmos.DrawLine(path[i], path[i + 1]);
+
+        foreach (Vector2 point in path)
+            Gizmos.DrawWireSphere(point, 0.08f);
+
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(path[pathIndex], 0.16f);
+
+        if (target.HasValue)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawWireCube(target.Value, Vector3.one * 0.3f);
+        }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (!Application.isPlaying || minBound == maxBound)
+            return;
+
+        NavGrid grid = NavGridCache.Get(minBound, maxBound, ColliderOffset(), ColliderRadius(), pathObstacles);
+
+        Gizmos.color = new Color(1f, 0.2f, 0.2f, 0.25f);
+
+        for (int y = 0; y < grid.Height; y++)
+        {
+            for (int x = 0; x < grid.Width; x++)
+            {
+                if (grid.IsBlocked(x, y))
+                    Gizmos.DrawCube(grid.CellCenter(x, y), Vector3.one * NavGrid.CellSize * 0.9f);
+            }
+        }
+
+        Gizmos.color = Color.white;
+        Gizmos.DrawWireCube((minBound + maxBound) * 0.5f, maxBound - minBound);
+    }
+
+    private Vector2 ClampToBounds(Vector2 position)
+    {
+        if (minBound == maxBound)
+            return position;
+
+        Bounds colliderBounds = bodyCollider.bounds;
+        Vector2 offset = (Vector2)colliderBounds.center - rb.position;
+        Vector2 extents = colliderBounds.extents;
+
+        position.x = Mathf.Clamp(position.x, minBound.x + extents.x - offset.x, maxBound.x - extents.x - offset.x);
+        position.y = Mathf.Clamp(position.y, minBound.y + extents.y - offset.y, maxBound.y - extents.y - offset.y);
+
+        return position;
+    }
 }

@@ -130,6 +130,7 @@ public class PredictingDrawingState : IDrawingState
         InitializeCamera();
         InitializeModel();
         InitializeFX();
+        Warmup();
 
         if (letterDrawing.renderTextureDisplay != null)
             letterDrawing.renderTextureDisplay.texture = mlRT;
@@ -138,6 +139,9 @@ public class PredictingDrawingState : IDrawingState
     public void Enter(LetterDrawing drawing)
     {
         letterDrawing = drawing;
+
+        letterDrawing.secondaryLineRenderer.startWidth = letterDrawing.drawStrokeWidth;
+        letterDrawing.secondaryLineRenderer.endWidth = letterDrawing.drawStrokeWidth;
 
         letterDrawing.CameraRig.SetActive(true);
         letterDrawing.ShowDrawZone(true);
@@ -179,6 +183,16 @@ public class PredictingDrawingState : IDrawingState
                   $"  displayRT={(displayRT != null ? "OK" : "NULL")}" +
                   $"  drawingDisplay={(letterDrawing.drawingDisplay != null ? "OK" : "NULL")}" +
                   $"  displayCamEnabled={displayCamera?.enabled}");
+    }
+
+
+    private void Warmup()
+    {
+        mlCamera.Render();
+
+        using Tensor warmupTensor = new Tensor(mlRT, 1);
+        worker.Execute(warmupTensor);
+        worker.PeekOutput().Dispose();
     }
 
     private void InitializeModel()

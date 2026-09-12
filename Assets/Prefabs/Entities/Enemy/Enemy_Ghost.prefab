@@ -34,6 +34,7 @@ Transform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &2712467978865591480
 SpriteRenderer:
+  serializedVersion: 2
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -49,6 +50,11 @@ SpriteRenderer:
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
   m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -70,9 +76,11 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: -883732801
   m_SortingLayer: 4
   m_SortingOrder: 1
+  m_MaskInteraction: 0
   m_Sprite: {fileID: -2064468079, guid: a5714655a274bed43bd34345a4de5418, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -82,7 +90,6 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!1001 &2277124308553648454
 PrefabInstance:
@@ -161,15 +168,15 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1186790290414908665, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
-      propertyPath: components.Array.data[0]
+      propertyPath: 'components.Array.data[0]'
       value: 
       objectReference: {fileID: 8114363694230377246}
     - target: {fileID: 1186790290414908665, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
-      propertyPath: components.Array.data[6]
+      propertyPath: 'components.Array.data[6]'
       value: 
       objectReference: {fileID: 3705066438658308859}
     - target: {fileID: 1186790290414908665, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
-      propertyPath: components.Array.data[7]
+      propertyPath: 'components.Array.data[7]'
       value: 
       objectReference: {fileID: 8354877865443280874}
     - target: {fileID: 4345423784217660443, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
@@ -179,6 +186,10 @@ PrefabInstance:
     - target: {fileID: 5580081335637333945, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
       propertyPath: attackPos
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7800451871808657866, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 7812484598037352108, guid: 86fb472320002f3469bfde3d99e7020f, type: 3}
       propertyPath: body
@@ -270,10 +281,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 8250668804967170324}
     m_Modifications:
     - target: {fileID: 4445126656023411518, guid: 834062e8111a83b488d5736e2ab4ae3c, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 06f81897386f41947975a947092cfa47, type: 3}
-    - target: {fileID: 4445126656023411518, guid: 834062e8111a83b488d5736e2ab4ae3c, type: 3}
       propertyPath: m_SortingLayer
       value: 4
       objectReference: {fileID: 0}
@@ -285,10 +292,6 @@ PrefabInstance:
       propertyPath: m_SortingLayerID
       value: -883732801
       objectReference: {fileID: 0}
-    - target: {fileID: 4445126656023411518, guid: 834062e8111a83b488d5736e2ab4ae3c, type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: 0e60e146cc707804ba1808d23bd32e28, type: 2}
     - target: {fileID: 7784125878354345092, guid: 834062e8111a83b488d5736e2ab4ae3c, type: 3}
       propertyPath: m_Controller
       value: 
@@ -387,6 +390,7 @@ CapsuleCollider2D:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4566088557770307288}
   m_Enabled: 1
+  serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -410,7 +414,8 @@ CapsuleCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_UsedByComposite: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
   m_Offset: {x: -0.10344711, y: 0.37499574}
   m_Size: {x: 0.910702, y: 1.2985861}
   m_Direction: 0

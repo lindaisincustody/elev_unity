@@ -37,6 +37,12 @@ public class PauseMenu : MonoBehaviour
         Time.timeScale = 1f;
     }
 
+    public void ResetGame()
+    {
+        SaveLoadService.Instance.EraseProgress();
+        OpenMainMenu();
+    }
+
     public void OpenMainMenu()
     {
         Time.timeScale = 1f;

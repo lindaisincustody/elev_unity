@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -34,8 +34,6 @@ public class Enemy : Entity
     void Start()
     {
         SanityChange();
-        SetBounds();
-        HideGlyphs();
 
         Get<EnemyHealth>().OnDeath += OnEnemyDeath;
     }
@@ -47,14 +45,14 @@ public class Enemy : Entity
 
         List<string> filteredLabels = new List<string>(_labels);
 
-        float symbolSpacing = 1f;
+        float symbolSpacing = .8f;
         int symbolCount = filteredLabels.Count;
         float totalWidth = (symbolCount - 1) * symbolSpacing;
         float startX = -totalWidth / 2f;
 
         for (int i = 0; i < symbolCount; i++)
         {
-            Vector3 symbolPosition = transform.position + new Vector3(startX + i * symbolSpacing, 4, 0);
+            Vector3 symbolPosition = transform.position + new Vector3(startX + i * symbolSpacing, 2.8f, 0);
             EnemyLetter symbolObject = Instantiate(letterPrefab, symbolPosition, Quaternion.identity, transform);
             enemyLetters.Add(symbolObject);
 
@@ -91,7 +89,6 @@ public class Enemy : Entity
                 foreach (var matchedSymbol in matchedSymbols)
                 {
                     displayedSymbols.Remove(matchedSymbol); 
-                    UIManager.Instance.Get<GlyphBook>().GlyphWritten(this, matchedSymbol);
                     Destroy(matchedSymbol.gameObject);   
                 }
 
@@ -130,12 +127,6 @@ public class Enemy : Entity
         }
     }
 
-
-    private void SetBounds()
-    {
-        Get<EnemyMovement>().minBound = minBound;
-        Get<EnemyMovement>().maxBound = maxBound;
-    }
 
     private void SanityChange()
     {
