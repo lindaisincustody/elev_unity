@@ -77,8 +77,20 @@ public class Enemy : Entity
     }
 
 
+    public bool IsInsideBounds(Vector2 position)
+    {
+        if (minBound == maxBound)
+            return true;
+
+        return position.x >= minBound.x && position.x <= maxBound.x
+            && position.y >= minBound.y && position.y <= maxBound.y;
+    }
+
     public void CheckSymbolMatch(string drawnSymbol)
     {
+        if (!IsInsideBounds(Player.instance.transform.position))
+            return;
+
         if (activeSymbols.Any(g => g.Glyph == drawnSymbol))
         {
             var matchedSymbols = displayedSymbols.FindAll(symbol => symbol.text == drawnSymbol);
@@ -89,6 +101,7 @@ public class Enemy : Entity
                 foreach (var matchedSymbol in matchedSymbols)
                 {
                     displayedSymbols.Remove(matchedSymbol); 
+                    UIManager.Instance.Get<GlyphBook>().GlyphWritten(this, matchedSymbol);
                     Destroy(matchedSymbol.gameObject);   
                 }
 

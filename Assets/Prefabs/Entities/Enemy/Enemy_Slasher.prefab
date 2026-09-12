@@ -254,6 +254,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectionRadius: 20
   targetTags: []
+  sightBlockers:
+    serializedVersion: 2
+    m_Bits: 1
+  memoryDuration: 2
   detectedObjects: []
 --- !u!1 &5701702810069756436
 GameObject:
@@ -985,7 +989,7 @@ MonoBehaviour:
   shader: {fileID: 2998463136461633261}
   shieldMat: {fileID: 2100000, guid: fc19eff57169f024aa0854c298b82598, type: 2}
   valueToChange: _Intensity
-  activeValue: 0.027
+  activeValue: 0.2
   inactiveValue: 0
   flashDuration: 1
 --- !u!58 &1356284750688808381
@@ -1047,6 +1051,10 @@ PrefabInstance:
     - target: {fileID: 1487263885347553310, guid: 9cec064c0ce8a704f9479f6537b5850e, type: 3}
       propertyPath: m_Name
       value: SoulReaper
+      objectReference: {fileID: 0}
+    - target: {fileID: 1487263885347553310, guid: 9cec064c0ce8a704f9479f6537b5850e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6750562016530469358, guid: 9cec064c0ce8a704f9479f6537b5850e, type: 3}
       propertyPath: m_Size.x

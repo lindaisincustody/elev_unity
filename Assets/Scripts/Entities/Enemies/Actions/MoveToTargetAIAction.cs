@@ -16,7 +16,14 @@ public class MoveToTargetAIAction : AIAction
 
         if (target == null) return;
 
-        context.movement.target = target.position;
+        if (context.sensor.CanSee(target))
+        {
+            context.movement.target = target.position;
+        }
+        else if (context.sensor.TryGetLastSeenPosition(targetTag, out Vector2 lastSeen))
+        {
+            context.movement.target = lastSeen;
+        }
     }
 
     public override void Reset(Context context)
