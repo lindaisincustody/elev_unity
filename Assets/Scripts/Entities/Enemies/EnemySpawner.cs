@@ -1,10 +1,13 @@
+using NaughtyAttributes;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class EnemySpawner : MonoBehaviour
 {
     [Header("Enemy")]
     [SerializeField] private Enemy enemyPrefab;
+    [SerializeField] private Item item;
 
     [Space, SerializeField] private List<Transform> spawnPoints;
 
@@ -12,7 +15,6 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private Transform minBound;
     [SerializeField] private Transform maxBound;
     [SerializeField] private EnemyGlyphSO enemyGlyphSO;
-    [SerializeField] private ItemDropper itemDropper;
 
     public int EnemyCount => spawnPoints.Count;
 
@@ -40,7 +42,7 @@ public class EnemySpawner : MonoBehaviour
     private void OnDeath(Enemy enemy)
     {
         enemy.OnDeath -= OnDeath;
-        if (itemDropper)
-            itemDropper.Drop(enemy.transform.position);
+
+        ItemDropper.Instance.Drop(item, enemy.transform.position);
     }
 }

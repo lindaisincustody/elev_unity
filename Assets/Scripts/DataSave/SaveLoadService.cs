@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using Cysharp.Threading.Tasks;
@@ -57,6 +57,12 @@ public class SaveLoadService : CoreService
 
     public void EraseProgress()
     {
+        DeleteSaveFiles();
+        CreateSaveFiles();
+    }
+
+    public static void DeleteSaveFiles()
+    {
         foreach (Type type in SaveFileTypes)
         {
             string path = PathFor(type);
@@ -64,8 +70,6 @@ public class SaveLoadService : CoreService
             if (File.Exists(path))
                 File.Delete(path);
         }
-
-        CreateSaveFiles();
     }
 
     private void CreateSaveFiles()
@@ -76,7 +80,7 @@ public class SaveLoadService : CoreService
             saveFilesByType[type] = (ISaveFile)Activator.CreateInstance(type);
     }
 
-    private string PathFor(Type type)
+    private static string PathFor(Type type)
     {
         return Path.Combine(Application.persistentDataPath, type.Name + ".json");
     }

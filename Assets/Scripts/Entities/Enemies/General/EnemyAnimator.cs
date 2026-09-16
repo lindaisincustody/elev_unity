@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -47,6 +47,9 @@ public class EnemyAnimator : Component
 
     public void ResetAnimator()
     {
+        if (isDead)
+            return;
+
         animator.SetInteger("State", 0);
     }
 

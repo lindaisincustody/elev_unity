@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -36,6 +36,7 @@ public class EnemyMovement : Component
     public float passedTime { get; set; }
 
     private const float DASH_DURATION = 0.2f;
+    private const string DEATH_FREEZE = "Death";
 
     private bool isFrozen = false;
     private List<string> freezeReqeusts = new();
@@ -84,6 +85,19 @@ public class EnemyMovement : Component
         SanityManager.Instance.OnSanityChanged += SanityChange;
         SanityChange(0);
 
+        Entity.Get<EnemyHealth>().OnLethal += OnEnemyDeath;
+    }
+
+    private void OnEnemyDeath()
+    {
+        Stop();
+        Freeze(DEATH_FREEZE);
+    }
+
+    private void OnDestroy()
+    {
+        SanityManager.Instance.OnSanityChanged -= SanityChange;
+        Entity.Get<EnemyHealth>().OnLethal -= OnEnemyDeath;
     }
 
     public void Freeze(string requesterId)

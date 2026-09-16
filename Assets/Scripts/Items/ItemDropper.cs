@@ -1,21 +1,29 @@
 using UnityEngine;
 using DG.Tweening;
+using Cysharp.Threading.Tasks;
 
-public class ItemDropper : MonoBehaviour
+public class ItemDropper : CoreService
 {
-    [SerializeField] private PickUp pickUp;
-    [SerializeField] private Item item;
+    public static ItemDropper Instance { get; private set; }
 
     private float _duration = 1f;
 
-    public void Drop(Vector3 position)
+    public override UniTask Initialize()
+    {
+        Instance = this;
+
+        return UniTask.CompletedTask;
+    }
+
+    public void Drop(Item item, Vector3 position)
     {   
-        PickUp newPickup = Instantiate(pickUp, position, Quaternion.identity);
+        PickUp newPickup = Instantiate(ConfigManager.Instance.References.PickUp, position, Quaternion.identity);
         newPickup.SetItem(item);
 
         newPickup.transform.localScale = Vector3.zero;
 
-        newPickup.transform.DOScale(Vector3.one, _duration / 2f);
-        newPickup.transform.DOJump(position, 2, 1, _duration);
+        newPickup.transform.localScale = Vector3.one * 0.2f;
+        newPickup.transform.DOScale(Vector3.one, 0.2f);
+        newPickup.transform.DOJump(position, .2f, 1, _duration);
     }
 }

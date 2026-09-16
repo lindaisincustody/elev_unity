@@ -1,6 +1,7 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
@@ -40,7 +41,14 @@ public class PauseMenu : MonoBehaviour
     public void ResetGame()
     {
         SaveLoadService.Instance.EraseProgress();
-        OpenMainMenu();
+
+        Time.timeScale = 1f;
+
+#if UNITY_EDITOR
+        PlayModeRestarter.Request();
+#else
+        SceneManager.LoadScene(Constants.SceneNames.MainMenu);
+#endif
     }
 
     public void OpenMainMenu()

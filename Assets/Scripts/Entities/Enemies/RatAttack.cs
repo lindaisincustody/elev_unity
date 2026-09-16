@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +9,7 @@ public class RatAttack : EnemyAttack
     [SerializeField] private Transform attackPos;
     [SerializeField] private Transform body;
 
-    private List<GameObject> _activeAttacks = new();
+    private List<(EffectType type, GameObject effect)> _activeAttacks = new();
 
     private EnemyMovement movement;
     private EnemyAnimator animator;
@@ -27,6 +27,9 @@ public class RatAttack : EnemyAttack
 
     public override void Attack(Context context, AttackRequest attackRequest)
     {
+        if (Entity.Get<EnemyHealth>().isDead)
+            return;
+
         movement.FaceTarget(attackRequest.targetHealth.transform);
         animator = attackRequest.animator;
         animator.Play(EnemyAnimator.AnimationType.Attack);
@@ -39,7 +42,7 @@ public class RatAttack : EnemyAttack
     private IEnumerator SpecialAttack(Health targetHealth, Action onAttackEnd)
     {
         GameObject effect = EffectSystem.GetEffect(EffectType.WhiteSlashFull);
-        _activeAttacks.Add(effect);
+        _activeAttacks.Add((EffectType.WhiteSlashFull, effect));
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
         swipe.Init(targetHealth, damageAmount, body);
@@ -66,7 +69,7 @@ public class RatAttack : EnemyAttack
     private void SpawnSwipe(Health targetHealth, Vector3 direction, float distance)
     {
         var effect = EffectSystem.GetEffect(EffectType.WhiteSlash);
-        _activeAttacks.Add(effect);
+        _activeAttacks.Add((EffectType.WhiteSlash, effect));
         effect.SetActive(false);
         Swipe swipe = effect.GetComponent<Swipe>();
         swipe.Init(targetHealth, damageAmount, body);
@@ -92,17 +95,20 @@ public class RatAttack : EnemyAttack
         effect.SetActive(true);
         swipe.ActivateCollider();
         yield return new WaitForSeconds(SWIPE_APPEAR_DELAY - SWIPE_DURATION);
-        _activeAttacks.Remove(effect);
+        _activeAttacks.Remove((effectType, effect));
         EffectSystem.ReturnEffect(effectType, effect);
     }
 
     private void OnEnemyDeath()
     {
         StopAllCoroutines();
-        foreach (GameObject attack in _activeAttacks)
+
+        foreach ((EffectType type, GameObject effect) in _activeAttacks)
         {
-            Destroy(attack);
+            EffectSystem.ReturnEffect(type, effect);
         }
+
+        _activeAttacks.Clear();
     }
 
     public override void ResetAttack()

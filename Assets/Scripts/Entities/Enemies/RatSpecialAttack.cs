@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,6 +15,18 @@ public class RatSpecialAttack : Component
     {
         ratAttack = Entity.Get<RatAttack>();
         enemyMovement = Entity.Get<EnemyMovement>();
+
+        Entity.Get<EnemyHealth>().OnLethal += OnEnemyDeath;
+    }
+
+    private void OnEnemyDeath()
+    {
+        StopAllCoroutines();
+    }
+
+    private void OnDestroy()
+    {
+        Entity.Get<EnemyHealth>().OnLethal -= OnEnemyDeath;
     }
 
     public void Execute(Context context, System.Action OnEnd)
