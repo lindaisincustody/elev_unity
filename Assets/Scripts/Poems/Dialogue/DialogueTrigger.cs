@@ -1,59 +1,45 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class DialogueTrigger : Interactable
 {
+    [SerializeField] private SaveId dialogueID;
     [SerializeField] private DialogueData dialogueData;
-    [SerializeField] private bool instant = false;
-    [SerializeField] private Material newMaterial;
-    [SerializeField] private SpriteRenderer targetRenderer;
-    [SerializeField] private bool isInteractionCircle;
-    [SerializeField] private Item itemToAdd;
     [SerializeField] public UnityEvent OnComplete;
-    private bool itemAdded = false;
+
+    private DialoguesSnapshot snapshot;
+
+    protected override void Start()
+    {
+        base.Start();
+
+        snapshot = SaveLoadService.Instance.Get<GeneralSaveFile>().DialoguesSnapshot;
+
+        if (snapshot.IsCompleted(dialogueID.Value))
+            Hide();
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.gameObject.CompareTag("Player")) return;
 
-        HandleItemAddition();
-
         playerIsInTrigger = true;
-
-        if (instant)
-        {
-            ActivateDialogueInstantly();
-        }
-        else
-        {
-            player.ShowInteractUI(true);
-        }
+        player.ShowInteractUI(true);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            playerIsInTrigger = false;
-            if (!instant)
-            {
-                player.ShowInteractUI(false);
-            }
-        }
+        if (!collision.gameObject.CompareTag("Player")) return;
+
+        playerIsInTrigger = false;
+        player.ShowInteractUI(false);
     }
 
     protected override void HandleInteract()
     {
-        if (!playerIsInTrigger || instant) return;
+        if (!playerIsInTrigger) return;
 
         base.HandleInteract();
-
-        if (isInteractionCircle)
-        {
-            DisableInteractionCircle();
-        }
 
         Trigger();
     }
@@ -63,42 +49,27 @@ public class DialogueTrigger : Interactable
         ActivateDialogue();
     }
 
-    protected void ActivateDialogueInstantly()
+    public virtual void Complete()
     {
-        ActivateDialogue();
-        UIManager.Instance.Get<DialogueController>().NextAction();
-    }
+        OnComplete?.Invoke();
 
-    private void HandleItemAddition()
-    {
-        if (itemAdded || itemToAdd == null) return;
-
-        Player.instance.Get<ItemsInventory>().AddItem(itemToAdd);
-        itemAdded = true;
-    }
-
-    private void DisableInteractionCircle()
-    {
-        Transform child = transform.Find("InteractionCircle");
-        if (child == null) return;
-
-        SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
+        if (!snapshot.IsCompleted(dialogueID.Value))
         {
-            spriteRenderer.enabled = false;
+            snapshot.Completed.Add(dialogueID.Value);
+            SaveLoadService.Instance.SaveProgress();
         }
+
+        Hide();
     }
 
-    public void ChangeMaterial()
+    protected virtual void Hide()
     {
-        if (targetRenderer != null && newMaterial != null)
-        {
-            targetRenderer.material = newMaterial;
-        }
+        gameObject.SetActive(false);
     }
 
     public void ActivateDialogue()
     {
+        UIManager.Instance.Get<DialogueController>().NextAction();
         UIManager.Instance.Get<DialogueController>().ActivateDialogue(dialogueData, this);
     }
-}
+}

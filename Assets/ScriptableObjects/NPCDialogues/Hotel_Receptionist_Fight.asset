@@ -15,9 +15,11 @@ MonoBehaviour:
   dialogueType: 0
   otherCharacterName: Sandra
   textList:
-  - lineType: 0
-    dialogueLineText: Am I dreaming?
   - lineType: 1
-    dialogueLineText: Are you?
+    dialogueLineText: Good morning! The elevator seems to be malfunctioning again...
+      Could you take a look?
+  - lineType: 0
+    dialogueLineText: Yes, Sandra. Another morning, another problem... Let me go
+      to the basement to grab my tools
   mainCharacterImage: {fileID: 21300000, guid: 5d1bcc8f9c9eda84fa582f908b791f67, type: 3}
   otherCharacterImage: {fileID: 21300000, guid: 5869c97e285a3bc41a7814f7eda3fa98, type: 3}

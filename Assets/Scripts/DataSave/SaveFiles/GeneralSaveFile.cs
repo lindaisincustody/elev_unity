@@ -9,4 +9,7 @@ public class GeneralSaveFile : ISaveFile
     public InventorySnapshot InventorySnapshot = new InventorySnapshot();
     public AbilitiesSnapshot AbilitiesSnapshot = new AbilitiesSnapshot();
     public FightsSnapshot FightsSnapshot = new FightsSnapshot();
+    public RoomsSnapshot RoomsSnapshot = new RoomsSnapshot();
+    public DialoguesSnapshot DialoguesSnapshot = new DialoguesSnapshot();
+    public PickupsSnapshot PickupsSnapshot = new PickupsSnapshot();
 }

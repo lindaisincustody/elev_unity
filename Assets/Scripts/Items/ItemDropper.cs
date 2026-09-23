@@ -15,12 +15,17 @@ public class ItemDropper : CoreService
         return UniTask.CompletedTask;
     }
 
-    public void Drop(Item item, Vector3 position)
-    {   
-        PickUp newPickup = Instantiate(ConfigManager.Instance.References.PickUp, position, Quaternion.identity);
+    public ItemPickup Spawn(Item item, Vector3 position)
+    {
+        ItemPickup newPickup = Instantiate(ConfigManager.Instance.References.ItemPickup, position, Quaternion.identity);
         newPickup.SetItem(item);
 
-        newPickup.transform.localScale = Vector3.zero;
+        return newPickup;
+    }
+
+    public void Drop(Item item, Vector3 position)
+    {
+        ItemPickup newPickup = Spawn(item, position);
 
         newPickup.transform.localScale = Vector3.one * 0.2f;
         newPickup.transform.DOScale(Vector3.one, 0.2f);

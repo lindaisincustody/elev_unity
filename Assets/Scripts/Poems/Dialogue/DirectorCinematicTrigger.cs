@@ -16,7 +16,5 @@ public class DirectorCinematicTrigger : DialogueTrigger
         if (aDirector != director) return;
 
         director.stopped -= OnPlaybackStopped;
-
-        ActivateDialogueInstantly();
     }
 }

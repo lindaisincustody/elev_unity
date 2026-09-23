@@ -248,12 +248,10 @@ public class DialogueController : MonoBehaviour
         cursorCoroutine = null;
         CanvasBG.SetActive(false);
 
-        currentTrigger.OnComplete?.Invoke();
+        currentTrigger.Complete();
 
         if (currentTrigger != null)
         {
-            currentTrigger.ChangeMaterial();
-
             currentTrigger = null; // Reset the trigger reference after use
         }
     }
