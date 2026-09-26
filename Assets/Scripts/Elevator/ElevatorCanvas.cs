@@ -32,7 +32,7 @@ public class ElevatorCanvas : MonoBehaviour
             return false;
 
         panel.SetActive(true);
-        Player.instance.SetMovement(false);
+        Player.instance.LockMovement(this);
 
         rideCancellation.Dispose();
         rideCancellation = new CancellationTokenSource();
@@ -53,7 +53,7 @@ public class ElevatorCanvas : MonoBehaviour
         elevatorManager.Stop();
 
         panel.SetActive(false);
-        Player.instance.SetMovement(true);
+        Player.instance.UnlockMovement(this);
         UIManager.Instance.NotifyClosed(this);
     }
 }

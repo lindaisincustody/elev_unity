@@ -53,7 +53,7 @@ public class AbilityCrafting : MonoBehaviour
         isCraftingOpen = true;
         craftingPanel.SetActive(true);
         craftingBG.SetActive(true);
-        playerMovement.SetMovement(false);
+        playerMovement.LockMovement(this);
     }
 
     public void ClosePanel()
@@ -64,7 +64,7 @@ public class AbilityCrafting : MonoBehaviour
         isCraftingOpen = false;
         craftingPanel.SetActive(false);
         craftingBG.SetActive(false);
-        playerMovement.SetMovement(true);
+        playerMovement.UnlockMovement(this);
         UIManager.Instance.NotifyClosed(this);
     }
 

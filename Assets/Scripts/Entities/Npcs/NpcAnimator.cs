@@ -15,6 +15,17 @@ public class NpcAnimator : Component
         lastAnim = anim;
     }
 
+    public void SetDirection(Vector2 direction)
+    {
+        if (animator == null || direction.sqrMagnitude < 0.000001f)
+            return;
+
+        Vector2 facing = Facing.ToAxis(direction);
+
+        animator.SetFloat("Horizontal", facing.x);
+        animator.SetFloat("Vertical", facing.y);
+    }
+
     public enum AnimationType
     {
         Idle,

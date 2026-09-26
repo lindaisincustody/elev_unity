@@ -141,9 +141,14 @@ public class Player : Entity
         return _inventory.GetGoldMultiplier(attribute);
     }
 
-    public void SetMovement(bool canMove)
+    public void LockMovement(object requester)
     {
-        playerMovement.SetMovement(canMove);
+        playerMovement.LockMovement(requester);
+    }
+
+    public void UnlockMovement(object requester)
+    {
+        playerMovement.UnlockMovement(requester);
     }
 
     public void ShowInteractUI(bool show)

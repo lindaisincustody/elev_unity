@@ -57,6 +57,10 @@ public abstract class MovementComponent : Component
     protected abstract void PlayWalk();
     protected abstract void PlayIdle();
 
+    protected virtual void FaceDirection(Vector2 direction)
+    {
+    }
+
     protected virtual void Awake()
     {
         foreach (Collider2D collider2D in rb.GetComponents<Collider2D>())
@@ -142,6 +146,8 @@ public abstract class MovementComponent : Component
         Vector2 waypoint = path.Count > 0 ? path[pathIndex] : goal;
 
         Vector2 nextPosition = Vector2.SmoothDamp(rb.position, waypoint, ref velocity, smoothTime, speed, Time.fixedDeltaTime);
+
+        FaceDirection(nextPosition - rb.position);
 
         rb.MovePosition(nextPosition);
 

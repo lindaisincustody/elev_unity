@@ -82,7 +82,7 @@ public class InventoryUI : MonoBehaviour
         isInventoryOpen = true;
         inventoryPanel.SetActive(true);
         inventoryBG.SetActive(true);
-        playerMovement.SetMovement(false);
+        playerMovement.LockMovement(this);
     }
 
     public void CloseInventory()
@@ -95,7 +95,7 @@ public class InventoryUI : MonoBehaviour
         isInventoryOpen = false;
         inventoryPanel.SetActive(false);
         inventoryBG.SetActive(false);
-        playerMovement.SetMovement(true);
+        playerMovement.UnlockMovement(this);
         UIManager.Instance.NotifyClosed(this);
     }
 

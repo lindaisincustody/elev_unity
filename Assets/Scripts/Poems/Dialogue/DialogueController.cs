@@ -91,7 +91,7 @@ public class DialogueController : MonoBehaviour
     {
         CanvasBG.SetActive(true);
         characterImageHolder.SetActive(true);
-        playerMovement.SetMovement(false);
+        playerMovement.LockMovement(this);
         dialogueUI.ActivateDialogueBox(newDialogueData);
     }
 
@@ -99,13 +99,13 @@ public class DialogueController : MonoBehaviour
     {
         CanvasBG.SetActive(true);
         characterImageHolder.SetActive(true);
-        playerMovement.SetMovement(false);
+        playerMovement.LockMovement(this);
         dialogueUI.ActivateDialogueBox(newDialogueData);
     }
 
     private void ActivateNarrator(DialogueData newDialogueData)
     {
-        playerMovement.SetMovement(false);
+        playerMovement.LockMovement(this);
         dialogueUI.ActivateNarratorBox(newDialogueData);
     }
 
@@ -238,7 +238,7 @@ public class DialogueController : MonoBehaviour
 
         dialogueUI.Hide();
 
-        playerMovement.SetMovement(true);
+        playerMovement.UnlockMovement(this);
         if (cursorCoroutine != null)
             StopCoroutine(cursorCoroutine);
         if (dialogueCoroutine != null)

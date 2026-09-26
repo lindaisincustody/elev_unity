@@ -65,7 +65,7 @@ public class PoemMenuController : MonoBehaviour
         isBookActive = true;
         _canBeTriggered = false;
         leftImage.enabled = false;
-        playerMovement.SetMovement(false);
+        playerMovement.LockMovement(this);
 
         for (int i = 0; i < wordsElements.cursorElements.Length; i++)
         {
@@ -116,7 +116,7 @@ public class PoemMenuController : MonoBehaviour
 
     private IEnumerator ClosePoemBookDelay()
     {
-        playerMovement.SetMovement(true);
+        playerMovement.UnlockMovement(this);
         yield return new WaitForSeconds(2f);
         bookFlipper.FlipLeftPage();
         UIManager.Instance.NotifyClosed(this);

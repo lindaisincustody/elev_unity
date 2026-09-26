@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : Component
@@ -27,7 +28,7 @@ public class PlayerMovement : Component
     private int stepsTaken = 0;
 
     private InputManager playerInput;
-    private bool _canMove = true;
+    private readonly HashSet<object> movementLocks = new();
 
     public float maxPitch = 0.85f;
     public float minPitch = 0.65f;
@@ -76,7 +77,7 @@ public class PlayerMovement : Component
         }
 
 
-        if (!_canMove)
+        if (movementLocks.Count > 0)
         {
             StopMovementSound();
             return;
@@ -104,8 +105,10 @@ public class PlayerMovement : Component
                 StopMovementSound();
             }
 
-            animator.SetFloat("Horizontal", movement.x);
-            animator.SetFloat("Vertical", movement.y);
+            Vector2 facing = Facing.ToAxis(movement);
+
+            animator.SetFloat("Horizontal", facing.x);
+            animator.SetFloat("Vertical", facing.y);
             animator.SetFloat("Speed", movement.sqrMagnitude);
         }
     }
@@ -266,15 +269,19 @@ public class PlayerMovement : Component
         }
     }
 
-    public void SetMovement(bool canMove)
+    public void LockMovement(object requester)
     {
-        _canMove = canMove;
-        if (!canMove)
-        {
-            movement = Vector2.zero;
-            animator.SetFloat("Horizontal", movement.x);
-            animator.SetFloat("Vertical", movement.y);
-            animator.SetFloat("Speed", movement.sqrMagnitude);
-        }
+        if (!movementLocks.Add(requester))
+            return;
+
+        movement = Vector2.zero;
+        animator.SetFloat("Horizontal", movement.x);
+        animator.SetFloat("Vertical", movement.y);
+        animator.SetFloat("Speed", movement.sqrMagnitude);
+    }
+
+    public void UnlockMovement(object requester)
+    {
+        movementLocks.Remove(requester);
     }
 }

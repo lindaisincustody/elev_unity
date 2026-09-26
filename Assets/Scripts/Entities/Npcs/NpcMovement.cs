@@ -46,4 +46,9 @@ public class NpcMovement : MovementComponent
     {
         animator.Play(NpcAnimator.AnimationType.Idle);
     }
+
+    protected override void FaceDirection(Vector2 direction)
+    {
+        animator.SetDirection(direction);
+    }
 }

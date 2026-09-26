@@ -86,7 +86,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87772d88dd79d6a458e11ece6e20d5c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NpcAnimator
-  animator: {fileID: 0}
+  animator: {fileID: 5530169781445283011}
 --- !u!114 &247860384097741103
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,6 +207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 336837102274029241}
   - component: {fileID: 1218361130529564430}
+  - component: {fileID: 5530169781445283011}
   m_Layer: 0
   m_Name: Sprite
   m_TagString: Untagged
@@ -288,3 +289,25 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!95 &5530169781445283011
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8991185463540917054}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 62ca9b764e524a2b9feb49742867840c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

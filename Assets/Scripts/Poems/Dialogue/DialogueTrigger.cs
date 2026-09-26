@@ -5,6 +5,7 @@ public class DialogueTrigger : Interactable
 {
     [SerializeField] private SaveId dialogueID;
     [SerializeField] private DialogueData dialogueData;
+    [SerializeField] public UnityEvent OnStart;
     [SerializeField] public UnityEvent OnComplete;
 
     private DialoguesSnapshot snapshot;
@@ -46,6 +47,8 @@ public class DialogueTrigger : Interactable
 
     protected virtual void Trigger()
     {
+        OnStart?.Invoke();
+
         ActivateDialogue();
     }
 

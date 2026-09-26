@@ -25,7 +25,7 @@ public class ShopUI : MonoBehaviour
         if (!panel.activeSelf)
             return;
         panel.SetActive(false);
-        player.SetMovement(true);
+        player.UnlockMovement(this);
         itemsSelection.SetShopOpenState(false);
         UIManager.Instance.NotifyClosed(this);
     }
@@ -37,7 +37,7 @@ public class ShopUI : MonoBehaviour
 
         UpdateGoldText();
         panel.SetActive(true);
-        player.SetMovement(false);
+        player.LockMovement(this);
         itemsSelection.SetShopOpenState(true);
     }
 
