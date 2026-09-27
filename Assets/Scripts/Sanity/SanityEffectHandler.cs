@@ -31,6 +31,8 @@ public class SanityEffectHandler : MonoBehaviour
 
     public float transitionSpeed = 3f;
 
+    [SerializeField] private bool screenEffects;
+
     private Coroutine crteffectCoroutine;
 
     private bool bound;
@@ -71,7 +73,9 @@ public class SanityEffectHandler : MonoBehaviour
         {
             bound = true;
             SanityManager.Instance.OnSanityChanged += OnSanityChange;
-            StartCoroutine(UpdateEffectsBasedOnSanity());
+
+            if (screenEffects)
+                StartCoroutine(UpdateEffectsBasedOnSanity());
         }
 
         OnSanityChange(SanityManager.Instance.CurrentSanity);
@@ -92,7 +96,8 @@ public class SanityEffectHandler : MonoBehaviour
 
         playerAnimator.SetBool("IsPlayerInUnderworldAnimation", SanityManager.Instance.IsPlayerInUnderworld);
 
-        TriggerCRTEffectTransition();
+        if (screenEffects)
+            TriggerCRTEffectTransition();
     }
 
     private IEnumerator UpdateEffectsBasedOnSanity()

@@ -8,6 +8,9 @@ public abstract class MovementComponent : Component
     [SerializeField] protected Rigidbody2D rb;
     [SerializeField] protected float smoothTime = 0.3f;
     [SerializeField] protected LayerMask pathObstacles = 1;
+    [SerializeField] protected LayerMask avoidanceLayers = (1 << 18) | (1 << 24);
+    [SerializeField] protected float avoidanceRadius = 0.8f;
+    [SerializeField] protected float passSideWeight = 1.2f;
 
     public virtual Vector2 minBound => Vector2.zero;
     public virtual Vector2 maxBound => Vector2.zero;
@@ -46,7 +49,10 @@ public abstract class MovementComponent : Component
     private readonly List<Vector2> path = new List<Vector2>();
     private readonly List<string> freezeRequests = new();
 
+    private static readonly Collider2D[] NeighbourBuffer = new Collider2D[16];
+
     private ContactFilter2D obstacleFilter;
+    private ContactFilter2D avoidanceFilter;
     private int pathIndex;
     private Vector2 pathGoal;
     private float pathTime;
@@ -72,6 +78,7 @@ public abstract class MovementComponent : Component
         rb.sleepMode = RigidbodySleepMode2D.NeverSleep;
 
         obstacleFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = pathObstacles };
+        avoidanceFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = avoidanceLayers };
 
         bodyHandler = new(body);
         avoidBehaviour = new(rb);
@@ -145,7 +152,7 @@ public abstract class MovementComponent : Component
         bool onFinalWaypoint = pathIndex >= path.Count - 1;
         Vector2 waypoint = path.Count > 0 ? path[pathIndex] : goal;
 
-        Vector2 nextPosition = Vector2.SmoothDamp(rb.position, waypoint, ref velocity, smoothTime, speed, Time.fixedDeltaTime);
+        Vector2 nextPosition = Vector2.SmoothDamp(rb.position, SteerAroundAgents(waypoint), ref velocity, smoothTime, speed, Time.fixedDeltaTime);
 
         FaceDirection(nextPosition - rb.position);
 
@@ -166,6 +173,57 @@ public abstract class MovementComponent : Component
         }
 
         bodyHandler.UpdateBody(waypoint);
+    }
+
+    private Vector2 SteerAroundAgents(Vector2 waypoint)
+    {
+        Vector2 toWaypoint = waypoint - rb.position;
+        float distance = toWaypoint.magnitude;
+
+        if (distance < 0.001f)
+            return waypoint;
+
+        Vector2 direction = toWaypoint / distance;
+        Vector2 center = bodyCollider.bounds.center;
+        Vector2 avoidance = Vector2.zero;
+
+        int count = Physics2D.OverlapCircle(center, ColliderRadius() + avoidanceRadius, avoidanceFilter, NeighbourBuffer);
+
+        for (int i = 0; i < count; i++)
+        {
+            Collider2D neighbour = NeighbourBuffer[i];
+
+            if (neighbour.attachedRigidbody == rb)
+                continue;
+
+            Vector2 away = center - (Vector2)neighbour.bounds.center;
+
+            if (away.sqrMagnitude < 0.000001f)
+                continue;
+
+            away.Normalize();
+
+            float gap = Mathf.Max(0f, Physics2D.Distance(bodyCollider, neighbour).distance);
+            float weight = 1f - gap / avoidanceRadius;
+
+            if (weight <= 0f)
+                continue;
+
+            avoidance += away * weight;
+
+            if (Vector2.Dot(-away, direction) > 0.3f)
+                avoidance += new Vector2(direction.y, -direction.x) * weight * passSideWeight;
+        }
+
+        if (avoidance == Vector2.zero)
+            return waypoint;
+
+        Vector2 steered = rb.position + (direction + avoidance).normalized * Mathf.Min(distance, avoidanceRadius);
+
+        if (navMin != navMax && !NavGridCache.Get(navMin, navMax, ColliderOffset(), ColliderRadius(), pathObstacles).IsFree(steered))
+            return waypoint;
+
+        return steered;
     }
 
     private void RefreshPath(Vector2 goal)

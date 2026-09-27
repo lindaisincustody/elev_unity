@@ -4,7 +4,6 @@ using UnityEngine.Events;
 
 public class ElevatorButtonTrigger : Interactable
 {
-    [SerializeField] private ElevatorGameManager elevatorGame;
     [SerializeField] public UnityEvent OnElevatorGameTriggered;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -13,7 +12,14 @@ public class ElevatorButtonTrigger : Interactable
             return;
 
         playerIsInTrigger = true;
-        player.ShowInteractUI(true);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (!collision.CompareTag("Player"))
+            return;
+
+        player.ShowInteractUI(playerIsInTrigger && ElevatorGameManager.Instance.HasPassenger);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -27,12 +33,12 @@ public class ElevatorButtonTrigger : Interactable
 
     protected override void HandleInteract()
     {
-        if (!playerIsInTrigger)
+        if (!playerIsInTrigger || !ElevatorGameManager.Instance.HasPassenger)
             return;
 
         base.HandleInteract();
 
-        elevatorGame.Play().Forget();
+        ElevatorGameManager.Instance.Play().Forget();
 
         OnElevatorGameTriggered?.Invoke();
     }

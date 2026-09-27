@@ -9,6 +9,7 @@ public class NpcSpawner : MonoBehaviour
     {
         public Npc prefab;
         public Transform point;
+        public NpcRoutine routine;
     }
 
     [SerializeField] private List<Spawn> spawns = new List<Spawn>();
@@ -36,6 +37,7 @@ public class NpcSpawner : MonoBehaviour
         Npc npc = Instantiate(spawn.prefab, spawn.point.position, Quaternion.identity);
         npc.name = spawn.prefab.name;
         npc.Get<NpcMovement>().SetArea(areaMin.position, areaMax.position);
+        npc.Get<NpcBrain>().SetRoutine(spawn.routine);
 
         NpcManager.Instance.RegisterNpc(npc);
     }

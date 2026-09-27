@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class NpcBrain : Component
 {
-    [SerializeField] private NpcRoutine routine;
     [SerializeField] private List<NpcReaction> reactions = new List<NpcReaction>();
 
     public NpcContext Context { get; private set; }
 
+    private NpcRoutine routine;
     private CancellationTokenSource routineSource;
     private CancellationToken destroyToken;
     private NpcTask pendingInterrupt;
@@ -43,6 +43,11 @@ public class NpcBrain : Component
             Interrupt(reaction.task);
             return;
         }
+    }
+
+    public void SetRoutine(NpcRoutine routine)
+    {
+        this.routine = routine;
     }
 
     public void Interrupt(NpcTask task)

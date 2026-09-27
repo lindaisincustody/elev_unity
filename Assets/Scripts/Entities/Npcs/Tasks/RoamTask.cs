@@ -6,7 +6,6 @@ using UnityEngine;
 public class RoamTask : NpcTask
 {
     public float radius = 5f;
-    public float timeout = 15f;
 
     public override async UniTask Run(NpcContext context, CancellationToken token)
     {
@@ -14,7 +13,7 @@ public class RoamTask : NpcTask
             ? RandomPointInArea(context)
             : context.movement.spawnPos + UnityEngine.Random.insideUnitCircle * radius;
 
-        await context.movement.MoveTo(destination, timeout, token);
+        await context.movement.MoveTo(destination, token);
     }
 
     private bool HasArea(NpcContext context)

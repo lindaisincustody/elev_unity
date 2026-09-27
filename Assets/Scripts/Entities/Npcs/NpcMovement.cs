@@ -15,6 +15,8 @@ public class NpcMovement : MovementComponent
 
     protected override void Awake()
     {
+        avoidanceLayers |= LayerMask.GetMask("Player");
+
         base.Awake();
 
         speed = walkSpeed;
@@ -26,13 +28,11 @@ public class NpcMovement : MovementComponent
         areaMax = max;
     }
 
-    public async UniTask MoveTo(Vector2 destination, float timeout, CancellationToken token)
+    public async UniTask MoveTo(Vector2 destination, CancellationToken token)
     {
         target = destination;
 
-        float deadline = Time.time + timeout;
-
-        await UniTask.WaitUntil(() => !target.HasValue || Time.time >= deadline, cancellationToken: token);
+        await UniTask.WaitUntil(() => !target.HasValue, cancellationToken: token);
 
         target = null;
     }

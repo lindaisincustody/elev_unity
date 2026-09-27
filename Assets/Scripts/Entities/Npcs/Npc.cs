@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Npc : Entity
 {
+    [field: SerializeField] public NpcData Data { get; private set; }
+
     private void Awake()
     {
         foreach (Component component in components)

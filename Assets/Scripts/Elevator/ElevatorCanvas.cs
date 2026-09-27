@@ -26,7 +26,7 @@ public class ElevatorCanvas : MonoBehaviour
         rideCancellation.Dispose();
     }
 
-    public async UniTask<bool> Ride(NPCData passenger, int miniGameLevels)
+    public async UniTask<bool> Ride(Npc passenger, int requestedFloor, int miniGameLevels)
     {
         if (!UIManager.Instance.RequestOpen(this))
             return false;
@@ -38,7 +38,7 @@ public class ElevatorCanvas : MonoBehaviour
         rideCancellation = new CancellationTokenSource();
 
         bool canceled = await elevatorManager
-            .Ride(passenger, miniGameLevels, rideCancellation.Token)
+            .Ride(passenger, requestedFloor, miniGameLevels, rideCancellation.Token)
             .SuppressCancellationThrow();
 
         return !canceled;

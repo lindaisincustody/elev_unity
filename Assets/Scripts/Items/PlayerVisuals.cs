@@ -9,7 +9,14 @@ public class PlayerVisuals : Component
     [SerializeField] private TrailRenderer trail;
     [SerializeField] private SpriteRenderer playerRenderer;
 
+    private static readonly int PlayerPositionId = Shader.PropertyToID("_PlayerPosition");
+
     private float _fadeDuration = 0.5f;
+
+    private void LateUpdate()
+    {
+        Shader.SetGlobalVector(PlayerPositionId, playerRenderer.transform.position);
+    }
 
     public void EnableTrail()
     {

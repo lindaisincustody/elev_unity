@@ -9,8 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d23e10235b926d43a888f9edffa93a4, type: 3}
-  m_Name: Roam
-  m_EditorClassIdentifier: Assembly-CSharp::RoamTask
-  radius: 5
-  timeout: 15
+  m_Script: {fileID: 11500000, guid: 0a740ada865941a1b8992a650b50cb12, type: 3}
+  m_Name: RideElevator_Task
+  m_EditorClassIdentifier: Assembly-CSharp::RideElevatorTask

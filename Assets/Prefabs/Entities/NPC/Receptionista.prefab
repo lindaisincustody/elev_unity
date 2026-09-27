@@ -54,6 +54,7 @@ MonoBehaviour:
   - {fileID: 8536937107457383649}
   - {fileID: 7812305378719131275}
   - {fileID: 247860384097741103}
+  <Data>k__BackingField: {fileID: 11400000, guid: fabf7ca4c73c9cb4d8a46f1bc39c8571, type: 2}
 --- !u!114 &8536937107457383649
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,6 +73,11 @@ MonoBehaviour:
   pathObstacles:
     serializedVersion: 2
     m_Bits: 1
+  avoidanceLayers:
+    serializedVersion: 2
+    m_Bits: 17039360
+  avoidanceRadius: 0.8
+  passSideWeight: 1.2
   animator: {fileID: 7812305378719131275}
   walkSpeed: 2
 --- !u!114 &7812305378719131275
@@ -99,7 +105,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5c23871da64f484a8131ed04055091a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NpcBrain
-  routine: {fileID: 11400000, guid: 13252db0a67de5841b93f583c04179f7, type: 2}
   reactions: []
 --- !u!50 &2099907768630144635
 Rigidbody2D:
@@ -256,7 +261,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 32ff0a40970140fea7f55f345d5a552b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

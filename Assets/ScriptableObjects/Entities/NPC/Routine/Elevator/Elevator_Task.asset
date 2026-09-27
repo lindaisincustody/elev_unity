@@ -9,9 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b125cad891242a4b9cdbfbbbf5cd9c6, type: 3}
-  m_Name: ReceptionRoutine
-  m_EditorClassIdentifier: Assembly-CSharp::NpcRoutine
-  tasks:
-  - {fileID: 11400000, guid: 3b86a92e8cee32943878b40c4cfbfa58, type: 2}
-  loop: 1
+  m_Script: {fileID: 11500000, guid: f884e6f3702ed4942930100be1978cba, type: 3}
+  m_Name: Elevator_Task
+  m_EditorClassIdentifier: Assembly-CSharp::MoveToAnchorTask
+  anchorId: Elevator

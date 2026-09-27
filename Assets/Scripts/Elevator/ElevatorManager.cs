@@ -32,17 +32,17 @@ public class ElevatorManager : MonoBehaviour
     [SerializeField] private float beatDuration = 1f;
     [SerializeField] private float miniGameStartDelay = 0.5f;
 
-    private NPCData passenger;
+    private int requestedFloor;
     private UniTaskCompletionSource floorReached;
 
-    public async UniTask Ride(NPCData newPassenger, int miniGameLevels, CancellationToken token)
+    public async UniTask Ride(Npc passenger, int floor, int miniGameLevels, CancellationToken token)
     {
-        passenger = newPassenger;
+        requestedFloor = floor;
         floorReached = new UniTaskCompletionSource();
 
         levels.ResetToGround();
-        levels.SetTargetLevel(passenger.requestedFloor);
-        ShowPassenger();
+        levels.SetTargetLevel(requestedFloor);
+        ShowPassenger(passenger);
         leverMover.UnlockLever();
 
         await floorReached.Task.AttachExternalCancellation(token);
@@ -60,7 +60,6 @@ public class ElevatorManager : MonoBehaviour
         await FadeTo(0f, token);
         fadeOut.gameObject.SetActive(false);
 
-        Say(passenger.thankYouText);
         await UniTask.Delay(TimeSpan.FromSeconds(beatDuration), cancellationToken: token);
 
         npcUIPanel.SetActive(false);
@@ -68,7 +67,7 @@ public class ElevatorManager : MonoBehaviour
 
     public void OnFloorReached(int floor)
     {
-        if (floor != passenger.requestedFloor)
+        if (floor != requestedFloor)
             return;
 
         floorReached.TrySetResult();
@@ -109,15 +108,15 @@ public class ElevatorManager : MonoBehaviour
         circle.SetActive(false);
     }
 
-    private void ShowPassenger()
+    private void ShowPassenger(Npc passenger)
     {
-        npcNameText.text = passenger.npcName;
-        npcSpriteImage.sprite = passenger.npcSprite;
+        npcNameText.text = passenger.Data.displayName;
+        npcSpriteImage.sprite = passenger.Data.portrait;
 
         npcUIPanel.SetActive(true);
         npcRequestText.gameObject.SetActive(true);
 
-        Say(passenger.greetingText + "\n(Take me to floor " + passenger.requestedFloor + "!)");
+        Say("Take me to floor " + requestedFloor + "!");
     }
 
     private void Say(string message)
