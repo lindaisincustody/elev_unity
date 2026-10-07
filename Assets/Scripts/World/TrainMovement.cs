@@ -1,106 +1,110 @@
-using System.Collections;
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 public class TrainMovement : MonoBehaviour
 {
-    public float initialSpeed = -30f; // Initial speed of the train
-    public float arrivalX = -11.7f; // X position where the train should stop
-    public float leaveX = -94f;
-    public float stopOvershoot = 2f; // Distance the train overshoots before coming to a complete stop
-    private Rigidbody2D rb; // Rigidbody component
-    private float currentVelocity; // Current velocity of the train
-    public static bool hasArrived = false; // To check if the train has arrived
-    private bool leaveStation = false; // To check if the train should start leaving
-    public CameraShake cameraShake; // Reference to the CameraShake script
-    private bool active = true;
+    [SerializeField] private float initialSpeed = -30f;
+    [SerializeField] private float arrivalX = -11.7f;
+    [SerializeField] private float leaveX = -94f;
+    [SerializeField] private float stopOvershoot = 2f;
+    [SerializeField] private CameraShake cameraShake;
+
+    private Rigidbody2D rb;
+    private float velocity;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component
-        currentVelocity = initialSpeed; // Initialize current velocity
         PlayerSnapshot playerSnapshot = SaveLoadService.Instance.Get<GeneralSaveFile>().PlayerSnapshot;
+
         if (playerSnapshot.TutorialComplete)
         {
             Player.instance.ShowPlayer(true);
             gameObject.SetActive(false);
-            active = false;
-        }
-        else
-        {
-            Player.instance.ShowPlayer(false);
-            playerSnapshot.TutorialComplete = true;
-            SaveLoadService.Instance.SaveProgress();
-            SoundManager.PlaySound2D(SoundManager.Sound.TrainComing);
-        }
-    }
-
-    void FixedUpdate()
-    {
-        if (!active)
             return;
-
-        // Move the train towards the station
-        if (!hasArrived && transform.position.x - stopOvershoot > arrivalX + stopOvershoot)
-        {
-            currentVelocity = Mathf.MoveTowards(currentVelocity, 0, Time.fixedDeltaTime * 10f); // Gradually decrease speed
-            rb.linearVelocity = new Vector2(currentVelocity, 0);
-            if (Mathf.Abs(currentVelocity) > 5f) // Check if the train is moving fast enough to justify shaking
-            {
-                cameraShake.Shake(0.5f, 0.01f); // Trigger camera shake
-            }
-        }
-        else if (!hasArrived && transform.position.x <= arrivalX - stopOvershoot)
-        {
-            hasArrived = true; // Train has arrived
-            StartCoroutine(DriftToStop());
         }
 
-        // Move the train away from the station
-        if (hasArrived && leaveStation)
-        {
-            if (transform.position.x > leaveX)
-            {
-                currentVelocity = Mathf.MoveTowards(currentVelocity, initialSpeed, Time.fixedDeltaTime * 2.5f); // Gradually increase speed
-                rb.linearVelocity = new Vector2(currentVelocity, 0);
-                if (Mathf.Abs(currentVelocity) > 5f) // Trigger camera shake if the train is moving fast enough while leaving
-                {
-                    cameraShake.Shake(0.2f, 0.01f); // Trigger camera shake
-                }
-            }
-            else
-            {
-                rb.linearVelocity = Vector2.zero; // Stop moving when past leaveX
-            }
-        }
+        Player.instance.ShowPlayer(false);
+        playerSnapshot.TutorialComplete = true;
+        SaveLoadService.Instance.SaveProgress();
 
+        rb = GetComponent<Rigidbody2D>();
+        Run(gameObject.GetCancellationTokenOnDestroy()).Forget();
     }
 
-    IEnumerator DriftToStop()
+    private async UniTaskVoid Run(CancellationToken token)
     {
-        // Allow a slight drift beyond the target stopping point
-        while (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
-        {
-            currentVelocity = Mathf.MoveTowards(currentVelocity, 0, Time.fixedDeltaTime * 5f);
-            rb.linearVelocity = new Vector2(currentVelocity, 0);
-            // Trigger a gentle camera shake
-            cameraShake.Shake(0.3f, 0.007f); // Shorter duration and lower magnitude for gentle shake
-            yield return null;
-        }
-        rb.linearVelocity = Vector2.zero; // Finally stop the train
-        Invoke("LeavingSound", 3.3f);
-        Invoke("PrepareToLeave", 5f); // Wait for 5 seconds before leaving
-    }
+        SoundManager.PlaySound2D(SoundManager.Sound.TrainComing);
 
-    void LeavingSound()
-    {
+        await Arrive(token);
+        await DriftToStop(token);
+
+        await UniTask.Delay(TimeSpan.FromSeconds(3.3f), cancellationToken: token);
         SoundManager.PlaySound2D(SoundManager.Sound.TrainLeaving);
+        await UniTask.Delay(TimeSpan.FromSeconds(1.7f), cancellationToken: token);
+
+        await Leave(token);
     }
 
-    void PrepareToLeave()
+    private async UniTask Arrive(CancellationToken token)
+    {
+        velocity = initialSpeed;
+
+        while (transform.position.x > arrivalX + stopOvershoot * 2f)
+        {
+            Accelerate(0f, 10f);
+
+            if (Mathf.Abs(velocity) > 5f)
+                cameraShake.Shake(0.5f, 0.01f);
+
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+        }
+
+        while (transform.position.x > arrivalX - stopOvershoot)
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+    }
+
+    private async UniTask DriftToStop(CancellationToken token)
+    {
+        while (Mathf.Abs(velocity) > 0.1f)
+        {
+            Accelerate(0f, 5f);
+            cameraShake.Shake(0.3f, 0.007f);
+
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+        }
+
+        Stop();
+    }
+
+    private async UniTask Leave(CancellationToken token)
     {
         Player.instance.ShowPlayer(true);
-        leaveStation = true;
-        currentVelocity = initialSpeed / 2; // Start leaving at half the initial speed
-        rb.linearVelocity = new Vector2(currentVelocity, 0);
+        velocity = initialSpeed / 2f;
+
+        while (transform.position.x > leaveX)
+        {
+            Accelerate(initialSpeed, 2.5f);
+
+            if (Mathf.Abs(velocity) > 5f)
+                cameraShake.Shake(0.2f, 0.01f);
+
+            await UniTask.Yield(PlayerLoopTiming.FixedUpdate, token);
+        }
+
+        Stop();
+    }
+
+    private void Accelerate(float target, float rate)
+    {
+        velocity = Mathf.MoveTowards(velocity, target, rate * Time.fixedDeltaTime);
+        rb.linearVelocity = new Vector2(velocity, 0f);
+    }
+
+    private void Stop()
+    {
+        velocity = 0f;
+        rb.linearVelocity = Vector2.zero;
     }
 }
