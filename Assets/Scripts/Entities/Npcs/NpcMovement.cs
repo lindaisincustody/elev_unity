@@ -37,6 +37,49 @@ public class NpcMovement : MovementComponent
         target = null;
     }
 
+    public async UniTask WalkInto(Vector2 destination, CancellationToken token)
+    {
+        target = null;
+        Freeze(nameof(WalkInto));
+        bodyCollider.enabled = false;
+
+        PlayWalk();
+        FaceDirection(destination - rb.position);
+
+        await Glide(destination, speed, token);
+
+        PlayIdle();
+    }
+
+    public async UniTask Shake(Vector2 amplitude, float frequency, float duration, CancellationToken token)
+    {
+        Vector2 origin = rb.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            await UniTask.WaitForFixedUpdate(token);
+
+            elapsed += Time.fixedDeltaTime;
+
+            float phase = elapsed * frequency * 2f * Mathf.PI;
+
+            rb.MovePosition(origin + Vector2.Scale(amplitude, new Vector2(Mathf.Sin(phase), Mathf.Sin(phase * 2f))));
+        }
+
+        rb.MovePosition(origin);
+    }
+
+    public async UniTask Glide(Vector2 destination, float glideSpeed, CancellationToken token)
+    {
+        while (rb.position != destination)
+        {
+            await UniTask.WaitForFixedUpdate(token);
+
+            rb.MovePosition(Vector2.MoveTowards(rb.position, destination, glideSpeed * Time.fixedDeltaTime));
+        }
+    }
+
     protected override void PlayWalk()
     {
         animator.Play(NpcAnimator.AnimationType.Walk);

@@ -11,5 +11,9 @@ public class RideElevatorTask : NpcTask
         context.npc.Get<NpcAnimator>().Play(NpcAnimator.AnimationType.Idle);
 
         await ElevatorGameManager.Instance.WaitForRide(context.npc, token);
+
+        Elevator elevator = ElevatorGameManager.Instance.GetClosestElevator(context.npc.transform.position);
+
+        await elevator.Board(context, token);
     }
 }

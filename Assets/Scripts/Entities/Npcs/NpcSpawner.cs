@@ -20,6 +20,11 @@ public class NpcSpawner : MonoBehaviour
 
     private void Start()
     {
+        SpawnAll();
+    }
+
+    public void SpawnAll()
+    {
         foreach (Spawn spawn in spawns)
         {
             SpawnNpc(spawn);

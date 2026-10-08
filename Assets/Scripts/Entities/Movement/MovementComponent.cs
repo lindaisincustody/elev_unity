@@ -162,9 +162,9 @@ public abstract class MovementComponent : Component
         {
             if (onFinalWaypoint)
             {
-                PlayIdle();
                 target = null;
                 path.Clear();
+                PlayIdle();
             }
             else
             {

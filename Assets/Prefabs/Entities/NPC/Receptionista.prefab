@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 247860384097741103}
   - component: {fileID: 2099907768630144635}
   - component: {fileID: 2358414107259024327}
+  - component: {fileID: 5696745580862052330}
   m_Layer: 24
   m_Name: Receptionista
   m_TagString: Untagged
@@ -54,6 +55,7 @@ MonoBehaviour:
   - {fileID: 8536937107457383649}
   - {fileID: 7812305378719131275}
   - {fileID: 247860384097741103}
+  - {fileID: 5696745580862052330}
   <Data>k__BackingField: {fileID: 11400000, guid: fabf7ca4c73c9cb4d8a46f1bc39c8571, type: 2}
 --- !u!114 &8536937107457383649
 MonoBehaviour:
@@ -170,6 +172,21 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.1396985}
   m_Size: {x: 0.31116778, y: 0.86376476}
   m_Direction: 0
+--- !u!114 &5696745580862052330
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4434796996084333949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 15d90f5dfdfbb7c4eb491b5db172cb34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NpcSorting
+  sprite: {fileID: 1218361130529564430}
+  elevatorLayer: Objects
+  elevatorOrder: 2
 --- !u!1 &5444691033708855595
 GameObject:
   m_ObjectHideFlags: 0
