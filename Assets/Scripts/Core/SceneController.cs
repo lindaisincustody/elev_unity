@@ -12,7 +12,7 @@ public class SceneController : MonoBehaviour
         transitionAnim.SetTrigger("End");
 
         if (sceneName == Constants.SceneNames.MainMenu)
-            Player.instance.SaveCurrentScenePosition();
+            Player.instance.Get<PlayerScenePosition>().Save();
         else
             SaveTargetScene(sceneName);
 
@@ -39,7 +39,7 @@ public class SceneController : MonoBehaviour
         player.transform.position = new Vector3(x, y, player.transform.position.z);
         PlayerFollowCamera.Instance.Snap();
 
-        player.SaveCurrentScenePosition();
+        player.Get<PlayerScenePosition>().Save();
 
         transitionAnim.SetTrigger("Start");
     }

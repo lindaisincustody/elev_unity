@@ -19,7 +19,7 @@ public class ElevatorButtonTrigger : Interactable
         if (!collision.CompareTag("Player"))
             return;
 
-        player.ShowInteractUI(playerIsInTrigger && ElevatorGameManager.Instance.HasPassenger);
+        interactPrompt.Show(playerIsInTrigger && ElevatorGameManager.Instance.HasPassenger);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -28,7 +28,7 @@ public class ElevatorButtonTrigger : Interactable
             return;
 
         playerIsInTrigger = false;
-        player.ShowInteractUI(false);
+        interactPrompt.Show(false);
     }
 
     protected override void HandleInteract()

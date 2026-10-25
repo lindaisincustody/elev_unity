@@ -11,7 +11,7 @@ public class PoemTrigger : Interactable
         if (collision.gameObject.CompareTag("Player"))
         {
             playerIsInTrigger = true;
-            player.ShowInteractUI(true);
+            interactPrompt.Show(true);
         }
     }
 
@@ -20,7 +20,7 @@ public class PoemTrigger : Interactable
         if (collision.gameObject.CompareTag("Player"))
         {
             playerIsInTrigger = false;
-            player.ShowInteractUI(false);
+            interactPrompt.Show(false);
         }
     }
 

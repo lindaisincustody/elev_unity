@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -12,10 +13,23 @@ public class PlayerVisuals : Component
     private static readonly int PlayerPositionId = Shader.PropertyToID("_PlayerPosition");
 
     private float _fadeDuration = 0.5f;
+    private Tween flashTween;
 
     private void LateUpdate()
     {
         Shader.SetGlobalVector(PlayerPositionId, playerRenderer.transform.position);
+    }
+
+    public void SetVisible(bool visible)
+    {
+        playerRenderer.enabled = visible;
+    }
+
+    public void Flash(Color color)
+    {
+        flashTween?.Kill();
+        playerRenderer.color = Color.white;
+        flashTween = playerRenderer.DOColor(color, 0.1f).SetLoops(2, LoopType.Yoyo);
     }
 
     public void EnableTrail()

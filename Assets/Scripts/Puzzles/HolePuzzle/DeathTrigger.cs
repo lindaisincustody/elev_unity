@@ -8,9 +8,7 @@ public class DeathTrigger : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Feet"))
         {
-            Player.instance.InDangerZone = true;
-            if (!Player.instance.InSafeZone)
-                Player.instance.transform.position = Player.instance.GetSavedScenePosition().Value;
+            Player.instance.Get<PlayerFooting>().SetOverHole(true);
         }
     }
 
@@ -18,7 +16,7 @@ public class DeathTrigger : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Feet"))
         {
-            Player.instance.InDangerZone = false;
+            Player.instance.Get<PlayerFooting>().SetOverHole(false);
         }
     }
 }

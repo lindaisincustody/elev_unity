@@ -6,7 +6,7 @@ public class DrawnPathTrigger : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Feet"))
         {
-            Player.instance.InSafeZone = true;
+            Player.instance.Get<PlayerFooting>().SetOnPath(true);
         }
     }
 
@@ -14,9 +14,7 @@ public class DrawnPathTrigger : MonoBehaviour
     {
         if (collision.gameObject.layer == LayerMask.NameToLayer("Feet"))
         {
-            Player.instance.InSafeZone = false;
-            if (Player.instance.InDangerZone)
-                Player.instance.transform.position = Player.instance.GetSavedScenePosition().Value;
+            Player.instance.Get<PlayerFooting>().SetOnPath(false);
         }
     }
 }

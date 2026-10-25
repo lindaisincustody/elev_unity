@@ -57,7 +57,7 @@ public class Enemy : Entity
             enemyLetters.Add(symbolObject);
 
             EnemyGlyph randomSymbol = new(Glyphs.LatexToUnicode.ContainsKey(filteredLabels[i]) ? Glyphs.LatexToUnicode[filteredLabels[i]] : filteredLabels[i]);
-            if (UnityEngine.Random.value <= Player.instance.SpecialSymbolChance)
+            if (UnityEngine.Random.value <= Player.instance.Get<PlayerCombat>().SpecialSymbolChance)
             {
                 SetSymbolSpecial(randomSymbol, symbolObject.Letter);
             }

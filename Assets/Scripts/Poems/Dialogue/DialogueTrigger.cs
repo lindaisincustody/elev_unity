@@ -25,7 +25,7 @@ public class DialogueTrigger : Interactable
         if (!collision.gameObject.CompareTag("Player")) return;
 
         playerIsInTrigger = true;
-        player.ShowInteractUI(true);
+        interactPrompt.Show(true);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -33,7 +33,7 @@ public class DialogueTrigger : Interactable
         if (!collision.gameObject.CompareTag("Player")) return;
 
         playerIsInTrigger = false;
-        player.ShowInteractUI(false);
+        interactPrompt.Show(false);
     }
 
     protected override void HandleInteract()

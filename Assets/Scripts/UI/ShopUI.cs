@@ -10,11 +10,13 @@ public class ShopUI : MonoBehaviour
     [SerializeField] PanelItemsSection itemsSelection;
 
     InputManager playerInput;
-    Player player;
+    PlayerMovement playerMovement;
+    PlayerWallet wallet;
 
     void Start()
     {
-        player = Player.instance;
+        playerMovement = Player.instance.Get<PlayerMovement>();
+        wallet = Player.instance.Get<PlayerWallet>();
         playerInput = InputManager.Instance;
 
         playerInput.OnUICancel += ExitShop;
@@ -25,7 +27,7 @@ public class ShopUI : MonoBehaviour
         if (!panel.activeSelf)
             return;
         panel.SetActive(false);
-        player.UnlockMovement(this);
+        playerMovement.UnlockMovement(this);
         itemsSelection.SetShopOpenState(false);
         UIManager.Instance.NotifyClosed(this);
     }
@@ -37,7 +39,7 @@ public class ShopUI : MonoBehaviour
 
         UpdateGoldText();
         panel.SetActive(true);
-        player.LockMovement(this);
+        playerMovement.LockMovement(this);
         itemsSelection.SetShopOpenState(true);
     }
 
@@ -48,7 +50,7 @@ public class ShopUI : MonoBehaviour
 
     private void UpdateGoldText()
     {
-        gold.text = player.GetGold().ToString();
+        gold.text = wallet.GetGold().ToString();
     }
 
     private void OnDestroy()

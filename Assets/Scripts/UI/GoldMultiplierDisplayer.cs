@@ -15,20 +15,20 @@ public class GoldMultiplierDisplayer : MonoBehaviour
     private readonly string coordinationPrefix = "CoordinationGold: ";
     private readonly string neutralPrefix = "NeutralityGold: ";
 
-    Player player;
+    PlayerWallet wallet;
 
     // Start is called before the first frame update
     void Start()
     {
-        player = Player.instance;
+        wallet = Player.instance.Get<PlayerWallet>();
         UpdateText();
     }
 
     public void UpdateText()
     {
-        strengthText.text = strengthPrefix + player.GetGoldMultiplier(Attribute.Strength).ToString("F2");
-        intelligenceText.text = intelligencePrefix + player.GetGoldMultiplier(Attribute.Intelligence).ToString("F2");
-        coordinationText.text = coordinationPrefix + player.GetGoldMultiplier(Attribute.Coordination).ToString("F2");
-        neutralText.text = neutralPrefix + player.GetGoldMultiplier(Attribute.Neutrality).ToString("F2");
+        strengthText.text = strengthPrefix + wallet.GetMultiplier(Attribute.Strength).ToString("F2");
+        intelligenceText.text = intelligencePrefix + wallet.GetMultiplier(Attribute.Intelligence).ToString("F2");
+        coordinationText.text = coordinationPrefix + wallet.GetMultiplier(Attribute.Coordination).ToString("F2");
+        neutralText.text = neutralPrefix + wallet.GetMultiplier(Attribute.Neutrality).ToString("F2");
     }
 }

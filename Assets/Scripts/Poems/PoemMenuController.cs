@@ -29,7 +29,7 @@ public class PoemMenuController : MonoBehaviour
     public AnimationCurve bookAnimationCurve;
     public float bookAnimationDuration = 1.0f;
 
-    Player player;
+    PlayerWallet wallet;
     InputManager playerInput;
     PlayerMovement playerMovement;
 
@@ -41,9 +41,9 @@ public class PoemMenuController : MonoBehaviour
 
     void Start()
     {
-        player = Player.instance;
+        wallet = Player.instance.Get<PlayerWallet>();
         playerInput = InputManager.Instance;
-        playerMovement = player.Get<PlayerMovement>();
+        playerMovement = Player.instance.Get<PlayerMovement>();
 
         playerInput.OnInteract += OpenNextPage;
     }
@@ -128,10 +128,10 @@ public class PoemMenuController : MonoBehaviour
 
     public void UpdateAttributes(Word wordData)
     {
-        player.AddGoldMultiplier(Attribute.Strength, wordData.strengthWeight);
-        player.AddGoldMultiplier(Attribute.Coordination, wordData.coordinationWeight);
-        player.AddGoldMultiplier(Attribute.Intelligence, wordData.intelligenceWeight);
-        player.AddGoldMultiplier(Attribute.Neutrality, wordData.neutralWeight);
+        wallet.AddMultiplier(Attribute.Strength, wordData.strengthWeight);
+        wallet.AddMultiplier(Attribute.Coordination, wordData.coordinationWeight);
+        wallet.AddMultiplier(Attribute.Intelligence, wordData.intelligenceWeight);
+        wallet.AddMultiplier(Attribute.Neutrality, wordData.neutralWeight);
     }
 
     public void OnWritingPanelActivate()

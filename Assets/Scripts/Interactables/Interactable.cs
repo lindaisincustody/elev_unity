@@ -4,23 +4,22 @@ using UnityEngine;
 
 public abstract class Interactable : MonoBehaviour
 {
-    protected Player player;
     protected bool playerIsInTrigger = false;
+
+    protected InteractPrompt interactPrompt => Player.instance.Get<InteractPrompt>();
 
     protected virtual void Start()
     {
-        player = Player.instance;
         InputManager.Instance.OnInteract += HandleInteract;
     }
 
     protected virtual void HandleInteract() {
         playerIsInTrigger = false;
-        player.ShowInteractUI(false);
+        interactPrompt.Show(false);
     }
 
     protected void OnDestroy()
     {
-        player = Player.instance;
         InputManager.Instance.OnInteract -= HandleInteract;
     }
 }

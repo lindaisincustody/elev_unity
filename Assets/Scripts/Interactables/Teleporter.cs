@@ -50,10 +50,8 @@ public class Teleporter : Interactable
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            if (player == null)
-                player = Player.instance;
             playerIsInTrigger = true;
-            player.ShowInteractUI(true);
+            interactPrompt.Show(true);
         }
     }
 
@@ -62,7 +60,7 @@ public class Teleporter : Interactable
         if (collision.gameObject.CompareTag("Player"))
         {
             playerIsInTrigger = false;
-            player.ShowInteractUI(false);
+            interactPrompt.Show(false);
         }
     }
 

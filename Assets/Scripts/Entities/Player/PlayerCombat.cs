@@ -8,6 +8,8 @@ public class PlayerCombat : Component
     [SerializeField] int meleeDamage = 5;
     [SerializeField] float meleeCooldown = 0.7f;
 
+    public float SpecialSymbolChance { get; set; }
+
     private float nextMeleeTime = 0f;
     private Player player;
     private Animator animator;

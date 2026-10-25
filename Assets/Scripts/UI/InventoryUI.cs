@@ -28,7 +28,7 @@ public class InventoryUI : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI effectDurationText;
 
-    private Player player;
+    private PlayerWallet wallet;
     private ItemsInventory itemsInventory;
     private InputManager playerInput;
     private PlayerMovement playerMovement;
@@ -40,10 +40,11 @@ public class InventoryUI : MonoBehaviour
 
     private void Start()
     {
-        player = Player.instance;
+        Player player = Player.instance;
         playerInput = InputManager.Instance;
         playerMovement = player.Get<PlayerMovement>();
         itemsInventory = player.Get<ItemsInventory>();
+        wallet = player.Get<PlayerWallet>();
 
         playerInput.OnInventory += ToggleInventory;
     }
@@ -193,6 +194,6 @@ public class InventoryUI : MonoBehaviour
 
     private void UpdateGoldText()
     {
-        gold.text = player.GetGold().ToString();
+        gold.text = wallet.GetGold().ToString();
     }
 }

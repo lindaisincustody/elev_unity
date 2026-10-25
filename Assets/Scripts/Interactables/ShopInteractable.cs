@@ -9,7 +9,7 @@ public class ShopInteractable : Interactable
         if (collision.gameObject.CompareTag("Player"))
         {
             playerIsInTrigger = true;
-            player.ShowInteractUI(true);
+            interactPrompt.Show(true);
         }
     }
 
@@ -18,7 +18,7 @@ public class ShopInteractable : Interactable
         if (collision.gameObject.CompareTag("Player"))
         {
             playerIsInTrigger = false;
-            player.ShowInteractUI(false);
+            interactPrompt.Show(false);
         }
     }
 

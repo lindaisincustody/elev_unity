@@ -11,7 +11,7 @@ public class DirectorCinematicTrigger : DialogueTrigger
         OnStart?.Invoke();
 
         if (disablePlayerInput)
-            player.LockMovement(this);
+            Player.instance.Get<PlayerMovement>().LockMovement(this);
 
         director.stopped += OnPlaybackStopped;
         director.Play();
@@ -24,7 +24,7 @@ public class DirectorCinematicTrigger : DialogueTrigger
         director.stopped -= OnPlaybackStopped;
 
         if (disablePlayerInput)
-            player.UnlockMovement(this);
+            Player.instance.Get<PlayerMovement>().UnlockMovement(this);
 
         Complete();
     }

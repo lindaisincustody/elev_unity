@@ -31,7 +31,7 @@ public class Sensor : MonoBehaviour
 
         sightFilter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = sightBlockers };
 
-        Player.instance.OnGhost += OnTriggerExit2D;
+        Player.instance.Get<PlayerGhost>().OnGhost += OnTriggerExit2D;
     }
 
     public bool CanSee(Transform target)
@@ -120,7 +120,7 @@ public class Sensor : MonoBehaviour
 
     private void OnDestroy()
     {
-        Player.instance.OnGhost -= OnTriggerExit2D;
+        Player.instance.Get<PlayerGhost>().OnGhost -= OnTriggerExit2D;
     }
 
     private readonly struct Memory

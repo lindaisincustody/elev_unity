@@ -23,6 +23,12 @@ GameObject:
   - component: {fileID: 2997224443469270906}
   - component: {fileID: 7374925929689665054}
   - component: {fileID: 8468488059332638287}
+  - component: {fileID: 5357939462569449762}
+  - component: {fileID: 5258178331903656280}
+  - component: {fileID: 7296615743833029151}
+  - component: {fileID: 3399172192253395301}
+  - component: {fileID: 1935823419414760482}
+  - component: {fileID: 8300343542975718419}
   m_Layer: 8
   m_Name: Player
   m_TagString: Player
@@ -256,19 +262,13 @@ MonoBehaviour:
   - {fileID: 4811051021864669420}
   - {fileID: 7374925929689665054}
   - {fileID: 8468488059332638287}
-  InteractableUI: {fileID: 8420326837088205274}
+  - {fileID: 5357939462569449762}
+  - {fileID: 5258178331903656280}
+  - {fileID: 7296615743833029151}
+  - {fileID: 3399172192253395301}
+  - {fileID: 1935823419414760482}
+  - {fileID: 8300343542975718419}
   <Animator>k__BackingField: {fileID: 6330455195613800542}
-  spriteRenderer: {fileID: 2226871447008519275}
-  playerMovement: {fileID: 7905350812563266831}
-  poemAvailable: {fileID: 0}
-  wordsData:
-  - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
-  - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
-  - {fileID: 11400000, guid: ff08f7d0b0c6c2046909fde5f131fcfe, type: 2}
-  - {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
-  bodyCollider: {fileID: 6769244744475398257}
-  InDangerZone: 0
-  InSafeZone: 0
 --- !u!114 &5376793493941146557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -487,6 +487,86 @@ MonoBehaviour:
   <Light>k__BackingField: {fileID: 8666088299801794120}
   trail: {fileID: 2388857520201769837}
   playerRenderer: {fileID: 2226871447008519275}
+--- !u!114 &5357939462569449762
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96d96572de74c234fbc7c031e8b57c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerWallet
+--- !u!114 &5258178331903656280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eabdde9897a72f648a4b844408d745c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerPoems
+  poemAvailable: {fileID: 0}
+  wordsData:
+  - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
+  - {fileID: 11400000, guid: 743a728358f778846ba681c93cb725bc, type: 2}
+  - {fileID: 11400000, guid: ff08f7d0b0c6c2046909fde5f131fcfe, type: 2}
+  - {fileID: 11400000, guid: c0174984080f99e40be49e0ea838e9ce, type: 2}
+--- !u!114 &7296615743833029151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24646f4109a28ab4ba0132a7609f25f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InteractPrompt
+  icon: {fileID: 8420326837088205274}
+--- !u!114 &3399172192253395301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad0ac1ce45523be4186cb700baba14cb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerGhost
+  bodyCollider: {fileID: 6769244744475398257}
+--- !u!114 &1935823419414760482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecfc914ebbecf8646a03a81f336e29ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerScenePosition
+--- !u!114 &8300343542975718419
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514501729019924183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 389c08c6490312b4189131951a04b3f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerFooting
 --- !u!1 &1033117730231277173
 GameObject:
   m_ObjectHideFlags: 0

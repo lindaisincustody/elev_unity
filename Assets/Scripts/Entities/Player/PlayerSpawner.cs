@@ -37,8 +37,7 @@ public class PlayerSpawner : CoreService
 
     private void PlaceInScene()
     {
-        Vector3? savedPosition = Player.instance.GetSavedScenePosition();
-        Player.instance.transform.position = savedPosition ?? PlayerSpawnPoint.Instance.transform.position;
+        Player.instance.transform.position = Player.instance.Get<PlayerScenePosition>().GetSpawnPosition();
     }
 
     private void OnDestroy()

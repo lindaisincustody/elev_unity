@@ -14,11 +14,11 @@ public class StunChanceAbility : Ability
 
     public override void Start()
     {
-        Player.instance.SpecialSymbolChance += stunGlyphChance;
+        Player.instance.Get<PlayerCombat>().SpecialSymbolChance += stunGlyphChance;
     }
 
     public override void Destroy()
     {
-        Player.instance.SpecialSymbolChance -= stunGlyphChance;
+        Player.instance.Get<PlayerCombat>().SpecialSymbolChance -= stunGlyphChance;
     }
 }

@@ -20,12 +20,12 @@ public class TrainMovement : MonoBehaviour
 
         if (playerSnapshot.TutorialComplete)
         {
-            Player.instance.ShowPlayer(true);
+            Player.instance.Get<PlayerVisuals>().SetVisible(true);
             gameObject.SetActive(false);
             return;
         }
 
-        Player.instance.ShowPlayer(false);
+        Player.instance.Get<PlayerVisuals>().SetVisible(false);
         playerSnapshot.TutorialComplete = true;
         SaveLoadService.Instance.SaveProgress();
 
@@ -80,7 +80,7 @@ public class TrainMovement : MonoBehaviour
 
     private async UniTask Leave(CancellationToken token)
     {
-        Player.instance.ShowPlayer(true);
+        Player.instance.Get<PlayerVisuals>().SetVisible(true);
         velocity = initialSpeed / 2f;
 
         while (transform.position.x > leaveX)
