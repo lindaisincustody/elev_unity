@@ -23,6 +23,7 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     private Transform player;
     private CinemachineVirtualCamera vcam;
     private CinemachineFramingTransposer framing;
+    private CinemachineConfiner2D confiner;
     private LetterDrawing letterDrawing;
 
     private float defaultOrthoSize;
@@ -33,6 +34,7 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
     private void Awake()
     {
         vcam = GetComponent<CinemachineVirtualCamera>();
+        confiner = GetComponent<CinemachineConfiner2D>();
 
         framing = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
         if (framing == null)
@@ -65,11 +67,18 @@ public sealed class CinemachineTopDownAim_CM2 : MonoBehaviour
 
         // 1) Zoom
         float targetSize = rmb ? defaultOrthoSize + zoomAmount : defaultOrthoSize;
-        vcam.m_Lens.OrthographicSize = Mathf.Lerp(
+        float size = Mathf.Lerp(
             vcam.m_Lens.OrthographicSize,
             targetSize,
             zoomSpeed * Time.deltaTime
         );
+        if (Mathf.Abs(size - targetSize) < 0.001f)
+            size = targetSize;
+        if (size != vcam.m_Lens.OrthographicSize)
+        {
+            vcam.m_Lens.OrthographicSize = size;
+            confiner.InvalidateCache();
+        }
 
         // 2) Desired offset
 

@@ -7262,6 +7262,7 @@ GameObject:
   - component: {fileID: 484424889}
   - component: {fileID: 484424887}
   - component: {fileID: 7712334455667711001}
+  - component: {fileID: 7712334455667711002}
   m_Layer: 0
   m_Name: Vcam_Main
   m_TagString: Untagged
@@ -7300,7 +7301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BoundingShape2D: {fileID: 1096406934}
-  m_Damping: 0.5
+  m_Damping: 0
   m_MaxWindowSize: -1
   m_Padding: 0
 --- !u!114 &484424890
@@ -24628,7 +24629,9 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 5.790375, y: 12.99972}
+    - - {x: 20.800049, y: 18.167208}
+      - {x: 10.926308, y: 18.082855}
+      - {x: 6.154373, y: 13.572383}
       - {x: -19.58147, y: 12.87767}
       - {x: -19.7576, y: 3.909761}
       - {x: -19.618378, y: -5.7175126}
@@ -24637,7 +24640,6 @@ PolygonCollider2D:
       - {x: 13.5675, y: -2.134766}
       - {x: 13.09883, y: -1.515672}
       - {x: 20.620628, y: 3.5317235}
-      - {x: 20.965992, y: 14.542546}
   m_UseDelaunayMesh: 0
 --- !u!4 &1096406935
 Transform:
@@ -30612,6 +30614,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7c94f1a05b4e3b8c61f0d2947ab3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7712334455667711002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484424886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a3312b37eeb3734faa8d2f96f835212, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraConfinerEase
+  duration: 0.8
+  jumpSpeed: 20
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
