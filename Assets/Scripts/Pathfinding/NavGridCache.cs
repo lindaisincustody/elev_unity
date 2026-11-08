@@ -6,10 +6,16 @@ public static class NavGridCache
 {
     private static readonly Dictionary<string, NavGrid> grids = new Dictionary<string, NavGrid>();
 
+    public static int Version { get; private set; }
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
     private static void Initialize()
     {
-        SceneManager.sceneLoaded += (scene, mode) => grids.Clear();
+        SceneManager.sceneLoaded += (scene, mode) =>
+        {
+            grids.Clear();
+            Version++;
+        };
     }
 
     public static NavGrid Get(Vector2 min, Vector2 max, Vector2 agentOffset, float agentRadius, LayerMask obstacles)
@@ -23,5 +29,13 @@ public static class NavGridCache
         }
 
         return grid;
+    }
+
+    public static void Refresh(Bounds area)
+    {
+        foreach (NavGrid grid in grids.Values)
+            grid.Refresh(area);
+
+        Version++;
     }
 }

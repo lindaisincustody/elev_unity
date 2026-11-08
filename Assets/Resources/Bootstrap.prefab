@@ -212,6 +212,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 32c4aa343473906409745abef05273cf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyManager
+--- !u!1 &3190457712846629101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3190457712846629102}
+  - component: {fileID: 3190457712846629103}
+  m_Layer: 0
+  m_Name: ElevatorGameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3190457712846629102
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3190457712846629101}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1892692840743722423}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3190457712846629103
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3190457712846629101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4e9d17c8a2f4356be0713d9c5a82e40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ElevatorGameManager
+  totalFloors: 6
+  miniGameLevels: 3
+  sanityCost: 600
 --- !u!1 &3544983459895457099
 GameObject:
   m_ObjectHideFlags: 0
@@ -259,6 +306,7 @@ MonoBehaviour:
   rippleMaterial: {fileID: 2100000, guid: 770db0076aa830142b4907f509e0e057, type: 2}
   crteffectMaterial: {fileID: 2100000, guid: c99d49292b7766241a1b56b8e8f08adf, type: 2}
   transitionSpeed: 3
+  screenEffects: 0
 --- !u!1 &4040176321446786245
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,6 +455,7 @@ MonoBehaviour:
     - {fileID: 1172802601903664795}
     - {fileID: 7446054952354890951}
     - {fileID: 4843480386452913303}
+    - {fileID: 4390829600860129477}
   - state: 4
     services:
     - {fileID: 5516315378308778242}
@@ -460,6 +509,58 @@ MonoBehaviour:
   <References>k__BackingField: {fileID: 11400000, guid: 8dde59fea29f0bc4484c81547a4bff63, type: 2}
   <DrawingRig>k__BackingField: {fileID: 11400000, guid: 841d917952aa71246869083a1a2f07b1, type: 2}
   <Drawing>k__BackingField: {fileID: 11400000, guid: 9ad4c61e8e514c7d9f25b3a06d81e445, type: 2}
+--- !u!1 &5761110928197244407
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3510706946075350798}
+  - component: {fileID: 4390829600860129477}
+  m_Layer: 0
+  m_Name: PathGuide
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3510706946075350798
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5761110928197244407}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1892692840743722423}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4390829600860129477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5761110928197244407}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 155466c281816434597c2360e094769a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PathGuide
+  trailPrefab: {fileID: 1539741483140824400, guid: 0bbd2029369d29f4f9946dee6071c3a8, type: 3}
+  obstacles:
+    serializedVersion: 2
+    m_Bits: 1
+  agentRadius: 0.3
+  searchMargin: 8
+  searchAttempts: 3
+  chunkSize: 8
 --- !u!1 &6320875044460986984
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,6 +1058,7 @@ Transform:
   - {fileID: 8721006858959926648}
   - {fileID: 8559114201741744535}
   - {fileID: 3190457712846629102}
+  - {fileID: 3510706946075350798}
   m_Father: {fileID: 6140382831497581559}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1228300180439050955
@@ -1105,50 +1207,3 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5438551479118118321, guid: 2f6923bee8ac8cd46ac1ed6ca73931e7, type: 3}
   m_PrefabInstance: {fileID: 4435308389959901677}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &3190457712846629101
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3190457712846629102}
-  - component: {fileID: 3190457712846629103}
-  m_Layer: 0
-  m_Name: ElevatorGameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3190457712846629102
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3190457712846629101}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1892692840743722423}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3190457712846629103
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3190457712846629101}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b4e9d17c8a2f4356be0713d9c5a82e40, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ElevatorGameManager
-  totalFloors: 6
-  miniGameLevels: 3
-  sanityCost: 600

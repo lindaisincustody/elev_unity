@@ -15,13 +15,14 @@ public class NavGrid
     private readonly int width;
     private readonly int height;
     private readonly bool[] blocked;
+    private readonly Vector2 agentOffset;
+    private readonly float agentRadius;
+    private readonly ContactFilter2D filter;
 
     private readonly float[] gScore;
-    private readonly float[] fScore;
     private readonly int[] cameFrom;
     private readonly bool[] closed;
-    private readonly bool[] opened;
-    private readonly List<int> open = new List<int>();
+    private readonly List<Node> open = new List<Node>();
     private static readonly Collider2D[] OverlapBuffer = new Collider2D[1];
 
     public NavGrid(Vector2 min, Vector2 max, Vector2 agentOffset, float agentRadius, LayerMask obstacles)
@@ -34,21 +35,54 @@ public class NavGrid
 
         blocked = new bool[count];
         gScore = new float[count];
-        fScore = new float[count];
         cameFrom = new int[count];
         closed = new bool[count];
-        opened = new bool[count];
 
-        ContactFilter2D filter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = obstacles };
+        this.agentOffset = agentOffset;
+        this.agentRadius = agentRadius;
+        filter = new ContactFilter2D { useTriggers = false, useLayerMask = true, layerMask = obstacles };
 
         for (int i = 0; i < count; i++)
-            blocked[i] = Physics2D.OverlapCircle(CellCenter(i) + agentOffset, agentRadius, filter, OverlapBuffer) > 0;
+            blocked[i] = IsObstructed(i);
+    }
 
+    public bool ReachedEdge { get; private set; }
+
+    public bool Contains(Vector2 position)
+    {
+        return CellIndex(position) >= 0;
+    }
+
+    public void Refresh(Bounds area)
+    {
+        Vector2 margin = Vector2.one * (agentRadius + CellSize);
+        Vector2 min = (Vector2)area.min - agentOffset - margin;
+        Vector2 max = (Vector2)area.max - agentOffset + margin;
+
+        if (max.x < origin.x || max.y < origin.y || min.x > origin.x + width * CellSize || min.y > origin.y + height * CellSize)
+            return;
+
+        int minX = Mathf.Clamp(Mathf.FloorToInt((min.x - origin.x) / CellSize), 0, width - 1);
+        int minY = Mathf.Clamp(Mathf.FloorToInt((min.y - origin.y) / CellSize), 0, height - 1);
+        int maxX = Mathf.Clamp(Mathf.FloorToInt((max.x - origin.x) / CellSize), 0, width - 1);
+        int maxY = Mathf.Clamp(Mathf.FloorToInt((max.y - origin.y) / CellSize), 0, height - 1);
+
+        for (int y = minY; y <= maxY; y++)
+        {
+            for (int x = minX; x <= maxX; x++)
+                blocked[y * width + x] = IsObstructed(y * width + x);
+        }
+    }
+
+    private bool IsObstructed(int index)
+    {
+        return Physics2D.OverlapCircle(CellCenter(index) + agentOffset, agentRadius, filter, OverlapBuffer) > 0;
     }
 
     public bool FindPath(Vector2 from, Vector2 to, List<Vector2> path)
     {
         path.Clear();
+        ReachedEdge = false;
 
         int start = NearestFree(from);
         int goal = NearestFree(to);
@@ -61,18 +95,18 @@ public class NavGrid
             gScore[i] = float.MaxValue;
             cameFrom[i] = -1;
             closed[i] = false;
-            opened[i] = false;
         }
 
         open.Clear();
         gScore[start] = 0f;
-        fScore[start] = Heuristic(start, goal);
-        open.Add(start);
-        opened[start] = true;
+        Push(start, Heuristic(start, goal));
 
         while (open.Count > 0)
         {
-            int current = TakeLowest();
+            int current = Pop();
+
+            if (closed[current])
+                continue;
 
             if (current == goal)
             {
@@ -89,6 +123,9 @@ public class NavGrid
 
             int cx = current % width;
             int cy = current / width;
+
+            if (cx == 0 || cy == 0 || cx == width - 1 || cy == height - 1)
+                ReachedEdge = true;
 
             for (int n = 0; n < NeighbourCount; n++)
             {
@@ -112,14 +149,8 @@ public class NavGrid
                     continue;
 
                 gScore[neighbour] = cost;
-                fScore[neighbour] = cost + Heuristic(neighbour, goal);
                 cameFrom[neighbour] = current;
-
-                if (!opened[neighbour])
-                {
-                    open.Add(neighbour);
-                    opened[neighbour] = true;
-                }
+                Push(neighbour, cost + Heuristic(neighbour, goal));
             }
         }
 
@@ -155,20 +186,52 @@ public class NavGrid
         return index >= 0 && !blocked[index];
     }
 
-    private int TakeLowest()
+    private void Push(int cell, float score)
     {
-        int best = 0;
+        open.Add(new Node(cell, score));
 
-        for (int i = 1; i < open.Count; i++)
+        int child = open.Count - 1;
+
+        while (child > 0)
         {
-            if (fScore[open[i]] < fScore[open[best]])
-                best = i;
-        }
+            int parent = (child - 1) / 2;
 
-        int cell = open[best];
-        open[best] = open[open.Count - 1];
-        open.RemoveAt(open.Count - 1);
-        opened[cell] = false;
+            if (open[parent].Score <= open[child].Score)
+                break;
+
+            (open[parent], open[child]) = (open[child], open[parent]);
+            child = parent;
+        }
+    }
+
+    private int Pop()
+    {
+        int cell = open[0].Cell;
+        int last = open.Count - 1;
+
+        open[0] = open[last];
+        open.RemoveAt(last);
+
+        int parent = 0;
+
+        while (true)
+        {
+            int left = parent * 2 + 1;
+            int right = left + 1;
+            int smallest = parent;
+
+            if (left < open.Count && open[left].Score < open[smallest].Score)
+                smallest = left;
+
+            if (right < open.Count && open[right].Score < open[smallest].Score)
+                smallest = right;
+
+            if (smallest == parent)
+                break;
+
+            (open[parent], open[smallest]) = (open[smallest], open[parent]);
+            parent = smallest;
+        }
 
         return cell;
     }
@@ -268,5 +331,17 @@ public class NavGrid
         return new Vector2(
             origin.x + (index % width + 0.5f) * CellSize,
             origin.y + (index / width + 0.5f) * CellSize);
+    }
+
+    private readonly struct Node
+    {
+        public int Cell { get; }
+        public float Score { get; }
+
+        public Node(int cell, float score)
+        {
+            Cell = cell;
+            Score = score;
+        }
     }
 }
