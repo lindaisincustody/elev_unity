@@ -18,7 +18,7 @@ public abstract class Interactable : MonoBehaviour
         interactPrompt.Show(false);
     }
 
-    protected void OnDestroy()
+    protected virtual void OnDestroy()
     {
         InputManager.Instance.OnInteract -= HandleInteract;
     }

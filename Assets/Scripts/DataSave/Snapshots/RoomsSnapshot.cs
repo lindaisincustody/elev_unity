@@ -6,4 +6,5 @@ public class RoomsSnapshot
 {
     public bool Seeded;
     public List<RoomId> Unlocked = new List<RoomId>();
+    public List<string> OpenedDoors = new List<string>();
 }

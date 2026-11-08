@@ -26216,7 +26216,7 @@ Tilemap:
       m_TileColorIndex: 0
       m_TileObjectToInstantiateIndex: 65535
       dummyAlignment: 0
-      m_AllTileFlags: 1
+      m_AllTileFlags: 1073741825
   m_AnimatedTiles: {}
   m_TileAssetArray:
   - m_RefCount: 0
@@ -27574,6 +27574,76 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5575204232954764362, guid: bb65542d96e45a54c98ff6a25920471b, type: 3}
   m_PrefabInstance: {fileID: 1316282874}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1378910706
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1505434740}
+    m_Modifications:
+    - target: {fileID: 4093028525983255294, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: room
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4093028525983255294, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: doorId.value
+      value: BasementDoor_8a15f67b
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 67.43
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.667
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7230113320156310336, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+      propertyPath: m_Name
+      value: RoomDoor
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+--- !u!4 &1378910707 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4368706937524001969, guid: ea726d08429bdba45bee3fb587c1a8ab, type: 3}
+  m_PrefabInstance: {fileID: 1378910706}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1463214103
 GameObject:
   m_ObjectHideFlags: 0
@@ -28781,6 +28851,7 @@ Transform:
   - {fileID: 2124136559}
   - {fileID: 103461851}
   - {fileID: 318607782}
+  - {fileID: 1378910707}
   m_Father: {fileID: 2097873081}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1505434741
@@ -28790,7 +28861,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1505434739}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 59532ebf8ef574546994f9963e36ce1f, type: 3}
   m_Name: 
