@@ -7,7 +7,7 @@ public class EnemyGlyphSO : ScriptableObject
 {
     [SerializeField]
     private string[] labels = {
-        "_Aries", "_Capricorn", "_Cross", "_EyesDollar", "_Heart", "_Leo", "_Mercury",
+        "_Aries", "_Capricorn", "_Cross", "_Heart", "_Leo", "_Mercury",
     "_Moon", "_Rightarrow", "_Sigma", "_Taurus", "_alpha", "_bigtriangleup",
     "_bowtie", "_boxplus", "_circlearrowleft", "_clubsuit", "_diagup",
     "_diamondsuit", "_downarrow", "_emptyset", "_female", "_infty", "_lambda",
@@ -26,7 +26,6 @@ public static class Glyphs
         { "_Aries", "♈" },
     { "_Capricorn", "♑" },
     { "_Cross", "†" },
-    { "_EyesDollar", "🤑" },
     { "_Heart", "♥" },
     { "_Leo", "♌" },
     { "_Mercury", "☿" },

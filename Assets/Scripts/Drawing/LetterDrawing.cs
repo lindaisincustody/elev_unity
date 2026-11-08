@@ -9,6 +9,7 @@ public class LetterDrawing : Component
 {
     [Header("Predictions")]
     [SerializeField] public NNModel model;
+    [field: SerializeField] public SymbolTemplates Templates { get; private set; }
 
     [Header("Feedback FX")]
     public ParticleSystem sparkleEffectPrefab;
@@ -84,7 +85,7 @@ public class LetterDrawing : Component
 
     private void Awake()
     {
-        drawingRig.Spawn();
+        drawingRig.Spawn(ConfigManager.Instance.DrawingRig, ConfigManager.Instance.Drawing);
 
         lineRenderer = drawingRig.Primary;
 

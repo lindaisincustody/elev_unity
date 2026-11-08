@@ -335,6 +335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   model: {fileID: 5022602860645237092, guid: 94dee1124f917c24ca2d6ed6684eae2b, type: 3}
+  <Templates>k__BackingField: {fileID: 11400000, guid: a091517859f82b847919052579a0fc28, type: 2}
   sparkleEffectPrefab: {fileID: 2503558607980736289, guid: d346fa3b78b20844699d951f5d9b48f2, type: 3}
   sparkleDuration: 0.75
   flashDuration: 1

@@ -15,5 +15,6 @@ public class Constants
         public const string TrainStation = "TrainStation";
         public const string HotelScene = "Hotel";
         public const string MainMenu = "MainMenu";
+        public const string SymbolTest = "SymbolTest";
     }
 }

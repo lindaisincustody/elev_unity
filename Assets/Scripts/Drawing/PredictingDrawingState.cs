@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using Unity.Barracuda;
+﻿using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Rendering.Universal;
@@ -12,89 +10,13 @@ public class PredictingDrawingState : IDrawingState
 {
     private LetterDrawing letterDrawing;
 
-    public Prediction prediction;
-
-    private RenderTexture mlRT;          // 96×96 B&W texture used for inference
-    private Camera        mlCamera;      // moves to tightly frame each stroke for capture
-    private RenderTexture displayRT;     // screen-resolution texture shown as UI overlay
+    private SymbolRecognizer recognizer;
+    private PointCloudRecognizer templates;
+    private RenderTexture displayRT;    // screen-resolution texture shown as UI overlay
     private Camera        displayCamera; // fixed, never moves — positions strokes in screen space
-    private IWorker worker;
 
     private ParticleSystem sparkleInstance;
     private Coroutine feedbackRoutine;
-
-    private string[] labels = new string[]
-{
-    "_Aries", "_Capricorn", "_Cross", "_EyesDollar", "_Heart", "_Leo", "_Mercury",
-    "_Moon", "_Rightarrow", "_Sigma", "_Taurus", "_alpha", "_bigtriangleup",
-    "_bowtie", "_boxplus", "_circlearrowleft", "_clubsuit", "_diagup",
-    "_diamondsuit", "_downarrow", "_emptyset", "_female", "_infty", "_lambda",
-    "_lightning", "_ltimes", "_male", "_psi", "_sim", "_spadesuit", "_square",
-    "_star", "_textasteriskcentered", "_textcent", "_textgamma",
-    "_textmusicalnote", "_theta", "_varphi"
-};
-
-    private readonly Dictionary<string, string> latexToUnicode = new Dictionary<string, string>
-{
-    { "_Aries", "♈" },
-    { "_Capricorn", "♑" },
-    { "_Cross", "†" },
-    { "_EyesDollar", "🤑" },
-    { "_Heart", "♥" },
-    { "_Leo", "♌" },
-    { "_Mercury", "☿" },
-    { "_Moon", "☾" },
-    { "_Rightarrow", "⇒" },
-    { "_Sigma", "Σ" },
-    { "_Taurus", "♉" },
-    { "_alpha", "α" },
-    { "_bigtriangleup", "△" },
-    { "_bowtie", "⧓" },
-    { "_boxplus", "⊞" },
-    { "_circlearrowleft", "↺" },
-    { "_clubsuit", "♣" },
-    { "_diagup", "/" },
-    { "_diamondsuit", "♦" },
-    { "_downarrow", "↓" },
-    { "_emptyset", "∅" },
-    { "_female", "♀" },
-    { "_infty", "∞" },
-    { "_lambda", "λ" },
-    { "_lightning", "⚡" },
-    { "_ltimes", "⋉" },
-    { "_male", "♂" },
-    { "_psi", "ψ" },
-    { "_sim", "∼" },
-    { "_spadesuit", "♠" },
-    { "_square", "■" },
-    { "_star", "★" },
-    { "_textasteriskcentered", "∗" },
-    { "_textcent", "¢" },
-    { "_textgamma", "γ" },
-    { "_textmusicalnote", "♪" },
-    { "_theta", "θ" },
-    { "_varphi", "φ" }
-};
-
-    private float threshold = 0.91f;
-    private int currentLetterIndex = 0;
-
-    [Serializable]
-    public struct Prediction
-    {
-        public string predictedLabel;
-        public float[] predicted;
-
-        public void SetPrediction(Tensor t, string[] labels)
-        {
-            predicted = t.AsFloats();
-            int predictedIndex = Array.IndexOf(predicted, predicted.Max());
-            predictedLabel = (predictedIndex >= 0 && predictedIndex < labels.Length)
-                ? labels[predictedIndex]
-                : "Unknown";
-            Debug.Log($"Predicted Symbol: {predictedLabel}");
-        }
-    }
 
     public DrawingMode Mode => DrawingMode.Predicting;
     public DrawingWorld World => DrawingWorld.Underworld;
@@ -127,13 +49,13 @@ public class PredictingDrawingState : IDrawingState
     {
         letterDrawing = newLetterDrawing;
 
+        recognizer = new SymbolRecognizer(letterDrawing.model, letterDrawing.CameraRig.MLCamera);
+        templates = letterDrawing.Templates.CreateRecognizer();
         InitializeCamera();
-        InitializeModel();
         InitializeFX();
-        Warmup();
 
         if (letterDrawing.renderTextureDisplay != null)
-            letterDrawing.renderTextureDisplay.texture = mlRT;
+            letterDrawing.renderTextureDisplay.texture = recognizer.Input;
     }
 
     public void Enter(LetterDrawing drawing)
@@ -157,12 +79,7 @@ public class PredictingDrawingState : IDrawingState
 
     private void InitializeCamera()
     {
-        mlCamera = letterDrawing.CameraRig.MLCamera;
         displayCamera = letterDrawing.CameraRig.DisplayCamera;
-
-        mlRT = new RenderTexture(96, 96, 16, RenderTextureFormat.ARGB32);
-        mlRT.Create();
-        mlCamera.targetTexture = mlRT;
 
         Rect zone = letterDrawing.DrawZoneRect.rect;
         float camAspect = zone.width / zone.height;
@@ -186,123 +103,40 @@ public class PredictingDrawingState : IDrawingState
     }
 
 
-    private void Warmup()
-    {
-        mlCamera.Render();
-
-        using Tensor warmupTensor = new Tensor(mlRT, 1);
-        worker.Execute(warmupTensor);
-        worker.PeekOutput().Dispose();
-    }
-
-    private void InitializeModel()
-    {
-        worker = ModelLoader.Load(letterDrawing.model).CreateWorker(WorkerFactory.Device.CPU);
-        prediction = new Prediction();
-    }
-
     public void ProcessDrawing(LineRenderer mainLineRenderer, LineRenderer secondaryLineRenderer)
     {
-        EndDrawing();
-        CenterDrawingInTexture();
+        SymbolPrediction prediction = recognizer.Predict(mainLineRenderer, secondaryLineRenderer);
+        TemplateMatch match = templates.Recognize(PointCloudRecognizer.Points(mainLineRenderer));
+        CombinedMatch combined = new CombinedMatch(prediction, match);
+        Debug.Log($"Predicted Symbol: {combined.Label} ({combined.Probability:P0}, distance {combined.Distance:F2})");
 
-        using var inputTensor = new Tensor(mlRT, 1);
-        worker.Execute(inputTensor);
-        Tensor output = worker.PeekOutput();
-
-        prediction.SetPrediction(output, labels);
-
-        float confidence = prediction.predicted.Max();
-
-        if (confidence < threshold)
+        if (!combined.IsAccepted)
         {
-            Debug.Log("Low confidence drawing, ignoring input.");
-            Debug.Log(confidence);
             TriggerMissSparkle(secondaryLineRenderer);
-            output.Dispose();
             return;
         }
-        Debug.Log(confidence);
-        MatchSymbolWithPoem(prediction.predictedLabel);
-        TriggerCorrectSparkle(secondaryLineRenderer);
-        DisplaySymbol(prediction.predictedLabel, secondaryLineRenderer);
 
-        output.Dispose();
+        MatchSymbolWithPoem(combined.Label);
+        TriggerCorrectSparkle(secondaryLineRenderer);
+        DisplaySymbol(combined.Label, secondaryLineRenderer);
     }
 
-    private void MatchSymbolWithPoem(string predictedSymbol)
+    private void MatchSymbolWithPoem(string label)
     {
-        string predictedLabel = prediction.predictedLabel;
-        Debug.Log($"Predicted Symbol: {predictedLabel}");
+        string glyph = Glyphs.LatexToUnicode[label];
 
         foreach (var enemy in EnemyManager.Instance.GetAllEnemies())
         {
-            if (enemy.activeSymbols.Any(g =>
-                    g.Glyph == (latexToUnicode.ContainsKey(predictedSymbol)
-                        ? latexToUnicode[predictedSymbol]
-                        : predictedSymbol)))
-            {
-                enemy.CheckSymbolMatch((latexToUnicode.ContainsKey(predictedSymbol)
-                    ? latexToUnicode[predictedSymbol]
-                    : predictedSymbol));
-            }
+            if (enemy.activeSymbols.Any(g => g.Glyph == glyph))
+                enemy.CheckSymbolMatch(glyph);
         }
 
-        AbilityActionRegistry.Instance.ExecuteAction(predictedLabel);
-    }
-
-    private void EndDrawing()
-    {
-        // Show only the primary (white) LR for the ML capture; hide the visual one.
-        letterDrawing.lineRenderer.enabled = true;
-        if (letterDrawing.secondaryLineRenderer != null)
-            letterDrawing.secondaryLineRenderer.enabled = false;
-
-        RenderTexture prev = RenderTexture.active;
-        RenderTexture.active = mlRT;
-        GL.Clear(true, true, Color.black);
-        RenderTexture.active = prev;
-        mlCamera.Render();
-
-        letterDrawing.lineRenderer.enabled = false;
-        if (letterDrawing.secondaryLineRenderer != null)
-            letterDrawing.secondaryLineRenderer.enabled = true;
-    }
-
-    private void CenterDrawingInTexture()
-    {
-        Bounds bounds = new Bounds(letterDrawing.lineRenderer.GetPosition(0), Vector3.zero);
-        for (int i = 1; i < letterDrawing.lineRenderer.positionCount; i++)
-            bounds.Encapsulate(letterDrawing.lineRenderer.GetPosition(i));
-
-        Vector3 center = bounds.center;
-        mlCamera.transform.position = new Vector3(center.x, center.y, mlCamera.transform.position.z);
-
-        float marginFactor = 1.2f;
-        float maxDrawingSize = Mathf.Max(bounds.size.x, bounds.size.y) * marginFactor;
-        mlCamera.orthographicSize = Mathf.Max(maxDrawingSize / 2f, 0.01f);
-
-        // Keep primary LR at the same absolute width as everywhere else.
-        // widthMultiplier stays 1 so startWidth/endWidth are the sole source of truth.
-        letterDrawing.lineRenderer.widthMultiplier = 1f;
-        letterDrawing.lineRenderer.startWidth      = 0.10f;
-        letterDrawing.lineRenderer.endWidth        = 0.10f;
-
-        // Swap visibility: ML camera needs primary on, secondary off.
-        letterDrawing.lineRenderer.enabled = true;
-        if (letterDrawing.secondaryLineRenderer != null)
-            letterDrawing.secondaryLineRenderer.enabled = false;
-
-        mlCamera.Render();
-
-        letterDrawing.lineRenderer.enabled = false;
-        if (letterDrawing.secondaryLineRenderer != null)
-            letterDrawing.secondaryLineRenderer.enabled = true;
+        AbilityActionRegistry.Instance.ExecuteAction(label);
     }
 
     private void DisplaySymbol(string label, LineRenderer lr)
     {
-        string glyph = latexToUnicode.ContainsKey(label) ? latexToUnicode[label] : label;
+        string glyph = Glyphs.LatexToUnicode[label];
 
         // Spawn above the player if a reference is set; fall back to stroke centre.
         Vector3 worldPos;
@@ -584,8 +418,7 @@ public class PredictingDrawingState : IDrawingState
 
     public void Dispose()
     {
-        worker?.Dispose();
-        worker = null;
+        recognizer.Dispose();
 
         if (letterDrawing.drawingDisplay != null)
         {
@@ -596,9 +429,7 @@ public class PredictingDrawingState : IDrawingState
         if (letterDrawing.CameraRig != null)
             GameObject.Destroy(letterDrawing.CameraRig.gameObject);
 
-        mlCamera      = null;
         displayCamera = null;
-        if (mlRT != null)          { mlRT.Release();      mlRT      = null; }
         if (displayRT != null)     { displayRT.Release(); displayRT = null; }
     }
 

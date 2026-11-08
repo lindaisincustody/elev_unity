@@ -8,11 +8,8 @@ public class PlayerDrawingRig
     public DrawingCameraRig Cameras { get; private set; }
     public Dictionary<DrawingMode, LineRenderer> ModeLines { get; private set; }
 
-    public void Spawn()
+    public void Spawn(DrawingRigReferences references, DrawingConfig config)
     {
-        DrawingRigReferences references = ConfigManager.Instance.DrawingRig;
-        DrawingConfig config = ConfigManager.Instance.Drawing;
-
         Primary = SpawnLine(references.primaryLine);
 
         ModeLines = new Dictionary<DrawingMode, LineRenderer>();
